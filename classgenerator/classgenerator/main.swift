@@ -42,7 +42,6 @@ for argument in input
 var varTypes = [String]()
 var varNames = [String]()
 
-
 func parseFile(fileText: String) -> Void
 {
     var lines =  fileText.componentsSeparatedByString("\n")
@@ -59,6 +58,9 @@ func parseFile(fileText: String) -> Void
     {
         println( "\(varNames[i]) is a \(varTypes[i])")
     }
+    
+    var username = NSUserName()!
+    println("Hello \(username)")
 }
 
 
