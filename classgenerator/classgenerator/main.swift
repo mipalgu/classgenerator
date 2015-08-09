@@ -12,8 +12,14 @@
 import Foundation
 
 
+let fileMgr = NSFileManager.defaultManager()
+let currentPath = fileMgr.currentDirectoryPath
+
 var input = [String]()
-var fileName : String!
+var inputFileName : String!
+
+var varTypes = [String]()
+var varNames = [String]()
 
 for argument in Process.arguments
 {
@@ -33,18 +39,14 @@ for argument in input
         println("b argument");
         
     default:
-        fileName = argument
+        inputFileName = argument   // will need to test
     }
 }
 
 
-
-var varTypes = [String]()
-var varNames = [String]()
-
-func parseFile(fileText: String) -> Void
+func parseInput(inputText: String) -> Void
 {
-    var lines =  fileText.componentsSeparatedByString("\n")
+    var lines =  inputText.componentsSeparatedByString("\n")
 
     for line in lines
     {
@@ -54,6 +56,7 @@ func parseFile(fileText: String) -> Void
         varNames.append(variable[1])
     }
     
+
     for var i = 0; i < varTypes.count; i++
     {
         println( "\(varNames[i]) is a \(varTypes[i])")
@@ -61,14 +64,38 @@ func parseFile(fileText: String) -> Void
     
     var username = NSUserName()!
     println("Hello \(username)")
+
 }
 
 
+func generateC() -> Void
+{
+    var fileNameParts = inputFileName.componentsSeparatedByString(".")
+    var structName = "wb_" + fileNameParts[0]  // just need the first part
+    
+    
 
-let filemgr = NSFileManager.defaultManager()
-let filepath1 = "/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/" + fileName
 
-if filemgr.fileExistsAtPath(filepath1)
+}
+
+
+/*
+    class func write (path: String, content: String, encoding: NSStringEncoding = NSUTF8StringEncoding) -> Bool 
+    {
+        return content.writeToFile(path, atomically: true, encoding: encoding, error: nil)
+    }
+
+
+    text.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
+*/
+
+
+
+
+let inputFilePath = currentPath + "/" + inputFileName
+
+
+if fileMgr.fileExistsAtPath(inputFilePath)
 {
     println("File exists")
 }
@@ -78,7 +105,7 @@ else
 }
 
 
-if filemgr.isWritableFileAtPath(filepath1)
+if fileMgr.isWritableFileAtPath(inputFilePath)
 {
     println("File is writable")
 }
@@ -88,7 +115,7 @@ else
 }
 
 
-let file: NSFileHandle? = NSFileHandle(forReadingAtPath: filepath1)
+let file: NSFileHandle? = NSFileHandle(forReadingAtPath: inputFilePath)
 
 if file == nil
 {
@@ -96,8 +123,9 @@ if file == nil
 }
 else
 {
-    let fileText = String(contentsOfFile: filepath1, encoding: NSUTF8StringEncoding, error: nil)
-    parseFile(fileText!)
+    let inputText = String(contentsOfFile: inputFilePath, encoding: NSUTF8StringEncoding, error: nil)
+    parseInput(inputText!)
+    
     file?.closeFile()
 }
 
