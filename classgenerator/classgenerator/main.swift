@@ -73,9 +73,11 @@ func generateC() -> Void
     var fileNameParts = inputFileName.componentsSeparatedByString(".")
     var structName = "wb_" + fileNameParts[0]  // just need the first part
     
+    println(structName)
     
-
-
+    var cFilePath = currentPath + "/" + structName + ".h"
+    
+    fileMgr.createFileAtPath(cFilePath, contents: nil, attributes: nil)
 }
 
 
@@ -125,6 +127,7 @@ else
 {
     let inputText = String(contentsOfFile: inputFilePath, encoding: NSUTF8StringEncoding, error: nil)
     parseInput(inputText!)
+    generateC()
     
     file?.closeFile()
 }
