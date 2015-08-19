@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0022CD0C1B77032C003F8CF2"
+               BlueprintIdentifier = "00BCC1001B7EDA17002C72B7"
                BuildableName = "classgenerator"
                BlueprintName = "classgenerator"
                ReferencedContainer = "container:classgenerator.xcodeproj">
@@ -32,7 +32,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0022CD0C1B77032C003F8CF2"
+            BlueprintIdentifier = "00BCC1001B7EDA17002C72B7"
             BuildableName = "classgenerator"
             BlueprintName = "classgenerator"
             ReferencedContainer = "container:classgenerator.xcodeproj">
@@ -52,7 +52,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0022CD0C1B77032C003F8CF2"
+            BlueprintIdentifier = "00BCC1001B7EDA17002C72B7"
             BuildableName = "classgenerator"
             BlueprintName = "classgenerator"
             ReferencedContainer = "container:classgenerator.xcodeproj">
@@ -71,7 +71,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0022CD0C1B77032C003F8CF2"
+            BlueprintIdentifier = "00BCC1001B7EDA17002C72B7"
             BuildableName = "classgenerator"
             BlueprintName = "classgenerator"
             ReferencedContainer = "container:classgenerator.xcodeproj">

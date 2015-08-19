@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0022CD111B77032C003F8CF2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0022CD101B77032C003F8CF2 /* main.swift */; };
+		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
+		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0022CD0B1B77032C003F8CF2 /* CopyFiles */ = {
+		00BCC0FF1B7EDA17002C72B7 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -23,12 +24,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0022CD0D1B77032C003F8CF2 /* classgenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = classgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
-		0022CD101B77032C003F8CF2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		00BCC1011B7EDA17002C72B7 /* classgenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = classgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
+		00BCC1041B7EDA17002C72B7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		00BCC10E1B7EFE28002C72B7 /* fileio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = fileio.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0022CD0A1B77032C003F8CF2 /* Frameworks */ = {
+		00BCC0FE1B7EDA17002C72B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -38,26 +40,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0022CD041B77032C003F8CF2 = {
+		00BCC0F81B7EDA17002C72B7 = {
 			isa = PBXGroup;
 			children = (
-				0022CD0F1B77032C003F8CF2 /* classgenerator */,
-				0022CD0E1B77032C003F8CF2 /* Products */,
+				00BCC1031B7EDA17002C72B7 /* classgenerator */,
+				00BCC1021B7EDA17002C72B7 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		0022CD0E1B77032C003F8CF2 /* Products */ = {
+		00BCC1021B7EDA17002C72B7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0022CD0D1B77032C003F8CF2 /* classgenerator */,
+				00BCC1011B7EDA17002C72B7 /* classgenerator */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0022CD0F1B77032C003F8CF2 /* classgenerator */ = {
+		00BCC1031B7EDA17002C72B7 /* classgenerator */ = {
 			isa = PBXGroup;
 			children = (
-				0022CD101B77032C003F8CF2 /* main.swift */,
+				00BCC1041B7EDA17002C72B7 /* main.swift */,
+				00BCC10E1B7EFE28002C72B7 /* fileio.swift */,
 			);
 			path = classgenerator;
 			sourceTree = "<group>";
@@ -65,13 +68,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0022CD0C1B77032C003F8CF2 /* classgenerator */ = {
+		00BCC1001B7EDA17002C72B7 /* classgenerator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0022CD141B77032C003F8CF2 /* Build configuration list for PBXNativeTarget "classgenerator" */;
+			buildConfigurationList = 00BCC1081B7EDA17002C72B7 /* Build configuration list for PBXNativeTarget "classgenerator" */;
 			buildPhases = (
-				0022CD091B77032C003F8CF2 /* Sources */,
-				0022CD0A1B77032C003F8CF2 /* Frameworks */,
-				0022CD0B1B77032C003F8CF2 /* CopyFiles */,
+				00BCC0FD1B7EDA17002C72B7 /* Sources */,
+				00BCC0FE1B7EDA17002C72B7 /* Frameworks */,
+				00BCC0FF1B7EDA17002C72B7 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -79,53 +82,54 @@
 			);
 			name = classgenerator;
 			productName = classgenerator;
-			productReference = 0022CD0D1B77032C003F8CF2 /* classgenerator */;
+			productReference = 00BCC1011B7EDA17002C72B7 /* classgenerator */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		0022CD051B77032C003F8CF2 /* Project object */ = {
+		00BCC0F91B7EDA17002C72B7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Mick Hawkins";
 				TargetAttributes = {
-					0022CD0C1B77032C003F8CF2 = {
+					00BCC1001B7EDA17002C72B7 = {
 						CreatedOnToolsVersion = 6.4;
 					};
 				};
 			};
-			buildConfigurationList = 0022CD081B77032C003F8CF2 /* Build configuration list for PBXProject "classgenerator" */;
+			buildConfigurationList = 00BCC0FC1B7EDA17002C72B7 /* Build configuration list for PBXProject "classgenerator" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 0022CD041B77032C003F8CF2;
-			productRefGroup = 0022CD0E1B77032C003F8CF2 /* Products */;
+			mainGroup = 00BCC0F81B7EDA17002C72B7;
+			productRefGroup = 00BCC1021B7EDA17002C72B7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0022CD0C1B77032C003F8CF2 /* classgenerator */,
+				00BCC1001B7EDA17002C72B7 /* classgenerator */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		0022CD091B77032C003F8CF2 /* Sources */ = {
+		00BCC0FD1B7EDA17002C72B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0022CD111B77032C003F8CF2 /* main.swift in Sources */,
+				00BCC1051B7EDA17002C72B7 /* main.swift in Sources */,
+				00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		0022CD121B77032C003F8CF2 /* Debug */ = {
+		00BCC1061B7EDA17002C72B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -168,7 +172,7 @@
 			};
 			name = Debug;
 		};
-		0022CD131B77032C003F8CF2 /* Release */ = {
+		00BCC1071B7EDA17002C72B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -203,14 +207,14 @@
 			};
 			name = Release;
 		};
-		0022CD151B77032C003F8CF2 /* Debug */ = {
+		00BCC1091B7EDA17002C72B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		0022CD161B77032C003F8CF2 /* Release */ = {
+		00BCC10A1B7EDA17002C72B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -220,24 +224,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0022CD081B77032C003F8CF2 /* Build configuration list for PBXProject "classgenerator" */ = {
+		00BCC0FC1B7EDA17002C72B7 /* Build configuration list for PBXProject "classgenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0022CD121B77032C003F8CF2 /* Debug */,
-				0022CD131B77032C003F8CF2 /* Release */,
+				00BCC1061B7EDA17002C72B7 /* Debug */,
+				00BCC1071B7EDA17002C72B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0022CD141B77032C003F8CF2 /* Build configuration list for PBXNativeTarget "classgenerator" */ = {
+		00BCC1081B7EDA17002C72B7 /* Build configuration list for PBXNativeTarget "classgenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0022CD151B77032C003F8CF2 /* Debug */,
-				0022CD161B77032C003F8CF2 /* Release */,
+				00BCC1091B7EDA17002C72B7 /* Debug */,
+				00BCC10A1B7EDA17002C72B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 0022CD051B77032C003F8CF2 /* Project object */;
+	rootObject = 00BCC0F91B7EDA17002C72B7 /* Project object */;
 }

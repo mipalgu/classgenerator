@@ -1,0 +1,2 @@
+bool	is_pressed
+int	a_number
