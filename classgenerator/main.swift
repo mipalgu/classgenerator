@@ -9,7 +9,6 @@
 //
 
 import Darwin
-import Foundation
 
 var input = [String]()
 var inputFilePath : String!
