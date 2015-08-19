@@ -7,6 +7,7 @@
 //
 
 import Darwin
+import Foundation   // for componentsSeparatedByString()
 
 let fileSize = 4096               /// find a way to get EOF to work so I dont need to do this
 
@@ -16,7 +17,7 @@ var varNames = [String]()
 
 func parseInput(inputText: String) -> Void {
     
-    var lines = inputText.componentsSeparatedByString("\n")
+    var lines = inputText.componentsSeparatedByString("\n")      // can i use this Foundation method?
     
     
     // check for case where the file had a return/s at the end or between lines
@@ -30,9 +31,9 @@ func parseInput(inputText: String) -> Void {
     
     for line in lines {
         
-        var variable = line.componentsSeparatedByString("\t")
+        var variable = line.componentsSeparatedByString("\t")   // can i use this Foundation method?
         
-        varTypes.append(variable[0])               // these parallel arrays arent going to cut it 
+        varTypes.append(variable[0])               // these parallel arrays arent going to cut it
         varNames.append(variable[1])
     }
     
@@ -86,7 +87,7 @@ func readVariables(inputFileName: String) -> String {
     }
     
     //fgets(line, MAXNAMLEN, fs)
-    fread(line, fileSize, 1, fs)       /// ***** size of file as const?
+    fread(line, fileSize, 1, fs)       /// ***** size of file as const? declared above.  
     
     let variable = String.fromCString(line)
     //}
@@ -114,7 +115,7 @@ func generateTopComment(structName: String) -> String {
         "#ifndef \(structName)_h \n" +
         "#define \(structName)_h \n\n" +
         
-    "#include <gu_util.h> \n\n\n"
+        "#include <gu_util.h> \n\n\n"
     
     return comment
 }
@@ -159,8 +160,8 @@ func generateCStruct(structName: String) -> String {
         "\t} \n" +
         "#endif \n\n" +
         
-    "};\n"
-    "#endif //\(structName)_h \n"
+        "};\n"
+        "#endif //\(structName)_h \n"
     
     
     return cStruct
