@@ -8,7 +8,7 @@
 
 import Darwin
 
-let fileSize = 4096
+let fileSize = 4096               /// find a way to get EOF to work so I dont need to do this
 
 var varTypes = [String]()
 var varNames = [String]()
@@ -75,7 +75,7 @@ func readVariables(inputFileName: String) -> String {
     var variables = [String]()
     
     
-    //while Int32(line.memory) != EOF {
+    //while Int32(line.memory) != EOF {          /// cant get EOF to work!!!!
     // check for errors while reading
     
     
@@ -190,7 +190,7 @@ func generateC(inputFileName: String, workingDirectory: String) -> Void {
     
     var text = generateTopComment(structName) + generateCStruct(structName)
     
-    fputs( text, fs )
+    fputs( text, fs )    /// perhaps use multiple fputs statements instead
     
     closeFileStream(fs)
 }
