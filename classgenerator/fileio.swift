@@ -32,7 +32,7 @@ func parseInput(inputText: String) -> Void {
         
         var variable = line.componentsSeparatedByString("\t")
         
-        varTypes.append(variable[0])
+        varTypes.append(variable[0])               // these parallel arrays arent going to cut it 
         varNames.append(variable[1])
     }
     
