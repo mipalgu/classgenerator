@@ -7,9 +7,46 @@
 //
 
 import Darwin
-import Foundation
 
 let fileSize = 4096
+
+var varTypes = [String]()
+var varNames = [String]()
+
+
+func parseInput(inputText: String) -> Void {
+    
+    var lines = inputText.componentsSeparatedByString("\n")
+    
+    
+    // check for case where the file had a return/s at the end or between lines
+    // counting backwards so not to change indexes
+    let numberOfLines = lines.count
+    for var i = numberOfLines-1; i >= 0; i-- {
+        if lines[i] == "" {
+            lines.removeAtIndex(i)
+        }
+    }
+    
+    for line in lines {
+        
+        var variable = line.componentsSeparatedByString("\t")
+        
+        varTypes.append(variable[0])
+        varNames.append(variable[1])
+    }
+    
+    for var i = 0; i < varTypes.count; i++ {
+        println( "\(varNames[i]) is a \(varTypes[i])")
+    }
+    
+    //   var username = NSUserName()!
+    //   println("Hello \(username)")
+    
+}
+
+
+
 
 func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
     
@@ -21,16 +58,16 @@ func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
 
 
 func readVariables(inputFileName: String) -> String {
-
+    
     // open a filestream for reading
     var fs : UnsafeMutablePointer<FILE> = fopen( inputFileName, "r" )
-
+    
     if fs == nil {
         // file did not open
         println("HERE: \(inputFileName) : No such file or directory\n")
         exit(EXIT_FAILURE)
     }
-
+    
     // read from the opened file
     // then close the stream
     
@@ -39,39 +76,109 @@ func readVariables(inputFileName: String) -> String {
     
     
     //while Int32(line.memory) != EOF {
-        // check for errors while reading
-        
-
-        if (ferror(fs) != 0) {
+    // check for errors while reading
     
-            println("Unable to read");
-            exit(EXIT_FAILURE);
-        }
-        
-        //fgets(line, MAXNAMLEN, fs)
-        fread(line, fileSize, 1, fs)       /// ***** size of file as const?
     
-        let variable = String.fromCString(line)
+    if (ferror(fs) != 0) {
+        
+        println("Unable to read");
+        exit(EXIT_FAILURE);
+    }
+    
+    //fgets(line, MAXNAMLEN, fs)
+    fread(line, fileSize, 1, fs)       /// ***** size of file as const?
+    
+    let variable = String.fromCString(line)
     //}
     
     closeFileStream(fs)
     line.destroy()
     
     return variable! // variables
+    
+}
 
+
+
+
+func generateTopComment(structName: String) -> String {
+    
+    var comment = "/** \n" +
+        " *  /file \(structName).h \n" +
+        " * \n" +
+        " *  Created by YOUR NAME in YEAR. \n" +    // generate NAME and YEAR
+        " *  Copyright (c) YEAR YOUR NAME. \n" +     // generate NAME and YEAR
+        " *  All rights reserved. \n" +
+        " */ \n\n" +
+        
+        "#ifndef \(structName)_h \n" +
+        "#define \(structName)_h \n\n" +
+        
+    "#include <gu_util.h> \n\n\n"
+    
+    return comment
+}
+
+func generateCStruct(structName: String) -> String {
+    
+    var defaultValue : String = "value"
+    
+    switch varNames[0] {         /// move to the loop below when it's made... perhaps
+    case "bool":
+        defaultValue = "false"
+        
+    case "int":
+        defaultValue = "0"
+        
+    default:
+        "ADD DEFAULT"
+    }
+    
+    var cStruct = "/** \n" +
+        " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(structName)\n" +
+        " * \n" +
+        " */ \n\n" +
+        
+        "struct \(structName) \n" +
+        "{ \n" +
+        "\tPROPERTY(\(varTypes[0]), \(varNames[0]))\n\n" +    // loop for multiple variables
+        
+        "#ifdef __cplusplus \n\n" +
+        
+        "\t/** Default constructor */ \n" +
+        "\t\(structName)() : \(varNames[0])(\(defaultValue))  {} \n\n" +
+        
+        "\t/** Copy Constructor */ \n" +
+        "\t\(structName)(const  \(structName) &other) : \n" +
+        "\t\t_\(varNames[0])(other._\(varNames[0]))   {} \n\n" +
+        
+        "\t/** Assignment Operator */ \n" +
+        "\t\(structName) &operator= (const \(structName) &other) { \n" +
+        "\t\t_\(varNames[0]) = other._\(varNames[0]); \n" +
+        "\t\treturn *this; \n" +
+        "\t} \n" +
+        "#endif \n\n" +
+        
+    "};\n"
+    "#endif //\(structName)_h \n"
+    
+    
+    return cStruct
 }
 
 
 
 func generateC(inputFileName: String, workingDirectory: String) -> Void {
     
+    // create C filename
     var fileNameParts = inputFileName.componentsSeparatedByString(".")
-    var structName = "wb_" + fileNameParts[0]  // just need the first part
-
-    println(structName)
-
+    
+    // just need the first part
+    var structName = "wb_" + fileNameParts[0]
     var cFilePath : String = workingDirectory + "/" + structName + ".h"
-
+    
+    println(structName)
+    
     // open a filestream for reading
     var fs : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
     
@@ -81,12 +188,12 @@ func generateC(inputFileName: String, workingDirectory: String) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    var text = "This is a test"
-   
+    var text = generateTopComment(structName) + generateCStruct(structName)
+    
     fputs( text, fs )
-
     
     closeFileStream(fs)
 }
+
 
 
