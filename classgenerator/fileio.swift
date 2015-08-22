@@ -171,6 +171,7 @@ func generateCStruct(structName: String) -> String {
 
 func generateC(inputFileName: String, workingDirectory: String) -> Void {
     
+    /*
     // create C filename
     var fileNameParts = inputFileName.componentsSeparatedByString(".")
     
@@ -179,7 +180,9 @@ func generateC(inputFileName: String, workingDirectory: String) -> Void {
     var cFilePath : String = workingDirectory + "/" + structName + ".h"
     
     println(structName)
-    
+    */    
+
+
     // open a filestream for reading
     var fs : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
     
