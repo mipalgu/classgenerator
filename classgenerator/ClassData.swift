@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
 
-import Foundation
+import Foundation   // capitalizedString and uppercaseString
 import Darwin
 
 class ClassData {
@@ -66,9 +66,8 @@ class ClassData {
         // get working directory  **** DO AUTOMATICALLY INCL LINUX ****
         self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         
-        var t = time(nil)    /// error check  ***************
-        var currentTime = ctime(&t)
-        self.creationDate = String.fromCString(currentTime)!
+        var t = time(nil)    /// error check and set default value ***************
+        self.creationDate = String.fromCString(ctime(&t))!
         
         self.year = 2015   /// TO DO  ***************
     }
