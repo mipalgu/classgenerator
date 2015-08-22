@@ -9,7 +9,7 @@
 
 class Filename {
     
-    var inputFilename: String     // filename including
+    var inputFilename: String     // user's filename including .txt
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
@@ -26,7 +26,7 @@ class Filename {
         let nameWithoutExtension = split(inputFilename) {$0 == "."}
         // for swift 2... split(inputFilename.characters){$0 == " "}.map{String($0)}
         
-        self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt
+        self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
         
         let words = split(nameWithoutExtension[0]) {$0 == "_"}
         

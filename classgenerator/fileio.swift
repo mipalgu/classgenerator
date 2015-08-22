@@ -7,7 +7,6 @@
 //
 
 import Darwin
-import Foundation   // for componentsSeparatedByString()
 
 let fileSize = 4096               /// find a way to get EOF to work so I dont need to do this
 
@@ -17,7 +16,7 @@ var varNames = [String]()
 
 func parseInput(inputText: String) -> Void {
     
-    var lines = inputText.componentsSeparatedByString("\n")      // can i use this Foundation method?
+    var lines = split(inputText) {$0 == "\n"}
     
     
     // check for case where the file had a return/s at the end or between lines
@@ -31,7 +30,7 @@ func parseInput(inputText: String) -> Void {
     
     for line in lines {
         
-        var variable = line.componentsSeparatedByString("\t")   // can i use this Foundation method?
+        var variable = split(line) {$0 == "\t"}
         
         varTypes.append(variable[0])               // these parallel arrays arent going to cut it
         varNames.append(variable[1])
@@ -124,7 +123,7 @@ func generateCStruct(structName: String) -> String {
     
     var defaultValue : String = "value"
     
-    switch varNames[0] {         /// move to the loop below when it's made... perhaps
+    switch varNames[0] {         /// move this to the loop below when it's made... perhaps
     case "bool":
         defaultValue = "false"
         
