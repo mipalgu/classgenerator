@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Darwin
 
 class ClassData {
     
@@ -62,13 +63,13 @@ class ClassData {
         
         println("user is: \(self.userName)")
         
-        // get working directory  **** DO AUTOMATICALLY  ****
+        // get working directory  **** DO AUTOMATICALLY INCL LINUX ****
         self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         
         var t = time(nil)    /// error check  ***************
         var currentTime = ctime(&t)
         self.creationDate = String.fromCString(currentTime)!
         
-        self.year = 2015
+        self.year = 2015   /// TO DO  ***************
     }
 }
