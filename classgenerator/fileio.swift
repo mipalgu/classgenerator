@@ -18,7 +18,6 @@ func parseInput(inputText: String) -> Void {
     
     var lines = split(inputText) {$0 == "\n"}
     
-    
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
     let numberOfLines = lines.count
@@ -121,45 +120,78 @@ func generateTopComment(structName: String) -> String {
 
 func generateCStruct(structName: String) -> String {
     
-    var defaultValue : String = "value"
     
-    switch varNames[0] {         /// move this to the loop below when it's made... perhaps
-    case "bool":
-        defaultValue = "false"
-        
-    case "int":
-        defaultValue = "0"
-        
-    default:
-        "ADD DEFAULT"
-    }
     
     var cStruct = "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(structName)\n" +
         " * \n" +
-        " */ \n\n" +
+        " */ \n" +
         
         "struct \(structName) \n" +
-        "{ \n" +
-        "\tPROPERTY(\(varTypes[0]), \(varNames[0]))\n\n" +    // loop for multiple variables
+        "{ \n"
+    
+    for i in 0...varTypes.count-1 {
         
-        "#ifdef __cplusplus \n\n" +
+        cStruct += "\t/** \(varNames[i]) COMMENT ON PROPERTY */ \n" +
+        "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
+    }
+        
+        cStruct += "#ifdef __cplusplus \n\n" +
         
         "\t/** Default constructor */ \n" +
-        "\t\(structName)() : \(varNames[0])(\(defaultValue))  {} \n\n" +
+         "\t\(structName)() : "
+            
+    for i in 0...varTypes.count-1 {
+        
+        var defaultValue : String = "value"
+        
+        switch varTypes[i] {
+        case "bool":
+            defaultValue = "false"
+            
+        case "int":                    /// turn this into a function that works for all int types
+            defaultValue = "0"
+            
+        default:
+            "ADD DEFAULT"
+        }
+        
+        cStruct += "_\(varNames[i])(\(defaultValue))"
+        
+        if i < varTypes.count-1 {
+            cStruct += ", "
+        }
+    }
+            
+        cStruct += "  {} \n\n" +
         
         "\t/** Copy Constructor */ \n" +
-        "\t\(structName)(const  \(structName) &other) : \n" +
-        "\t\t_\(varNames[0])(other._\(varNames[0]))   {} \n\n" +
+        "\t\(structName)(const  \(structName) &other) : \n"
+            
+    for i in 0...varTypes.count-1 {
+    
+        cStruct += "\t\t_\(varNames[i])(other._\(varNames[i]))"
+        
+        if i < varTypes.count-1 {
+            cStruct += ", \n"
+        }
+    }
+            
+        cStruct += "  {} \n\n" +
         
         "\t/** Assignment Operator */ \n" +
-        "\t\(structName) &operator= (const \(structName) &other) { \n" +
-        "\t\t_\(varNames[0]) = other._\(varNames[0]); \n" +
-        "\t\treturn *this; \n" +
+        "\t\(structName) &operator= (const \(structName) &other) { \n"
+            
+    for i in 0...varTypes.count-1 {
+        
+        cStruct += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
+    }
+    
+        cStruct += "\t\treturn *this; \n" +
         "\t} \n" +
         "#endif \n\n" +
         
-        "};\n"
+        "};\n" +
         "#endif //\(structName)_h \n"
     
     

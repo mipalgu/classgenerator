@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
 
+import Foundation
 
 class Filename {
     
@@ -42,7 +43,7 @@ class Filename {
             var wordToAdd = words[0]
             for word in words {
                 if count(camelCase) > 0 {
-                    wordToAdd = word.capitalizedString
+                    wordToAdd = word.capitalizedString     // don't use: FOUNDATION
                 }
                 camelCase += wordToAdd
             }
@@ -50,6 +51,6 @@ class Filename {
             self.camel = camelCase
         }
         
-        self.caps = nameWithoutExtension[0].uppercaseString
+        self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
     }
 }
