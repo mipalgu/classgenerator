@@ -169,30 +169,20 @@ func generateCStruct(structName: String) -> String {
 
 
 
-func generateC(inputFileName: String, workingDirectory: String) -> Void {
-    
-    /*
-    // create C filename
-    var fileNameParts = inputFileName.componentsSeparatedByString(".")
-    
-    // just need the first part
-    var structName = "wb_" + fileNameParts[0]
-    var cFilePath : String = workingDirectory + "/" + structName + ".h"
-    
-    println(structName)
-    */    
+func generateC(filename: Filename) -> Void {
 
-
+    var cFilePath = filename.workingDirectory + "/" + filename.wb + ".h"
+    
     // open a filestream for reading
     var fs : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
     
     if fs == nil {
         // file did not open
-        println("HERE: \(inputFileName) : No such file or directory\n")
+        println("\(filename.wb).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
     
-    var text = generateTopComment(structName) + generateCStruct(structName)
+    var text = generateTopComment(filename.wb) + generateCStruct(filename.wb)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead
     

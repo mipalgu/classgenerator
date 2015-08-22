@@ -10,17 +10,16 @@
 
 import Darwin
 
-var input = [String]()
-var inputFilePath : String!
+//var input = [String]()
 
 // for now, set command line arg manually
-var inputFileName = "mybutton.txt"
+var inputFile = "my_button.txt"
 
 
 //var cwd : UnsafeMutablePointer<Int8>
 //let workingDirectory = getcwd(&cwd, UInt(MAXNAMLEN))
 
-let workingDirectory = "/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
+//let workingDirectory = "/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
 
 //let fileMgr = NSFileManager.defaultManager()
 //let workingDirectory = fileMgr.currentDirectoryPath
@@ -46,13 +45,18 @@ inputFileName = workingDirectory + argument   // will need to test
 }
 */
 
+var filename = Filename(inputFilename: inputFile)
 
-inputFilePath = workingDirectory + inputFileName
 
-var inputText = readVariables(inputFilePath)
+println("wb: \(filename.wb)")
+println("camel: \(filename.camel)")
+println("caps: \(filename.caps)")
+
+
+var inputText = readVariables(filename.workingDirectory + inputFile)
 parseInput(inputText)
 
-generateC(inputFileName, workingDirectory)
+generateC(filename)
 
 
 

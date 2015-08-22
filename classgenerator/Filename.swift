@@ -20,7 +20,7 @@ class Filename {
         
         self.inputFilename = inputFilename
         
-        // get working directory
+        // get working directory  **** DO AUTOMATICALLY  ****
         self.workingDirectory = "/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         
         let nameWithoutExtension = split(inputFilename) {$0 == "."}
@@ -52,6 +52,4 @@ class Filename {
         
         self.caps = nameWithoutExtension[0].uppercaseString
     }
-    
-    
 }
