@@ -124,8 +124,8 @@ func generateTopComment(data: ClassData) -> String {
     var comment = "/** \n" +
         " *  /file \(data.wb).h \n" +
         " * \n" +
-        " *  Created by \(data.userName) in YEAR. \n" +    // generate NAME and YEAR
-        " *  Copyright (c) YEAR \(data.userName). \n" +     // generate NAME and YEAR
+        " *  Created by \(data.userName) on \(data.creationDate)" + 
+        " *  Copyright (c) \(data.year) \(data.userName) \n" +
         " *  All rights reserved. \n" +
         " */ \n\n" +
         

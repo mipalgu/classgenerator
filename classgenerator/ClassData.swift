@@ -16,13 +16,12 @@ class ClassData {
     var camel: String       // camel case, without underscores
     var caps: String        // upper case, including underscores
     var userName: String
+    var creationDate: String
+    var year: Int
     
     init(inputFilename: String) {
         
         self.inputFilename = inputFilename
-        
-        // get working directory  **** DO AUTOMATICALLY  ****
-        self.workingDirectory = "/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         
         let nameWithoutExtension = split(inputFilename) {$0 == "."}
         // for swift 2... split(inputFilename.characters){$0 == " "}.map{String($0)}
@@ -62,5 +61,14 @@ class ClassData {
         }
         
         println("user is: \(self.userName)")
+        
+        // get working directory  **** DO AUTOMATICALLY  ****
+        self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
+        
+        var t = time(nil)    /// error check  ***************
+        var currentTime = ctime(&t)
+        self.creationDate = String.fromCString(currentTime)!
+        
+        self.year = 2015
     }
 }
