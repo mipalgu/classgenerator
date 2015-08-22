@@ -38,33 +38,20 @@ class Filename {
         else {
             
             // more than one word, make camel case
+            var camelCase: String = ""
+            var wordToAdd = words[0]
+            for word in words {
+                if count(camelCase) > 0 {
+                    wordToAdd = word.capitalizedString
+                }
+                camelCase += wordToAdd
+            }
             
-            
+            self.camel = camelCase
         }
         
-        
-        
+        self.caps = nameWithoutExtension[0].uppercaseString
     }
-    
-    
-    func camelCase (name: String) -> String {
-        
-        // create wb filename
-        var fileNameParts = inputFileName.componentsSeparatedByString(".")
-        
-        // just need the first part
-        var structName = "wb_" + fileNameParts[0]
-        
-        println(structName)
-        return structName
-        
-    }
-    
-    
-    
-    // var cFilePath : String = workingDirectory + "/" + structName + ".h"
-    
-    
     
     
 }
