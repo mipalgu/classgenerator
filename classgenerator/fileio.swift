@@ -46,6 +46,25 @@ func parseInput(inputText: String) -> Void {
 
 
 
+func setDefault(varType: String) -> String {
+    
+    var defaultValue : String
+    
+    switch varType {
+        case "bool":
+            defaultValue = "false"
+            
+        case "int", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t":
+            defaultValue = "0"
+            
+        default:
+            defaultValue = "ADD DEFAULT"
+    }
+    
+    return defaultValue
+}
+
+
 
 func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
     
@@ -120,8 +139,6 @@ func generateTopComment(structName: String) -> String {
 
 func generateCStruct(structName: String) -> String {
     
-    
-    
     var cStruct = "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(structName)\n" +
         " * \n" +
@@ -129,6 +146,10 @@ func generateCStruct(structName: String) -> String {
         
         "struct \(structName) \n" +
         "{ \n"
+    
+    
+    /// ADD LICENSE INFO HERE
+    
     
     for i in 0...varTypes.count-1 {
         
@@ -143,18 +164,7 @@ func generateCStruct(structName: String) -> String {
             
     for i in 0...varTypes.count-1 {
         
-        var defaultValue : String = "value"
-        
-        switch varTypes[i] {
-        case "bool":
-            defaultValue = "false"
-            
-        case "int":                    /// turn this into a function that works for all int types
-            defaultValue = "0"
-            
-        default:
-            "ADD DEFAULT"
-        }
+        var defaultValue = setDefault(varTypes[i])
         
         cStruct += "_\(varNames[i])(\(defaultValue))"
         
@@ -167,7 +177,8 @@ func generateCStruct(structName: String) -> String {
         
         "\t/** Copy Constructor */ \n" +
         "\t\(structName)(const  \(structName) &other) : \n"
-            
+    
+    
     for i in 0...varTypes.count-1 {
     
         cStruct += "\t\t_\(varNames[i])(other._\(varNames[i]))"
@@ -181,7 +192,8 @@ func generateCStruct(structName: String) -> String {
         
         "\t/** Assignment Operator */ \n" +
         "\t\(structName) &operator= (const \(structName) &other) { \n"
-            
+    
+    
     for i in 0...varTypes.count-1 {
         
         cStruct += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
