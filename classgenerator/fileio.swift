@@ -75,6 +75,7 @@ func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
 }
 
 
+
 func readVariables(inputFileName: String) -> String {
     
     // open a filestream for reading
@@ -113,38 +114,40 @@ func readVariables(inputFileName: String) -> String {
     line.destroy()
     
     return variable! // variables
-    
 }
 
 
 
 
-func generateTopComment(structName: String) -> String {
+func generateTopComment(data: ClassData) -> String {
     
     var comment = "/** \n" +
-        " *  /file \(structName).h \n" +
+        " *  /file \(data.wb).h \n" +
         " * \n" +
-        " *  Created by YOUR NAME in YEAR. \n" +    // generate NAME and YEAR
-        " *  Copyright (c) YEAR YOUR NAME. \n" +     // generate NAME and YEAR
+        " *  Created by \(data.userName) in YEAR. \n" +    // generate NAME and YEAR
+        " *  Copyright (c) YEAR \(data.userName). \n" +     // generate NAME and YEAR
         " *  All rights reserved. \n" +
         " */ \n\n" +
         
-        "#ifndef \(structName)_h \n" +
-        "#define \(structName)_h \n\n" +
+        "#ifndef \(data.wb)_h \n" +
+        "#define \(data.wb)_h \n\n" +
         
         "#include <gu_util.h> \n\n\n"
     
     return comment
 }
 
-func generateCStruct(structName: String) -> String {
+
+
+
+func generateCStruct(data: ClassData) -> String {
     
     var cStruct = "/** \n" +
-        " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(structName)\n" +
+        " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
         " * \n" +
         " */ \n" +
         
-        "struct \(structName) \n" +
+        "struct \(data.wb) \n" +
         "{ \n"
     
     
@@ -160,7 +163,7 @@ func generateCStruct(structName: String) -> String {
         cStruct += "#ifdef __cplusplus \n\n" +
         
         "\t/** Default constructor */ \n" +
-         "\t\(structName)() : "
+         "\t\(data.wb)() : "
             
     for i in 0...varTypes.count-1 {
         
@@ -176,7 +179,7 @@ func generateCStruct(structName: String) -> String {
         cStruct += "  {} \n\n" +
         
         "\t/** Copy Constructor */ \n" +
-        "\t\(structName)(const  \(structName) &other) : \n"
+        "\t\(data.wb)(const  \(data.wb) &other) : \n"
     
     
     for i in 0...varTypes.count-1 {
@@ -191,7 +194,7 @@ func generateCStruct(structName: String) -> String {
         cStruct += "  {} \n\n" +
         
         "\t/** Assignment Operator */ \n" +
-        "\t\(structName) &operator= (const \(structName) &other) { \n"
+        "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
     
     
     for i in 0...varTypes.count-1 {
@@ -204,7 +207,7 @@ func generateCStruct(structName: String) -> String {
         "#endif \n\n" +
         
         "};\n" +
-        "#endif //\(structName)_h \n"
+        "#endif //\(data.wb)_h \n"
     
     
     return cStruct
@@ -212,20 +215,20 @@ func generateCStruct(structName: String) -> String {
 
 
 
-func generateC(filename: Filename) -> Void {
+func generateC(data: ClassData) -> Void {
 
-    var cFilePath = filename.workingDirectory + "/" + filename.wb + ".h"
+    var cFilePath = data.workingDirectory + "/" + data.wb + ".h"
     
     // open a filestream for reading
     var fs : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
     
     if fs == nil {
         // file did not open
-        println("\(filename.wb).h : Could not create file\n")
+        println("\(data.wb).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
     
-    var text = generateTopComment(filename.wb) + generateCStruct(filename.wb)
+    var text = generateTopComment(data) + generateCStruct(data)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead
     

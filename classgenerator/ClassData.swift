@@ -1,5 +1,5 @@
 //
-//  Filename.swift
+//  ClassData.swift
 //  classgenerator
 //
 //  Created by Mick Hawkins on 22/08/2015.
@@ -8,14 +8,14 @@
 
 import Foundation
 
-class Filename {
+class ClassData {
     
     var inputFilename: String     // user's filename including .txt
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
     var caps: String        // upper case, including underscores
-    
+    var userName: String
     
     init(inputFilename: String) {
         
@@ -52,5 +52,15 @@ class Filename {
         }
         
         self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
+        
+        let pw = getpwuid(getuid())
+        if pw != nil {
+            self.userName = String.fromCString(pw.memory.pw_name)!
+        }
+        else {
+            self.userName = "YOUR NAME"
+        }
+        
+        println("user is: \(self.userName)")
     }
 }

@@ -45,18 +45,18 @@ inputFileName = workingDirectory + argument   // will need to test
 }
 */
 
-var filename = Filename(inputFilename: inputFile)
+var data = ClassData(inputFilename: inputFile)
 
 
-println("wb: \(filename.wb)")
-println("camel: \(filename.camel)")
-println("caps: \(filename.caps)")
+println("wb: \(data.wb)")
+println("camel: \(data.camel)")
+println("caps: \(data.caps)")
 
 
-var inputText = readVariables(filename.workingDirectory + inputFile)
+var inputText = readVariables(data.workingDirectory + inputFile)
 parseInput(inputText)
 
-generateC(filename)
+generateC(data)
 
 
 
