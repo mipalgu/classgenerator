@@ -1,9 +1,9 @@
 /** 
- *  file wb_my_button.h 
+ * file wb_my_button.h 
  * 
- *  Created by mick on Sun Aug 23 14:20:26 2015
- *  Copyright (c) 2015 mick 
- *  All rights reserved. 
+ * Created by mick on Sun Aug 23 14:55:15 2015
+ * Copyright (c) 2015 mick 
+ * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 

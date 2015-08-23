@@ -29,7 +29,7 @@ func getCreatorDetailsCommentCPP(data: ClassData) -> String {
         " * Created by \(data.userName) on \(data.creationDate)" +
         " * Copyright (c) \(data.year) \(data.userName) \n" +
         " * All rights reserved. \n" +
-    " * \n"
+        " * \n"
     
     return comment
 }

@@ -205,17 +205,16 @@ func generateCPPStruct(data: ClassData) -> String {
         "#include <gu_util.h> \n" +
         "#include \"\(data.wb).h\" \n\n" +
         
+        "namespace guWhiteboard \n" +
+        "{ \n" +
         
+            "\t/** \n" +
+            "\t*  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.camel)\n" +
+            "\t* \n" +
+            "\t*/ \n" +
         
-        
-        
-        "/** \n" +
-        " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
-        " * \n" +
-        " */ \n" +
-        
-        "struct \(data.wb) \n" +
-    "{ \n"
+            "\tclass \(data.camel): public \(data.wb) \n" +
+            "\t{ \n"
 
 /// REPLACE with cpp file contents
 /*
