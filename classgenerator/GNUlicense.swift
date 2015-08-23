@@ -8,14 +8,27 @@
 
 
 
-func generateCreatorDetailsComment(data: ClassData) -> String {
+func getCreatorDetailsCommentWB(data: ClassData) -> String {
     
     var comment = "/** \n" +
-        " *  file \(data.wb).h \n" +
+        " * file \(data.wb).h \n" +
         " * \n" +
-        " *  Created by \(data.userName) on \(data.creationDate)" +
-        " *  Copyright (c) \(data.year) \(data.userName) \n" +
-        " *  All rights reserved. \n" +
+        " * Created by \(data.userName) on \(data.creationDate)" +
+        " * Copyright (c) \(data.year) \(data.userName) \n" +
+        " * All rights reserved. \n" +
+        " * \n"
+    
+    return comment
+}
+
+func getCreatorDetailsCommentCPP(data: ClassData) -> String {
+    
+    var comment = "/** \n" +
+        " * file \(data.camel).h \n" +
+        " * \n" +
+        " * Created by \(data.userName) on \(data.creationDate)" +
+        " * Copyright (c) \(data.year) \(data.userName) \n" +
+        " * All rights reserved. \n" +
     " * \n"
     
     return comment

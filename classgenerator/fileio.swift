@@ -45,7 +45,6 @@ func parseInput(inputText: String) -> Void {
 }
 
 
-
 func setDefault(varType: String) -> String {
     
     var defaultValue : String
@@ -189,18 +188,106 @@ func generateCStruct(data: ClassData) -> String {
         "};\n" +
         "#endif //\(data.wb)_h \n"
     
-    
     return cStruct
 }
 
 
+func generateCPPStruct(data: ClassData) -> String {
+    
+    var cppStruct = "#ifndef \(data.camel)_DEFINED \n" +
+        
+        "#define \(data.camel)_DEFINED \n\n" +
+        
+        "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+        "#include <cstdlib> \n" +
+        "#include <sstream> \n" +
+        "#endif \n" +
+        "#include <gu_util.h> \n" +
+        "#include \"\(data.wb).h\" \n\n" +
+        
+        
+        
+        
+        
+        "/** \n" +
+        " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
+        " * \n" +
+        " */ \n" +
+        
+        "struct \(data.wb) \n" +
+    "{ \n"
 
-func generateC(data: ClassData) -> Void {
+/// REPLACE with cpp file contents
+/*
+    for i in 0...varTypes.count-1 {
+        
+        cppStruct += "\t/** \(varNames[i]) COMMENT ON PROPERTY */ \n" +
+        "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
+    }
+    
+    cppStruct += "#ifdef __cplusplus \n\n" +
+        
+        "\t/** Default constructor */ \n" +
+    "\t\(data.wb)() : "
+    
+    for i in 0...varTypes.count-1 {
+        
+        var defaultValue = setDefault(varTypes[i])
+        
+        cppStruct += "_\(varNames[i])(\(defaultValue))"
+        
+        if i < varTypes.count-1 {
+            cppStruct += ", "
+        }
+    }
+    
+    cppStruct += "  {} \n\n" +
+        
+        "\t/** Copy Constructor */ \n" +
+    "\t\(data.wb)(const  \(data.wb) &other) : \n"
+    
+    
+    for i in 0...varTypes.count-1 {
+        
+        cppStruct += "\t\t_\(varNames[i])(other._\(varNames[i]))"
+        
+        if i < varTypes.count-1 {
+            cppStruct += ", \n"
+        }
+    }
+    
+    cppStruct += "  {} \n\n" +
+        
+        "\t/** Assignment Operator */ \n" +
+    "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
+    
+    
+    for i in 0...varTypes.count-1 {
+        
+        cppStruct += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
+    }
+    
+    cppStruct += "\t\treturn *this; \n" +
+        "\t} \n" +
+        "#endif \n\n" +
+        
+        "};\n" +
+    "#endif //\(data.wb)_h \n"
+*/
 
-    var cFilePath = data.workingDirectory + "/" + data.wb + ".h"
+    return cppStruct
+}
+
+
+
+
+
+func generateWBFile(data: ClassData) -> Void {
+
+    var filePath = data.workingDirectory + "/" + data.wb + ".h"
     
     // open a filestream for reading
-    var fs : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
+    var fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
     
     if fs == nil {
         // file did not open
@@ -208,12 +295,33 @@ func generateC(data: ClassData) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    var text = generateCreatorDetailsComment(data) + getLicense(data.userName) + generateCStruct(data)
+    var text = getCreatorDetailsCommentWB(data) + getLicense(data.userName) + generateCStruct(data)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
     
     closeFileStream(fs)
 }
 
+
+
+func generateCPPFile(data: ClassData) -> Void {
+    
+    var filePath = data.workingDirectory + "/" + data.camel + ".h"
+    
+    // open a filestream for reading
+    var fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
+    
+    if fs == nil {
+        // file did not open
+        println("\(data.camel).h : Could not create file\n")
+        exit(EXIT_FAILURE)
+    }
+    
+    var text = getCreatorDetailsCommentCPP(data) + getLicense(data.userName) + generateCPPStruct(data)
+    
+    fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
+    
+    closeFileStream(fs)
+}
 
 
