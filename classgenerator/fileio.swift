@@ -119,40 +119,20 @@ func readVariables(inputFileName: String) -> String {
 
 
 
-func generateTopComment(data: ClassData) -> String {
-    
-    var comment = "/** \n" +
-        " *  /file \(data.wb).h \n" +
-        " * \n" +
-        " *  Created by \(data.userName) on \(data.creationDate)" + 
-        " *  Copyright (c) \(data.year) \(data.userName) \n" +
-        " *  All rights reserved. \n" +
-        " */ \n\n" +
-        
-        "#ifndef \(data.wb)_h \n" +
-        "#define \(data.wb)_h \n\n" +
-        
-        "#include <gu_util.h> \n\n\n"
-    
-    return comment
-}
-
-
-
-
 func generateCStruct(data: ClassData) -> String {
     
-    var cStruct = "/** \n" +
+    var cStruct = "#ifndef \(data.wb)_h \n" +
+        
+        "#define \(data.wb)_h \n\n" +
+        "#include <gu_util.h> \n\n\n" +
+    
+        "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
         " * \n" +
         " */ \n" +
         
         "struct \(data.wb) \n" +
         "{ \n"
-    
-    
-    /// ADD LICENSE INFO HERE
-    
     
     for i in 0...varTypes.count-1 {
         
@@ -228,9 +208,9 @@ func generateC(data: ClassData) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    var text = generateTopComment(data) + generateCStruct(data)
+    var text = generateCreatorDetailsComment(data) + getLicense(data.userName) + generateCStruct(data)
     
-    fputs( text, fs )    /// perhaps use multiple fputs statements instead
+    fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
     
     closeFileStream(fs)
 }

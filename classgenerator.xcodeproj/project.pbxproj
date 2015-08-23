@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00021F601B897D1100F7F681 /* GNUlicense.swift */; };
 		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
 		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
 		00D9678C1B886CAE00D47595 /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D9678B1B886CAE00D47595 /* ClassData.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
 		00BCC1011B7EDA17002C72B7 /* classgenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = classgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BCC1041B7EDA17002C72B7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		00BCC10E1B7EFE28002C72B7 /* fileio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = fileio.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 			children = (
 				00BCC1041B7EDA17002C72B7 /* main.swift */,
 				00BCC10E1B7EFE28002C72B7 /* fileio.swift */,
+				00021F601B897D1100F7F681 /* GNUlicense.swift */,
 				00D9678B1B886CAE00D47595 /* ClassData.swift */,
 			);
 			path = classgenerator;
@@ -124,6 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */,
 				00BCC1051B7EDA17002C72B7 /* main.swift in Sources */,
 				00D9678C1B886CAE00D47595 /* ClassData.swift in Sources */,
 				00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */,
