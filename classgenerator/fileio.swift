@@ -144,7 +144,7 @@ func generateCStruct(data: ClassData) -> String {
     }
     
     
-    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
         
         "\t/** convert to a string */  \n" +
         "\t\tchar descString[0] = '\\0'; \n" +
@@ -193,6 +193,8 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "\t\treturn descString; \n" +
         "\t} \n\n" +
         
+        
+        
         "\t/** convert to a string */  \n" +
         "\tchar* to_string() {\n" +
         "\t\tchar*  toString = \"\"; \n" +
@@ -204,7 +206,7 @@ func generateCStruct(data: ClassData) -> String {
         "\tvoid from_string(char* str) {\n" +
         "\t\t  //// TO DO \n" +
         "\t} \n" +
-        "#endif WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
+        "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
         
         
     var cStruct2 = "#ifdef __cplusplus \n\n" +

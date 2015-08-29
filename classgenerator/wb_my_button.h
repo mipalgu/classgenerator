@@ -1,9 +1,11 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Sat Aug 29 17:52:40 2015
+ * Created by mick on Sat Aug 29 17:57:18 2015
  * Copyright (c) 2015 mick 
- * All rights reserved. 
+ * 
+ * This file was generated using my_button.txt 
+ * 
  * 
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
@@ -83,6 +85,7 @@ struct wb_my_button
 	PROPERTY(int, another_number)
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
+
 	/** convert to a string */  
 		char descString[0] = '\0'; 
 		char buffer[20]; 
@@ -114,7 +117,7 @@ struct wb_my_button
 	void from_string(char* str) {
 		  //// TO DO 
 	} 
-#endif WHITEBOARD_POSTER_STRING_CONVERSION 
+#endif // WHITEBOARD_POSTER_STRING_CONVERSION 
 
 #ifdef __cplusplus 
 
