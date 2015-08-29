@@ -1,7 +1,7 @@
 /** 
  * file myButton.h 
  * 
- * Created by mick on Sat Aug 29 18:07:37 2015
+ * Created by mick on Sat Aug 29 18:16:14 2015
  * Copyright (c) 2015 mick 
  * All rights reserved. 
  * 
@@ -75,5 +75,5 @@ namespace guWhiteboard
 	*  ADD YOUR COMMENT DESCRIBING THE CLASS myButton
 	* 
 	*/ 
-	class myButton: public wb_my_button 
-	{ 
+	class myButton: public wb_my_button {} 
+} 

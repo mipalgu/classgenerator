@@ -173,7 +173,7 @@ func generateCStruct(data: ClassData) -> String {
                 cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
                 "\t\tstrcat(descString, buffer); \n\n"
         }
-        // if the variabe is a bool
+        // if the variable is a bool
         else if varTypes[i] == "bool" {
             
             if first {
@@ -284,11 +284,11 @@ func generateCPPStruct(data: ClassData) -> String {
             "\t* \n" +
             "\t*/ \n" +
         
-            "\tclass \(data.camel): public \(data.wb) \n" +
-            "\t{ \n"
+            "\tclass \(data.camel): public \(data.wb) {} \n" +
 
-/// REPLACE with cpp file contents
+/// ADD with cpp file contents
 
+        "} \n"
 
     return cppStruct
 }
