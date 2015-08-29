@@ -1,5 +1,5 @@
 /** 
- * file wb_my_button.h 
+ * file myButton.h 
  * 
  * Created by mick on Sat Aug 29 16:15:18 2015
  * Copyright (c) 2015 mick 
@@ -56,64 +56,21 @@
  */ 
 
 
-#ifndef wb_my_button_h 
-#define wb_my_button_h 
+#ifndef myButton_DEFINED 
+#define myButton_DEFINED 
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
-
-#include <gu_util.h> 
-
-
-/** 
- *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button
- * 
- */ 
-struct wb_my_button 
-{ 
-	/** is_pressed COMMENT ON PROPERTY */ 
-	PROPERTY(bool, is_pressed)
-
-	/** a_number COMMENT ON PROPERTY */ 
-	PROPERTY(int, a_number)
-
-#ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
-	/** convert to a string */  
-	char* description() { 
-		char*  descString = ""; 
-		  //// TO DO 
-		return descString 
-	} 
-
-	/** convert to a string */  
-	char* to_string() {
-		char*  toString = ""; 
-		  //// TO DO 
-		return toString 
-	} 
-
-	/** convert from a string */  
-	void from_string(char* str) {
-		  //// TO DO 
-	} 
-#endif WHITEBOARD_POSTER_STRING_CONVERSION 
-
-#ifdef __cplusplus 
-
-	/** Default constructor */ 
-	wb_my_button() : _is_pressed(false), _a_number(0)  {} 
-
-	/** Copy Constructor */ 
-	wb_my_button(const  wb_my_button &other) : 
-		_is_pressed(other._is_pressed), 
-		_a_number(other._a_number)  {} 
-
-	/** Assignment Operator */ 
-	wb_my_button &operator= (const wb_my_button &other) { 
-		_is_pressed = other._is_pressed; 
-		_a_number = other._a_number; 
-		return *this; 
-	} 
+#include <cstdlib> 
+#include <sstream> 
 #endif 
+#include <gu_util.h> 
+#include "wb_my_button.h" 
 
-};
-#endif //wb_my_button_h 
+namespace guWhiteboard 
+{ 
+	/** 
+	*  ADD YOUR COMMENT DESCRIBING THE CLASS myButton
+	* 
+	*/ 
+	class myButton: public wb_my_button 
+	{ 

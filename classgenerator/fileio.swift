@@ -120,9 +120,10 @@ func readVariables(inputFileName: String) -> String {
 
 func generateCStruct(data: ClassData) -> String {
     
-    var cStruct = "#ifndef \(data.wb)_h \n" +
+    var cStruct1 = "#ifndef \(data.wb)_h \n" +
         
         "#define \(data.wb)_h \n\n" +
+        "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
         "#include <gu_util.h> \n\n\n" +
     
         "/** \n" +
@@ -135,27 +136,51 @@ func generateCStruct(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
         
-        cStruct += "\t/** \(varNames[i]) COMMENT ON PROPERTY */ \n" +
+        cStruct1 += "\t/** \(varNames[i]) COMMENT ON PROPERTY */ \n" +
         "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
     }
+    
+    
+    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         
-        cStruct += "#ifdef __cplusplus \n\n" +
+        "\t/** convert to a string */  \n" +
+        "\tchar* description() { \n" +
+        "\t\tchar*  descString = \"\"; \n" +
+        "\t\t  //// TO DO \n" +
+        "\t\treturn descString \n" +
+        "\t} \n\n" +
         
-        "\t/** Default constructor */ \n" +
-         "\t\(data.wb)() : "
+        "\t/** convert to a string */  \n" +
+        "\tchar* to_string() {\n" +
+        "\t\tchar*  toString = \"\"; \n" +
+        "\t\t  //// TO DO \n" +
+        "\t\treturn toString \n" +
+        "\t} \n\n" +
+        
+        "\t/** convert from a string */  \n" +
+        "\tvoid from_string(char* str) {\n" +
+        "\t\t  //// TO DO \n" +
+        "\t} \n" +
+        "#endif WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
+        
+        
+    var cStruct2 = "#ifdef __cplusplus \n\n" +
+    
+    "\t/** Default constructor */ \n" +
+     "\t\(data.wb)() : "
             
     for i in 0...varTypes.count-1 {
         
         var defaultValue = setDefault(varTypes[i])
         
-        cStruct += "_\(varNames[i])(\(defaultValue))"
+        cStruct2 += "_\(varNames[i])(\(defaultValue))"
         
         if i < varTypes.count-1 {
-            cStruct += ", "
+            cStruct2 += ", "
         }
     }
             
-        cStruct += "  {} \n\n" +
+        cStruct2 += "  {} \n\n" +
         
         "\t/** Copy Constructor */ \n" +
         "\t\(data.wb)(const  \(data.wb) &other) : \n"
@@ -163,14 +188,14 @@ func generateCStruct(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
     
-        cStruct += "\t\t_\(varNames[i])(other._\(varNames[i]))"
+        cStruct2 += "\t\t_\(varNames[i])(other._\(varNames[i]))"
         
         if i < varTypes.count-1 {
-            cStruct += ", \n"
+            cStruct2 += ", \n"
         }
     }
             
-        cStruct += "  {} \n\n" +
+        cStruct2 += "  {} \n\n" +
         
         "\t/** Assignment Operator */ \n" +
         "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
@@ -178,17 +203,17 @@ func generateCStruct(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
         
-        cStruct += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
+        cStruct2 += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
     }
     
-        cStruct += "\t\treturn *this; \n" +
+        cStruct2 += "\t\treturn *this; \n" +
         "\t} \n" +
         "#endif \n\n" +
         
         "};\n" +
         "#endif //\(data.wb)_h \n"
     
-    return cStruct
+    return cStruct1 + cStruct2
 }
 
 
@@ -217,62 +242,7 @@ func generateCPPStruct(data: ClassData) -> String {
             "\t{ \n"
 
 /// REPLACE with cpp file contents
-/*
-    for i in 0...varTypes.count-1 {
-        
-        cppStruct += "\t/** \(varNames[i]) COMMENT ON PROPERTY */ \n" +
-        "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
-    }
-    
-    cppStruct += "#ifdef __cplusplus \n\n" +
-        
-        "\t/** Default constructor */ \n" +
-    "\t\(data.wb)() : "
-    
-    for i in 0...varTypes.count-1 {
-        
-        var defaultValue = setDefault(varTypes[i])
-        
-        cppStruct += "_\(varNames[i])(\(defaultValue))"
-        
-        if i < varTypes.count-1 {
-            cppStruct += ", "
-        }
-    }
-    
-    cppStruct += "  {} \n\n" +
-        
-        "\t/** Copy Constructor */ \n" +
-    "\t\(data.wb)(const  \(data.wb) &other) : \n"
-    
-    
-    for i in 0...varTypes.count-1 {
-        
-        cppStruct += "\t\t_\(varNames[i])(other._\(varNames[i]))"
-        
-        if i < varTypes.count-1 {
-            cppStruct += ", \n"
-        }
-    }
-    
-    cppStruct += "  {} \n\n" +
-        
-        "\t/** Assignment Operator */ \n" +
-    "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
-    
-    
-    for i in 0...varTypes.count-1 {
-        
-        cppStruct += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
-    }
-    
-    cppStruct += "\t\treturn *this; \n" +
-        "\t} \n" +
-        "#endif \n\n" +
-        
-        "};\n" +
-    "#endif //\(data.wb)_h \n"
-*/
+
 
     return cppStruct
 }
