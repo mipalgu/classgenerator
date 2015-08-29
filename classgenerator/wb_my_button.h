@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Sat Aug 29 16:15:18 2015
+ * Created by mick on Sat Aug 29 17:35:24 2015
  * Copyright (c) 2015 mick 
  * All rights reserved. 
  * 
@@ -62,6 +62,9 @@
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
 #include <gu_util.h> 
+#include <stdio.h> 
+#include <string.h> 
+#include <stdlib.h> 
 
 
 /** 
@@ -76,19 +79,32 @@ struct wb_my_button
 	/** a_number COMMENT ON PROPERTY */ 
 	PROPERTY(int, a_number)
 
+	/** another_number COMMENT ON PROPERTY */ 
+	PROPERTY(int, another_number)
+
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 	/** convert to a string */  
 	char* description() { 
-		char*  descString = ""; 
-		  //// TO DO 
-		return descString 
+
+		char char descString[0] = '\0'; 
+		char buffer[20]; 
+
+		itoa(a_number,buffer,10); 
+		strcat(descString, buffer); 
+
+		strcat( descString, ',' ); 
+
+		itoa(another_number,buffer,10); 
+		strcat(descString, buffer); 
+
+		return descString; 
 	} 
 
 	/** convert to a string */  
 	char* to_string() {
 		char*  toString = ""; 
 		  //// TO DO 
-		return toString 
+		return toString; 
 	} 
 
 	/** convert from a string */  
@@ -100,17 +116,19 @@ struct wb_my_button
 #ifdef __cplusplus 
 
 	/** Default constructor */ 
-	wb_my_button() : _is_pressed(false), _a_number(0)  {} 
+	wb_my_button() : _is_pressed(false), _a_number(0), _another_number(0)  {} 
 
 	/** Copy Constructor */ 
 	wb_my_button(const  wb_my_button &other) : 
 		_is_pressed(other._is_pressed), 
-		_a_number(other._a_number)  {} 
+		_a_number(other._a_number), 
+		_another_number(other._another_number)  {} 
 
 	/** Assignment Operator */ 
 	wb_my_button &operator= (const wb_my_button &other) { 
 		_is_pressed = other._is_pressed; 
 		_a_number = other._a_number; 
+		_another_number = other._another_number; 
 		return *this; 
 	} 
 #endif 

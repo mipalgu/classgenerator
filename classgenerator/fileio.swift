@@ -53,7 +53,7 @@ func setDefault(varType: String) -> String {
         case "bool":
             defaultValue = "false"
             
-        case "int", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t":
+        case "int", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t":
             defaultValue = "0"
             
         default:
@@ -124,7 +124,10 @@ func generateCStruct(data: ClassData) -> String {
         
         "#define \(data.wb)_h \n\n" +
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
-        "#include <gu_util.h> \n\n\n" +
+        "#include <gu_util.h> \n" +
+        "#include <stdio.h> \n" +
+        "#include <string.h> \n" +
+        "#include <stdlib.h> \n\n\n" +
     
         "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
@@ -144,17 +147,44 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         
         "\t/** convert to a string */  \n" +
-        "\tchar* description() { \n" +
-        "\t\tchar*  descString = \"\"; \n" +
-        "\t\t  //// TO DO \n" +
-        "\t\treturn descString \n" +
+        "\tchar* description() { \n\n" +
+        "\t\tchar char descString[0] = '\\0'; \n" +
+        "\t\tchar buffer[20]; \n"
+
+    var first = true
+        
+    for i in 0...varTypes.count-1 {
+        
+        // if the variabe is an integer type
+        if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
+            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
+            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
+            
+                if first {
+                    
+                    cStruct1 += "\n"
+                    first = false
+                }
+                else {
+
+                    cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
+                }
+            
+                
+                cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
+                "\t\tstrcat(descString, buffer); \n\n"
+        }
+        
+    }
+
+    cStruct1 += "\t\treturn descString; \n" +
         "\t} \n\n" +
         
         "\t/** convert to a string */  \n" +
         "\tchar* to_string() {\n" +
         "\t\tchar*  toString = \"\"; \n" +
         "\t\t  //// TO DO \n" +
-        "\t\treturn toString \n" +
+        "\t\treturn toString; \n" +
         "\t} \n\n" +
         
         "\t/** convert from a string */  \n" +
@@ -180,10 +210,10 @@ func generateCStruct(data: ClassData) -> String {
         }
     }
             
-        cStruct2 += "  {} \n\n" +
-        
-        "\t/** Copy Constructor */ \n" +
-        "\t\(data.wb)(const  \(data.wb) &other) : \n"
+    cStruct2 += "  {} \n\n" +
+    
+    "\t/** Copy Constructor */ \n" +
+    "\t\(data.wb)(const  \(data.wb) &other) : \n"
     
     
     for i in 0...varTypes.count-1 {
@@ -195,23 +225,23 @@ func generateCStruct(data: ClassData) -> String {
         }
     }
             
-        cStruct2 += "  {} \n\n" +
-        
-        "\t/** Assignment Operator */ \n" +
-        "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
+    cStruct2 += "  {} \n\n" +
     
+    "\t/** Assignment Operator */ \n" +
+    "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
+
     
     for i in 0...varTypes.count-1 {
         
         cStruct2 += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
     }
     
-        cStruct2 += "\t\treturn *this; \n" +
-        "\t} \n" +
-        "#endif \n\n" +
-        
-        "};\n" +
-        "#endif //\(data.wb)_h \n"
+    cStruct2 += "\t\treturn *this; \n" +
+    "\t} \n" +
+    "#endif \n\n" +
+    
+    "};\n" +
+    "#endif //\(data.wb)_h \n"
     
     return cStruct1 + cStruct2
 }
