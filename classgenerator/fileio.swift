@@ -147,8 +147,7 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         
         "\t/** convert to a string */  \n" +
-        "\tchar* description() { \n\n" +
-        "\t\tchar char descString[0] = '\\0'; \n" +
+        "\t\tchar descString[0] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
 
     var first = true
@@ -169,12 +168,26 @@ func generateCStruct(data: ClassData) -> String {
 
                     cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
                 }
-            
                 
                 cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
                 "\t\tstrcat(descString, buffer); \n\n"
         }
-        
+        // if the variabe is a bool
+        else if varTypes[i] == "bool" {
+            
+            if first {
+                
+                cStruct1 += "\n"
+                first = false
+            }
+            else {
+                
+                cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
+            }
+            
+            cStruct1 += "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
+            "\t\tstrcat( descString, \(varNames[i])String ); \n\n"
+        }
     }
 
     cStruct1 += "\t\treturn descString; \n" +

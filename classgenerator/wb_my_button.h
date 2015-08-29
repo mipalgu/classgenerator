@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Sat Aug 29 17:35:24 2015
+ * Created by mick on Sat Aug 29 17:52:40 2015
  * Copyright (c) 2015 mick 
  * All rights reserved. 
  * 
@@ -84,10 +84,13 @@ struct wb_my_button
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 	/** convert to a string */  
-	char* description() { 
-
-		char char descString[0] = '\0'; 
+		char descString[0] = '\0'; 
 		char buffer[20]; 
+
+		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
+		strcat( descString, is_pressedString ); 
+
+		strcat( descString, ',' ); 
 
 		itoa(a_number,buffer,10); 
 		strcat(descString, buffer); 
