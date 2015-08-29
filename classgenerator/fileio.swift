@@ -147,6 +147,7 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
         
         "\t/** convert to a string */  \n" +
+        "\tchar* description() {\n" +
         "\t\tchar descString[0] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
 

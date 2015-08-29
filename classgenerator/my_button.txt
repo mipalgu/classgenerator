@@ -1,3 +1,3 @@
 bool	is_pressed
-int	a_number
-int	another_number
+int16_t	a_number
+uint32_t	another_number

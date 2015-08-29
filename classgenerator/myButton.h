@@ -1,9 +1,12 @@
 /** 
  * file myButton.h 
  * 
- * Created by mick on Sat Aug 29 17:57:18 2015
+ * Created by mick on Sat Aug 29 18:07:37 2015
  * Copyright (c) 2015 mick 
  * All rights reserved. 
+ * 
+ * This file was generated from my_button.txt 
+ * 
  * 
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 

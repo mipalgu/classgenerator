@@ -1,10 +1,10 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Sat Aug 29 17:57:18 2015
+ * Created by mick on Sat Aug 29 18:07:37 2015
  * Copyright (c) 2015 mick 
  * 
- * This file was generated using my_button.txt 
+ * This file was generated from my_button.txt 
  * 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -79,14 +79,15 @@ struct wb_my_button
 	PROPERTY(bool, is_pressed)
 
 	/** a_number COMMENT ON PROPERTY */ 
-	PROPERTY(int, a_number)
+	PROPERTY(int16_t, a_number)
 
 	/** another_number COMMENT ON PROPERTY */ 
-	PROPERTY(int, another_number)
+	PROPERTY(uint32_t, another_number)
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
 	/** convert to a string */  
+	char* description() {
 		char descString[0] = '\0'; 
 		char buffer[20]; 
 
