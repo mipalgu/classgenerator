@@ -42,9 +42,9 @@ for argument in input {
 
 var data = ClassData(inputFilename: inputFile)
 
-println("wb: \(data.wb)")
-println("camel: \(data.camel)")
-println("caps: \(data.caps)")
+print("wb: \(data.wb)")
+print("camel: \(data.camel)")
+print("caps: \(data.caps)")
 
 var inputText = readVariables(data.workingDirectory + inputFile)
 parseInput(inputText)

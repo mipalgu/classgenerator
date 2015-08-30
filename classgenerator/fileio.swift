@@ -16,7 +16,7 @@ var varNames = [String]()
 
 func parseInput(inputText: String) -> Void {
     
-    var lines = split(inputText) {$0 == "\n"}
+    var lines = inputText.characters.split {$0 == "\n"}.map { String($0) }
     
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
@@ -29,14 +29,14 @@ func parseInput(inputText: String) -> Void {
     
     for line in lines {
         
-        var variable = split(line) {$0 == "\t"}
+        var variable = line.characters.split {$0 == "\t"}.map { String($0) }
         
         varTypes.append(variable[0])               // these parallel arrays arent going to cut it
         varNames.append(variable[1])
     }
     
     for var i = 0; i < varTypes.count; i++ {
-        println( "\(varNames[i]) is a \(varTypes[i])")
+        print( "\(varNames[i]) is a \(varTypes[i])")
     }
     
     //   var username = NSUserName()!
@@ -68,7 +68,7 @@ func setDefault(varType: String) -> String {
 func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
     
     if (fclose(fileStream) != 0) {
-        println("Unable to close file\n")
+        print("Unable to close file\n")
         exit(EXIT_FAILURE)
     }
 }
@@ -78,18 +78,18 @@ func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
 func readVariables(inputFileName: String) -> String {
     
     // open a filestream for reading
-    var fs : UnsafeMutablePointer<FILE> = fopen( inputFileName, "r" )
+    let fs : UnsafeMutablePointer<FILE> = fopen( inputFileName, "r" )
     
     if fs == nil {
         // file did not open
-        println("HERE: \(inputFileName) : No such file or directory\n")
+        print("HERE: \(inputFileName) : No such file or directory\n")
         exit(EXIT_FAILURE)
     }
     
     // read from the opened file
     // then close the stream
     
-    var line = UnsafeMutablePointer<Int8>.alloc(fileSize)  /// ***** size of file as const?
+    let line = UnsafeMutablePointer<Int8>.alloc(fileSize)  /// ***** size of file as const?
     var variables = [String]()
     
     
@@ -99,7 +99,7 @@ func readVariables(inputFileName: String) -> String {
     
     if (ferror(fs) != 0) {
         
-        println("Unable to read");
+        print("Unable to read");
         exit(EXIT_FAILURE);
     }
     
@@ -217,7 +217,7 @@ func generateCStruct(data: ClassData) -> String {
             
     for i in 0...varTypes.count-1 {
         
-        var defaultValue = setDefault(varTypes[i])
+        let defaultValue = setDefault(varTypes[i])
         
         cStruct2 += "_\(varNames[i])(\(defaultValue))"
         
@@ -265,7 +265,7 @@ func generateCStruct(data: ClassData) -> String {
 
 func generateCPPStruct(data: ClassData) -> String {
     
-    var cppStruct = "#ifndef \(data.camel)_DEFINED \n" +
+    let cppStruct = "#ifndef \(data.camel)_DEFINED \n" +
         
         "#define \(data.camel)_DEFINED \n\n" +
         
@@ -299,18 +299,18 @@ func generateCPPStruct(data: ClassData) -> String {
 
 func generateWBFile(data: ClassData) -> Void {
 
-    var filePath = data.workingDirectory + "/" + data.wb + ".h"
+    let filePath = data.workingDirectory + "/" + data.wb + ".h"
     
     // open a filestream for reading
-    var fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
+    let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
     
     if fs == nil {
         // file did not open
-        println("\(data.wb).h : Could not create file\n")
+        print("\(data.wb).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
     
-    var text = getCreatorDetailsCommentWB(data) + getLicense(data.userName) + generateCStruct(data)
+    let text = getCreatorDetailsCommentWB(data) + getLicense(data.userName) + generateCStruct(data)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
     
@@ -321,18 +321,18 @@ func generateWBFile(data: ClassData) -> Void {
 
 func generateCPPFile(data: ClassData) -> Void {
     
-    var filePath = data.workingDirectory + "/" + data.camel + ".h"
+    let filePath = data.workingDirectory + "/" + data.camel + ".h"
     
     // open a filestream for reading
-    var fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
+    let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
     
     if fs == nil {
         // file did not open
-        println("\(data.camel).h : Could not create file\n")
+        print("\(data.camel).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
     
-    var text = getCreatorDetailsCommentCPP(data) + getLicense(data.userName) + generateCPPStruct(data)
+    let text = getCreatorDetailsCommentCPP(data) + getLicense(data.userName) + generateCPPStruct(data)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
     

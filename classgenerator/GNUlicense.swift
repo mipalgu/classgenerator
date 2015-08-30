@@ -10,7 +10,7 @@
 
 func getCreatorDetailsCommentWB(data: ClassData) -> String {
     
-    var comment = "/** \n" +
+    let comment = "/** \n" +
         " * file \(data.wb).h \n" +
         " * \n" +
         " * Created by \(data.userName) on \(data.creationDate)" +
@@ -25,7 +25,7 @@ func getCreatorDetailsCommentWB(data: ClassData) -> String {
 
 func getCreatorDetailsCommentCPP(data: ClassData) -> String {
     
-    var comment = "/** \n" +
+    let comment = "/** \n" +
         " * file \(data.camel).h \n" +
         " * \n" +
         " * Created by \(data.userName) on \(data.creationDate)" +
@@ -42,7 +42,7 @@ func getCreatorDetailsCommentCPP(data: ClassData) -> String {
 
 func getLicense(name: String) -> String {
     
-    var license = " * Redistribution and use in source and binary forms, with or without \n" +
+    let license = " * Redistribution and use in source and binary forms, with or without \n" +
     " * modification, are permitted provided that the following conditions \n" +
     " * are met: \n" +
     " * \n" +

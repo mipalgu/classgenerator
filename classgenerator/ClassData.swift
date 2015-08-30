@@ -24,12 +24,12 @@ class ClassData {
         
         self.inputFilename = inputFilename
         
-        let nameWithoutExtension = split(inputFilename) {$0 == "."}
+        let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
         // for swift 2... split(inputFilename.characters){$0 == " "}.map{String($0)}
         
         self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
         
-        let words = split(nameWithoutExtension[0]) {$0 == "_"}
+        let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
         
         if words.count == 1 {
             
@@ -42,7 +42,7 @@ class ClassData {
             var camelCase: String = ""
             var wordToAdd = words[0]
             for word in words {
-                if count(camelCase) > 0 {
+                if camelCase.characters.count > 0 {
                     wordToAdd = word.capitalizedString     // don't use: FOUNDATION
                 }
                 camelCase += wordToAdd
@@ -61,7 +61,7 @@ class ClassData {
             self.userName = "YOUR NAME"
         }
         
-        println("user is: \(self.userName)")
+        print("user is: \(self.userName)")
         
         // get working directory  **** DO AUTOMATICALLY INCL LINUX ****
         self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
