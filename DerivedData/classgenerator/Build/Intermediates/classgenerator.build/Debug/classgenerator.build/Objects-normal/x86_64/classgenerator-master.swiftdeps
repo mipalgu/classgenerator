@@ -1,8 +1,0 @@
-version: "Apple Swift version 2.0 (swiftlang-700.0.57.3 clang-700.0.72)"
-options: "88ba17b3c333fd25a3fd45f6d7f46165"
-build_time: [494658650, 479700000]
-inputs: 
-	"/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/main.swift": [494647417, 0]
-	"/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/ClassData.swift": [494658648, 0]
-	"/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/GNUlicense.swift": [494647417, 0]
-	"/Users/mick/src/MiPal/GUNao/posix/classgenerator/classgenerator/fileio.swift": [494656931, 0]
