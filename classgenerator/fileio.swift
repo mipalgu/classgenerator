@@ -273,7 +273,7 @@ func generateCStruct(data: ClassData) -> String {
             varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
                 
-            cStruct1 += "\t\tset_\(varNames[i])(\(varTypes[i])(atoi(strings[\(i)]))); \n"
+            cStruct1 += "\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n"
         }
         
         else if varTypes[i] == "bool" {
@@ -371,8 +371,6 @@ func generateCPPStruct(data: ClassData) -> String {
 
     return cppStruct
 }
-
-
 
 
 

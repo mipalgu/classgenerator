@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Fri Sep  4 14:29:43 2015
+ * Created by mick on Fri Sep  4 14:42:20 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -143,8 +143,8 @@
 		} 
 
 		set_is_pressed(strings[0]); 
-		set_a_number(int16_t(atoi(strings[1]))); 
-		set_another_number(uint32_t(atoi(strings[2]))); 
+		set_a_number((int16_t)atoi(strings[1])); 
+		set_another_number((uint32_t)atoi(strings[2])); 
 	} 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION 
 

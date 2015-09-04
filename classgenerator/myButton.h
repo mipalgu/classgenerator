@@ -1,7 +1,7 @@
 /** 
  * file myButton.h 
  * 
- * Created by mick on Fri Sep  4 14:29:43 2015
+ * Created by mick on Fri Sep  4 14:42:20 2015
  * Copyright (c) 2015 mick 
  * All rights reserved. 
  * 
