@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Fri Sep  4 12:17:55 2015
+ * Created by mick on Fri Sep  4 12:29:26 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -86,7 +86,7 @@ struct wb_my_button
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
-	/** convert to a string */  
+	/** convert to a description string */  
 	char* description() {
 		char descString[0] = '\0'; 
 		char buffer[20]; 

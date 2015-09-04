@@ -147,7 +147,7 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     // create description() method
-    cStruct1 += "\t/** convert to a string */  \n" +
+    cStruct1 += "\t/** convert to a description string */  \n" +
         "\tchar* description() {\n" +
         "\t\tchar descString[0] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
@@ -323,13 +323,16 @@ func generateCPPStruct(data: ClassData) -> String {
         "{ \n" +
         
             "\t/** \n" +
-            "\t*  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.camel)\n" +
-            "\t* \n" +
-            "\t*/ \n" +
+            "\t *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.camel)\n" +
+            "\t * \n" +
+            "\t */ \n" +
         
-            "\tclass \(data.camel): public \(data.wb) {} \n" +
+            "\tclass \(data.camel): public \(data.wb) \n" +
+            "\t{ \n\n" +
+        
+            "\t// ADD YOUR C++ CODE HERE \n\n" +
 
-/// ADD with cpp file contents
+            "\t} \n" +
 
         "} \n"
 
