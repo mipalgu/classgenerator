@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Fri Sep  4 12:44:15 2015
+ * Created by mick on Fri Sep  4 14:29:43 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -68,13 +68,8 @@
 #include <string.h> 
 #include <stdlib.h> 
 
+#define NUMBER_OF_VARIABLES 3 
 
-/** 
- *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button
- * 
- */ 
-struct wb_my_button 
-{ 
 	/** is_pressed COMMENT ON PROPERTY */ 
 	PROPERTY(bool, is_pressed)
 
@@ -136,7 +131,20 @@ struct wb_my_button
 
 	/** convert from a string */  
 	void from_string(char* str) {
-		  //// TO DO 
+
+		char strings[NUMBER_OF_VARIABLES + 1]; 
+		const char s[2] = ",";  // delimeter 
+		char* token; 
+
+		for ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { 
+
+			token = strtok(str, s); 
+			strings[i] = token; 
+		} 
+
+		set_is_pressed(strings[0]); 
+		set_a_number(int16_t(atoi(strings[1]))); 
+		set_another_number(uint32_t(atoi(strings[2]))); 
 	} 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION 
 

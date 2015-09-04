@@ -127,7 +127,9 @@ func generateCStruct(data: ClassData) -> String {
         "#include <gu_util.h> \n" +
         "#include <stdio.h> \n" +
         "#include <string.h> \n" +
-        "#include <stdlib.h> \n\n\n" +
+        "#include <stdlib.h> \n\n" +
+        
+        "#define NUMBER_OF_VARIABLES \(varNames.count) \n\n"
     
         "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
@@ -186,7 +188,7 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
+                cStruct1 += "\t\tstrcat( descString, ', ' ); \n\n"
             }
             
             cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
@@ -251,9 +253,36 @@ func generateCStruct(data: ClassData) -> String {
 
         
         "\t/** convert from a string */  \n" +
-        "\tvoid from_string(char* str) {\n" +
-        "\t\t  //// TO DO \n" +
-        "\t} \n" +
+        "\tvoid from_string(char* str) {\n\n"
+    
+    cStruct1 += "\t\tchar strings[NUMBER_OF_VARIABLES + 1]; \n" +
+        "\t\tconst char s[2] = \",\";  // delimeter \n" +
+        "\t\tchar* token; \n\n" +
+        
+        "\t\tfor ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { \n\n" +
+        
+            "\t\t\ttoken = strtok(str, s); \n" +
+            "\t\t\tstrings[i] = token; \n" +
+        
+        "\t\t} \n\n"
+        
+    for i in 0...varTypes.count-1 {
+        
+        // if the variable is an integer type
+        if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
+            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
+            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
+                
+            cStruct1 += "\t\tset_\(varNames[i])(\(varTypes[i])(atoi(strings[\(i)]))); \n"
+        }
+        
+        else if varTypes[i] == "bool" {
+        
+            cStruct1 += "\t\tset_\(varNames[i])(strings[\(i)]); \n"
+        }
+    }
+    
+    cStruct1 += "\t} \n" +
         "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
         
         
