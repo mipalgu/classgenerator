@@ -90,7 +90,7 @@ func readVariables(inputFileName: String) -> String {
     // then close the stream
     
     let line = UnsafeMutablePointer<Int8>.alloc(fileSize)  /// ***** size of file as const?
-    var variables = [String]()
+    // var variables = [String]()
     
     
     //while Int32(line.memory) != EOF {          /// cant get EOF to work!!!!
@@ -144,9 +144,10 @@ func generateCStruct(data: ClassData) -> String {
     }
     
     
-    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
-        
-        "\t/** convert to a string */  \n" +
+    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
+    
+    // create description() method
+    cStruct1 += "\t/** convert to a string */  \n" +
         "\tchar* description() {\n" +
         "\t\tchar descString[0] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
@@ -192,16 +193,58 @@ func generateCStruct(data: ClassData) -> String {
     }
 
     cStruct1 += "\t\treturn descString; \n" +
-        "\t} \n\n" +
+        "\t} \n\n"
         
         
-        
-        "\t/** convert to a string */  \n" +
+    // create to_string method
+    cStruct1 += "\t/** convert to a string */  \n" +
         "\tchar* to_string() {\n" +
-        "\t\tchar*  toString = \"\"; \n" +
-        "\t\t  //// TO DO \n" +
-        "\t\treturn toString; \n" +
+        "\t\tchar toString[0] = '\\0'; \n" +
+        "\t\tchar buffer[20]; \n"
+    
+    first = true
+    
+    for i in 0...varTypes.count-1 {
+        
+        // if the variable is an integer type
+        if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
+            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
+            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
+                
+                if first {
+                    
+                    cStruct1 += "\n"
+                    first = false
+                }
+                else {
+                    
+                    cStruct1 += "\t\tstrcat( toString, ',' ); \n\n"
+                }
+                
+                cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
+                "\t\tstrcat(toString, buffer); \n\n"
+        }
+            // if the variable is a bool
+        else if varTypes[i] == "bool" {
+            
+            if first {
+                
+                cStruct1 += "\n"
+                first = false
+            }
+            else {
+                
+                cStruct1 += "\t\tstrcat( toString, ',' ); \n\n"
+            }
+            
+            cStruct1 += "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
+            "\t\tstrcat( toString, \(varNames[i])String ); \n\n"
+        }
+    }
+    
+    cStruct1 += "\t\treturn toString; \n" +
         "\t} \n\n" +
+
         
         "\t/** convert from a string */  \n" +
         "\tvoid from_string(char* str) {\n" +

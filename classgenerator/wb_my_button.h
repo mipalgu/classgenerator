@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Sun Aug 30 18:32:57 2015
+ * Created by mick on Fri Sep  4 12:17:55 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -109,8 +109,22 @@ struct wb_my_button
 
 	/** convert to a string */  
 	char* to_string() {
-		char*  toString = ""; 
-		  //// TO DO 
+		char toString[0] = '\0'; 
+		char buffer[20]; 
+
+		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
+		strcat( toString, is_pressedString ); 
+
+		strcat( toString, ',' ); 
+
+		itoa(a_number,buffer,10); 
+		strcat(toString, buffer); 
+
+		strcat( toString, ',' ); 
+
+		itoa(another_number,buffer,10); 
+		strcat(toString, buffer); 
+
 		return toString; 
 	} 
 
