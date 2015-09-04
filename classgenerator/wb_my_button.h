@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Fri Sep  4 12:29:26 2015
+ * Created by mick on Fri Sep  4 12:44:15 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -91,18 +91,24 @@ struct wb_my_button
 		char descString[0] = '\0'; 
 		char buffer[20]; 
 
+		strcat(descString, 'is_pressed('); 
 		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
 		strcat( descString, is_pressedString ); 
+		strcat(descString, ')'); 
 
-		strcat( descString, ',' ); 
+		strcat( descString, ', ' ); 
 
+		strcat(descString, 'a_number('); 
 		itoa(a_number,buffer,10); 
 		strcat(descString, buffer); 
+		strcat(descString, ')'); 
 
-		strcat( descString, ',' ); 
+		strcat( descString, ', ' ); 
 
+		strcat(descString, 'another_number('); 
 		itoa(another_number,buffer,10); 
 		strcat(descString, buffer); 
+		strcat(descString, ')'); 
 
 		return descString; 
 	} 

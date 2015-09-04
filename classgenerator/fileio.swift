@@ -168,11 +168,13 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
+                    cStruct1 += "\t\tstrcat( descString, ', ' ); \n\n"
                 }
                 
-                cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                "\t\tstrcat(descString, buffer); \n\n"
+                cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
+                    "\t\titoa(\(varNames[i]),buffer,10); \n" +
+                    "\t\tstrcat(descString, buffer); \n" +
+                    "\t\tstrcat(descString, ')'); \n\n"
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -187,8 +189,10 @@ func generateCStruct(data: ClassData) -> String {
                 cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
             }
             
-            cStruct1 += "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
-            "\t\tstrcat( descString, \(varNames[i])String ); \n\n"
+            cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
+                "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
+                "\t\tstrcat( descString, \(varNames[i])String ); \n" +
+                "\t\tstrcat(descString, ')'); \n\n"
         }
     }
 
@@ -330,7 +334,7 @@ func generateCPPStruct(data: ClassData) -> String {
             "\tclass \(data.camel): public \(data.wb) \n" +
             "\t{ \n\n" +
         
-            "\t// ADD YOUR C++ CODE HERE \n\n" +
+            "\t\t// ADD YOUR C++ CODE HERE \n\n" +
 
             "\t} \n" +
 
