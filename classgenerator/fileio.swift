@@ -249,13 +249,13 @@ func generateCStruct(data: ClassData) -> String {
     }
     
     cStruct1 += "\t\treturn toString; \n" +
-        "\t} \n\n" +
+        "\t} \n\n"
 
-        
-        "\t/** convert from a string */  \n" +
+    // create from_string method
+    cStruct1 += "\t/** convert from a string */  \n" +
         "\tvoid from_string(char* str) {\n\n"
     
-    cStruct1 += "\t\tchar strings[NUMBER_OF_VARIABLES + 1]; \n" +
+    cStruct1 += "\t\tchar* strings[NUMBER_OF_VARIABLES]; \n" +
         "\t\tconst char s[2] = \",\";  // delimeter \n" +
         "\t\tchar* token; \n\n" +
         
@@ -284,9 +284,6 @@ func generateCStruct(data: ClassData) -> String {
     
     cStruct1 += "\t} \n" +
         "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
-        
-        
-    
     
     return cStruct1
 }
