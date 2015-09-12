@@ -1,7 +1,7 @@
 /** 
  * file myButton.h 
  * 
- * Created by mick on Fri Sep  4 15:47:15 2015
+ * Created by mick on Sat Sep 12 16:12:19 2015
  * Copyright (c) 2015 mick 
  * All rights reserved. 
  * 
@@ -77,8 +77,21 @@ namespace guWhiteboard
 	 */ 
 	class myButton: public wb_my_button 
 	{ 
+		/** Default constructor */ 
+		wb_my_button() : _is_pressed(false), _a_number(0), _another_number(0)  {} 
 
-		// ADD YOUR C++ CODE HERE 
+		/** Copy Constructor */ 
+		wb_my_button(const  wb_my_button &other) : 
+			_is_pressed(other._is_pressed), 
+			_a_number(other._a_number), 
+			_another_number(other._another_number)  {} 
 
+		/** Assignment Operator */ 
+		wb_my_button &operator= (const wb_my_button &other) { 
+			_is_pressed = other._is_pressed; 
+			_a_number = other._a_number; 
+			_another_number = other._another_number; 
+			return *this; 
+		} 
 	} 
 } 

@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Fri Sep  4 15:47:15 2015
+ * Created by mick on Sat Sep 12 16:12:19 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -70,6 +70,12 @@
 
 #define NUMBER_OF_VARIABLES 3 
 
+/** 
+ *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button
+ * 
+ */ 
+struct wb_my_button 
+{ 
 	/** is_pressed COMMENT ON PROPERTY */ 
 	PROPERTY(bool, is_pressed)
 
@@ -148,25 +154,3 @@
 	} 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION 
 
-#ifdef __cplusplus 
-
-	/** Default constructor */ 
-	wb_my_button() : _is_pressed(false), _a_number(0), _another_number(0)  {} 
-
-	/** Copy Constructor */ 
-	wb_my_button(const  wb_my_button &other) : 
-		_is_pressed(other._is_pressed), 
-		_a_number(other._a_number), 
-		_another_number(other._another_number)  {} 
-
-	/** Assignment Operator */ 
-	wb_my_button &operator= (const wb_my_button &other) { 
-		_is_pressed = other._is_pressed; 
-		_a_number = other._a_number; 
-		_another_number = other._another_number; 
-		return *this; 
-	} 
-#endif 
-
-};
-#endif //wb_my_button_h 

@@ -129,7 +129,7 @@ func generateCStruct(data: ClassData) -> String {
         "#include <string.h> \n" +
         "#include <stdlib.h> \n\n" +
         
-        "#define NUMBER_OF_VARIABLES \(varNames.count) \n\n"
+        "#define NUMBER_OF_VARIABLES \(varNames.count) \n\n" +
     
         "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
@@ -286,62 +286,15 @@ func generateCStruct(data: ClassData) -> String {
         "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
         
         
-    var cStruct2 = "#ifdef __cplusplus \n\n" +
-    
-    "\t/** Default constructor */ \n" +
-     "\t\(data.wb)() : "
-            
-    for i in 0...varTypes.count-1 {
-        
-        let defaultValue = setDefault(varTypes[i])
-        
-        cStruct2 += "_\(varNames[i])(\(defaultValue))"
-        
-        if i < varTypes.count-1 {
-            cStruct2 += ", "
-        }
-    }
-            
-    cStruct2 += "  {} \n\n" +
-    
-    "\t/** Copy Constructor */ \n" +
-    "\t\(data.wb)(const  \(data.wb) &other) : \n"
     
     
-    for i in 0...varTypes.count-1 {
-    
-        cStruct2 += "\t\t_\(varNames[i])(other._\(varNames[i]))"
-        
-        if i < varTypes.count-1 {
-            cStruct2 += ", \n"
-        }
-    }
-            
-    cStruct2 += "  {} \n\n" +
-    
-    "\t/** Assignment Operator */ \n" +
-    "\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
-
-    
-    for i in 0...varTypes.count-1 {
-        
-        cStruct2 += "\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
-    }
-    
-    cStruct2 += "\t\treturn *this; \n" +
-    "\t} \n" +
-    "#endif \n\n" +
-    
-    "};\n" +
-    "#endif //\(data.wb)_h \n"
-    
-    return cStruct1 + cStruct2
+    return cStruct1
 }
 
 
 func generateCPPStruct(data: ClassData) -> String {
     
-    let cppStruct = "#ifndef \(data.camel)_DEFINED \n" +
+    var cppStruct = "#ifndef \(data.camel)_DEFINED \n" +
         
         "#define \(data.camel)_DEFINED \n\n" +
         
@@ -361,12 +314,51 @@ func generateCPPStruct(data: ClassData) -> String {
             "\t */ \n" +
         
             "\tclass \(data.camel): public \(data.wb) \n" +
-            "\t{ \n\n" +
+            "\t{ \n" +
         
-            "\t\t// ADD YOUR C++ CODE HERE \n\n" +
-
+            "\t\t/** Default constructor */ \n" +
+            "\t\t\(data.wb)() : "
+    
+    for i in 0...varTypes.count-1 {
+        
+        let defaultValue = setDefault(varTypes[i])
+        
+        cppStruct += "_\(varNames[i])(\(defaultValue))"
+        
+        if i < varTypes.count-1 {
+            cppStruct += ", "
+        }
+    }
+    
+    cppStruct += "  {} \n\n" +
+        
+        "\t\t/** Copy Constructor */ \n" +
+    "\t\t\(data.wb)(const  \(data.wb) &other) : \n"
+    
+    
+    for i in 0...varTypes.count-1 {
+        
+        cppStruct += "\t\t\t_\(varNames[i])(other._\(varNames[i]))"
+        
+        if i < varTypes.count-1 {
+            cppStruct += ", \n"
+        }
+    }
+    
+    cppStruct += "  {} \n\n" +
+        
+        "\t\t/** Assignment Operator */ \n" +
+        "\t\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
+    
+    
+    for i in 0...varTypes.count-1 {
+        
+        cppStruct += "\t\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
+    }
+    
+    cppStruct += "\t\t\treturn *this; \n" +
+                "\t\t} \n" +
             "\t} \n" +
-
         "} \n"
 
     return cppStruct
