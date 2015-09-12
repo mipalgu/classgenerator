@@ -43,7 +43,24 @@ class ClassData {
             var wordToAdd = words[0]
             for word in words {
                 if camelCase.characters.count > 0 {
-                    wordToAdd = word.capitalizedString     // don't use: FOUNDATION
+
+                    
+                    let upperCase = String(map(word) {
+                        (ch: Character) -> Character in
+                        switch ch {
+                        case "a"..."z":                                  // only work with printable low-ASCII
+                            let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
+                            let val = scalars[scalars.startIndex].value  // value of the unicode scalar
+                            return Character(UnicodeScalar(val + 32))    // return an uppercase character
+                        default:
+                            return ch     // non-printable or non-ASCII
+                        }
+                        })
+                    
+                    
+                    //if (firstChar >= "a" && firstChar <= "z") {
+
+                        wordToAdd = word.capitalizedString
                 }
                 camelCase += wordToAdd
             }
