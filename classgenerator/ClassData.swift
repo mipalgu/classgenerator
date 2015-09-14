@@ -15,7 +15,7 @@ class ClassData {
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
-//    var caps: String        // upper case, including underscores
+//    var caps: String        // upper case, including underscores DO I NEED THIS????
     var userName: String
     var creationDate: String
     var year: Int
@@ -98,11 +98,11 @@ func upperCase (ch: Character) -> Character {
         let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
         let val = scalars[scalars.startIndex].value  // value of the unicode scalar
         
-        return Character(UnicodeScalar(val - 32))
+        return Character(UnicodeScalar(val - 32))    // return the capital
     }
     else {
         
-        return ch
+        return ch                                    // return the character since it's not a letter
     }
 }
 
