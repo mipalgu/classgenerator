@@ -1,8 +1,8 @@
 /** 
  * file wb_my_button_test2.h 
  * 
- * Created by mick on Mon Sep 14 20:06:11 2015
- * Copyright (c) 2015 mick 
+ * Created by rh on Tue Sep 15 09:17:25 2015
+ * Copyright (c) 2015 rh 
  * 
  * This file was generated from my_button_test2.txt 
  * 
@@ -22,7 +22,7 @@
  * 3. All advertising materials mentioning features or use of this 
  *    software must display the following acknowledgement: 
  * 
- *    This product includes software developed by mick. 
+ *    This product includes software developed by rh. 
  * 
  * 4. Neither the name of the author nor the names of contributors 
  *    may be used to endorse or promote products derived from this 
