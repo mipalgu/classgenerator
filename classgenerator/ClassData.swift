@@ -43,22 +43,8 @@ class ClassData {
             var wordToAdd = words[0]
             for word in words {
                 if camelCase.characters.count > 0 {
-                    
-                    var upperCaseWord = ""
-                    var firstLetter = true
 
-                    for ch in word.characters {
-                        
-                        if firstLetter {
-                            upperCaseWord += String(upperCase(ch))    // return an uppercase character as a String
-                            firstLetter = false
-                        }
-                        else {
-                            upperCaseWord += String(ch)
-                        }
-                    }
-
-                    wordToAdd = upperCaseWord
+                    wordToAdd = upperCaseWord(word)
                 }
                 
                 camelCase += wordToAdd
@@ -104,6 +90,26 @@ func upperCase (ch: Character) -> Character {
         
         return ch                                    // return the character since it's not a letter
     }
+}
+
+
+func upperCaseWord (word: String) -> String {
+    
+    var upperCaseWord = ""
+    var firstLetter = true
+    
+    for ch in word.characters {
+        
+        if firstLetter {
+            upperCaseWord += String(upperCase(ch))    // return an uppercase character as a String
+            firstLetter = false
+        }
+        else {
+            upperCaseWord += String(ch)
+        }
+    }
+
+    return upperCaseWord
 }
 
 
