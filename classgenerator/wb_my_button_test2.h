@@ -1,10 +1,10 @@
 /** 
- * file wb_my_button.h 
+ * file wb_my_button_test2.h 
  * 
- * Created by mick on Mon Sep 14 18:29:41 2015
+ * Created by mick on Mon Sep 14 20:06:11 2015
  * Copyright (c) 2015 mick 
  * 
- * This file was generated from my_button.txt 
+ * This file was generated from my_button_test2.txt 
  * 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -58,8 +58,8 @@
  */ 
 
 
-#ifndef wb_my_button_h 
-#define wb_my_button_h 
+#ifndef wb_my_button_test2_h 
+#define wb_my_button_test2_h 
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
@@ -71,11 +71,10 @@
 #define NUMBER_OF_VARIABLES 3 
 
 /** 
- *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button
+ *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button_test2
  * 
  */ 
-struct wb_my_button 
-{ 
+struct wb_my_button_test2 { 
 	/** is_pressed COMMENT ON PROPERTY */ 
 	PROPERTY(bool, is_pressed)
 
@@ -92,25 +91,19 @@ struct wb_my_button
 		char descString[0] = '\0'; 
 		char buffer[20]; 
 
-		strcat(descString, 'is_pressed('); 
+		strcat(descString, 'is_pressed='); 
 		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
 		strcat( descString, is_pressedString ); 
-		strcat(descString, ')'); 
+		strcat( descString, ',' ); 
 
-		strcat( descString, ', ' ); 
-
-		strcat(descString, 'a_number('); 
+		strcat(descString, 'a_number='); 
 		itoa(a_number,buffer,10); 
 		strcat(descString, buffer); 
-		strcat(descString, ')'); 
+		strcat( descString, ',' ); 
 
-		strcat( descString, ', ' ); 
-
-		strcat(descString, 'another_number('); 
+		strcat(descString, 'another_number='); 
 		itoa(another_number,buffer,10); 
 		strcat(descString, buffer); 
-		strcat(descString, ')'); 
-
 		return descString; 
 	} 
 
@@ -139,12 +132,26 @@ struct wb_my_button
 	void from_string(char* str) {
 
 		char* strings[NUMBER_OF_VARIABLES]; 
-		const char s[2] = ",";  // delimeter 
-		char* token; 
+		char* descStrings[NUMBER_OF_VARIABLES]; 
+		const char s[2] = ",";  // delimeters 
+		const char e[2] = "=";  // delimeters 
+		char* tokenS, *tokenE, *token; 
+
+		for ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { 
+			tokenS = strtok(str, s); 
+			descStrings[i] = tokenS; 
+		} 
 
 		for ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { 
 
-			token = strtok(str, s); 
+			tokenE = strtok(descStrings[i], e); 
+
+			// Remove the variable name and equals sign (if there) 
+			while ( tokenE != NULL ) { 
+				token = tokenE; 
+				tokenE = strtok(NULL, e); 
+			} 
+
 			strings[i] = token; 
 		} 
 
@@ -152,5 +159,6 @@ struct wb_my_button
 		set_a_number((int16_t)atoi(strings[1])); 
 		set_another_number((uint32_t)atoi(strings[2])); 
 	} 
+}; 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION 
 

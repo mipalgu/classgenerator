@@ -15,7 +15,7 @@ import Darwin
  */
 
 // for now, set command line arg manually
-var inputFile = "my_button.txt"
+var inputFile = "my_button_test2.txt"
 
 /*
 var input = [String]()
@@ -44,7 +44,6 @@ var data = ClassData(inputFilename: inputFile)
 
 print("wb: \(data.wb)")
 print("camel: \(data.camel)")
-print("caps: \(data.caps)")
 
 var inputText = readVariables(data.workingDirectory + inputFile)
 parseInput(inputText)

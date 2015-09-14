@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
 
-import Foundation   // capitalizedString and uppercaseString
+
 import Darwin
 
 class ClassData {
@@ -15,7 +15,7 @@ class ClassData {
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
-    var caps: String        // upper case, including underscores
+//    var caps: String        // upper case, including underscores DO I NEED THIS????
     var userName: String
     var creationDate: String
     var year: Int
@@ -25,51 +25,37 @@ class ClassData {
         self.inputFilename = inputFilename
         
         let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
-        // for swift 2... split(inputFilename.characters){$0 == " "}.map{String($0)}
         
+        // make wb_ name
         self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
         
         let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
         
+        // make camel case
         if words.count == 1 {
             
             // only one word in the name
             self.camel = words[0]
         }
         else {
-            
             // more than one word, make camel case
             var camelCase: String = ""
             var wordToAdd = words[0]
             for word in words {
                 if camelCase.characters.count > 0 {
 
-                    
-                    let upperCase = String(map(word) {
-                        (ch: Character) -> Character in
-                        switch ch {
-                        case "a"..."z":                                  // only work with printable low-ASCII
-                            let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
-                            let val = scalars[scalars.startIndex].value  // value of the unicode scalar
-                            return Character(UnicodeScalar(val + 32))    // return an uppercase character
-                        default:
-                            return ch     // non-printable or non-ASCII
-                        }
-                        })
-                    
-                    
-                    //if (firstChar >= "a" && firstChar <= "z") {
-
-                        wordToAdd = word.capitalizedString
+                    wordToAdd = capitalisedWord(word)
                 }
+                
                 camelCase += wordToAdd
             }
             
             self.camel = camelCase
         }
         
-        self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
+//      self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
         
+        // get user name
         let pw = getpwuid(getuid())
         if pw != nil {
             self.userName = String.fromCString(pw.memory.pw_name)!
@@ -89,3 +75,41 @@ class ClassData {
         self.year = 2015   /// TO DO  ***************
     }
 }
+
+
+func upperCase (ch: Character) -> Character {
+    
+    if ( ch >= "a" ) && ( ch <= "z" ){
+        
+        let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
+        let val = scalars[scalars.startIndex].value  // value of the unicode scalar
+        
+        return Character(UnicodeScalar(val - 32))    // return the capital
+    }
+    else {
+        
+        return ch                                    // return the character since it's not a letter
+    }
+}
+
+
+func capitalisedWord (word: String) -> String {
+    
+    var capWord = ""
+    var firstLetter = true
+    
+    for ch in word.characters {
+        
+        if firstLetter {
+            capWord += String(upperCase(ch))    // return an uppercase character as a String
+            firstLetter = false
+        }
+        else {
+            capWord += String(ch)
+        }
+    }
+
+    return capWord
+}
+
+

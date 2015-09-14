@@ -1,8 +1,9 @@
 /** 
- * file wb_my_button.h 
+ * file myutton.h 
  * 
- * Created by mick on Mon Sep 14 18:29:41 2015
+ * Created by mick on Mon Sep 14 17:55:44 2015
  * Copyright (c) 2015 mick 
+ * All rights reserved. 
  * 
  * This file was generated from my_button.txt 
  * 
@@ -58,99 +59,39 @@
  */ 
 
 
-#ifndef wb_my_button_h 
-#define wb_my_button_h 
+#ifndef myutton_DEFINED 
+#define myutton_DEFINED 
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
-
+#include <cstdlib> 
+#include <sstream> 
+#endif 
 #include <gu_util.h> 
-#include <stdio.h> 
-#include <string.h> 
-#include <stdlib.h> 
+#include "wb_my_button.h" 
 
-#define NUMBER_OF_VARIABLES 3 
-
-/** 
- *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button
- * 
- */ 
-struct wb_my_button 
+namespace guWhiteboard 
 { 
-	/** is_pressed COMMENT ON PROPERTY */ 
-	PROPERTY(bool, is_pressed)
+	/** 
+	 *  ADD YOUR COMMENT DESCRIBING THE CLASS myutton
+	 * 
+	 */ 
+	class myutton: public wb_my_button 
+	{ 
+		/** Default constructor */ 
+		wb_my_button() : _is_pressed(false), _a_number(0), _another_number(0)  {} 
 
-	/** a_number COMMENT ON PROPERTY */ 
-	PROPERTY(int16_t, a_number)
+		/** Copy Constructor */ 
+		wb_my_button(const  wb_my_button &other) : 
+			_is_pressed(other._is_pressed), 
+			_a_number(other._a_number), 
+			_another_number(other._another_number)  {} 
 
-	/** another_number COMMENT ON PROPERTY */ 
-	PROPERTY(uint32_t, another_number)
-
-#ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
-
-	/** convert to a description string */  
-	char* description() {
-		char descString[0] = '\0'; 
-		char buffer[20]; 
-
-		strcat(descString, 'is_pressed('); 
-		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
-		strcat( descString, is_pressedString ); 
-		strcat(descString, ')'); 
-
-		strcat( descString, ', ' ); 
-
-		strcat(descString, 'a_number('); 
-		itoa(a_number,buffer,10); 
-		strcat(descString, buffer); 
-		strcat(descString, ')'); 
-
-		strcat( descString, ', ' ); 
-
-		strcat(descString, 'another_number('); 
-		itoa(another_number,buffer,10); 
-		strcat(descString, buffer); 
-		strcat(descString, ')'); 
-
-		return descString; 
-	} 
-
-	/** convert to a string */  
-	char* to_string() {
-		char toString[0] = '\0'; 
-		char buffer[20]; 
-
-		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
-		strcat( toString, is_pressedString ); 
-
-		strcat( toString, ',' ); 
-
-		itoa(a_number,buffer,10); 
-		strcat(toString, buffer); 
-
-		strcat( toString, ',' ); 
-
-		itoa(another_number,buffer,10); 
-		strcat(toString, buffer); 
-
-		return toString; 
-	} 
-
-	/** convert from a string */  
-	void from_string(char* str) {
-
-		char* strings[NUMBER_OF_VARIABLES]; 
-		const char s[2] = ",";  // delimeter 
-		char* token; 
-
-		for ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { 
-
-			token = strtok(str, s); 
-			strings[i] = token; 
+		/** Assignment Operator */ 
+		wb_my_button &operator= (const wb_my_button &other) { 
+			_is_pressed = other._is_pressed; 
+			_a_number = other._a_number; 
+			_another_number = other._another_number; 
+			return *this; 
 		} 
-
-		set_is_pressed(strings[0]); 
-		set_a_number((int16_t)atoi(strings[1])); 
-		set_another_number((uint32_t)atoi(strings[2])); 
 	} 
-#endif // WHITEBOARD_POSTER_STRING_CONVERSION 
-
+} 

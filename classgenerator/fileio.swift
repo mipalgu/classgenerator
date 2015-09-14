@@ -136,8 +136,7 @@ func generateCStruct(data: ClassData) -> String {
         " * \n" +
         " */ \n" +
         
-        "struct \(data.wb) \n" +
-        "{ \n"
+        "struct \(data.wb) { \n"
     
     for i in 0...varTypes.count-1 {
         
@@ -170,13 +169,12 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tstrcat( descString, ', ' ); \n\n"
+                    cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
                 }
                 
-                cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
+                cStruct1 += "\t\tstrcat(descString, '\(varNames[i])='); \n" +
                     "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                    "\t\tstrcat(descString, buffer); \n" +
-                    "\t\tstrcat(descString, ')'); \n\n"
+                    "\t\tstrcat(descString, buffer); \n"
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -188,13 +186,12 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tstrcat( descString, ', ' ); \n\n"
+                cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
             }
             
-            cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
+            cStruct1 += "\t\tstrcat(descString, '\(varNames[i])='); \n" +
                 "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
-                "\t\tstrcat( descString, \(varNames[i])String ); \n" +
-                "\t\tstrcat(descString, ')'); \n\n"
+                "\t\tstrcat( descString, \(varNames[i])String ); \n"
         }
     }
 
@@ -256,16 +253,31 @@ func generateCStruct(data: ClassData) -> String {
         "\tvoid from_string(char* str) {\n\n"
     
     cStruct1 += "\t\tchar* strings[NUMBER_OF_VARIABLES]; \n" +
-        "\t\tconst char s[2] = \",\";  // delimeter \n" +
-        "\t\tchar* token; \n\n" +
+        "\t\tchar* descStrings[NUMBER_OF_VARIABLES]; \n" +
+        "\t\tconst char s[2] = \",\";  // delimeters \n" +
+        "\t\tconst char e[2] = \"=\";  // delimeters \n" +
+        "\t\tchar* tokenS, *tokenE, *token; \n\n" +
         
+        "\t\tfor ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { \n" +
+            "\t\t\ttokenS = strtok(str, s); \n" +
+            "\t\t\tdescStrings[i] = tokenS; \n" +
+        
+        "\t\t} \n\n" +
+    
         "\t\tfor ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { \n\n" +
         
-            "\t\t\ttoken = strtok(str, s); \n" +
-            "\t\t\tstrings[i] = token; \n" +
+        "\t\t\ttokenE = strtok(descStrings[i], e); \n\n" +
+        
+        "\t\t\t// Remove the variable name and equals sign (if there) \n" +
+        "\t\t\twhile ( tokenE != NULL ) { \n" +
+            "\t\t\t\ttoken = tokenE; \n" +
+            "\t\t\t\ttokenE = strtok(NULL, e); \n" +
+        "\t\t\t} \n\n" +
+        
+        "\t\t\tstrings[i] = token; \n" +
         
         "\t\t} \n\n"
-        
+    
     for i in 0...varTypes.count-1 {
         
         // if the variable is an integer type
@@ -283,6 +295,7 @@ func generateCStruct(data: ClassData) -> String {
     }
     
     cStruct1 += "\t} \n" +
+        "}; \n" +
         "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     return cStruct1
