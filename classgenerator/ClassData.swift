@@ -26,17 +26,18 @@ class ClassData {
         
         let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
         
+        // make wb_ name
         self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
         
         let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
         
+        // make camel case
         if words.count == 1 {
             
             // only one word in the name
             self.camel = words[0]
         }
         else {
-            
             // more than one word, make camel case
             var camelCase: String = ""
             var wordToAdd = words[0]
@@ -68,6 +69,7 @@ class ClassData {
         
         // self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
         
+        // get user name
         let pw = getpwuid(getuid())
         if pw != nil {
             self.userName = String.fromCString(pw.memory.pw_name)!
