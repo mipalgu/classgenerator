@@ -53,7 +53,7 @@ class ClassData {
             self.camel = camelCase
         }
         
-        // self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
+//      self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
         
         // get user name
         let pw = getpwuid(getuid())

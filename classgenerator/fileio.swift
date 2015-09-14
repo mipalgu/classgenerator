@@ -136,8 +136,7 @@ func generateCStruct(data: ClassData) -> String {
         " * \n" +
         " */ \n" +
         
-        "struct \(data.wb) \n" +
-        "{ \n"
+        "struct \(data.wb) { \n"
     
     for i in 0...varTypes.count-1 {
         
@@ -296,6 +295,7 @@ func generateCStruct(data: ClassData) -> String {
     }
     
     cStruct1 += "\t} \n" +
+        "}; \n" +
         "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     return cStruct1

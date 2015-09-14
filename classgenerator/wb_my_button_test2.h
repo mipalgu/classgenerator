@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button_test2.h 
  * 
- * Created by mick on Mon Sep 14 19:50:19 2015
+ * Created by mick on Mon Sep 14 20:03:07 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button_test2.txt 
@@ -74,8 +74,7 @@
  *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button_test2
  * 
  */ 
-struct wb_my_button_test2 
-{ 
+struct wb_my_button_test2 { 
 	/** is_pressed COMMENT ON PROPERTY */ 
 	PROPERTY(bool, is_pressed)
 
@@ -160,5 +159,6 @@ struct wb_my_button_test2
 		set_a_number((int16_t)atoi(strings[1])); 
 		set_another_number((uint32_t)atoi(strings[2])); 
 	} 
+}; 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION 
 
