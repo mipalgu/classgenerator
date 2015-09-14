@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button_test2.h 
  * 
- * Created by mick on Mon Sep 14 18:30:29 2015
+ * Created by mick on Mon Sep 14 18:52:47 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button_test2.txt 
@@ -92,25 +92,19 @@ struct wb_my_button_test2
 		char descString[0] = '\0'; 
 		char buffer[20]; 
 
-		strcat(descString, 'is_pressed('); 
+		strcat(descString, 'is_pressed='); 
 		char is_pressedString[6] = is_pressed ? 'true' : 'false'; 
 		strcat( descString, is_pressedString ); 
-		strcat(descString, ')'); 
+		strcat( descString, ',' ); 
 
-		strcat( descString, ', ' ); 
-
-		strcat(descString, 'a_number('); 
+		strcat(descString, 'a_number='); 
 		itoa(a_number,buffer,10); 
 		strcat(descString, buffer); 
-		strcat(descString, ')'); 
+		strcat( descString, ',' ); 
 
-		strcat( descString, ', ' ); 
-
-		strcat(descString, 'another_number('); 
+		strcat(descString, 'another_number='); 
 		itoa(another_number,buffer,10); 
 		strcat(descString, buffer); 
-		strcat(descString, ')'); 
-
 		return descString; 
 	} 
 

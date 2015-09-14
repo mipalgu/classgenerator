@@ -170,13 +170,12 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tstrcat( descString, ', ' ); \n\n"
+                    cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
                 }
                 
-                cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
+                cStruct1 += "\t\tstrcat(descString, '\(varNames[i])='); \n" +
                     "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                    "\t\tstrcat(descString, buffer); \n" +
-                    "\t\tstrcat(descString, ')'); \n\n"
+                    "\t\tstrcat(descString, buffer); \n"
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -188,13 +187,12 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tstrcat( descString, ', ' ); \n\n"
+                cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
             }
             
-            cStruct1 += "\t\tstrcat(descString, '\(varNames[i])('); \n" +
+            cStruct1 += "\t\tstrcat(descString, '\(varNames[i])='); \n" +
                 "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
-                "\t\tstrcat( descString, \(varNames[i])String ); \n" +
-                "\t\tstrcat(descString, ')'); \n\n"
+                "\t\tstrcat( descString, \(varNames[i])String ); \n"
         }
     }
 
