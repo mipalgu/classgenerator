@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button_test2.h 
  * 
- * Created by mick on Mon Sep 14 19:28:30 2015
+ * Created by mick on Mon Sep 14 19:37:09 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button_test2.txt 
@@ -136,7 +136,7 @@ struct wb_my_button_test2
 		char* descStrings[NUMBER_OF_VARIABLES]; 
 		const char s[2] = ",";  // delimeters 
 		const char e[2] = "=";  // delimeters 
-		char* tokenS, *tokenE; 
+		char* tokenS, *tokenE, *token; 
 
 		for ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { 
 			tokenS = strtok(str, s); 
@@ -145,14 +145,15 @@ struct wb_my_button_test2
 
 		for ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { 
 
-			// Remove the variable name and equals sign (if there) 
 			tokenE = strtok(descStrings[i], e); 
 
+			// Remove the variable name and equals sign (if there) 
 			while ( tokenE != NULL ) { 
+				token = tokenE; 
 				tokenE = strtok(NULL, e); 
 			} 
 
-			strings[i] = tokenE; 
+			strings[i] = token; 
 		} 
 
 		set_is_pressed(strings[0]); 
