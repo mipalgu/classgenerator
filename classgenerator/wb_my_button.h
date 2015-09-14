@@ -1,7 +1,7 @@
 /** 
  * file wb_my_button.h 
  * 
- * Created by mick on Sat Sep 12 16:12:19 2015
+ * Created by mick on Mon Sep 14 18:04:49 2015
  * Copyright (c) 2015 mick 
  * 
  * This file was generated from my_button.txt 
@@ -138,7 +138,7 @@ struct wb_my_button
 	/** convert from a string */  
 	void from_string(char* str) {
 
-		char strings[NUMBER_OF_VARIABLES + 1]; 
+		char* strings[NUMBER_OF_VARIABLES]; 
 		const char s[2] = ",";  // delimeter 
 		char* token; 
 

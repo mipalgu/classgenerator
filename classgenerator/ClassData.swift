@@ -15,7 +15,7 @@ class ClassData {
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
-    var caps: String        // upper case, including underscores
+//    var caps: String        // upper case, including underscores
     var userName: String
     var creationDate: String
     var year: Int
@@ -43,32 +43,32 @@ class ClassData {
             var wordToAdd = words[0]
             for word in words {
                 if camelCase.characters.count > 0 {
-
                     
-                    let upperCase = String(map(word) {
-                        (ch: Character) -> Character in
-                        switch ch {
-                        case "a"..."z":                                  // only work with printable low-ASCII
-                            let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
-                            let val = scalars[scalars.startIndex].value  // value of the unicode scalar
-                            return Character(UnicodeScalar(val + 32))    // return an uppercase character
+                    var upperCaseWord = ""
+                    var firstLetter = true
+
+                    for ch in word.characters {
+                        
+                        switch firstLetter {
+                        case true:
+                            upperCaseWord += String(upperCase(ch))    // return an uppercase character
+                            firstLetter = false
                         default:
-                            return ch     // non-printable or non-ASCII
+                            upperCaseWord += String(ch)     // non-printable or non-ASCII
                         }
-                        })
                     
-                    
-                    //if (firstChar >= "a" && firstChar <= "z") {
+                    }
 
-                        wordToAdd = word.capitalizedString
+                    wordToAdd = upperCaseWord
                 }
+                
                 camelCase += wordToAdd
             }
             
             self.camel = camelCase
         }
         
-        self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
+        // self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
         
         let pw = getpwuid(getuid())
         if pw != nil {
@@ -89,3 +89,21 @@ class ClassData {
         self.year = 2015   /// TO DO  ***************
     }
 }
+
+
+func upperCase (ch: Character) -> Character {
+    
+    if ( ch >= "a" ) && ( ch <= "z" ){
+        
+        let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
+        let val = scalars[scalars.startIndex].value  // value of the unicode scalar
+        
+        return Character(UnicodeScalar(val - 32))
+    }
+    else {
+        
+        return ch
+    }
+}
+
+
