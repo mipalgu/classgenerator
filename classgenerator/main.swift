@@ -15,7 +15,7 @@ import Darwin
  */
 
 // for now, set command line arg manually
-var inputFile = "my_button.txt"
+var inputFile = "my_button_test2.txt"
 
 /*
 var input = [String]()

@@ -1,10 +1,10 @@
 /** 
- * file wb_my_button.h 
+ * file wb_my_button_test2.h 
  * 
- * Created by mick on Mon Sep 14 18:29:41 2015
+ * Created by mick on Mon Sep 14 18:30:29 2015
  * Copyright (c) 2015 mick 
  * 
- * This file was generated from my_button.txt 
+ * This file was generated from my_button_test2.txt 
  * 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -58,8 +58,8 @@
  */ 
 
 
-#ifndef wb_my_button_h 
-#define wb_my_button_h 
+#ifndef wb_my_button_test2_h 
+#define wb_my_button_test2_h 
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
@@ -71,10 +71,10 @@
 #define NUMBER_OF_VARIABLES 3 
 
 /** 
- *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button
+ *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_button_test2
  * 
  */ 
-struct wb_my_button 
+struct wb_my_button_test2 
 { 
 	/** is_pressed COMMENT ON PROPERTY */ 
 	PROPERTY(bool, is_pressed)

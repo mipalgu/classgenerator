@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
 
-import Foundation   // capitalizedString and uppercaseString
+
 import Darwin
 
 class ClassData {
@@ -25,7 +25,6 @@ class ClassData {
         self.inputFilename = inputFilename
         
         let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
-        // for swift 2... split(inputFilename.characters){$0 == " "}.map{String($0)}
         
         self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
         
@@ -49,14 +48,13 @@ class ClassData {
 
                     for ch in word.characters {
                         
-                        switch firstLetter {
-                        case true:
-                            upperCaseWord += String(upperCase(ch))    // return an uppercase character
+                        if firstLetter {
+                            upperCaseWord += String(upperCase(ch))    // return an uppercase character as a String
                             firstLetter = false
-                        default:
-                            upperCaseWord += String(ch)     // non-printable or non-ASCII
                         }
-                    
+                        else {
+                            upperCaseWord += String(ch)
+                        }
                     }
 
                     wordToAdd = upperCaseWord
