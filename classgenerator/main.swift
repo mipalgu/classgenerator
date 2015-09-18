@@ -44,6 +44,7 @@ var data = ClassData(inputFilename: inputFile)
 
 print("wb: \(data.wb)")
 print("camel: \(data.camel)")
+print("caps: \(data.caps)")
 
 var inputText = readVariables(data.workingDirectory + inputFile)
 parseInput(inputText)

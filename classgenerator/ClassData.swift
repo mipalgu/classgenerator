@@ -15,7 +15,7 @@ class ClassData {
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
-//    var caps: String        // upper case, including underscores DO I NEED THIS????
+    var caps: String        // upper case, including underscores
     var userName: String
     var creationDate: String
     var year: Int
@@ -53,7 +53,7 @@ class ClassData {
             self.camel = camelCase
         }
         
-//      self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
+        self.caps = uppercaseWord(nameWithoutExtension[0])
         
         // get user name
         let pw = getpwuid(getuid())
@@ -112,4 +112,16 @@ func capitalisedWord (word: String) -> String {
     return capWord
 }
 
+
+func uppercaseWord (word: String) -> String {
+    
+    var uppWord = ""
+    
+    for ch in word.characters {
+        
+            uppWord += String(upperCase(ch))
+    }
+    
+    return uppWord
+}
 
