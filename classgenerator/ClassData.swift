@@ -66,8 +66,9 @@ class ClassData {
         
         print("user is: \(self.userName)")
         
-        // get working directory  **** DO AUTOMATICALLY INCL LINUX ****
-        self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
+        // get working directory
+        //self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
+        self.workingDirectory = getPath()
         
         var t = time(nil)    /// error check and set default value ***************
         self.creationDate = String.fromCString(ctime(&t))!
@@ -75,6 +76,20 @@ class ClassData {
         self.year = 2015   /// TO DO  ***************
     }
 }
+
+
+func getPath() -> String {
+    
+    //var cwd: UnsafeMutablePointer<Int8>
+    //getcwd(cwd, 1024)
+    
+    var cwd: [Int8] = Array(count: Int(MAXNAMLEN), repeatedValue: 0)
+    let workingDirectory = getcwd(&cwd, Int(MAXNAMLEN))
+    print("Working directory: \(String.fromCString(workingDirectory)!)")
+    
+    return String.fromCString(workingDirectory)! + "/"
+}
+
 
 
 func upperCase (ch: Character) -> Character {

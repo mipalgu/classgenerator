@@ -15,9 +15,9 @@ import Darwin
  */
 
 // for now, set command line arg manually
-var inputFile = "my_button_test2.txt"
+var inputFile = ""
 
-/*
+
 var input = [String]()
 
 for argument in Process.arguments {
@@ -29,16 +29,16 @@ input.removeAtIndex(0)  //remove the program name
 for argument in input {
     switch argument {
         case "a":
-            println("a argument");
+            print("a argument");
 
         case "b":
-            println("b argument");
+            print("b argument");
 
         default:
-            inputFileName = workingDirectory + argument   // will need to test
+            inputFile = input[0]
     }
 }
-*/
+
 
 var data = ClassData(inputFilename: inputFile)
 

@@ -38,10 +38,6 @@ func parseInput(inputText: String) -> Void {
     for var i = 0; i < varTypes.count; i++ {
         print( "\(varNames[i]) is a \(varTypes[i])")
     }
-    
-    //   var username = NSUserName()!
-    //   println("Hello \(username)")
-    
 }
 
 
