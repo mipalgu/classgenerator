@@ -26,8 +26,8 @@ class ClassData {
         
         let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
         
-        // make wb_ name
-        self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
+        // make wb_ name : the name not including .txt, with wb_ added
+        self.wb = "wb_" + nameWithoutExtension[0]
         
         let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
         
@@ -39,8 +39,6 @@ class ClassData {
         
         // get working directory
         self.workingDirectory = getPath()
-        
-        //self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         
         var t = time(nil)    /// error check and set default value ***************
         self.creationDate = String.fromCString(ctime(&t))!
@@ -66,7 +64,7 @@ func getUserName() -> String {
 func getPath() -> String {
     
     var cwd: [Int8] = Array(count: Int(MAXNAMLEN), repeatedValue: 0)
-    let path = getcwd(&cwd, Int(MAXNAMLEN))
+    let path = getcwd(&cwd, Int(MAXNAMLEN))                               /// error check ***************
     //print("Working directory: \(String.fromCString(path)!)")
     
     return String.fromCString(path)! + "/"
@@ -98,7 +96,7 @@ func capitalisedWord (word: String) -> String {
     for ch in word.characters {
         
         if firstLetter {
-            capWord += String(upperCase(ch))    // return an uppercase character as a String
+            capWord += String(upperCase(ch))          // return an uppercase character as a String
             firstLetter = false
         }
         else {
@@ -125,25 +123,18 @@ func uppercaseWord (word: String) -> String {
 
 func camelCaseWord(words: [String]) -> String {
     
-    if words.count == 1 {
-        
-        // only one word in the name
-        return words[0]
-    }
-    else {
-        // more than one word, make camel case
-        var camelCase: String = ""
-        var wordToAdd = words[0]
-        for word in words {
-            if camelCase.characters.count > 0 {
-                
-                wordToAdd = capitalisedWord(word)
-            }
+    var camelCase: String = ""
+    var wordToAdd = words[0]
+    
+    for word in words {
+        if camelCase.characters.count > 0 {
             
-            camelCase += wordToAdd
+            wordToAdd = capitalisedWord(word)
         }
         
-        return camelCase
+        camelCase += wordToAdd
     }
+    
+    return camelCase
 }
 
