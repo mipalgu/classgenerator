@@ -116,7 +116,8 @@ func readVariables(inputFileName: String) -> String {
 
 func generateCStruct(data: ClassData) -> String {
     
-    let descriptionBufferSize = getDescriptionBufferSize()
+    let toStringBufferSize = getToStringBufferSize()
+    let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
     
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         
@@ -128,7 +129,8 @@ func generateCStruct(data: ClassData) -> String {
         "#include <stdlib.h> \n\n" +
         
         "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
-        "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n\n" +
+        "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
+        "#define \(data.caps)_TOSTRING_BUFFER_SIZE \(toStringBufferSize) \n\n" +
     
         "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
@@ -149,7 +151,7 @@ func generateCStruct(data: ClassData) -> String {
     // create description() method
     cStruct1 += "\t/** convert to a description string */  \n" +
         "\tchar* description() {\n" +
-        "\t\tchar descString[\(data.caps)_DESC_BUFFER_SIZE+1] = '\\0'; \n" +   
+        "\t\tchar descString[\(data.caps)_DESC_BUFFER_SIZE+1] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
 
     var first = true
@@ -200,7 +202,7 @@ func generateCStruct(data: ClassData) -> String {
     // create to_string method
     cStruct1 += "\t/** convert to a string */  \n" +
         "\tchar* to_string() {\n" +
-        "\t\tchar toString[0] = '\\0'; \n" +
+        "\t\tchar toString[\(data.caps)_TOSTRING_BUFFER_SIZE+1] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
     
     first = true
@@ -416,21 +418,31 @@ func generateCPPFile(data: ClassData) -> Void {
 }
 
 
-func getDescriptionBufferSize() -> size_t {
+func getDescriptionBufferSize(toStringbufferSize: size_t) -> size_t {
     
     
     // total the number of characters in the descrption string
     
-    var size: size_t = 0
+    var size: size_t = toStringbufferSize
     
     size += (varNames.count) //* strideofValue("=")    // equals signs
-    size += (varNames.count-1) //* strideofValue(",")  // commas
     
     for name in varNames {
     
         size += Int(strlen(name))      // length of the variable names
         //print("\(name) length = \(strlen(name))")
     }
+    
+    print ("maximum number of characters in the description string is : \(size)")
+    return size
+}
+
+
+func getToStringBufferSize() -> size_t {
+    
+    var size: size_t = 0
+    
+    size += (varNames.count-1) //* strideofValue(",")  // commas
     
     for type in varTypes {
         
@@ -458,10 +470,8 @@ func getDescriptionBufferSize() -> size_t {
         }
     }
     
-    print ("maximum number of characters in the description string is : \(size)")
     return size
 }
-
 
 
 
