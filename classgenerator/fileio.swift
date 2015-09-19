@@ -116,6 +116,8 @@ func readVariables(inputFileName: String) -> String {
 
 func generateCStruct(data: ClassData) -> String {
     
+    let descriptionBufferSize = getDescriptionBufferSize()
+    
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         
         "#define \(data.wb)_h \n\n" +
@@ -125,7 +127,8 @@ func generateCStruct(data: ClassData) -> String {
         "#include <string.h> \n" +
         "#include <stdlib.h> \n\n" +
         
-        "#define NUMBER_OF_VARIABLES \(varNames.count) \n\n" +
+        "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
+        "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n\n" +
     
         "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
@@ -146,7 +149,7 @@ func generateCStruct(data: ClassData) -> String {
     // create description() method
     cStruct1 += "\t/** convert to a description string */  \n" +
         "\tchar* description() {\n" +
-        "\t\tchar descString[0] = '\\0'; \n" +      /// NOT THIS : Calculate size ************
+        "\t\tchar descString[\(data.caps)_DESC_BUFFER_SIZE+1] = '\\0'; \n" +   
         "\t\tchar buffer[20]; \n"
 
     var first = true
@@ -246,19 +249,19 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "\t/** convert from a string */  \n" +
         "\tvoid from_string(char* str) {\n\n"
     
-    cStruct1 += "\t\tchar* strings[NUMBER_OF_VARIABLES]; \n" +
-        "\t\tchar* descStrings[NUMBER_OF_VARIABLES]; \n" +
+    cStruct1 += "\t\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
+        "\t\tchar* descStrings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "\t\tconst char s[2] = \",\";  // delimeters \n" +
         "\t\tconst char e[2] = \"=\";  // delimeters \n" +
         "\t\tchar* tokenS, *tokenE, *token; \n\n" +
         
-        "\t\tfor ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { \n" +
+        "\t\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
             "\t\t\ttokenS = strtok(str, s); \n" +
             "\t\t\tdescStrings[i] = tokenS; \n" +
         
         "\t\t} \n\n" +
     
-        "\t\tfor ( int i = 0; i < NUMBER_OF_VARIABLES; i++ ) { \n\n" +
+        "\t\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n\n" +
         
         "\t\t\ttokenE = strtok(descStrings[i], e); \n\n" +
         
@@ -411,5 +414,54 @@ func generateCPPFile(data: ClassData) -> Void {
     
     closeFileStream(fs)
 }
+
+
+func getDescriptionBufferSize() -> size_t {
+    
+    
+    // total the number of characters in the descrption string
+    
+    var size: size_t = 0
+    
+    size += (varNames.count) //* strideofValue("=")    // equals signs
+    size += (varNames.count-1) //* strideofValue(",")  // commas
+    
+    for name in varNames {
+    
+        size += Int(strlen(name))      // length of the variable names
+        //print("\(name) length = \(strlen(name))")
+    }
+    
+    for type in varTypes {
+        
+        switch type {
+        case "bool":
+            size += 1    // boolean is 1 byte
+        case "int":
+            size += strideof(Int)
+        case "int8_t":
+            size += 4    // strideof(Int8)
+        case "uint8_t":
+            size += 3
+        case "int16_t":
+            size += 6    //strideof(Int16)
+        case "uint16_t":
+            size += 5
+        case "int32_t":
+            size += 11   //strideof(Int32)
+        case "uint32_t":
+            size += 10
+        case "int64_t", "uint64_t":
+            size += 20   //strideof(Int64)
+        default:
+            print("Unknown variable type")
+        }
+    }
+    
+    print ("maximum number of characters in the description string is : \(size)")
+    return size
+}
+
+
 
 
