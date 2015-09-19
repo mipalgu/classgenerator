@@ -15,14 +15,9 @@ import Darwin
  */
 
 // for now, set command line arg manually
-var inputFile = ""
+var inputFileName = ""
 
-
-var input = [String]()
-
-for argument in Process.arguments {
-    input.append("\(argument)")
-}
+var input = [String](Process.arguments)
 
 input.removeAtIndex(0)  //remove the program name
 
@@ -35,18 +30,18 @@ for argument in input {
             print("b argument");
 
         default:
-            inputFile = input[0]
+            inputFileName = input[0]
     }
 }
 
 
-var data = ClassData(inputFilename: inputFile)
+var data = ClassData(inputFilename: inputFileName)
 
 print("wb: \(data.wb)")
 print("camel: \(data.camel)")
 print("caps: \(data.caps)")
 
-var inputText = readVariables(data.workingDirectory + inputFile)
+var inputText = readVariables(data.workingDirectory + inputFileName)
 parseInput(inputText)
 
 generateWBFile(data)

@@ -76,8 +76,6 @@ func getUserName() -> String {
     let pw = getpwuid(getuid())
     
     if pw != nil {
-        
-        print(String.fromCString(pw.memory.pw_name)!)
         return String.fromCString(pw.memory.pw_name)!
     }
     else {
