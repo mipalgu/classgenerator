@@ -56,19 +56,12 @@ class ClassData {
         self.caps = uppercaseWord(nameWithoutExtension[0])
         
         // get user name
-        let pw = getpwuid(getuid())
-        if pw != nil {
-            self.userName = String.fromCString(pw.memory.pw_name)!
-        }
-        else {
-            self.userName = "YOUR NAME"
-        }
-        
-        print("user is: \(self.userName)")
+        self.userName = getUserName()
         
         // get working directory
-        //self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         self.workingDirectory = getPath()
+        
+        //self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
         
         var t = time(nil)    /// error check and set default value ***************
         self.creationDate = String.fromCString(ctime(&t))!
@@ -78,16 +71,28 @@ class ClassData {
 }
 
 
+func getUserName() -> String {
+    
+    let pw = getpwuid(getuid())
+    
+    if pw != nil {
+        
+        print(String.fromCString(pw.memory.pw_name)!)
+        return String.fromCString(pw.memory.pw_name)!
+    }
+    else {
+        return "YOUR NAME"
+    }
+}
+
+
 func getPath() -> String {
     
-    //var cwd: UnsafeMutablePointer<Int8>
-    //getcwd(cwd, 1024)
-    
     var cwd: [Int8] = Array(count: Int(MAXNAMLEN), repeatedValue: 0)
-    let workingDirectory = getcwd(&cwd, Int(MAXNAMLEN))
-    print("Working directory: \(String.fromCString(workingDirectory)!)")
+    let path = getcwd(&cwd, Int(MAXNAMLEN))
+    //print("Working directory: \(String.fromCString(path)!)")
     
-    return String.fromCString(workingDirectory)! + "/"
+    return String.fromCString(path)! + "/"
 }
 
 
