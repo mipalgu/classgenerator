@@ -31,28 +31,7 @@ class ClassData {
         
         let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
         
-        // make camel case
-        if words.count == 1 {
-            
-            // only one word in the name
-            self.camel = words[0]
-        }
-        else {
-            // more than one word, make camel case
-            var camelCase: String = ""
-            var wordToAdd = words[0]
-            for word in words {
-                if camelCase.characters.count > 0 {
-
-                    wordToAdd = capitalisedWord(word)
-                }
-                
-                camelCase += wordToAdd
-            }
-            
-            self.camel = camelCase
-        }
-        
+        self.camel = camelCaseWord(words)
         self.caps = uppercaseWord(nameWithoutExtension[0])
         
         // get user name
@@ -141,5 +120,30 @@ func uppercaseWord (word: String) -> String {
     }
     
     return uppWord
+}
+
+
+func camelCaseWord(words: [String]) -> String {
+    
+    if words.count == 1 {
+        
+        // only one word in the name
+        return words[0]
+    }
+    else {
+        // more than one word, make camel case
+        var camelCase: String = ""
+        var wordToAdd = words[0]
+        for word in words {
+            if camelCase.characters.count > 0 {
+                
+                wordToAdd = capitalisedWord(word)
+            }
+            
+            camelCase += wordToAdd
+        }
+        
+        return camelCase
+    }
 }
 

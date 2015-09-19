@@ -1,4 +1,4 @@
-#!/usr/bin/env xcrun swift
+//#!/usr/bin/env xcrun swift
 
 //
 //  main.swift
@@ -8,7 +8,7 @@
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
 
-import Darwin
+//import Darwin
 
 /**
  * Get input filename from command line args
@@ -18,8 +18,9 @@ import Darwin
 var inputFileName = ""
 
 var input = [String](Process.arguments)
-
 input.removeAtIndex(0)  //remove the program name
+
+inputFileName = input[0]
 
 for argument in input {
     switch argument {
@@ -30,7 +31,7 @@ for argument in input {
             print("b argument");
 
         default:
-            inputFileName = input[0]
+            print("USAGE:....")
     }
 }
 
