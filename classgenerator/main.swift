@@ -14,7 +14,6 @@ import Darwin
  * Get input filename from command line args
  */
 
-// for now, set command line arg manually
 var inputFileName = ""
 
 var makeCPPWrapper = false
@@ -38,19 +37,26 @@ for argument in input {
 
         default:
             
-            
             // is this argument a filename?
             let nameWithoutExtension = argument.characters.split {$0 == "."}.map { String($0) }
         
-            if nameWithoutExtension[1] == "txt" && !foundFilename {
+            if nameWithoutExtension.count > 1 {
                 
-                inputFileName = argument //nameWithoutExtension[0]
-                foundFilename = true
+                if nameWithoutExtension[1] == "txt" && !foundFilename {
+                    
+                    inputFileName = argument //nameWithoutExtension[0]
+                    foundFilename = true
+                }
+                else {
+                    print("Unknown argument. USAGE...")
+                    exit(EXIT_FAILURE)
+                }
             }
             else {
                 print("Unknown argument. USAGE...")
                 exit(EXIT_FAILURE)
-            }
+        }
+        
         
     }
 }
