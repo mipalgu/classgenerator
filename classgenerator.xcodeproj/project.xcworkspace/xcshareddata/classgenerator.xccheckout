@@ -7,7 +7,7 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>ACB763A5-FB35-4A7D-9851-371F3669F287</string>
 	<key>IDESourceControlProjectName</key>
-	<string>classgenerator</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>9252A0F81FCE38410949A0A00E30DD38183EF7B8</key>
@@ -16,7 +16,7 @@
 		<string>ssh://git.mipal.net/git/GUNao.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>posix/classgenerator/classgenerator.xcodeproj</string>
+	<string>posix/classgenerator/classgenerator.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>9252A0F81FCE38410949A0A00E30DD38183EF7B8</key>

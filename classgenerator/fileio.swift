@@ -95,8 +95,8 @@ func readVariables(inputFileName: String) -> String {
     
     if (ferror(fs) != 0) {
         
-        print("Unable to read");
-        exit(EXIT_FAILURE);
+        print("Unable to read")
+        exit(EXIT_FAILURE)
     }
     
     //fgets(line, MAXNAMLEN, fs)
