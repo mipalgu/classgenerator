@@ -8,7 +8,7 @@
 
 import Darwin
 
-let fileSize = 4096               /// find a way to get EOF to work so I dont need to do this
+let fileSize = 4096     // Int(MAXNAMLEN)  ???      /// find a way to get EOF to work so I dont need to do this
 
 var varTypes = [String]()
 var varNames = [String]()
@@ -165,10 +165,10 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
+                    cStruct1 += "\t\tstrcat( descString, \",\" ); \n\n"
                 }
                 
-                cStruct1 += "\t\tstrcat(descString, '\(varNames[i])='); \n" +
+                cStruct1 += "\t\tstrcat(descString, \"\(varNames[i])=\"); \n" +
                     "\t\titoa(\(varNames[i]),buffer,10); \n" +
                     "\t\tstrcat(descString, buffer); \n"
         }
@@ -182,12 +182,11 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tstrcat( descString, ',' ); \n\n"
+                cStruct1 += "\t\tstrcat( descString, \",\" ); \n\n"
             }
             
-            cStruct1 += "\t\tstrcat(descString, '\(varNames[i])='); \n" +
-                "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
-                "\t\tstrcat( descString, \(varNames[i])String ); \n"
+            cStruct1 += "\t\tstrcat(descString, \"\(varNames[i])=\"); \n" +
+                "\t\tstrcat( descString, \(varNames[i]) ? \"true\" : \"false\" ); \n"
         }
     }
 
@@ -217,7 +216,7 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
                     
-                    cStruct1 += "\t\tstrcat( toString, ',' ); \n\n"
+                    cStruct1 += "\t\tstrcat( toString, \",\" ); \n\n"
                 }
                 
                 cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
@@ -233,11 +232,10 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tstrcat( toString, ',' ); \n\n"
+                cStruct1 += "\t\tstrcat( toString, \",\" ); \n\n"
             }
             
-            cStruct1 += "\t\tchar \(varNames[i])String[6] = \(varNames[i]) ? 'true' : 'false'; \n" +
-            "\t\tstrcat( toString, \(varNames[i])String ); \n\n"
+            cStruct1 += "\t\tstrcat( toString, \(varNames[i]) ? \"true\" : \"false\" ); \n\n"
         }
     }
     

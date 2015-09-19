@@ -7,8 +7,6 @@
 //
 
 
-
-
 func upperCase (ch: Character) -> Character {
     
     if ( ch >= "a" ) && ( ch <= "z" ){

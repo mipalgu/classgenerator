@@ -36,7 +36,7 @@ class ClassData {
         self.caps = uppercaseWord(nameWithoutExtension[0])
         
         // get user name
-        self.userName = getUserName()
+        self.userName = getUserName()   // might need to read the username as a command line arg
         
         // get working directory
         self.workingDirectory = getPath()
@@ -64,8 +64,8 @@ func getUserName() -> String {
 
 func getPath() -> String {
     
-    var cwd: [Int8] = Array(count: Int(MAXNAMLEN), repeatedValue: 0)
-    let path = getcwd(&cwd, Int(MAXNAMLEN))                               /// error check ***************
+    var cwd: [Int8] = Array(count: Int(MAXPATHLEN), repeatedValue: 0)
+    let path = getcwd(&cwd, Int(MAXPATHLEN))                               /// error check ***************
     //print("Working directory: \(String.fromCString(path)!)")
     
     return String.fromCString(path)! + "/"
