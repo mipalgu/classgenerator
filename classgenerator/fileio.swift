@@ -150,8 +150,8 @@ func generateCStruct(data: ClassData) -> String {
     
     // create description() method
     cStruct1 += "\t/** convert to a description string */  \n" +
-        "\tchar* description() {\n" +
-        "\t\tchar descString[\(data.caps)_DESC_BUFFER_SIZE+1] = '\\0'; \n" +
+        "\tconst char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ) {\n" +
+        "\t\tdescString[\(data.caps)_DESC_BUFFER_SIZE+1] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
 
     var first = true
@@ -201,8 +201,8 @@ func generateCStruct(data: ClassData) -> String {
         
     // create to_string method
     cStruct1 += "\t/** convert to a string */  \n" +
-        "\tchar* to_string() {\n" +
-        "\t\tchar toString[\(data.caps)_TOSTRING_BUFFER_SIZE+1] = '\\0'; \n" +
+        "\tconst char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
+        "\t\tchar* toString[\(data.caps)_TOSTRING_BUFFER_SIZE+1] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
     
     first = true
@@ -448,9 +448,9 @@ func getToStringBufferSize() -> size_t {
         
         switch type {
         case "bool":
-            size += 1    // boolean is 1 byte
+            size += 5    // 'false' is 5 characters    // boolean is 1 byte
         case "int":
-            size += strideof(Int)
+            size += 11   // strideof(Int)
         case "int8_t":
             size += 4    // strideof(Int8)
         case "uint8_t":
