@@ -22,18 +22,18 @@ class ClassData {
     
     init(inputFilename: String) {
         
-        self.inputFilename = inputFilename
+        self.inputFilename = inputFilename + ".txt"
         
-        let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
+        //let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
         
         // make wb_ name : the name not including .txt, with wb_ added
-        self.wb = "wb_" + nameWithoutExtension[0]
+        self.wb = "wb_" + inputFilename
         
         // split the name into words, delimited by underscore
-        let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
+        let words = inputFilename.characters.split {$0 == "_"}.map { String($0) }
         
         self.camel = camelCaseWord(words)
-        self.caps = uppercaseWord(nameWithoutExtension[0])
+        self.caps = uppercaseWord(inputFilename)
         
         // get user name
         self.userName = getUserName()   // might need to read the username as a command line arg

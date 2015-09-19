@@ -28,11 +28,11 @@ input.removeAtIndex(0)      //remove the program name
 for argument in input {
     switch argument {
         case "c":
-            print("make a c++ wrapper")
+            print("Generating a C++ wrapper")
             makeCPPWrapper = true;
 
         case "s":
-            print("make a swift wrapper")
+            print("Generating a Swift wrapper")
             makeSwiftWrapper = true;
 
         default:
@@ -44,8 +44,9 @@ for argument in input {
                 
                 if nameWithoutExtension[1] == "txt" && !foundFilename {
                     
-                    inputFileName = argument //nameWithoutExtension[0]
+                    inputFileName = nameWithoutExtension[0]
                     foundFilename = true
+                    print("Filename is : \(inputFileName).txt ")
                 }
                 else {
                     print("Unknown argument. USAGE...")
@@ -61,11 +62,12 @@ for argument in input {
     }
 }
 
-// If neither are specified, make both
+// If neither wrapper is specified, make both
 if !makeCPPWrapper && !makeSwiftWrapper {
     
     makeCPPWrapper = true
     makeSwiftWrapper = true
+    print("Generating both C++ and Swift wrappers")
 }
 
 
