@@ -34,6 +34,11 @@ for argument in input {
         case "s":
             print("Generating a Swift wrapper")
             makeSwiftWrapper = true;
+        
+        case "cs", "sc":
+            makeCPPWrapper = true
+            makeSwiftWrapper = true
+            print("Generating both C++ and Swift wrappers")
 
         default:
             
