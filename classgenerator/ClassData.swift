@@ -20,20 +20,20 @@ class ClassData {
     var creationDate: String
     var year: Int
     
-    init(inputFilename: String) {
+    init(inputFilenameNoExtension: String) {
         
-        self.inputFilename = inputFilename + ".txt"
+        self.inputFilename = inputFilenameNoExtension + ".txt"
         
         //let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
         
         // make wb_ name : the name not including .txt, with wb_ added
-        self.wb = "wb_" + inputFilename
+        self.wb = "wb_" + inputFilenameNoExtension
         
         // split the name into words, delimited by underscore
-        let words = inputFilename.characters.split {$0 == "_"}.map { String($0) }
+        let words = inputFilenameNoExtension.characters.split {$0 == "_"}.map { String($0) }
         
         self.camel = camelCaseWord(words)
-        self.caps = uppercaseWord(inputFilename)
+        self.caps = uppercaseWord(inputFilenameNoExtension)
         
         // get user name
         self.userName = getUserName()   // might need to read the username as a command line arg

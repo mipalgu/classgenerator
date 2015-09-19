@@ -14,7 +14,7 @@ import Darwin
  * Get input filename from command line args
  */
 
-var inputFileName = ""
+var inputFilenameNoExtension = ""
 
 var makeCPPWrapper = false
 var makeSwiftWrapper = false
@@ -40,25 +40,23 @@ for argument in input {
             // is this argument a filename?
             let nameWithoutExtension = argument.characters.split {$0 == "."}.map { String($0) }
         
-            if nameWithoutExtension.count > 1 {
+            if nameWithoutExtension.count == 2 {
                 
                 if nameWithoutExtension[1] == "txt" && !foundFilename {
                     
-                    inputFileName = nameWithoutExtension[0]
+                    inputFilenameNoExtension = nameWithoutExtension[0]
                     foundFilename = true
-                    print("Filename is : \(inputFileName).txt ")
+                    //print("Filename is : \(inputFilenameNoExtension).txt ")
                 }
                 else {
-                    print("Unknown argument. USAGE...")
+                    print("Unknown file type or too many files specified. USAGE...")
                     exit(EXIT_FAILURE)
                 }
             }
             else {
                 print("Unknown argument. USAGE...")
                 exit(EXIT_FAILURE)
-        }
-        
-        
+            }
     }
 }
 
@@ -84,13 +82,13 @@ for i in 1..<args.count {
 
 
 
-var data = ClassData(inputFilename: inputFileName)
+var data = ClassData(inputFilenameNoExtension: inputFilenameNoExtension)
 
 // print("wb: \(data.wb)")
 // print("camel: \(data.camel)")
 // print("caps: \(data.caps)")
 
-var inputText = readVariables(data.workingDirectory + inputFileName)
+var inputText = readVariables(data.workingDirectory + data.inputFilename)
 parseInput(inputText)
 
 generateWBFile(data)
