@@ -146,7 +146,7 @@ func generateCStruct(data: ClassData) -> String {
     // create description() method
     cStruct1 += "\t/** convert to a description string */  \n" +
         "\tchar* description() {\n" +
-        "\t\tchar descString[0] = '\\0'; \n" +
+        "\t\tchar descString[0] = '\\0'; \n" +      /// NOT THIS : Calculate size ************
         "\t\tchar buffer[20]; \n"
 
     var first = true
@@ -165,12 +165,12 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tstrcat( descString, \",\" ); \n\n"
+                    cStruct1 += "\t\tgu_strlcat( descString, \",\", sizeof(',') ); \n\n"
                 }
                 
-                cStruct1 += "\t\tstrcat(descString, \"\(varNames[i])=\"); \n" +
+                cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", sizeof('\(varNames[i])=') ); \n" +
                     "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                    "\t\tstrcat(descString, buffer); \n"
+                    "\t\tgu_strlcat(descString, buffer, sizeof(buffer) ); \n"
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -182,11 +182,11 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tstrcat( descString, \",\" ); \n\n"
+                cStruct1 += "\t\tgu_strlcat( descString, \",\", sizeof(',') ); \n\n"
             }
             
-            cStruct1 += "\t\tstrcat(descString, \"\(varNames[i])=\"); \n" +
-                "\t\tstrcat( descString, \(varNames[i]) ? \"true\" : \"false\" ); \n"
+            cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", sizeof('\(varNames[i])=') ); \n" +
+                "\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", sizeof('\(varNames[i]) ? \"true\" : \"false\"') ); \n"
         }
     }
 
