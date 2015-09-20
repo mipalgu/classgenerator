@@ -10,14 +10,15 @@ import Darwin
 
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 
-var varTypes = [String]()
-var varNames = [String]()
+var varTypes    = [String]()
+var varNames    = [String]()
+var varDefaults = [String]()
 
 
 func parseInput(inputText: String) -> String {
     
     var lines = inputText.characters.split {$0 == "\n"}.map { String($0) }
-    var userName = "NAME"
+    var userName = "YOUR NAME"
     
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
@@ -32,15 +33,31 @@ func parseInput(inputText: String) -> String {
         
         var variable = line.characters.split {$0 == "\t"}.map { String($0) }
         
-        varTypes.append(variable[0])               // these parallel arrays arent going to cut it
-        varNames.append(variable[1])
+        if variable.count == 3 {
+            
+            varTypes.append(variable[0])               // these parallel arrays arent going to cut it
+            varNames.append(variable[1])
+            varDefaults.append(variable[2])
+        }
+        else if variable.count == 2 {
+            
+            varTypes.append(variable[0])               // these parallel arrays arent going to cut it
+            varNames.append(variable[1])
+            varDefaults.append("")
+        }
+        else {
+            print("Input text file contains too many or not enough values for a variable.")
+            exit(EXIT_FAILURE)
+        }
     }
     
-    if varTypes[0] == "name" {    // a name was included in the input, use it
+    if varTypes[0] == "name" {    // a name was included in the input, use it, then remove it
         
         userName = varNames[0]
         varTypes.removeAtIndex(0)
         varNames.removeAtIndex(0)
+        varDefaults.removeAtIndex(0)
+
     }
 
     return userName
@@ -336,7 +353,7 @@ func generateCPPStruct(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
         
-        let defaultValue = setDefault(varTypes[i])
+        let defaultValue = varDefaults[i] == "" ? setDefault(varTypes[i]) : varDefaults[i]
         
         cppStruct += "_\(varNames[i])(\(defaultValue))"
         

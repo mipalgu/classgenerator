@@ -86,6 +86,7 @@ let workingDirectory = String.fromCString(path)! + "/"
 // get the text from the input file
 var inputText = readVariables(workingDirectory + inputFilenameNoExtension + ".txt")
 
+// return the user name from the inut file
 var userName = parseInput(inputText)
 
 var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)

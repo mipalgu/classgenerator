@@ -34,7 +34,7 @@ class ClassData {
         self.caps = uppercaseWord(inputFilenameNoExtension)
         
         // get user name
-        if userName == "NAME" {
+        if userName == "YOUR NAME" {
             // no name supplied
             self.userName = getUserName()
         }
@@ -50,7 +50,7 @@ class ClassData {
         localtime_r(&t, &timeInfo)
         
         self.year = Int(timeInfo.tm_year) + 1900
-        //self.creationDate = String.fromCString(ctime(&t))!
+//        self.creationDate = String.fromCString(ctime(&t))!
         self.creationDate = "\(timeInfo.tm_hour):\(timeInfo.tm_min), \(timeInfo.tm_mday)/\(timeInfo.tm_mon+1)/\(timeInfo.tm_year+1900)"
     }
 }
