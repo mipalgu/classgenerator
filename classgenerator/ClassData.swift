@@ -41,10 +41,11 @@ class ClassData {
         // get working directory
         self.workingDirectory = getPath()
         
-        var t = time(nil)    /// error check and set default value ***************
+        var t = time(nil)     // ********* error check *********
+        var timeInfo = tm()
+        localtime_r(&t, &timeInfo)
+        self.year = Int(timeInfo.tm_year) + 1900
         self.creationDate = String.fromCString(ctime(&t))!
-        
-        self.year = 2015   /// TO DO  ***************
     }
 }
 

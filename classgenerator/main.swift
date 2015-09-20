@@ -19,7 +19,7 @@ var inputFilenameNoExtension = ""
 var makeCPPWrapper = false
 var makeSwiftWrapper = false
 var foundFilename = false
-
+  
 var input: [String] = Process.arguments
 input.removeAtIndex(0)      //remove the program name
 
@@ -41,7 +41,8 @@ for argument in input {
             print("Generating both C++ and Swift wrappers");
         
         case "usage", "-usage":
-            print(" USAGE.... ");
+            print(" USAGE.... ")
+            exit(EXIT_FAILURE);
 
         default:
             
