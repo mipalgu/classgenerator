@@ -13,7 +13,7 @@ func getCreatorDetailsCommentWB(data: ClassData) -> String {
     let comment = "/** \n" +
         " * file \(data.wb).h \n" +
         " * \n" +
-        " * Created by \(data.userName) on \(data.creationDate) \n" +
+        " * Created by \(data.userName) at \(data.creationDate) \n" +
         " * Copyright (c) \(data.year) \(data.userName) \n" +
         " * \n" +
         " * This file was generated from \(data.inputFilename) \n" +

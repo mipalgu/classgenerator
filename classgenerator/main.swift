@@ -94,12 +94,8 @@ for i in 1..<args.count {
 
 var data = ClassData(inputFilenameNoExtension: inputFilenameNoExtension)
 
-// print("wb: \(data.wb)")
-// print("camel: \(data.camel)")
-// print("caps: \(data.caps)")
-
 var inputText = readVariables(data.workingDirectory + data.inputFilename)
-parseInput(inputText)
+parseInput(inputText, data: data)
 
 generateWBFile(data)
 

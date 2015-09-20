@@ -8,13 +8,13 @@
 
 import Darwin
 
-let fileSize = 4096     // Int(MAXNAMLEN)  ???      /// find a way to get EOF to work so I dont need to do this
+let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 
 var varTypes = [String]()
 var varNames = [String]()
 
 
-func parseInput(inputText: String) -> Void {
+func parseInput(inputText: String, data: ClassData) -> Void {
     
     var lines = inputText.characters.split {$0 == "\n"}.map { String($0) }
     
@@ -34,6 +34,15 @@ func parseInput(inputText: String) -> Void {
         varTypes.append(variable[0])               // these parallel arrays arent going to cut it
         varNames.append(variable[1])
     }
+    
+    if varTypes[0] == "name" {    // a name was included in the input, use it
+        
+        data.userName = varNames[0]
+        varTypes.removeAtIndex(0)
+        varNames.removeAtIndex(0)
+    }
+
+    
     
     for var i = 0; i < varTypes.count; i++ {
         print( "\(varNames[i]) is a \(varTypes[i])")
