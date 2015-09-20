@@ -14,9 +14,10 @@ var varTypes = [String]()
 var varNames = [String]()
 
 
-func parseInput(inputText: String, data: ClassData) -> Void {
+func parseInput(inputText: String) -> String {
     
     var lines = inputText.characters.split {$0 == "\n"}.map { String($0) }
+    var userName = "NAME"
     
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
@@ -37,16 +38,12 @@ func parseInput(inputText: String, data: ClassData) -> Void {
     
     if varTypes[0] == "name" {    // a name was included in the input, use it
         
-        data.userName = varNames[0]
+        userName = varNames[0]
         varTypes.removeAtIndex(0)
         varNames.removeAtIndex(0)
     }
 
-    
-    
-    for var i = 0; i < varTypes.count; i++ {
-        print( "\(varNames[i]) is a \(varTypes[i])")
-    }
+    return userName
 }
 
 
@@ -397,7 +394,7 @@ func generateWBFile(data: ClassData) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    let text = getCreatorDetailsCommentWB(data) + getLicense(data.userName) + generateCStruct(data)
+    let text = getCreatorDetailsCommentWB(data) + getLicense(data) + generateCStruct(data)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
     
@@ -419,7 +416,7 @@ func generateCPPFile(data: ClassData) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    let text = getCreatorDetailsCommentCPP(data) + getLicense(data.userName) + generateCPPStruct(data)
+    let text = getCreatorDetailsCommentCPP(data) + getLicense(data) + generateCPPStruct(data)
     
     fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
     

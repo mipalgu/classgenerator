@@ -78,31 +78,23 @@ if !makeCPPWrapper && !makeSwiftWrapper {
     print("Generating both C++ and Swift wrappers")
 }
 
+// get current working path
+var cwd: [Int8] = Array(count: Int(MAXPATHLEN), repeatedValue: 0)
+let path = getcwd(&cwd, Int(MAXPATHLEN))
+let workingDirectory = String.fromCString(path)! + "/"
 
-/*
-let args = Process.arguments
+// get the text from the input file
+var inputText = readVariables(workingDirectory + inputFilenameNoExtension + ".txt")
 
-println("This program is named \(args[0]).")
-println("There are \(args.count-1) arguments.")
+var userName = parseInput(inputText)
 
-for i in 1..<args.count {
-    println("the argument #\(i) is \(args[i])")
-}
-*/
-
-
-
-var data = ClassData(inputFilenameNoExtension: inputFilenameNoExtension)
-
-var inputText = readVariables(data.workingDirectory + data.inputFilename)
-parseInput(inputText, data: data)
+var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)
 
 generateWBFile(data)
 
 if makeCPPWrapper {
     generateCPPFile(data)
 }
-
 
 
 

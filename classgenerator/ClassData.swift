@@ -20,7 +20,7 @@ class ClassData {
     var creationDate: String
     var year: Int
     
-    init(inputFilenameNoExtension: String) {
+    init(workingDirectory: String, inputFilenameNoExtension: String, userName: String) {
         
         self.inputFilename = inputFilenameNoExtension + ".txt"
         
@@ -34,10 +34,16 @@ class ClassData {
         self.caps = uppercaseWord(inputFilenameNoExtension)
         
         // get user name
-        self.userName = getUserName()   // might need to read the username as a command line arg
+        if userName == "NAME" {
+            // no name supplied
+            self.userName = getUserName()
+        }
+        else {
+            self.userName = userName
+        }
         
         // get working directory
-        self.workingDirectory = getPath()
+        self.workingDirectory = workingDirectory
         
         var t = time(nil)     // ********* error check *********
         var timeInfo = tm()
@@ -63,12 +69,5 @@ func getUserName() -> String {
 }
 
 
-func getPath() -> String {
-    
-    var cwd: [Int8] = Array(count: Int(MAXPATHLEN), repeatedValue: 0)
-    let path = getcwd(&cwd, Int(MAXPATHLEN))                               /// error check ***************
-    //print("Working directory: \(String.fromCString(path)!)")
-    
-    return String.fromCString(path)! + "/"
-}
+
 
