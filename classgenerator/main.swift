@@ -20,32 +20,35 @@ var makeCPPWrapper = false
 var makeSwiftWrapper = false
 var foundFilename = false
 
-var input = [String](Process.arguments)
+var input: [String] = Process.arguments
 input.removeAtIndex(0)      //remove the program name
 
 //inputFileName = input[0]
 
 for argument in input {
     switch argument {
-        case "c":
+        case "c", "-c":
             print("Generating a C++ wrapper")
             makeCPPWrapper = true;
 
-        case "s":
+        case "s", "-s":
             print("Generating a Swift wrapper")
             makeSwiftWrapper = true;
         
-        case "cs", "sc":
+        case "cs", "sc", "-cs", "-sc":
             makeCPPWrapper = true
             makeSwiftWrapper = true
-            print("Generating both C++ and Swift wrappers")
+            print("Generating both C++ and Swift wrappers");
+        
+        case "usage", "-usage":
+            print(" USAGE.... ");
 
         default:
             
             // is this argument a filename?
             let nameWithoutExtension = argument.characters.split {$0 == "."}.map { String($0) }
         
-            if nameWithoutExtension.count == 2 {
+            if nameWithoutExtension.count == 2 {   // have found an extension
                 
                 if nameWithoutExtension[1] == "txt" && !foundFilename {
                     
@@ -64,6 +67,7 @@ for argument in input {
             }
     }
 }
+
 
 // If neither wrapper is specified, make both
 if !makeCPPWrapper && !makeSwiftWrapper {
