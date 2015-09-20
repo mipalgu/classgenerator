@@ -24,8 +24,6 @@ class ClassData {
         
         self.inputFilename = inputFilenameNoExtension + ".txt"
         
-        //let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
-        
         // make wb_ name : the name not including .txt, with wb_ added
         self.wb = "wb_" + inputFilenameNoExtension
         
@@ -44,8 +42,10 @@ class ClassData {
         var t = time(nil)     // ********* error check *********
         var timeInfo = tm()
         localtime_r(&t, &timeInfo)
+        
         self.year = Int(timeInfo.tm_year) + 1900
-        self.creationDate = String.fromCString(ctime(&t))!
+        //self.creationDate = String.fromCString(ctime(&t))!
+        self.creationDate = "\(timeInfo.tm_hour):\(timeInfo.tm_min), \(timeInfo.tm_mday)/\(timeInfo.tm_mon+1)/\(timeInfo.tm_year+1900)"
     }
 }
 
