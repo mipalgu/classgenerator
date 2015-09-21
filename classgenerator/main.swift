@@ -23,8 +23,6 @@ var foundFilename = false
 var input: [String] = Process.arguments
 input.removeAtIndex(0)      //remove the program name
 
-//inputFileName = input[0]
-
 for argument in input {
     switch argument {
         case "c", "-c":
@@ -45,7 +43,6 @@ for argument in input {
             exit(EXIT_FAILURE);
 
         default:
-            
             // is this argument a filename?
             let nameWithoutExtension = argument.characters.split {$0 == "."}.map { String($0) }
         
@@ -55,7 +52,6 @@ for argument in input {
                     
                     inputFilenameNoExtension = nameWithoutExtension[0]
                     foundFilename = true
-                    //print("Filename is : \(inputFilenameNoExtension).txt ")
                 }
                 else {
                     print("Unknown file type or too many files specified. USAGE...")

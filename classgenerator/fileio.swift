@@ -57,7 +57,6 @@ func parseInput(inputText: String) -> String {
         varTypes.removeAtIndex(0)
         varNames.removeAtIndex(0)
         varDefaults.removeAtIndex(0)
-
     }
 
     return userName
@@ -70,15 +69,16 @@ func setDefault(varType: String) -> String {
     
     switch varType {
         case "bool":
-            defaultValue = "false"
+            defaultValue = "false";
             
         case "int", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t":
-            defaultValue = "0"
+            defaultValue = "0";
             
         default:
             defaultValue = "ADD DEFAULT"
     }
     
+    print ("\(varType) set to default value of: \(defaultValue)")
     return defaultValue
 }
 
@@ -272,7 +272,7 @@ func generateCStruct(data: ClassData) -> String {
 
     // create from_string method
     cStruct1 += "\t/** convert from a string */  \n" +
-        "\tvoid from_string(char* str) {\n\n"
+        "\tstruct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
     
     cStruct1 += "\t\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "\t\tchar* descStrings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
@@ -316,7 +316,9 @@ func generateCStruct(data: ClassData) -> String {
         }
     }
     
-    cStruct1 += "\t} \n" +
+    cStruct1 += "\t\treturn self \n" +
+        
+            "\t} \n" +
         "}; \n" +
         "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
@@ -332,7 +334,6 @@ func generateCPPStruct(data: ClassData) -> String {
         
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#include <cstdlib> \n" +
-        "#include <sstream> \n" +
         "#endif \n" +
         "#include <gu_util.h> \n" +
         "#include \"\(data.wb).h\" \n\n" +
