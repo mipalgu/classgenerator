@@ -18,7 +18,7 @@ func upperCase (ch: Character) -> Character {
     }
     else {
         
-        return ch                                    // return the character since it's not a letter
+        return ch                                    // return the character since it's not a lowercase letter
     }
 }
 
@@ -31,7 +31,7 @@ func capitalisedWord (word: String) -> String {
     for ch in word.characters {
         
         if firstLetter {
-            capWord += String(upperCase(ch))          // return an uppercase character as a String
+            capWord += String(upperCase(ch))          // make an uppercase character as a String
             firstLetter = false
         }
         else {

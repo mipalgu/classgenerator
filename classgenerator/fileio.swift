@@ -281,7 +281,12 @@ func generateCStruct(data: ClassData) -> String {
         "\t\tchar* tokenS, *tokenE, *token; \n\n" +
         
         "\t\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
-            "\t\t\ttokenS = strtok(str, s); \n" +
+            "\t\tint j = i; \n" +
+            "\t\t\ttokenS = strtok(str, s); \n\n" +
+        
+            "\t\tif (tokenS) { \n" +
+            "\t\t\t "
+        
             "\t\t\tdescStrings[i] = tokenS; \n" +
         
         "\t\t} \n\n" +

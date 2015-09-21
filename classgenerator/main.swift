@@ -23,6 +23,13 @@ var foundFilename = false
 var input: [String] = Process.arguments
 input.removeAtIndex(0)      //remove the program name
 
+if input.count == 0 {
+    
+    print("File not specified as an argument. USAGE...")
+    exit(EXIT_FAILURE)
+}
+
+
 for argument in input {
     switch argument {
         case "c", "-c":
