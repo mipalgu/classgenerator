@@ -341,20 +341,19 @@ func generateCPPStruct(data: ClassData) -> String {
         
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#include <cstdlib> \n" +
+        "#include <string.h> \n" +
         "#endif \n" +
         "#include <gu_util.h> \n" +
         "#include \"\(data.wb).h\" \n\n" +
         
-        "namespace guWhiteboard \n" +
-        "{ \n" +
+        "namespace guWhiteboard {\n" +
         
             "\t/** \n" +
             "\t *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.camel)\n" +
             "\t * \n" +
             "\t */ \n" +
         
-            "\tclass \(data.camel): public \(data.wb) \n" +
-            "\t{ \n" +
+            "\tclass \(data.camel): public \(data.wb) { \n" +
         
             "\t\t/** Default constructor */ \n" +
             "\t\t\(data.wb)() : "
@@ -397,7 +396,18 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     
     cppStruct += "\t\t\treturn *this; \n" +
+                "\t\t} \n\n" +
+        
+                "\t\t#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+                "\t\tstd::string description() { \n" +
+                "\t\t\tchar buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
+                "\t\t\t\(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
+                "\t\t\tstd::string descr = buffer; \n" +
+                "\t\t\treturn descr; \n" +
+        
                 "\t\t} \n" +
+                "\t\t#endif \n" +
+        
             "\t} \n" +
         "} \n"
 
