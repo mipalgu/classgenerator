@@ -153,7 +153,7 @@ func generateCStruct(data: ClassData) -> String {
         
         "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
-        "#define \(data.caps)_TOSTRING_BUFFER_SIZE \(toStringBufferSize) \n\n" +
+        "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n" +
     
         "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
@@ -225,7 +225,7 @@ func generateCStruct(data: ClassData) -> String {
     // create to_string method
     cStruct1 += "\t/** convert to a string */  \n" +
         "\tconst char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
-        "\t\tchar* toString[\(data.caps)_TOSTRING_BUFFER_SIZE+1] = '\\0'; \n" +
+        "\t\tchar* toString[\(data.caps)_TO_STRING_BUFFER_SIZE+1] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
     
     first = true
@@ -285,7 +285,7 @@ func generateCStruct(data: ClassData) -> String {
             "\t\t\ttokenS = strtok(str, s); \n\n" +
         
             "\t\tif (tokenS) { \n" +
-            "\t\t\t "
+            "\t\t\tif ????????? \n\n\n"
         
             "\t\t\tdescStrings[i] = tokenS; \n" +
         
@@ -311,13 +311,15 @@ func generateCStruct(data: ClassData) -> String {
         if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
             varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-                
-            cStruct1 += "\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n"
+            
+            cStruct1 += "\t\tif (strings[\(i)] != NULL) \n" +
+                "\t\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n\n"
         }
         
         else if varTypes[i] == "bool" {
         
-            cStruct1 += "\t\tset_\(varNames[i])(strings[\(i)]); \n"
+            cStruct1 += "\t\tif (strings[\(i)] != NULL) \n" +
+                "\t\t\tset_\(varNames[i])(strings[\(i)]); \n\n"
         }
     }
     

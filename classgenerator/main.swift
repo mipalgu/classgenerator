@@ -25,7 +25,7 @@ input.removeAtIndex(0)      //remove the program name
 
 if input.count == 0 {
     
-    print("File not specified as an argument. USAGE...")
+    print("Filename was not specified as an argument. USAGE...")
     exit(EXIT_FAILURE)
 }
 
