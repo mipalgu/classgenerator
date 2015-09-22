@@ -1,3 +1,0 @@
-bool	is_pressed
-int16_t	a_number
-uint32_t	another_number

@@ -1,4 +1,4 @@
-#!/usr/bin/env xcrun swift
+//#!/usr/bin/env xcrun swift
 
 //
 //  main.swift
@@ -14,42 +14,91 @@ import Darwin
  * Get input filename from command line args
  */
 
-// for now, set command line arg manually
-var inputFile = "my_button_test2.txt"
+var inputFilenameNoExtension = ""
 
-/*
-var input = [String]()
+var makeCPPWrapper = false
+var makeSwiftWrapper = false
+var foundFilename = false
+  
+var input: [String] = Process.arguments
+input.removeAtIndex(0)      //remove the program name
 
-for argument in Process.arguments {
-    input.append("\(argument)")
+if input.count == 0 {
+    
+    print("Filename was not specified as an argument. USAGE...")
+    exit(EXIT_FAILURE)
 }
 
-input.removeAtIndex(0)  //remove the program name
 
 for argument in input {
     switch argument {
-        case "a":
-            println("a argument");
+        case "c", "-c":
+            print("Generating a C++ wrapper")
+            makeCPPWrapper = true;
 
-        case "b":
-            println("b argument");
+        case "s", "-s":
+            print("Generating a Swift wrapper")
+            makeSwiftWrapper = true;
+        
+        case "cs", "sc", "-cs", "-sc":
+            makeCPPWrapper = true
+            makeSwiftWrapper = true
+            print("Generating both C++ and Swift wrappers");
+        
+        case "usage", "-usage":
+            print(" USAGE.... ")
+            exit(EXIT_FAILURE);
 
         default:
-            inputFileName = workingDirectory + argument   // will need to test
+            // is this argument a filename?
+            let nameWithoutExtension = argument.characters.split {$0 == "."}.map { String($0) }
+        
+            if nameWithoutExtension.count == 2 {   // have found an extension
+                
+                if nameWithoutExtension[1] == "txt" && !foundFilename {
+                    
+                    inputFilenameNoExtension = nameWithoutExtension[0]
+                    foundFilename = true
+                }
+                else {
+                    print("Unknown file type or too many files specified. USAGE...")
+                    exit(EXIT_FAILURE)
+                }
+            }
+            else {
+                print("Unknown argument. USAGE...")
+                exit(EXIT_FAILURE)
+            }
     }
 }
-*/
 
-var data = ClassData(inputFilename: inputFile)
 
-print("wb: \(data.wb)")
-print("camel: \(data.camel)")
+// If neither wrapper is specified, make both
+if !makeCPPWrapper && !makeSwiftWrapper {
+    
+    makeCPPWrapper = true
+    makeSwiftWrapper = true
+    print("Generating both C++ and Swift wrappers")
+}
 
-var inputText = readVariables(data.workingDirectory + inputFile)
-parseInput(inputText)
+// get current working path
+var cwd: [Int8] = Array(count: Int(MAXPATHLEN), repeatedValue: 0)
+let path = getcwd(&cwd, Int(MAXPATHLEN))
+let workingDirectory = String.fromCString(path)! + "/"
+
+// get the text from the input file
+var inputText = readVariables(workingDirectory + inputFilenameNoExtension + ".txt")
+
+// return the user name from the inut file
+var userName = parseInput(inputText)
+
+var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)
 
 generateWBFile(data)
-generateCPPFile(data)
+
+if makeCPPWrapper {
+    generateCPPFile(data)
+}
 
 
 

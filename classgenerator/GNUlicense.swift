@@ -13,7 +13,7 @@ func getCreatorDetailsCommentWB(data: ClassData) -> String {
     let comment = "/** \n" +
         " * file \(data.wb).h \n" +
         " * \n" +
-        " * Created by \(data.userName) on \(data.creationDate)" +
+        " * Created by \(data.userName) at \(data.creationDate) \n" +
         " * Copyright (c) \(data.year) \(data.userName) \n" +
         " * \n" +
         " * This file was generated from \(data.inputFilename) \n" +
@@ -28,7 +28,7 @@ func getCreatorDetailsCommentCPP(data: ClassData) -> String {
     let comment = "/** \n" +
         " * file \(data.camel).h \n" +
         " * \n" +
-        " * Created by \(data.userName) on \(data.creationDate)" +
+        " * Created by \(data.userName) on \(data.creationDate) \n" +
         " * Copyright (c) \(data.year) \(data.userName) \n" +
         " * All rights reserved. \n" +
         " * \n" +
@@ -40,7 +40,7 @@ func getCreatorDetailsCommentCPP(data: ClassData) -> String {
 }
 
 
-func getLicense(name: String) -> String {
+func getLicense(data: ClassData) -> String {
     
     let license = " * Redistribution and use in source and binary forms, with or without \n" +
     " * modification, are permitted provided that the following conditions \n" +
@@ -57,7 +57,7 @@ func getLicense(name: String) -> String {
     " * 3. All advertising materials mentioning features or use of this \n" +
     " *    software must display the following acknowledgement: \n" +
     " * \n" +
-    " *    This product includes software developed by \(name). \n" +
+    " *    This product includes software developed by \(data.userName). \n" +
     " * \n" +
     " * 4. Neither the name of the author nor the names of contributors \n" +
     " *    may be used to endorse or promote products derived from this \n" +
