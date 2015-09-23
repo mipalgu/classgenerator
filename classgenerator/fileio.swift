@@ -145,12 +145,13 @@ func generateCStruct(data: ClassData) -> String {
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         
         "#define \(data.wb)_h \n\n" +
-        "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
+        "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#include <gu_util.h> \n" +
         "#include <stdio.h> \n" +
         "#include <string.h> \n" +
-        "#include <stdlib.h> \n\n" +
-        
+        "#include <stdlib.h> \n" +
+        "#endif  \n\n" +
+    
         "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
         "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n" +
@@ -168,13 +169,14 @@ func generateCStruct(data: ClassData) -> String {
         "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
     }
     
+    cStruct1 += "}; \n\n"
     
     cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     // create description() method
     cStruct1 += "\t/** convert to a description string */  \n" +
         "\tconst char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ) {\n" +
-        "\t\tdescString[\(data.caps)_DESC_BUFFER_SIZE+1] = '\\0'; \n" +
+        "\t\tdescString[\(data.caps)_DESC_BUFFER_SIZE] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
 
     var first = true
@@ -193,12 +195,12 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tgu_strlcat( descString, \",\", sizeof(',') ); \n\n"
+                    cStruct1 += "\t\tgu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
                 }
                 
                 cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", sizeof('\(varNames[i])=') ); \n" +
                     "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                    "\t\tgu_strlcat(descString, buffer, sizeof(buffer) ); \n"
+                    "\t\tgu_strlcat(descString, buffer, \(data.caps)_DESC_BUFFER_SIZE ); \n"
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -210,7 +212,7 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tgu_strlcat( descString, \",\", sizeof(',') ); \n\n"
+                cStruct1 += "\t\tgu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
             }
             
             cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", sizeof('\(varNames[i])=') ); \n" +
@@ -225,7 +227,7 @@ func generateCStruct(data: ClassData) -> String {
     // create to_string method
     cStruct1 += "\t/** convert to a string */  \n" +
         "\tconst char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
-        "\t\tchar* toString[\(data.caps)_TO_STRING_BUFFER_SIZE+1] = '\\0'; \n" +
+        "\t\tchar* toString[\(data.caps)_TO_STRING_BUFFER_SIZE] = '\\0'; \n" +
         "\t\tchar buffer[20]; \n"
     
     first = true
@@ -244,11 +246,11 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
                     
-                    cStruct1 += "\t\tgu_strlcat( toString, \",\", sizeof(',') ); \n\n"
+                    cStruct1 += "\t\tgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
                 }
                 
                 cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                "\t\tgu_strlcat(toString, buffer, sizeof(buffer)); \n\n"
+                "\t\tgu_strlcat(toString, buffer, \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
         }
             // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -260,7 +262,7 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tsgu_strlcat( toString, \",\", sizeof(',') ); \n\n"
+                cStruct1 += "\t\tsgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
             }
             
             cStruct1 += "\t\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", sizeof(\(varNames[i]) ? \"true\" : \"false\") ); \n\n"
@@ -276,7 +278,7 @@ func generateCStruct(data: ClassData) -> String {
     
     cStruct1 += "\t\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "\t\tchar* descStrings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "\t\tconst char s[2] = \",\";  // delimeters \n" +
+        "\t\tconst char s[3] = \", \";  // delimeters \n" +
         "\t\tconst char e[2] = \"=\";  // delimeters \n" +
         "\t\tchar* tokenS, *tokenE, *token; \n\n" +
         
@@ -326,8 +328,7 @@ func generateCStruct(data: ClassData) -> String {
     cStruct1 += "\t\treturn self \n" +
         
             "\t} \n" +
-        "}; \n" +
-        "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
+        "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n"
     
     return cStruct1
 }
@@ -372,7 +373,7 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "  {} \n\n" +
         
         "\t\t/** Copy Constructor */ \n" +
-    "\t\t\(data.cpp)(const  \(data.wb) &other) : \n"
+    "\t\t\(data.cpp)(const \(data.wb) &other) : \n"
     
     
     for i in 0...varTypes.count-1 {
@@ -406,7 +407,7 @@ func generateCPPStruct(data: ClassData) -> String {
                 "\t\t\tstd::string descr = buffer; \n" +
                 "\t\t\treturn descr; \n" +
                 "\t\t\t#else \n" +
-                " description in c++ \n " +
+                " description in c++ \n " +   ///********************************
                 "\t\t\t#endif" +
         
                 "\t\t} \n" +
@@ -487,35 +488,35 @@ func getToStringBufferSize() -> size_t {
     
     var size: size_t = 0
     
-    size += (varNames.count-1) //* strideofValue(",")  // commas
+    size += (varNames.count-1) * 2 // commas and spaces
     
     for type in varTypes {
         
         switch type {
         case "bool":
-            size += 5    // 'false' is 5 characters    // boolean is 1 byte
+            size += 5    // 'false' is 5 characters
         case "int":
-            size += 11   // strideof(Int)
+            size += 11
         case "int8_t":
-            size += 4    // strideof(Int8)
+            size += 4
         case "uint8_t":
             size += 3
         case "int16_t":
-            size += 6    //strideof(Int16)
+            size += 6
         case "uint16_t":
             size += 5
         case "int32_t":
-            size += 11   //strideof(Int32)
+            size += 11
         case "uint32_t":
             size += 10
         case "int64_t", "uint64_t":
-            size += 20   //strideof(Int64)
+            size += 20
         default:
             print("Unknown variable type")
         }
     }
     
-    return size
+    return size + 1
 }
 
 
