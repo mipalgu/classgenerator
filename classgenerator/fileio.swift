@@ -190,17 +190,24 @@ func generateCStruct(data: ClassData) -> String {
                 if first {
                     
                     cStruct1 += "\n"
-                    first = false
+                    
                 }
                 else {
 
                     cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
                 }
                 
-                cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n" +
+                if !first {
+                    cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n"
+                }
                     
-                    "\t\t\tsnprintf(descString+len, \(data.caps)_DESC_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ) \n" +
-                "\t\t} \n\n"
+                cStruct1 += "\t\t\tsnprintf(descString+len, \(data.caps)_DESC_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                
+                if !first {
+                    cStruct1 += "\t\t} \n\n"
+                }
+                
+                first = false
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -208,17 +215,25 @@ func generateCStruct(data: ClassData) -> String {
             if first {
                 
                 cStruct1 += "\n"
-                first = false
+                
             }
             else {
                 
                 cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
             }
             
-            cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n" +
-                "\t\t\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n" +
-                "\t\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n" +
-            "\t\t} \n\n "
+            if !first {
+                cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n"
+            }
+            
+            cStruct1 += "\t\t\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n" +
+                "\t\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+            
+            if !first {
+                cStruct1 += "\t\t} \n\n "
+            }
+            
+            first = false
         }
     }
 
@@ -229,8 +244,7 @@ func generateCStruct(data: ClassData) -> String {
     // create to_string method
     cStruct1 += "\t/** convert to a string */  \n" +
         "\tconst char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
-        "\t\tchar* toString[\(data.caps)_TO_STRING_BUFFER_SIZE] = '\\0'; \n" +
-        "\t\tchar buffer[20]; \n"
+        "\t\tsize_t len; \n"
     
     first = true
     
@@ -242,32 +256,45 @@ func generateCStruct(data: ClassData) -> String {
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
                 
                 if first {
-                    
                     cStruct1 += "\n"
-                    first = false
                 }
                 else {
-                    
-                    cStruct1 += "\t\tgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+                    cStruct1 += "\t\tlen = gu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
                 }
                 
-                cStruct1 += "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                "\t\tgu_strlcat(toString, buffer, \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+                if !first {
+                    cStruct1 += "\t\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n"
+                }
+                
+                cStruct1 += "\t\t\tsnprintf(toString+len, \(data.caps)_TO_STRING_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                
+                if !first {
+                    cStruct1 += "\t\t} \n\n "
+                }
+                
+                first = false
         }
             // if the variable is a bool
         else if varTypes[i] == "bool" {
             
             if first {
-                
                 cStruct1 += "\n"
-                first = false
             }
             else {
-                
                 cStruct1 += "\t\tsgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
             }
             
-            cStruct1 += "\t\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+            if !first {
+                cStruct1 += "\t\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n"
+            }
+            
+            cStruct1 += "\t\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+            
+            if !first {
+                cStruct1 += "\t\t} \n\n "
+            }
+            
+            first = false
         }
     }
     
