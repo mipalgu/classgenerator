@@ -16,6 +16,7 @@ class ClassData {
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
     var caps: String        // upper case, including underscores
+    var cpp: String         // c++ class
     var userName: String
     var creationDate: String
     var year: Int
@@ -32,6 +33,7 @@ class ClassData {
         
         self.camel = camelCaseWord(words)
         self.caps = uppercaseWord(inputFilenameNoExtension)
+        self.cpp = cppWord(words)
         
         // get user name
         if userName == "YOUR NAME" {

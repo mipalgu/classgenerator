@@ -71,3 +71,18 @@ func camelCaseWord(words: [String]) -> String {
     return camelCase
 }
 
+
+
+func cppWord(words: [String]) -> String {
+    
+    var cpp: String = ""
+    var wordToAdd: String = ""
+    
+    for word in words {
+            wordToAdd = capitalisedWord(word)
+        
+        cpp += wordToAdd
+    }
+    
+    return cpp
+}

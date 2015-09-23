@@ -26,7 +26,7 @@ func getCreatorDetailsCommentWB(data: ClassData) -> String {
 func getCreatorDetailsCommentCPP(data: ClassData) -> String {
     
     let comment = "/** \n" +
-        " * file \(data.camel).h \n" +
+        " * file \(data.cpp).h \n" +
         " * \n" +
         " * Created by \(data.userName) on \(data.creationDate) \n" +
         " * Copyright (c) \(data.year) \(data.userName) \n" +

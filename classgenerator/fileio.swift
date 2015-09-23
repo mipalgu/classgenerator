@@ -335,9 +335,9 @@ func generateCStruct(data: ClassData) -> String {
 
 func generateCPPStruct(data: ClassData) -> String {
     
-    var cppStruct = "#ifndef \(data.camel)_DEFINED \n" +
+    var cppStruct = "#ifndef \(data.cpp)_DEFINED \n" +
         
-        "#define \(data.camel)_DEFINED \n\n" +
+        "#define \(data.cpp)_DEFINED \n\n" +
         
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#include <cstdlib> \n" +
@@ -349,14 +349,14 @@ func generateCPPStruct(data: ClassData) -> String {
         "namespace guWhiteboard {\n" +
         
             "\t/** \n" +
-            "\t *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.camel)\n" +
+            "\t *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.cpp)\n" +
             "\t * \n" +
             "\t */ \n" +
         
-            "\tclass \(data.camel): public \(data.wb) { \n" +
+            "\tclass \(data.cpp): public \(data.wb) { \n" +
         
             "\t\t/** Default constructor */ \n" +
-            "\t\t\(data.wb)() : "
+            "\t\t\(data.cpp)() : "
     
     for i in 0...varTypes.count-1 {
         
@@ -372,7 +372,7 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "  {} \n\n" +
         
         "\t\t/** Copy Constructor */ \n" +
-    "\t\t\(data.wb)(const  \(data.wb) &other) : \n"
+    "\t\t\(data.cpp)(const  \(data.wb) &other) : \n"
     
     
     for i in 0...varTypes.count-1 {
@@ -387,7 +387,7 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "  {} \n\n" +
         
         "\t\t/** Assignment Operator */ \n" +
-        "\t\t\(data.wb) &operator= (const \(data.wb) &other) { \n"
+        "\t\t\(data.cpp) &operator= (const \(data.wb) &other) { \n"
     
     
     for i in 0...varTypes.count-1 {
@@ -400,10 +400,14 @@ func generateCPPStruct(data: ClassData) -> String {
         
                 "\t\t#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
                 "\t\tstd::string description() { \n" +
+                "\t\t\t#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
                 "\t\t\tchar buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
                 "\t\t\t\(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
                 "\t\t\tstd::string descr = buffer; \n" +
                 "\t\t\treturn descr; \n" +
+                "\t\t\t#else \n" +
+                " description in c++ \n " +
+                "\t\t\t#endif" +
         
                 "\t\t} \n" +
                 "\t\t#endif \n" +
@@ -440,14 +444,14 @@ func generateWBFile(data: ClassData) -> Void {
 
 func generateCPPFile(data: ClassData) -> Void {
     
-    let filePath = data.workingDirectory + "/" + data.camel + ".h"
+    let filePath = data.workingDirectory + "/" + data.cpp + ".h"
     
     // open a filestream for reading
     let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
     
     if fs == nil {
         // file did not open
-        print("\(data.camel).h : Could not create file\n")
+        print("\(data.cpp).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
     
