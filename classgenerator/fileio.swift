@@ -176,8 +176,7 @@ func generateCStruct(data: ClassData) -> String {
     // create description() method
     cStruct1 += "\t/** convert to a description string */  \n" +
         "\tconst char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ) {\n" +
-        "\t\tdescString[\(data.caps)_DESC_BUFFER_SIZE] = '\\0'; \n" +
-        "\t\tchar buffer[20]; \n"
+        "\t\tsize_t len; \n"
 
     var first = true
         
@@ -195,12 +194,13 @@ func generateCStruct(data: ClassData) -> String {
                 }
                 else {
 
-                    cStruct1 += "\t\tgu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+                    cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
                 }
                 
-                cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", sizeof('\(varNames[i])=') ); \n" +
-                    "\t\titoa(\(varNames[i]),buffer,10); \n" +
-                    "\t\tgu_strlcat(descString, buffer, \(data.caps)_DESC_BUFFER_SIZE ); \n"
+                cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n" +
+                    
+                    "\t\t\tsnprintf(descString+len, \(data.caps)_DESC_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ) \n" +
+                "\t\t} \n\n"
         }
         // if the variable is a bool
         else if varTypes[i] == "bool" {
@@ -212,11 +212,13 @@ func generateCStruct(data: ClassData) -> String {
             }
             else {
                 
-                cStruct1 += "\t\tgu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+                cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
             }
             
-            cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", sizeof('\(varNames[i])=') ); \n" +
-                "\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", sizeof(\(varNames[i]) ? \"true\" : \"false\") ); \n"
+            cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n" +
+                "\t\t\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n" +
+                "\t\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n" +
+            "\t\t} \n\n "
         }
     }
 
@@ -265,7 +267,7 @@ func generateCStruct(data: ClassData) -> String {
                 cStruct1 += "\t\tsgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
             }
             
-            cStruct1 += "\t\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", sizeof(\(varNames[i]) ? \"true\" : \"false\") ); \n\n"
+            cStruct1 += "\t\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
         }
     }
     
