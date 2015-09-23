@@ -15,101 +15,61 @@ class ClassData {
     var workingDirectory: String
     var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
     var camel: String       // camel case, without underscores
-//    var caps: String        // upper case, including underscores DO I NEED THIS????
+    var caps: String        // upper case, including underscores
+    var cpp: String         // c++ class
     var userName: String
     var creationDate: String
     var year: Int
     
-    init(inputFilename: String) {
+    init(workingDirectory: String, inputFilenameNoExtension: String, userName: String) {
         
-        self.inputFilename = inputFilename
+        self.inputFilename = inputFilenameNoExtension + ".txt"
         
-        let nameWithoutExtension = inputFilename.characters.split {$0 == "."}.map { String($0) }
+        // make wb_ name : the name not including .txt, with wb_ added
+        self.wb = "wb_" + inputFilenameNoExtension
         
-        // make wb_ name
-        self.wb = "wb_" + nameWithoutExtension[0] // The name not including .txt, with wb_ added
+        // split the name into words, delimited by underscore
+        let words = inputFilenameNoExtension.characters.split {$0 == "_"}.map { String($0) }
         
-        let words = nameWithoutExtension[0].characters.split {$0 == "_"}.map { String($0) }
-        
-        // make camel case
-        if words.count == 1 {
-            
-            // only one word in the name
-            self.camel = words[0]
-        }
-        else {
-            // more than one word, make camel case
-            var camelCase: String = ""
-            var wordToAdd = words[0]
-            for word in words {
-                if camelCase.characters.count > 0 {
-
-                    wordToAdd = capitalisedWord(word)
-                }
-                
-                camelCase += wordToAdd
-            }
-            
-            self.camel = camelCase
-        }
-        
-//      self.caps = nameWithoutExtension[0].uppercaseString    // don't use: FOUNDATION
+        self.camel = camelCaseWord(words)
+        self.caps = uppercaseWord(inputFilenameNoExtension)
+        self.cpp = cppWord(words)
         
         // get user name
-        let pw = getpwuid(getuid())
-        if pw != nil {
-            self.userName = String.fromCString(pw.memory.pw_name)!
+        if userName == "YOUR NAME" {
+            // no name supplied
+            self.userName = getUserName()
         }
         else {
-            self.userName = "YOUR NAME"
+            self.userName = userName
         }
         
-        print("user is: \(self.userName)")
+        // get working directory
+        self.workingDirectory = workingDirectory
         
-        // get working directory  **** DO AUTOMATICALLY INCL LINUX ****
-        self.workingDirectory = "/Users/\(self.userName)/src/MiPal/GUNao/posix/classgenerator/classgenerator/"
+        var t = time(nil)     // ********* error check *********
+        var timeInfo = tm()
+        localtime_r(&t, &timeInfo)
         
-        var t = time(nil)    /// error check and set default value ***************
-        self.creationDate = String.fromCString(ctime(&t))!
-        
-        self.year = 2015   /// TO DO  ***************
+        self.year = Int(timeInfo.tm_year) + 1900
+//        self.creationDate = String.fromCString(ctime(&t))!
+        self.creationDate = "\(timeInfo.tm_hour):\(timeInfo.tm_min), \(timeInfo.tm_mday)/\(timeInfo.tm_mon+1)/\(timeInfo.tm_year+1900)"
     }
 }
 
 
-func upperCase (ch: Character) -> Character {
+func getUserName() -> String {
     
-    if ( ch >= "a" ) && ( ch <= "z" ){
-        
-        let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
-        let val = scalars[scalars.startIndex].value  // value of the unicode scalar
-        
-        return Character(UnicodeScalar(val - 32))    // return the capital
+    let pw = getpwuid(getuid())
+    
+    if pw != nil {
+        return String.fromCString(pw.memory.pw_name)!
     }
     else {
-        
-        return ch                                    // return the character since it's not a letter
+        return "YOUR NAME"
     }
 }
 
 
-func capitalisedWord (word: String) -> String {
-    
-    var capWord = ""
-    var firstLetter = true
-    
-    for ch in word.characters {
-        
-        if firstLetter {
-            capWord += String(upperCase(ch))    // return an uppercase character as a String
-            firstLetter = false
-        }
-        else {
-            capWord += String(ch)
-        }
-    }
-
-    return capWord
-}
 
 
