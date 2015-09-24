@@ -8,10 +8,10 @@
 
 
 
-func getCreatorDetailsCommentWB(data: ClassData) -> String {
+func getCreatorDetailsCommentWB(data: ClassData, fileType: String) -> String {
     
     let comment = "/** \n" +
-        " * file \(data.wb).h \n" +
+        " * file \(data.wb)\(fileType) \n" +
         " * \n" +
         " * Created by \(data.userName) at \(data.creationDate) \n" +
         " * Copyright (c) \(data.year) \(data.userName) \n" +

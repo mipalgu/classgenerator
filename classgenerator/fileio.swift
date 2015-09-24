@@ -139,9 +139,6 @@ func readVariables(inputFileName: String) -> String {
 
 func generateWbHeader(data: ClassData) -> String {
     
-    let toStringBufferSize = getToStringBufferSize()
-    let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
-    
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         
         "#define \(data.wb)_h \n\n" +
@@ -184,12 +181,10 @@ func generateWbC(data: ClassData) -> String {
     let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
     
     var cText = "#include <\(data.wb).h> \n" +
-    "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
     "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
     "#include <stdlib.h> \n" +
-    "#endif  \n\n" +
     
     "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
     "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
@@ -408,6 +403,7 @@ func generateCPPStruct(data: ClassData) -> String {
         "#include <string.h> \n" +
         "#endif \n" +
         "#include <gu_util.h> \n" +
+        "#include <sstream>" +
         "#include \"\(data.wb).h\" \n\n" +
         
         "namespace guWhiteboard {\n" +
@@ -448,7 +444,7 @@ func generateCPPStruct(data: ClassData) -> String {
         }
     }
     
-    cppStruct += "  {} \n\n" +
+    cppStruct += " {} \n\n" +
         
         "\t\t/** Assignment Operator */ \n" +
         "\t\t\(data.cpp) &operator= (const \(data.wb) &other) { \n"
@@ -470,8 +466,26 @@ func generateCPPStruct(data: ClassData) -> String {
                 "\t\t\tstd::string descr = buffer; \n" +
                 "\t\t\treturn descr; \n" +
                 "\t\t\t#else \n" +
-                " description in c++ \n " +   ///********************************
-                "\t\t\t#endif" +
+        
+                "\t\t\tstd::string description() const { \n" +
+                "\t\t\t\tstd::ostringstream ss; \n"
+    
+                var first = true
+    
+                for i in 0...varTypes.count-1 {
+                    
+                    if !first {
+                        cppStruct += " << \", \"; \n "
+                    }
+                    
+                    cppStruct += "\t\t\t\tss << \"\(varNames[i])=\" << \(varNames[i])"
+                    first = false
+                }
+
+                cppStruct += "\n\t\t\t\treturn ss.str(); \n" +
+                    "\t\t\t} \n" +
+    
+                "\t\t\t#endif \n" +
         
                 "\t\t} \n" +
                 "\t\t#endif \n" +
@@ -500,9 +514,10 @@ func generateWBFiles(data: ClassData) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    let commentText = getCreatorDetailsCommentWB(data) + getLicense(data)
+    var commentText = getCreatorDetailsCommentWB(data, fileType: ".h")
+    let licenseText = getLicense(data)
     
-    let headerText =  commentText + generateWbHeader(data)
+    let headerText =  commentText + licenseText + generateWbHeader(data)
     
     fputs( headerText, fsh )    /// perhaps use multiple fputs statements instead ????
     closeFileStream(fsh)
@@ -520,7 +535,9 @@ func generateWBFiles(data: ClassData) -> Void {
         exit(EXIT_FAILURE)
     }
     
-    let cText =  commentText + generateWbC(data)
+    commentText = getCreatorDetailsCommentWB(data, fileType: ".c")
+    
+    let cText =  commentText + licenseText + generateWbC(data)
     
     fputs( cText, fsc )    /// perhaps use multiple fputs statements instead ????
     closeFileStream(fsc)
