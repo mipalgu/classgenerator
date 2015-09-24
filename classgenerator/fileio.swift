@@ -226,8 +226,13 @@ func generateCStruct(data: ClassData) -> String {
                 cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
             }
             
-            cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n" +
-                "\t\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+            cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n"
+            
+            if !first {
+                cStruct1 += "\t"
+            }
+            
+            cStruct1 += "\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
             
             if !first {
                 cStruct1 += "\t\t} \n\n "
