@@ -188,12 +188,9 @@ func generateCStruct(data: ClassData) -> String {
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
             
                 if first {
-                    
                     cStruct1 += "\n"
-                    
                 }
                 else {
-
                     cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
                 }
                 
@@ -311,33 +308,42 @@ func generateCStruct(data: ClassData) -> String {
         "\tstruct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
     
     cStruct1 += "\t\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "\t\tchar* descStrings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "\t\tconst char s[3] = \", \";  // delimeters \n" +
         "\t\tconst char e[2] = \"=\";  // delimeters \n" +
-        "\t\tchar* tokenS, *tokenE, *token; \n\n" +
+        "\t\tchar* tokenS, *tokenE, *saveptr; \n\n" +
         
+        "\t\tmemset(descString, NULL, sizeof(\(data.caps)_NUMBER_OF_VARIABLES)); \n\n " +
+    
         "\t\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
-            "\t\tint j = i; \n" +
-            "\t\t\ttokenS = strtok(str, s); \n\n" +
+            "\t\t\tint j = i; \n" +
+            "\t\t\ttokenS = strtok_r(str, s, &saveptr); \n\n" +
         
             "\t\tif (tokenS) { \n" +
-            "\t\t\tif ????????? \n\n\n"
         
-            "\t\t\tdescStrings[i] = tokenS; \n" +
+                "\t\t\ttokenE = strchr(tokenS, '='); \n\n" +
         
-        "\t\t} \n\n" +
+                "\t\t\tif (tokenE == NULL) { \n " +
+                    "\t\t\t\ttokenE = tokenS; \n " +
+                "\t\t\t} \n" +
+                "\t\t\telse { /n " +
+                    "\t\t\t\ttokenE++; \n " +
+                "\t\t\t} \n\n"
     
-        "\t\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n\n" +
+    for i in 0...varNames.count-1 {
         
-        "\t\t\ttokenE = strtok(descStrings[i], e); \n\n" +
+        if ( i == 0 ) {
+            cStruct1 += "\t\t\tif "
+        }
+        else {
+            cStruct1 += "\t\t\telse if "
+        }
         
-        "\t\t\t// Remove the variable name and equals sign (if there) \n" +
-        "\t\t\twhile ( tokenE != NULL ) { \n" +
-            "\t\t\t\ttoken = tokenE; \n" +
-            "\t\t\t\ttokenE = strtok(NULL, e); \n" +
-        "\t\t\t} \n\n" +
-        
-        "\t\t\tstrings[i] = token; \n" +
+        cStruct1 += "( strcmp(tokenS, \"\(varNames[i])\") == 0 ) { \n " +
+        "\t\t\t\tj = \(i) \n " +
+        "\t\t\t} \n"
+    }
+
+        cStruct1 += "\t\t\tstrings[j] = tokenE; \n" +
         
         "\t\t} \n\n"
     
