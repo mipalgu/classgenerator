@@ -137,7 +137,7 @@ func readVariables(inputFileName: String) -> String {
 
 
 
-func generateCStruct(data: ClassData) -> String {
+func generateWbHeader(data: ClassData) -> String {
     
     let toStringBufferSize = getToStringBufferSize()
     let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
@@ -150,13 +150,14 @@ func generateCStruct(data: ClassData) -> String {
         "#include <stdio.h> \n" +
         "#include <string.h> \n" +
         "#include <stdlib.h> \n" +
-        "#endif  \n\n" +
+        "#endif  \n\n"
     
-        "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
-        "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
-        "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n" +
+    cStruct1 += "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ); \n" +
+        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ); \n" +
+        "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n\n"
     
-        "/** \n" +
+    
+    cStruct1 += "/** \n" +
         " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
         " * \n" +
         " */ \n" +
@@ -171,82 +172,102 @@ func generateCStruct(data: ClassData) -> String {
     
     cStruct1 += "}; \n\n"
     
-    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
+    return cStruct1
+}
+
+
+
+
+func generateWbC(data: ClassData) -> String {
+    
+    let toStringBufferSize = getToStringBufferSize()
+    let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
+    
+    var cText = "#include <\(data.wb).h> \n" +
+    "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+    "#include <gu_util.h> \n" +
+    "#include <stdio.h> \n" +
+    "#include <string.h> \n" +
+    "#include <stdlib.h> \n" +
+    "#endif  \n\n" +
+    
+    "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
+    "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
+    "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
+    
+    cText += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     // create description() method
-    cStruct1 += "\t/** convert to a description string */  \n" +
-        "\tconst char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ) {\n" +
-        "\t\tsize_t len; \n"
-
+    cText += "/** convert to a description string */  \n" +
+        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ) {\n" +
+    "\tsize_t len; \n"
+    
     var first = true
-        
+    
     for i in 0...varTypes.count-1 {
         
         // if the variabe is an integer type
         if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
             varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-            
+                
                 if first {
-                    cStruct1 += "\n"
+                    cText += "\n"
                 }
                 else {
-                    cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+                    cText += "\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
                 }
                 
                 if !first {
-                    cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
+                    cText += "\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
                 }
-                    
-                cStruct1 += "\t\tsnprintf(descString+len, \(data.caps)_DESC_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                
+                cText += "\tsnprintf(descString+len, \(data.caps)_DESC_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
                 
                 if !first {
-                    cStruct1 += "\t\t} \n\n"
+                    cText += "\t} \n\n"
                 }
                 
                 first = false
         }
-        // if the variable is a bool
+            // if the variable is a bool
         else if varTypes[i] == "bool" {
             
             if first {
-                
-                cStruct1 += "\n"
-                
+                cText += "\n"
             }
             else {
-                
-                cStruct1 += "\t\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+                cText += "\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
             }
             
             if !first {
-                cStruct1 += "\t\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
+                cText += "\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
             }
             
-            cStruct1 += "\t\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n"
+            cText += "\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n"
             
             if !first {
-                cStruct1 += "\t"
+                cText += "\t"
             }
             
-            cStruct1 += "\t\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+            cText += "\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
             
             if !first {
-                cStruct1 += "\t\t} \n\n "
+                cText += "\t} \n\n "
             }
             
             first = false
         }
     }
-
-    cStruct1 += "\t\treturn descString; \n" +
-        "\t} \n\n"
-        
-        
+    
+    cText += "\treturn descString; \n" +
+    "} \n\n"
+    
+    
     // create to_string method
-    cStruct1 += "\t/** convert to a string */  \n" +
-        "\tconst char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
-        "\t\tsize_t len; \n"
+    cText += "/** convert to a string */  \n" +
+        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
+    "\tsize_t len; \n"
     
     first = true
     
@@ -258,20 +279,20 @@ func generateCStruct(data: ClassData) -> String {
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
                 
                 if first {
-                    cStruct1 += "\n"
+                    cText += "\n"
                 }
                 else {
-                    cStruct1 += "\t\tlen = gu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+                    cText += "\tlen = gu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
                 }
                 
                 if !first {
-                    cStruct1 += "\t\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n\t"
+                    cText += "\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n\t"
                 }
                 
-                cStruct1 += "\t\tsnprintf(toString+len, \(data.caps)_TO_STRING_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                cText += "\tsnprintf(toString+len, \(data.caps)_TO_STRING_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
                 
                 if !first {
-                    cStruct1 += "\t\t} \n\n "
+                    cText += "\t} \n\n "
                 }
                 
                 first = false
@@ -280,72 +301,72 @@ func generateCStruct(data: ClassData) -> String {
         else if varTypes[i] == "bool" {
             
             if first {
-                cStruct1 += "\n"
+                cText += "\n"
             }
             else {
-                cStruct1 += "\t\tsgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+                cText += "\tsgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
             }
             
             if !first {
-                cStruct1 += "\t\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n\t"
+                cText += "\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n\t"
             }
             
-            cStruct1 += "\t\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+            cText += "\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
             
             if !first {
-                cStruct1 += "\t\t} \n\n "
+                cText += "\t} \n\n "
             }
             
             first = false
         }
     }
     
-    cStruct1 += "\t\treturn toString; \n" +
-        "\t} \n\n"
-
+    cText += "\t\treturn toString; \n" +
+    "\t} \n\n"
+    
     // create from_string method
-    cStruct1 += "\t/** convert from a string */  \n" +
-        "\tstruct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
+    cText += "/** convert from a string */  \n" +
+    "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
     
-    cStruct1 += "\t\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "\t\tconst char s[3] = \", \";  // delimeters \n" +
-        "\t\tconst char e[2] = \"=\";  // delimeters \n" +
-        "\t\tchar* tokenS, *tokenE, *saveptr; \n\n" +
+    cText += "\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
+        "\tconst char s[3] = \", \";  // delimeters \n" +
+        "\tconst char e[2] = \"=\";  // delimeters \n" +
+        "\tchar* tokenS, *tokenE, *saveptr; \n\n" +
         
-        "\t\tmemset(descString, NULL, sizeof(\(data.caps)_NUMBER_OF_VARIABLES)); \n\n " +
-    
-        "\t\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
-            "\t\t\tint j = i; \n" +
-            "\t\t\ttokenS = strtok_r(str, s, &saveptr); \n\n" +
+        "\tmemset(descString, NULL, sizeof(\(data.caps)_NUMBER_OF_VARIABLES)); \n\n " +
         
-            "\t\tif (tokenS) { \n" +
+        "\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
+        "\t\tint j = i; \n" +
+        "\t\ttokenS = strtok_r(str, s, &saveptr); \n\n" +
         
-                "\t\t\ttokenE = strchr(tokenS, '='); \n\n" +
+        "\tif (tokenS) { \n" +
         
-                "\t\t\tif (tokenE == NULL) { \n " +
-                    "\t\t\t\ttokenE = tokenS; \n " +
-                "\t\t\t} \n" +
-                "\t\t\telse { /n " +
-                    "\t\t\t\ttokenE++; \n " +
-                "\t\t\t} \n\n"
+        "\t\ttokenE = strchr(tokenS, '='); \n\n" +
+        
+        "\t\tif (tokenE == NULL) { \n " +
+        "\t\t\ttokenE = tokenS; \n " +
+        "\t\t} \n" +
+        "\t\telse { \n " +
+        "\t\t\ttokenE++; \n " +
+    "\t\t} \n\n"
     
     for i in 0...varNames.count-1 {
         
         if ( i == 0 ) {
-            cStruct1 += "\t\t\tif "
+            cText += "\t\tif "
         }
         else {
-            cStruct1 += "\t\t\telse if "
+            cText += "\t\telse if "
         }
         
-        cStruct1 += "( strcmp(tokenS, \"\(varNames[i])\") == 0 ) { \n " +
-        "\t\t\t\tj = \(i) \n " +
-        "\t\t\t} \n"
+        cText += "( strcmp(tokenS, \"\(varNames[i])\") == 0 ) { \n " +
+            "\t\t\tj = \(i) \n " +
+        "\t\t} \n"
     }
-
-        cStruct1 += "\t\t\tstrings[j] = tokenE; \n" +
+    
+    cText += "\t\tstrings[j] = tokenE; \n" +
         
-        "\t\t} \n\n"
+    "\t} \n\n"
     
     for i in 0...varTypes.count-1 {
         
@@ -353,25 +374,27 @@ func generateCStruct(data: ClassData) -> String {
         if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
             varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
             varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-            
-            cStruct1 += "\t\tif (strings[\(i)] != NULL) \n" +
-                "\t\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n\n"
+                
+                cText += "\tif (strings[\(i)] != NULL) \n" +
+                "\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n\n"
         }
-        
+            
         else if varTypes[i] == "bool" {
-        
-            cStruct1 += "\t\tif (strings[\(i)] != NULL) \n" +
-                "\t\t\tset_\(varNames[i])(strings[\(i)]); \n\n"
+            
+            cText += "\tif (strings[\(i)] != NULL) \n" +
+            "\t\tset_\(varNames[i])(strings[\(i)]); \n\n"
         }
     }
     
-    cStruct1 += "\t\treturn self \n" +
+    cText += "\treturn self \n" +
         
-            "\t} \n" +
-        "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n"
+        "} \n" +
+    "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n"
     
-    return cStruct1
+    return cText
 }
+
+
 
 
 func generateCPPStruct(data: ClassData) -> String {
@@ -461,24 +484,46 @@ func generateCPPStruct(data: ClassData) -> String {
 
 
 
-func generateWBFile(data: ClassData) -> Void {
 
-    let filePath = data.workingDirectory + "/" + data.wb + ".h"
+
+func generateWBFiles(data: ClassData) -> Void {
+
+    // make header file
+    let headerFilePath = data.workingDirectory + "/" + data.wb + ".h"
     
     // open a filestream for reading
-    let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
+    let fsh : UnsafeMutablePointer<FILE> = fopen( headerFilePath, "w" )
     
-    if fs == nil {
+    if fsh == nil {
         // file did not open
         print("\(data.wb).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
     
-    let text = getCreatorDetailsCommentWB(data) + getLicense(data) + generateCStruct(data)
+    let commentText = getCreatorDetailsCommentWB(data) + getLicense(data)
     
-    fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
+    let headerText =  commentText + generateWbHeader(data)
     
-    closeFileStream(fs)
+    fputs( headerText, fsh )    /// perhaps use multiple fputs statements instead ????
+    closeFileStream(fsh)
+    
+    
+    // make c file
+    let cFilePath = data.workingDirectory + "/" + data.wb + ".c"
+    
+    // open a filestream for reading
+    let fsc : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
+    
+    if fsc == nil {
+        // file did not open
+        print("\(data.wb).c : Could not create file\n")
+        exit(EXIT_FAILURE)
+    }
+    
+    let cText =  commentText + generateWbC(data)
+    
+    fputs( cText, fsc )    /// perhaps use multiple fputs statements instead ????
+    closeFileStream(fsc)
 }
 
 

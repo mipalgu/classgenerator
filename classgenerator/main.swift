@@ -94,7 +94,7 @@ var userName = parseInput(inputText)
 
 var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)
 
-generateWBFile(data)
+generateWBFiles(data)
 
 if makeCPPWrapper {
     generateCPPFile(data)
