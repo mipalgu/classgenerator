@@ -10,6 +10,8 @@
 		00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00021F601B897D1100F7F681 /* GNUlicense.swift */; };
 		00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; settings = {ASSET_TAGS = (); }; };
 		00542AB31BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; settings = {ASSET_TAGS = (); }; };
+		00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
+		00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
 		00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BAD0A61B9827F300A3A062 /* Tests.swift */; };
 		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
 		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
@@ -31,6 +33,7 @@
 /* Begin PBXFileReference section */
 		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
 		00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
+		00A9F9281BB621DD00F97E85 /* VariablesData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariablesData.swift; sourceTree = "<group>"; };
 		00BAD0A41B9827F200A3A062 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BAD0A61B9827F300A3A062 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		00BAD0A81B9827F300A3A062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -89,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				00BCC1041B7EDA17002C72B7 /* main.swift */,
+				00A9F9281BB621DD00F97E85 /* VariablesData.swift */,
 				00BCC10E1B7EFE28002C72B7 /* fileio.swift */,
 				00021F601B897D1100F7F681 /* GNUlicense.swift */,
 				00D9678B1B886CAE00D47595 /* ClassData.swift */,
@@ -186,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */,
 				00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */,
 				00542AB31BACEDDD0074AD7D /* stringmanipulation.swift in Sources */,
 			);
@@ -198,6 +203,7 @@
 				00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */,
 				00BCC1051B7EDA17002C72B7 /* main.swift in Sources */,
 				00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */,
+				00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */,
 				00D9678C1B886CAE00D47595 /* ClassData.swift in Sources */,
 				00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */,
 			);
