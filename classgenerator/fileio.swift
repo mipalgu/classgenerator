@@ -151,9 +151,9 @@ func generateWbHeader(data: ClassData) -> String {
         "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
     
     cStruct1 += "/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ); \n\n" +
+        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ); \n\n" +
         "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ); \n\n" +
+        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ); \n\n" +
         "/** convert from a string */  \n" +
         "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n\n"
     
@@ -191,8 +191,11 @@ func generateWbC(data: ClassData) -> String {
     
     // create description() method
     cText += "/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ) {\n" +
-    "\tsize_t len; \n"
+        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ) {\n"
+    
+    if varTypes.count > 1 {
+        cText += "\tsize_t len; \n"
+    }
     
     var first = true
     
@@ -236,7 +239,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\tif ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat(descString, \"\(varNames[i])=\", bufferSize ); \n"
+            cText += "\tgu_strlcat( descString, \"\(varNames[i])=\", bufferSize ); \n"
             
             if !first {
                 cText += "\t"
@@ -258,8 +261,11 @@ func generateWbC(data: ClassData) -> String {
     
     // create to_string method
     cText += "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ) {\n" +
-    "\tsize_t len; \n"
+        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ) {\n"
+    
+    if varTypes.count > 1 {
+        cText += "\tsize_t len; \n"
+    }
     
     first = true
     
@@ -313,8 +319,8 @@ func generateWbC(data: ClassData) -> String {
         }
     }
     
-    cText += "\t\treturn toString; \n" +
-    "\t} \n\n"
+    cText += "\treturn toString; \n" +
+    "} \n\n"
     
     // create from_string method
     cText += "/** convert from a string */  \n" +
