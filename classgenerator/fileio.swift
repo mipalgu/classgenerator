@@ -79,10 +79,14 @@ func setDefault(varType: String) -> String {
             defaultValue = "ADD DEFAULT"
     }
 */
-    let defaultValue = variables[varType]!.defaultValue
-
-    print ("Unspecified \(varType) set to default value of: \(defaultValue)")
-    return defaultValue
+    if let defaultValue = variables[varType]?.defaultValue {
+        print ("Unspecified \(varType) set to default value of: \(defaultValue)")
+        return defaultValue
+    }
+    else {
+        print ("Unknown type \(varType) set to default value of: \"ADD DEFAULT\"")
+        return "ADD DEFAULT"
+    }
 }
 
 
@@ -204,32 +208,8 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
         
-        // if the variabe is an integer type
-        if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
-            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
-            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-                
-                if first {
-                    cText += "\n"
-                }
-                else {
-                    cText += "\tlen = gu_strlcat( descString, \", \", bufferSize ); \n\n"
-                }
-                
-                if !first {
-                    cText += "\tif ( len < bufferSize ) { \n\t"
-                }
-                
-                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
-                
-                if !first {
-                    cText += "\t} \n\n"
-                }
-                
-                first = false
-        }
-            // if the variable is a bool
-        else if varTypes[i] == "bool" {
+        // if the variable is a bool
+        if varTypes[i] == "bool" {
             
             if first {
                 cText += "\n"
@@ -256,6 +236,37 @@ func generateWbC(data: ClassData) -> String {
             
             first = false
         }
+        
+        
+        
+        
+        
+        
+        // if the variabe is an integer type
+        else if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
+            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
+            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
+                
+                if first {
+                    cText += "\n"
+                }
+                else {
+                    cText += "\tlen = gu_strlcat( descString, \", \", bufferSize ); \n\n"
+                }
+                
+                if !first {
+                    cText += "\tif ( len < bufferSize ) { \n\t"
+                }
+                
+                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                
+                if !first {
+                    cText += "\t} \n\n"
+                }
+                
+                first = false
+        }
+
     }
     
     cText += "\treturn descString; \n" +

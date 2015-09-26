@@ -11,63 +11,64 @@ struct varData {
     let defaultValue : String
     let length : Int
     let macro : String
+    let format : String    // format specifier to use
 }
 
 
 // Are complex types needed?
 let variables = [
 
-    "bool": varData(defaultValue: "false", length: 5,  macro: "PROPERTY"),
+    "bool": varData(defaultValue: "false", length: 5,  macro: "PROPERTY", format: ""),
     
-    "char":          varData(defaultValue: "0", length: 1, macro: "PROPERTY"),
-    "signed char":   varData(defaultValue: "0", length: 2, macro: "PROPERTY"),
-    "unsigned char": varData(defaultValue: "0", length: 1, macro: "PROPERTY"),
+    "char":          varData(defaultValue: "0", length: 1, macro: "PROPERTY", format: "%c"),
+    "signed char":   varData(defaultValue: "0", length: 2, macro: "PROPERTY", format: "%c"),
+    "unsigned char": varData(defaultValue: "0", length: 1, macro: "PROPERTY", format: "%c"),
     
-    "int":          varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "signed":       varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "signed int":   varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "unsigned":     varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "unsigned int": varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
+    "int":          varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%d"),
+    "signed":       varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%d"),
+    "signed int":   varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%d"),
+    "unsigned":     varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%u"),
+    "unsigned int": varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%u"),
     
-    "int8_t":   varData(defaultValue: "0", length: 4,  macro: "PROPERTY"),
-    "uint8_t":  varData(defaultValue: "0", length: 3,  macro: "PROPERTY"),
-    "int16_t":  varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
-    "uint16_t": varData(defaultValue: "0", length: 5,  macro: "PROPERTY"),
-    "int32_t":  varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "uint32_t": varData(defaultValue: "0", length: 10, macro: "PROPERTY"),
-    "int64_t":  varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "uint64_t": varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
+    "int8_t":   varData(defaultValue: "0", length: 4,  macro: "PROPERTY", format: "%d"),
+    "uint8_t":  varData(defaultValue: "0", length: 3,  macro: "PROPERTY", format: "%u"),
+    "int16_t":  varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%d"),
+    "uint16_t": varData(defaultValue: "0", length: 5,  macro: "PROPERTY", format: "%u"),
+    "int32_t":  varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%d"),
+    "uint32_t": varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%u"),
+    "int64_t":  varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%d"),
+    "uint64_t": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%u"),
     
-    "short":             varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
-    "short int":         varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
-    "signed short":      varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
-    "signed short int":  varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
-    "unsigned short":    varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
-    "unsigned short int":varData(defaultValue: "0", length: 6,  macro: "PROPERTY"),
+    "short":             varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%i"),
+    "short int":         varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%i"),
+    "signed short":      varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%i"),
+    "signed short int":  varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%i"),
+    "unsigned short":    varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%u"),
+    "unsigned short int":varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%u"),
     
-    "long":              varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "long int":          varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "signed long":       varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "signed long int":   varData(defaultValue: "0", length: 11, macro: "PROPERTY"),
-    "unsigned long":     varData(defaultValue: "0", length: 10, macro: "PROPERTY"),
-    "unsigned long int": varData(defaultValue: "0", length: 10, macro: "PROPERTY"),
+    "long":              varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld"),
+    "long int":          varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld"),
+    "signed long":       varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld"),
+    "signed long int":   varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld"),
+    "unsigned long":     varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%lu"),
+    "unsigned long int": varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%lu"),
     
-    "long long":              varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "long long int":          varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "signed long long":       varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "signed long long int":   varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "unsigned long long":     varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
-    "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
+    "long long":              varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld"),
+    "long long int":          varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld"),
+    "signed long long":       varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld"),
+    "signed long long int":   varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld"),
+    "unsigned long long":     varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu"),
+    "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu"),
+    "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld"),
     
-    "float":   varData(defaultValue: "0", length: 64, macro: "PROPERTY"),    // length ???
-    "float_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY"),
+    "float":   varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%f"),    // length ???
+    "float_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%f"),
     
-    "double":   varData(defaultValue: "0", length: 64, macro: "PROPERTY"),   // length ???
-    "double_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY"),
+    "double":   varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%lf"),   // length ???
+    "double_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%lf"),
     
-    "long double":   varData(defaultValue: "0", length: 80, macro: "PROPERTY"), // length ???
-    "double double": varData(defaultValue: "0", length: 80, macro: "PROPERTY")
+    "long double":   varData(defaultValue: "0", length: 80, macro: "PROPERTY", format: "%Lf"), // length ???
+    "double double": varData(defaultValue: "0", length: 80, macro: "PROPERTY", format: "%Lf")
 ]
 
 
