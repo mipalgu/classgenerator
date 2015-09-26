@@ -139,18 +139,22 @@ func readVariables(inputFileName: String) -> String {
 
 func generateWbHeader(data: ClassData) -> String {
     
-    var cStruct1 = "#ifndef \(data.wb)_h \n" +
-        
-        "#define \(data.wb)_h \n\n" +
-        "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
-        "#include <gu_util.h> \n" +
-        "#include <stdio.h> \n" +
-        "#include <string.h> \n" +
-        "#include <stdlib.h> \n" +
-        "#endif  \n\n"
+    let toStringBufferSize = getToStringBufferSize()
+    let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
     
-    cStruct1 += "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ); \n" +
-        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ); \n" +
+    var cStruct1 = "#ifndef \(data.wb)_h \n" +
+        "#define \(data.wb)_h \n\n" +
+        "#include <gu_util.h> \n\n"
+    
+    cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
+        "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
+        "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
+    
+    cStruct1 += "/** convert to a description string */  \n" +
+        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ); \n\n" +
+        "/** convert to a string */  \n" +
+        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ); \n\n" +
+        "/** convert from a string */  \n" +
         "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n\n"
     
     
@@ -167,7 +171,7 @@ func generateWbHeader(data: ClassData) -> String {
         "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
     }
     
-    cStruct1 += "}; \n\n"
+    cStruct1 += "}; \n"
     
     return cStruct1
 }
@@ -177,24 +181,17 @@ func generateWbHeader(data: ClassData) -> String {
 
 func generateWbC(data: ClassData) -> String {
     
-    let toStringBufferSize = getToStringBufferSize()
-    let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
-    
     var cText = "#include <\(data.wb).h> \n" +
     "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
-    "#include <stdlib.h> \n" +
-    
-    "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
-    "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
-    "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
+    "#include <stdlib.h> \n\n"
     
     cText += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     // create description() method
     cText += "/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString ) {\n" +
+        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ) {\n" +
     "\tsize_t len; \n"
     
     var first = true
@@ -210,14 +207,14 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\n"
                 }
                 else {
-                    cText += "\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+                    cText += "\tlen = gu_strlcat( descString, \", \", bufferSize ); \n\n"
                 }
                 
                 if !first {
-                    cText += "\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
+                    cText += "\tif ( len < bufferSize ) { \n\t"
                 }
                 
-                cText += "\tsnprintf(descString+len, \(data.caps)_DESC_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
                 
                 if !first {
                     cText += "\t} \n\n"
@@ -232,20 +229,20 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "\tlen = gu_strlcat( descString, \", \", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+                cText += "\tlen = gu_strlcat( descString, \", \", bufferSize ); \n\n"
             }
             
             if !first {
-                cText += "\tif ( len < \(data.caps)_DESC_BUFFER_SIZE ) { \n\t"
+                cText += "\tif ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat(descString, \"\(varNames[i])=\", \(data.caps)_DESC_BUFFER_SIZE ); \n"
+            cText += "\tgu_strlcat(descString, \"\(varNames[i])=\", bufferSize ); \n"
             
             if !first {
                 cText += "\t"
             }
             
-            cText += "\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_DESC_BUFFER_SIZE ); \n\n"
+            cText += "\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", bufferSize ); \n\n"
             
             if !first {
                 cText += "\t} \n\n "
@@ -261,7 +258,7 @@ func generateWbC(data: ClassData) -> String {
     
     // create to_string method
     cText += "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString ) {\n" +
+        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ) {\n" +
     "\tsize_t len; \n"
     
     first = true
@@ -277,14 +274,14 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\n"
                 }
                 else {
-                    cText += "\tlen = gu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+                    cText += "\tlen = gu_strlcat( toString, \", \", bufferSize ); \n\n"
                 }
                 
                 if !first {
-                    cText += "\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n\t"
+                    cText += "\tif ( len < bufferSize ) { \n\t"
                 }
                 
-                cText += "\tsnprintf(toString+len, \(data.caps)_TO_STRING_BUFFER_SIZE-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                cText += "\tsnprintf(toString+len, bufferSize-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
                 
                 if !first {
                     cText += "\t} \n\n "
@@ -299,14 +296,14 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "\tsgu_strlcat( toString, \", \", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+                cText += "\tsgu_strlcat( toString, \", \", bufferSize ); \n\n"
             }
             
             if !first {
-                cText += "\tif ( len < \(data.caps)_TO_STRING_BUFFER_SIZE ) { \n\t"
+                cText += "\tif ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", \(data.caps)_TO_STRING_BUFFER_SIZE ); \n\n"
+            cText += "\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", bufferSize ); \n\n"
             
             if !first {
                 cText += "\t} \n\n "
@@ -324,9 +321,10 @@ func generateWbC(data: ClassData) -> String {
     "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
     
     cText += "\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "\tconst char s[3] = \", \";  // delimeters \n" +
-        "\tconst char e[2] = \"=\";  // delimeters \n" +
-        "\tchar* tokenS, *tokenE, *saveptr; \n\n" +
+        "\tconst char s[3] = \", \";  // delimeter \n" +
+        "\tconst char e[2] = \"=\";   // delimeter \n" +
+        "\tchar* tokenS, *tokenE; \n" +
+        "\tchar* saveptr = NULL; \n\n" +
         
         "\tmemset(descString, NULL, sizeof(\(data.caps)_NUMBER_OF_VARIABLES)); \n\n " +
         
@@ -342,26 +340,26 @@ func generateWbC(data: ClassData) -> String {
         "\t\t\ttokenE = tokenS; \n " +
         "\t\t} \n" +
         "\t\telse { \n " +
-        "\t\t\ttokenE++; \n " +
-    "\t\t} \n\n"
-    
-    for i in 0...varNames.count-1 {
+        "\t\t\ttokenE++; \n\n "
         
-        if ( i == 0 ) {
-            cText += "\t\tif "
+        for i in 0...varNames.count-1 {
+            
+            if ( i == 0 ) {
+                cText += "\t\t\tif "
+            }
+            else {
+                cText += "\t\t\telse if "
+            }
+            
+            cText += "( strcmp(tokenS, \"\(varNames[i])\") == 0 ) { \n " +
+                "\t\t\t\tj = \(i) \n " +
+                "\t\t\t} \n"
         }
-        else {
-            cText += "\t\telse if "
-        }
-        
-        cText += "( strcmp(tokenS, \"\(varNames[i])\") == 0 ) { \n " +
-            "\t\t\tj = \(i) \n " +
-        "\t\t} \n"
-    }
     
-    cText += "\t\tstrings[j] = tokenE; \n" +
-        
-    "\t} \n\n"
+    cText += "\t\t} \n\n" +
+    
+        "\t\tstrings[j] = tokenE; \n" +
+        "\t} \n\n"
     
     for i in 0...varTypes.count-1 {
         
@@ -401,9 +399,9 @@ func generateCPPStruct(data: ClassData) -> String {
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#include <cstdlib> \n" +
         "#include <string.h> \n" +
+        "#include <sstream> \n" +
         "#endif \n" +
         "#include <gu_util.h> \n" +
-        "#include <sstream>" +
         "#include \"\(data.wb).h\" \n\n" +
         
         "namespace guWhiteboard {\n" +
@@ -482,7 +480,7 @@ func generateCPPStruct(data: ClassData) -> String {
                     first = false
                 }
 
-                cppStruct += "\n\t\t\t\treturn ss.str(); \n" +
+                cppStruct += ";\n\t\t\t\treturn ss.str(); \n" +
                     "\t\t\t} \n" +
     
                 "\t\t\t#endif \n" +
