@@ -78,7 +78,7 @@ func setDefault(varType: String) -> String {
             defaultValue = "ADD DEFAULT"
     }
     
-    print ("\(varType) set to default value of: \(defaultValue)")
+    print ("Unspecified \(varType) set to default value of: \(defaultValue)")
     return defaultValue
 }
 

@@ -33,20 +33,17 @@ if input.count == 0 {
 for argument in input {
     switch argument {
         case "c", "-c":
-            print("Generating a C++ wrapper")
             makeCPPWrapper = true;
 
         case "s", "-s":
-            print("Generating a Swift wrapper")
             makeSwiftWrapper = true;
         
         case "cs", "sc", "-cs", "-sc":
             makeCPPWrapper = true
             makeSwiftWrapper = true
-            print("Generating both C++ and Swift wrappers");
         
         case "usage", "-usage":
-            print(" USAGE.... ")
+            print(" USAGE information to be added.... ")
             exit(EXIT_FAILURE);
 
         default:
@@ -61,24 +58,24 @@ for argument in input {
                     foundFilename = true
                 }
                 else {
-                    print("Unknown file type or too many files specified. USAGE...")
+                    print("Unknown file type or too many files specified. USAGE information to be added....")
                     exit(EXIT_FAILURE)
                 }
             }
             else {
-                print("Unknown argument. USAGE...")
+                print("Unknown argument. USAGE information to be added....")
                 exit(EXIT_FAILURE)
             }
     }
 }
 
 
-// If neither wrapper is specified, make both
+// If neither wrapper is specified...
 if !makeCPPWrapper && !makeSwiftWrapper {
     
-    makeCPPWrapper = true
-    makeSwiftWrapper = true
-    print("Generating both C++ and Swift wrappers")
+    //makeCPPWrapper = true
+    //makeSwiftWrapper = true
+    print("No wrappers requested.")
 }
 
 // get current working path
@@ -95,9 +92,11 @@ var userName = parseInput(inputText)
 var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)
 
 generateWBFiles(data)
+print("Generated WB files")
 
 if makeCPPWrapper {
     generateCPPFile(data)
+    print("Generated C++ wrapper")
 }
 
 
