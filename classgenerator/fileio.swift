@@ -65,6 +65,7 @@ func parseInput(inputText: String) -> String {
 
 func setDefault(varType: String) -> String {
     
+/*
     var defaultValue : String
     
     switch varType {
@@ -77,7 +78,9 @@ func setDefault(varType: String) -> String {
         default:
             defaultValue = "ADD DEFAULT"
     }
-    
+*/
+    let defaultValue = variables[varType]!.defaultValue
+
     print ("Unspecified \(varType) set to default value of: \(defaultValue)")
     return defaultValue
 }
