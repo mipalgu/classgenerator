@@ -14,7 +14,7 @@ struct varData {
 }
 
 
-
+// Are complex types needed?
 let variables = [
 
     "bool": varData(defaultValue: "false", length: 5,  macro: "PROPERTY"),
@@ -60,14 +60,14 @@ let variables = [
     "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
     "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY"),
     
-    "float":   varData(defaultValue: "0", length: 64, macro: "PROPERTY"),
+    "float":   varData(defaultValue: "0", length: 64, macro: "PROPERTY"),    // length ???
     "float_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY"),
     
-    "double":   varData(defaultValue: "0", length: 64, macro: "PROPERTY"),
+    "double":   varData(defaultValue: "0", length: 64, macro: "PROPERTY"),   // length ???
     "double_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY"),
     
-    "long double":   varData(defaultValue: "0", length: 80, macro: "PROPERTY"),
-    "double double": varData(defaultValue: "0", length: 80, macro: "PROPERTY"),
+    "long double":   varData(defaultValue: "0", length: 80, macro: "PROPERTY"), // length ???
+    "double double": varData(defaultValue: "0", length: 80, macro: "PROPERTY")
 ]
 
 

@@ -577,15 +577,13 @@ func getDescriptionBufferSize(toStringbufferSize: size_t) -> size_t {
     
     var size: size_t = toStringbufferSize
     
-    size += (varNames.count) //* strideofValue("=")    // equals signs
+    size += (varNames.count)      // equals signs
     
     for name in varNames {
-    
-        size += Int(strlen(name))      // length of the variable names
-        //print("\(name) length = \(strlen(name))")
+        size += Int(strlen(name)) // length of the variable names
     }
     
-    print ("maximum number of characters in the description string is : \(size)")
+    //print ("maximum number of characters in the description string is : \(size)")
     return size
 }
 
@@ -598,6 +596,15 @@ func getToStringBufferSize() -> size_t {
     
     for type in varTypes {
         
+        if let typeLength = variables["\(type)"]?.length {
+            size += typeLength
+        }
+        else {
+            size += 255
+        }
+    }
+        
+        /*
         switch type {
         case "bool":
             size += 5    // 'false' is 5 characters
@@ -620,7 +627,7 @@ func getToStringBufferSize() -> size_t {
         default:
             print("Unknown variable type")
         }
-    }
+        */
     
     return size + 1
 }
