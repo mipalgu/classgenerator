@@ -45,5 +45,14 @@ class Tests: XCTestCase {
     }
     
     
+    func typeConverter(){
+        
+        let conversion = "(\(varTypes[2]))\(variables[varTypes[2]]!.converter)(\(varNames[2]))"
+        let desired = "(long)atol(bigNum)"
+        
+        XCTAssertEqual(conversion, desired, "conversion not set correctly")
+    }
+    
+    
     
 }

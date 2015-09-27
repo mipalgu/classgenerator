@@ -381,7 +381,7 @@ func generateWbC(data: ClassData) -> String {
         // the variable is a number type
         else {
             cText += "\tif (strings[\(i)] != NULL) \n" +
-            "\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n\n"
+            "\t\tset_\(varNames[i])((\(varTypes[i]))\(variables[varTypes[i]]!.converter)(strings[\(i)])); \n\n"
         }
     }
     
