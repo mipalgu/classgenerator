@@ -62,14 +62,14 @@ let variables = [
     "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll"),
     "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll"),
     
-    "float":   varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),    // length ???
-    "float_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),
+    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),    // length ???
+    "float_t": varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),
     
-    "double":   varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),   // length ???
-    "double_t": varData(defaultValue: "0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),
+    "double":   varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),   // length ???
+    "double_t": varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),
     
-    "long double":   varData(defaultValue: "0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof"), // length ???
-    "double double": varData(defaultValue: "0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof")
+    "long double":   varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof"), // length ???
+    "double double": varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof")
 ]
 
 
