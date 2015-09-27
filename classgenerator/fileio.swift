@@ -336,8 +336,6 @@ func generateWbC(data: ClassData) -> String {
         "\tchar* tokenS, *tokenE; \n" +
         "\tchar* saveptr = NULL; \n\n" +
         
-        "\tmemset(descString, NULL, sizeof(\(data.caps)_NUMBER_OF_VARIABLES)); \n\n " +
-        
         "\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
         "\t\tint j = i; \n" +
         "\t\ttokenS = strtok_r(str, s, &saveptr); \n\n" +
