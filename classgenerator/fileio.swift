@@ -237,16 +237,8 @@ func generateWbC(data: ClassData) -> String {
             first = false
         }
         
-        
-        
-        
-        
-        
-        // if the variabe is an integer type
-        else if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
-            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
-            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-                
+        // if the variabe is a number type
+        else {
                 if first {
                     cText += "\n"
                 }
@@ -285,32 +277,8 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
         
-        // if the variable is an integer type
-        if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
-            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
-            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-                
-                if first {
-                    cText += "\n"
-                }
-                else {
-                    cText += "\tlen = gu_strlcat( toString, \", \", bufferSize ); \n\n"
-                }
-                
-                if !first {
-                    cText += "\tif ( len < bufferSize ) { \n\t"
-                }
-                
-                cText += "\tsnprintf(toString+len, bufferSize-len, \"\(varNames[i])=\(variables[varTypes[i]]!.format)\", \(varNames[i]) ); \n"
-                
-                if !first {
-                    cText += "\t} \n\n "
-                }
-                
-                first = false
-        }
-            // if the variable is a bool
-        else if varTypes[i] == "bool" {
+        // if the variable is a bool
+        if varTypes[i] == "bool" {
             
             if first {
                 cText += "\n"
@@ -324,6 +292,28 @@ func generateWbC(data: ClassData) -> String {
             }
             
             cText += "\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", bufferSize ); \n\n"
+            
+            if !first {
+                cText += "\t} \n\n "
+            }
+            
+            first = false
+        }
+        // if the variable is a number type
+        else {
+                
+            if first {
+                cText += "\n"
+            }
+            else {
+                cText += "\tlen = gu_strlcat( toString, \", \", bufferSize ); \n\n"
+            }
+            
+            if !first {
+                cText += "\tif ( len < bufferSize ) { \n\t"
+            }
+            
+            cText += "\tsnprintf(toString+len, bufferSize-len, \"\(varNames[i])=\(variables[varTypes[i]]!.format)\", \(varNames[i]) ); \n"
             
             if !first {
                 cText += "\t} \n\n "
@@ -383,19 +373,15 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...varTypes.count-1 {
         
-        // if the variable is an integer type
-        if varTypes[i] == "int" || varTypes[i] == "int8_t" || varTypes[i] == "uint8_t" ||
-            varTypes[i] == "int16_t" || varTypes[i] == "uint16_t" || varTypes[i] == "int32_t" ||
-            varTypes[i] == "uint32_t" || varTypes[i] == "int64_t" || varTypes[i] == "uint64_t" {
-                
-                cText += "\tif (strings[\(i)] != NULL) \n" +
-                "\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n\n"
-        }
-            
-        else if varTypes[i] == "bool" {
+        if varTypes[i] == "bool" {
             
             cText += "\tif (strings[\(i)] != NULL) \n" +
             "\t\tset_\(varNames[i])(strings[\(i)]); \n\n"
+        }
+        // the variable is a number type
+        else {
+            cText += "\tif (strings[\(i)] != NULL) \n" +
+            "\t\tset_\(varNames[i])((\(varTypes[i]))atoi(strings[\(i)])); \n\n"
         }
     }
     
