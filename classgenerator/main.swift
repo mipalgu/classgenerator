@@ -69,7 +69,7 @@ for argument in input {
     }
 }
 
-
+/*
 // If neither wrapper is specified...
 if !makeCPPWrapper && !makeSwiftWrapper {
     
@@ -77,6 +77,7 @@ if !makeCPPWrapper && !makeSwiftWrapper {
     //makeSwiftWrapper = true
     print("No wrappers requested.")
 }
+*/
 
 // get current working path
 var cwd: [Int8] = Array(count: Int(MAXPATHLEN), repeatedValue: 0)
