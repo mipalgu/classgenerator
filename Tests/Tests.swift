@@ -20,16 +20,30 @@ class Tests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    let varTypes = ["bool", "int32_t", "long", "double"]
+    let varNames = ["button_pressed", "pointX", "bigNum", "decimal"]
+    var varDefaults = ["true", "1", "3"]
+    let doubleDefault = "0.0"
+    
+    
+    func setDefault(){
+            
+        varDefaults[3] = variables[varNames[3]]!.defaultValue
+    
+        XCTAssertNotNil(varDefaults[3], "the default is nil")
+        XCTAssertEqual(doubleDefault, varDefaults[3], "default not set correctly")
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func formatSpecifier(){
+        
+        let intFormat = "\(varNames[1])=\(variables[varTypes[1]]!.format)"
+        let desired = "pointX=%d"
+        
+        XCTAssertEqual(intFormat, desired, "format not set correctly")
     }
+    
+    
     
 }

@@ -258,7 +258,7 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\tif ( len < bufferSize ) { \n\t"
                 }
                 
-                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(varNames[i])=\(variables[varTypes[i]]!.format)\", \(varNames[i]) ); \n"
                 
                 if !first {
                     cText += "\t} \n\n"
@@ -301,7 +301,7 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\tif ( len < bufferSize ) { \n\t"
                 }
                 
-                cText += "\tsnprintf(toString+len, bufferSize-len, \"\(varNames[i])=%d\", \(varNames[i]) ); \n"
+                cText += "\tsnprintf(toString+len, bufferSize-len, \"\(varNames[i])=\(variables[varTypes[i]]!.format)\", \(varNames[i]) ); \n"
                 
                 if !first {
                     cText += "\t} \n\n "
