@@ -1,7 +1,7 @@
 /** 
  * file wb_my_test.c 
  * 
- * Created by Mick Hawkins at 20:23, 27/9/2015 
+ * Created by Mick Hawkins at 19:26, 28/9/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
  * This file was generated from my_test.txt 
@@ -104,8 +104,7 @@ const char* wb_my_test_description( const struct wb_my_test* self, char* descStr
 const char* wb_my_test_to_string( const struct wb_my_test* self, char* toString, size_t bufferSize ) {
 	size_t len; 
 
-	gu_strlcat( toString, is_pressed ? "true" : "false", bufferSize ); 
-
+	snprintf(toString+len, bufferSize-len, "is_pressed=", is_pressed ); 
 	len = gu_strlcat( toString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 

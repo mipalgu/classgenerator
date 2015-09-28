@@ -10,9 +10,20 @@ import Darwin
 
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 
-var varTypes    = [String]()
-var varNames    = [String]()
-var varDefaults = [String]()
+// var varTypes    = [String]()
+// var varNames    = [String]()
+// var varDefaults = [String]()
+
+/*
+struct inputVariable{
+
+var varType : String
+var varName : String
+var varDefault : String
+}
+
+var inputData : [inputVariable] = []
+*/
 
 
 func parseInput(inputText: String) -> String {
@@ -32,18 +43,27 @@ func parseInput(inputText: String) -> String {
     for line in lines {
         
         var variable = line.characters.split {$0 == "\t"}.map { String($0) }
+        //var inputVar : inputVariable
         
         if variable.count == 3 {
+
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2])
             
-            varTypes.append(variable[0])               // these parallel arrays arent going to cut it
-            varNames.append(variable[1])
-            varDefaults.append(variable[2])
+            inputData.append(inputVar)
+            
+            //varTypes.append(variable[0])               // these parallel arrays arent going to cut it
+            //varNames.append(variable[1])
+            //varDefaults.append(variable[2])
         }
         else if variable.count == 2 {
             
-            varTypes.append(variable[0])               // these parallel arrays arent going to cut it
-            varNames.append(variable[1])
-            varDefaults.append("")
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "")
+            
+            inputData.append(inputVar)
+            
+            //varTypes.append(variable[0])               // these parallel arrays arent going to cut it
+            //varNames.append(variable[1])
+            //varDefaults.append("")
         }
         else {
             print("Input text file contains too many or not enough values for a variable.")
@@ -51,12 +71,16 @@ func parseInput(inputText: String) -> String {
         }
     }
     
-    if varTypes[0] == "name" {    // a name was included in the input, use it, then remove it
+    //if varTypes[0] == "name" {    // a name was included in the input, use it, then remove it
+    if inputData[0].varType == "name" {
+
+        userName = inputData[0].varName
+        inputData.removeAtIndex(0)
         
-        userName = varNames[0]
-        varTypes.removeAtIndex(0)
-        varNames.removeAtIndex(0)
-        varDefaults.removeAtIndex(0)
+        //userName = varNames[0]
+        //varTypes.removeAtIndex(0)
+        //varNames.removeAtIndex(0)
+        //varDefaults.removeAtIndex(0)
     }
 
     return userName
@@ -153,7 +177,7 @@ func generateWbHeader(data: ClassData) -> String {
         "#define \(data.wb)_h \n\n" +
         "#include <gu_util.h> \n\n"
     
-    cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(varNames.count) \n" +
+    cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n" +
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
         "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
     
@@ -172,10 +196,10 @@ func generateWbHeader(data: ClassData) -> String {
         
         "struct \(data.wb) { \n"
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
-        cStruct1 += "\t/** \(varNames[i]) COMMENT ON PROPERTY */ \n" +
-        "\tPROPERTY(\(varTypes[i]), \(varNames[i]))\n\n"
+        cStruct1 += "\t/** \(inputData[i].varName) COMMENT ON PROPERTY */ \n" +
+        "\tPROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
     }
     
     cStruct1 += "}; \n"
@@ -200,16 +224,16 @@ func generateWbC(data: ClassData) -> String {
     cText += "/** convert to a description string */  \n" +
         "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ) {\n"
     
-    if varTypes.count > 1 {
+    if inputData.count > 1 {
         cText += "\tsize_t len; \n"
     }
     
     var first = true
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
         // if the variable is a bool
-        if varTypes[i] == "bool" {
+        if inputData[i].varType == "bool" {
             
             if first {
                 cText += "\n"
@@ -222,13 +246,13 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\tif ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat( descString, \"\(varNames[i])=\", bufferSize ); \n"
+            cText += "\tgu_strlcat( descString, \"\(inputData[i].varName)=\", bufferSize ); \n"
             
             if !first {
                 cText += "\t"
             }
             
-            cText += "\tgu_strlcat( descString, \(varNames[i]) ? \"true\" : \"false\", bufferSize ); \n\n"
+            cText += "\tgu_strlcat( descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
             
             if !first {
                 cText += "\t} \n\n "
@@ -250,7 +274,7 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\tif ( len < bufferSize ) { \n\t"
                 }
                 
-                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(varNames[i])=\(variables[varTypes[i]]!.format)\", \(varNames[i]) ); \n"
+                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
                 
                 if !first {
                     cText += "\t} \n\n"
@@ -269,16 +293,16 @@ func generateWbC(data: ClassData) -> String {
     cText += "/** convert to a string */  \n" +
         "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ) {\n"
     
-    if varTypes.count > 1 {
+    if inputData.count > 1 {
         cText += "\tsize_t len; \n"
     }
     
     first = true
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
         // if the variable is a bool
-        if varTypes[i] == "bool" {
+        if inputData[i].varName == "bool" {
             
             if first {
                 cText += "\n"
@@ -291,7 +315,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\tif ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat( toString, \(varNames[i]) ? \"true\" : \"false\", bufferSize ); \n\n"
+            cText += "\tgu_strlcat( toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
             
             if !first {
                 cText += "\t} \n\n "
@@ -313,7 +337,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\tif ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tsnprintf(toString+len, bufferSize-len, \"\(varNames[i])=\(variables[varTypes[i]]!.format)\", \(varNames[i]) ); \n"
+            cText += "\tsnprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
             
             if !first {
                 cText += "\t} \n\n "
@@ -350,7 +374,7 @@ func generateWbC(data: ClassData) -> String {
         "\t\telse { \n " +
         "\t\t\ttokenE++; \n\n "
         
-        for i in 0...varNames.count-1 {
+        for i in 0...inputData.count-1 {
             
             if ( i == 0 ) {
                 cText += "\t\t\tif "
@@ -359,7 +383,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\t\t\telse if "
             }
             
-            cText += "( strcmp(tokenS, \"\(varNames[i])\") == 0 ) { \n " +
+            cText += "( strcmp(tokenS, \"\(inputData[i].varName)\") == 0 ) { \n " +
                 "\t\t\t\tj = \(i) \n " +
                 "\t\t\t} \n"
         }
@@ -369,17 +393,17 @@ func generateWbC(data: ClassData) -> String {
         "\t\tstrings[j] = tokenE; \n" +
         "\t} \n\n"
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
-        if varTypes[i] == "bool" {
+        if inputData[i].varType == "bool" {
             
             cText += "\tif (strings[\(i)] != NULL) \n" +
-            "\t\tset_\(varNames[i])(strings[\(i)]); \n\n"
+            "\t\tset_\(inputData[i].varName)(strings[\(i)]); \n\n"
         }
         // the variable is a number type
         else {
             cText += "\tif (strings[\(i)] != NULL) \n" +
-            "\t\tset_\(varNames[i])((\(varTypes[i]))\(variables[varTypes[i]]!.converter)(strings[\(i)])); \n\n"
+            "\t\tset_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
         }
     }
     
@@ -420,13 +444,13 @@ func generateCPPStruct(data: ClassData) -> String {
             "\t\t/** Default constructor */ \n" +
             "\t\t\(data.cpp)() : "
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
-        let defaultValue = varDefaults[i] == "" ? setDefault(varTypes[i]) : varDefaults[i]
+        let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
         
-        cppStruct += "_\(varNames[i])(\(defaultValue))"
+        cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
         
-        if i < varTypes.count-1 {
+        if i < inputData.count-1 {
             cppStruct += ", "
         }
     }
@@ -437,11 +461,11 @@ func generateCPPStruct(data: ClassData) -> String {
     "\t\t\(data.cpp)(const \(data.wb) &other) : \n"
     
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
-        cppStruct += "\t\t\t_\(varNames[i])(other._\(varNames[i]))"
+        cppStruct += "\t\t\t_\(inputData[i].varName)(other._\(inputData[i].varName))"
         
-        if i < varTypes.count-1 {
+        if i < inputData.count-1 {
             cppStruct += ", \n"
         }
     }
@@ -452,9 +476,9 @@ func generateCPPStruct(data: ClassData) -> String {
         "\t\t\(data.cpp) &operator= (const \(data.wb) &other) { \n"
     
     
-    for i in 0...varTypes.count-1 {
+    for i in 0...inputData.count-1 {
         
-        cppStruct += "\t\t\t_\(varNames[i]) = other._\(varNames[i]); \n"
+        cppStruct += "\t\t\t_\(inputData[i].varName) = other._\(inputData[i].varName); \n"
     }
     
     cppStruct += "\t\t\treturn *this; \n" +
@@ -474,13 +498,13 @@ func generateCPPStruct(data: ClassData) -> String {
     
                 var first = true
     
-                for i in 0...varTypes.count-1 {
+                for i in 0...inputData.count-1 {
                     
                     if !first {
                         cppStruct += " << \", \"; \n "
                     }
                     
-                    cppStruct += "\t\t\t\tss << \"\(varNames[i])=\" << \(varNames[i])"
+                    cppStruct += "\t\t\t\tss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)"
                     first = false
                 }
 
@@ -575,10 +599,11 @@ func getDescriptionBufferSize(toStringbufferSize: size_t) -> size_t {
     
     var size: size_t = toStringbufferSize
     
-    size += (varNames.count)      // equals signs
+    size += (inputData.count)      // equals signs
     
-    for name in varNames {
-        size += Int(strlen(name)) // length of the variable names
+    //for name in inputData.varName {
+    for i in 0...inputData.count-1 {
+        size += Int(strlen(inputData[i].varName)) // length of the variable names
     }
     
     //print ("maximum number of characters in the description string is : \(size)")
@@ -590,11 +615,11 @@ func getToStringBufferSize() -> size_t {
     
     var size: size_t = 0
     
-    size += (varNames.count-1) * 2 // commas and spaces
+    size += (inputData.count-1) * 2 // commas and spaces
     
-    for type in varTypes {
+    for i in 0...inputData.count-1 {
         
-        if let typeLength = variables["\(type)"]?.length {
+        if let typeLength = variables["\(inputData[i].varType)"]?.length {
             size += typeLength
         }
         else {

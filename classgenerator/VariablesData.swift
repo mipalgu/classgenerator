@@ -72,22 +72,3 @@ let variables = [
     "double double": varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof")
 ]
 
-
-
-/*
-
-struct Person {
-let age = 0
-}
-
-let people = ["tom": Person(age: 12), "dick": Person(age: 7), "harry": Person(age: 50)]
-
-var people_array = [Person](people.values)  //convert to array
-people_array.sort({ $0.age > $1.age })      //sort the array
-
-
-people_array[0].age // 50
-people_array[1].age // 12
-people_array[2].age // 7
-
-*/

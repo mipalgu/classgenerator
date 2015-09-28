@@ -54,5 +54,20 @@ class Tests: XCTestCase {
     }
     
     
+    func testInputStruct(){
+        
+        let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false")
+        
+        let inputType = "bool"
+        let inputName = "is_pressed"
+        let inputDefault = "false"
+        
+        XCTAssertEqual(inputType, inputVar.varType, "varType not set correctly")
+        XCTAssertEqual(inputType, inputVar.varType, "varType not set correctly")
+        XCTAssertEqual(inputType, inputVar.varType, "varType not set correctly")
+    }
+    
     
 }
+
+
