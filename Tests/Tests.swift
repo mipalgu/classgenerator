@@ -23,20 +23,19 @@ class Tests: XCTestCase {
     
     let varTypes = ["bool", "int32_t", "long", "double"]
     let varNames = ["button_pressed", "pointX", "bigNum", "decimal"]
-    var varDefaults = ["true", "1", "3"]
+    var varDefaults = ["true", "1", "3", ""]
     let doubleDefault = "0.0"
     
     
-    func setDefault(){
+    func testSetDefault(){
             
-        varDefaults[3] = variables[varNames[3]]!.defaultValue
+        varDefaults[3] = variables[varTypes[3]]!.defaultValue
     
-        XCTAssertNotNil(varDefaults[3], "the default is nil")
         XCTAssertEqual(doubleDefault, varDefaults[3], "default not set correctly")
     }
     
     
-    func formatSpecifier(){
+    func testFormatSpecifier(){
         
         let intFormat = "\(varNames[1])=\(variables[varTypes[1]]!.format)"
         let desired = "pointX=%d"
@@ -45,7 +44,7 @@ class Tests: XCTestCase {
     }
     
     
-    func typeConverter(){
+    func testTypeConverter(){
         
         let conversion = "(\(varTypes[2]))\(variables[varTypes[2]]!.converter)(\(varNames[2]))"
         let desired = "(long)atol(bigNum)"
@@ -54,18 +53,31 @@ class Tests: XCTestCase {
     }
     
     
+    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false")
+    
+    let inputType = "bool"
+    let inputName = "is_pressed"
+    let inputDefault = "false"
+    
+    var arrayTest : [inputVariable] = []
+    
     func testInputStruct(){
-        
-        let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false")
-        
-        let inputType = "bool"
-        let inputName = "is_pressed"
-        let inputDefault = "false"
-        
+    
         XCTAssertEqual(inputType, inputVar.varType, "varType not set correctly")
-        XCTAssertEqual(inputType, inputVar.varType, "varType not set correctly")
-        XCTAssertEqual(inputType, inputVar.varType, "varType not set correctly")
+        XCTAssertEqual(inputName, inputVar.varName, "varName not set correctly")
+        XCTAssertEqual(inputDefault, inputVar.varDefault, "varDefault not set correctly")
     }
+    
+    func testVariablesArray(){
+        
+        arrayTest.append(inputVar)
+        
+        XCTAssertEqual(inputType, arrayTest[0].varType, "array varType not set correctly")
+        XCTAssertEqual(inputName, arrayTest[0].varName, "array varName not set correctly")
+        XCTAssertEqual(inputDefault, arrayTest[0].varDefault, "array varDefault not set correctly")
+        
+    }
+    
     
     
 }
