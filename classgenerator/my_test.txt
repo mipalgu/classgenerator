@@ -1,0 +1,6 @@
+name	Mick Hawkins
+bool	is_pressed	true
+int16_t	pointX
+uint32_t	pointY	2
+long	longNum
+double	decimalNum
