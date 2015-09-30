@@ -42,12 +42,17 @@ func parseInput(inputText: String) -> String {
     
     for line in lines {
         
+        var inputArraySize : Int = 0
         var variable = line.characters.split {$0 == "\t"}.map { String($0) }
         //var inputVar : inputVariable
         
+        // check if this line is an array ***************
+        // first, check for [] notation
+        
+        
         if variable.count == 3 {
 
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2])
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varArraySize: inputArraySize)
             
             inputData.append(inputVar)
             
@@ -57,7 +62,7 @@ func parseInput(inputText: String) -> String {
         }
         else if variable.count == 2 {
             
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "")
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varArraySize: inputArraySize)
             
             inputData.append(inputVar)
             

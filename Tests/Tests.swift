@@ -53,7 +53,7 @@ class Tests: XCTestCase {
     }
     
     
-    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false")
+    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false", varArraySize: 0)
     
     let inputType = "bool"
     let inputName = "is_pressed"
@@ -79,6 +79,52 @@ class Tests: XCTestCase {
     }
     
     
+    func testForArrayUsingBrackets(){
+        
+        var arrayName : String = ""
+        var arraySize : Int = 0
+        let inputArray = "colour[8]"
+        let bracketValues = inputArray.characters.split {$0 == "["}.map { String($0) }
+        
+        if bracketValues.count == 2 {  // found bracket therefore array
+            arrayName = bracketValues[0]
+            arraySize = Int(bracketValues[1].substringToIndex(bracketValues[1].endIndex.predecessor()))!
+        }
+        else if bracketValues.count == 1 {  // not an array
+            arrayName = bracketValues[0]
+            arraySize = 0
+        }
+        else {
+            /// error
+        }
+        
+        XCTAssertEqual(arrayName, "colour", "arrayName not set correctly")
+        XCTAssertEqual(arraySize, 8, "arraySize not set correctly")
+    }
+    
+    
+    func testForArrayUsingColon(){
+        
+        var arrayType : String = ""
+        var arraySize : Int = 0
+        let inputArray = "int:8"
+        let colonValues = inputArray.characters.split {$0 == ":"}.map { String($0) }
+        
+        if colonValues.count == 2 {  // found colon therefore array
+            arrayType = colonValues[0]
+            arraySize = Int(colonValues[1])!
+        }
+        else if colonValues.count == 1 {  // not an array
+            arrayType = colonValues[0]
+            arraySize = 0
+        }
+        else {
+            /// error
+        }
+        
+        XCTAssertEqual(arrayType, "int", "arrayType not set correctly")
+        XCTAssertEqual(arraySize, 8, "arraySize not set correctly")
+    }
     
 }
 
