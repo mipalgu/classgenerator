@@ -8,6 +8,8 @@
 
 import Darwin
 
+
+
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 
 // var varTypes    = [String]()
@@ -46,8 +48,26 @@ func parseInput(inputText: String) -> String {
         var variable = line.characters.split {$0 == "\t"}.map { String($0) }
         //var inputVar : inputVariable
         
-        // check if this line is an array ***************
+        // check if this line is an array
         // first, check for [] notation
+        let bracketValues = variable[1].characters.split {$0 == "["}.map { String($0) }
+        
+        if bracketValues.count == 2 {  // found bracket therefore array
+            variable[1] = bracketValues[0]
+            let size : String = bracketValues[1]
+            inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
+        }
+        else if bracketValues.count == 1 {  // not an array
+            variable[1] = bracketValues[0]
+            inputArraySize = 0
+        }
+        else {
+            /// error    ****************************
+        }
+        
+        
+        
+        
         
         
         if variable.count == 3 {

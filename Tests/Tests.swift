@@ -88,7 +88,7 @@ class Tests: XCTestCase {
         
         if bracketValues.count == 2 {  // found bracket therefore array
             arrayName = bracketValues[0]
-            arraySize = Int(bracketValues[1].substringToIndex(bracketValues[1].endIndex.predecessor()))!
+            arraySize = Int(String(bracketValues[1].characters.dropLast()))!
         }
         else if bracketValues.count == 1 {  // not an array
             arrayName = bracketValues[0]
