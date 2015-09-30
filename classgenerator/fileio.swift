@@ -12,21 +12,6 @@ import Darwin
 
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 
-// var varTypes    = [String]()
-// var varNames    = [String]()
-// var varDefaults = [String]()
-
-/*
-struct inputVariable{
-
-var varType : String
-var varName : String
-var varDefault : String
-}
-
-var inputData : [inputVariable] = []
-*/
-
 
 func parseInput(inputText: String) -> String {
     
