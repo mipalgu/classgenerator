@@ -44,6 +44,7 @@ func parseInput(inputText: String) -> String {
     
     for line in lines {
         
+        var isArray = false
         var inputArraySize : Int = 0
         var variable = line.characters.split {$0 == "\t"}.map { String($0) }
         //var inputVar : inputVariable
@@ -56,39 +57,41 @@ func parseInput(inputText: String) -> String {
             variable[1] = bracketValues[0]
             let size : String = bracketValues[1]
             inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
+            isArray = true
         }
         else if bracketValues.count == 1 {  // not an array
             variable[1] = bracketValues[0]
-            inputArraySize = 0
         }
         else {
             /// error    ****************************
         }
         
-        
-        
-        
+        if !isArray {
+            
+            let colonValues = variable[0].characters.split {$0 == ":"}.map { String($0) }
+            
+            if colonValues.count == 2 {  // found colon therefore array
+                variable[0] = colonValues[0]
+                inputArraySize = Int(colonValues[1])!
+            }
+            else if colonValues.count == 1 {  // not an array
+                variable[0] = colonValues[0]
+            }
+            else {
+                /// error  **************************
+            }
+        }
         
         
         if variable.count == 3 {
 
             let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varArraySize: inputArraySize)
-            
             inputData.append(inputVar)
-            
-            //varTypes.append(variable[0])               // these parallel arrays arent going to cut it
-            //varNames.append(variable[1])
-            //varDefaults.append(variable[2])
         }
-        else if variable.count == 2 {
+        else if variable.count == 2 {  // no default
             
             let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varArraySize: inputArraySize)
-            
             inputData.append(inputVar)
-            
-            //varTypes.append(variable[0])               // these parallel arrays arent going to cut it
-            //varNames.append(variable[1])
-            //varDefaults.append("")
         }
         else {
             print("Input text file contains too many or not enough values for a variable.")
@@ -96,16 +99,11 @@ func parseInput(inputText: String) -> String {
         }
     }
     
-    //if varTypes[0] == "name" {    // a name was included in the input, use it, then remove it
+    // if a name was included in the input, use it, then remove it
     if inputData[0].varType == "name" {
 
         userName = inputData[0].varName
         inputData.removeAtIndex(0)
-        
-        //userName = varNames[0]
-        //varTypes.removeAtIndex(0)
-        //varNames.removeAtIndex(0)
-        //varDefaults.removeAtIndex(0)
     }
 
     return userName
@@ -114,20 +112,6 @@ func parseInput(inputText: String) -> String {
 
 func setDefault(varType: String) -> String {
     
-/*
-    var defaultValue : String
-    
-    switch varType {
-        case "bool":
-            defaultValue = "false";
-            
-        case "int", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t":
-            defaultValue = "0";
-            
-        default:
-            defaultValue = "ADD DEFAULT"
-    }
-*/
     if let defaultValue = variables[varType]?.defaultValue {
         print ("Unspecified \(varType) set to default value of: \(defaultValue)")
         return defaultValue
