@@ -13,6 +13,7 @@ struct varData {
     let macro : String
     let format : String    // format specifier to use
     let converter: String
+    
 }
 
 
