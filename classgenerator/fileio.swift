@@ -455,25 +455,42 @@ func generateCPPStruct(data: ClassData) -> String {
             "\t * \n" +
             "\t */ \n" +
         
-            "\tclass \(data.cpp): public \(data.wb) { \n" +
+            "\tclass \(data.cpp): public \(data.wb) { \n\n" +
         
             "\t\t/** Default constructor */ \n" +
             "\t\t\(data.cpp)() : "
     
+    var memsetForArrays : [String] = []
+    
     for i in 0...inputData.count-1 {
         
-        let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
-        
-        cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
+        if inputData[i].varArraySize == 0 {
+            let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+            cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
+        }
+        else {   // an array
+            cppStruct += "_\(inputData[i].varName)()"
+            memsetForArrays.append("\t\t\tmemset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+        }
         
         if i < inputData.count-1 {
             cppStruct += ", "
         }
     }
     
-    cppStruct += "  {} \n\n" +
+    if memsetForArrays.count == 0 {
+        cppStruct += "  {} \n\n"
+    }
+    else {
+        cppStruct += "  { \n"
         
-        "\t\t/** Copy Constructor */ \n" +
+        for mem in memsetForArrays {
+            cppStruct += "\(mem); \n"
+        }
+        cppStruct += "\t\t} \n\n"
+    }
+    
+    cppStruct += "\t\t/** Copy Constructor */ \n" +
     "\t\t\(data.cpp)(const \(data.wb) &other) : \n"
     
     
