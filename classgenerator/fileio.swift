@@ -206,7 +206,7 @@ func generateWbHeader(data: ClassData) -> String {
 
 func generateWbC(data: ClassData) -> String {
     
-    var cText = "#include <\(data.wb).h> \n" +
+    var cText = "#include \"\(data.wb).h\" \n" +
     "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
