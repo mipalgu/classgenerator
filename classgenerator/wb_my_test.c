@@ -1,7 +1,7 @@
 /** 
  * file wb_my_test.c 
  * 
- * Created by Mick Hawkins at 20:3, 28/9/2015 
+ * Created by Mick Hawkins at 18:50, 1/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
  * This file was generated from my_test.txt 
@@ -58,7 +58,7 @@
  */ 
 
 
-#include <wb_my_test.h> 
+#include "wb_my_test.h" 
 #include <gu_util.h> 
 #include <stdio.h> 
 #include <string.h> 
@@ -76,25 +76,25 @@ const char* wb_my_test_description( const struct wb_my_test* self, char* descStr
 	len = gu_strlcat( descString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "pointX=%d", pointX ); 
+		snprintf(descString+len, bufferSize-len, "pointX=", pointX ); 
 	} 
 
 	len = gu_strlcat( descString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "pointY=%u", pointY ); 
+		snprintf(descString+len, bufferSize-len, "pointY=", pointY ); 
 	} 
 
 	len = gu_strlcat( descString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "longNum=%ld", longNum ); 
+		snprintf(descString+len, bufferSize-len, "longNum=", longNum ); 
 	} 
 
 	len = gu_strlcat( descString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "decimalNum=%lf", decimalNum ); 
+		snprintf(descString+len, bufferSize-len, "decimalNum=", decimalNum ); 
 	} 
 
 	return descString; 
@@ -104,30 +104,25 @@ const char* wb_my_test_description( const struct wb_my_test* self, char* descStr
 const char* wb_my_test_to_string( const struct wb_my_test* self, char* toString, size_t bufferSize ) {
 	size_t len; 
 
-	snprintf(toString+len, bufferSize-len, "is_pressed=", is_pressed ); 
 	len = gu_strlcat( toString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(toString+len, bufferSize-len, "pointX=%d", pointX ); 
-	} 
+		} 
 
  	len = gu_strlcat( toString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(toString+len, bufferSize-len, "pointY=%u", pointY ); 
-	} 
+		} 
 
  	len = gu_strlcat( toString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(toString+len, bufferSize-len, "longNum=%ld", longNum ); 
-	} 
+		} 
 
  	len = gu_strlcat( toString, ", ", bufferSize ); 
 
 	if ( len < bufferSize ) { 
-		snprintf(toString+len, bufferSize-len, "decimalNum=%lf", decimalNum ); 
-	} 
+		} 
 
  	return toString; 
 } 
@@ -176,18 +171,6 @@ struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* s
 
 	if (strings[0] != NULL) 
 		set_is_pressed(strings[0]); 
-
-	if (strings[1] != NULL) 
-		set_pointX((int16_t)atoi(strings[1])); 
-
-	if (strings[2] != NULL) 
-		set_pointY((uint32_t)atoi(strings[2])); 
-
-	if (strings[3] != NULL) 
-		set_longNum((long)atol(strings[3])); 
-
-	if (strings[4] != NULL) 
-		set_decimalNum((double)atof(strings[4])); 
 
 	return self 
 } 

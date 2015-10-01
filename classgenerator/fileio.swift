@@ -67,22 +67,26 @@ func parseInput(inputText: String) -> String {
             }
         }
         
-        
         if variable.count == 3 {
 
             let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varArraySize: inputArraySize)
             inputData.append(inputVar)
+            //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
         }
         else if variable.count == 2 {  // no default
             
             let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varArraySize: inputArraySize)
             inputData.append(inputVar)
+            //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
         }
         else {
             print("Input text file contains too many or not enough values for a variable.")
             exit(EXIT_FAILURE)
         }
     }
+    
+    
+    
     
     // if a name was included in the input, use it, then remove it
     if inputData[0].varType == "name" {
@@ -192,8 +196,14 @@ func generateWbHeader(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        cStruct1 += "\t/** \(inputData[i].varName) COMMENT ON PROPERTY */ \n" +
-        "\tPROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
+        cStruct1 += "\t/** \(inputData[i].varName) COMMENT ON PROPERTY */ \n"
+        
+        if inputData[i].varArraySize == 0 {  // not an array
+            cStruct1 += "\tPROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
+        }
+        else {
+            cStruct1 += "\tARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(inputData[i].varArraySize))\n\n"
+        }
     }
     
     cStruct1 += "}; \n"
@@ -221,6 +231,7 @@ func generateWbC(data: ClassData) -> String {
     if inputData.count > 1 {
         cText += "\tsize_t len; \n"
     }
+    
     
     var first = true
     
@@ -255,7 +266,7 @@ func generateWbC(data: ClassData) -> String {
             first = false
         }
         
-        // if the variabe is a number type
+        // if the variable is a number type
         else {
                 if first {
                     cText += "\n"
@@ -278,6 +289,7 @@ func generateWbC(data: ClassData) -> String {
         }
 
     }
+    
     
     cText += "\treturn descString; \n" +
     "} \n\n"
@@ -400,6 +412,8 @@ func generateWbC(data: ClassData) -> String {
             "\t\tset_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
         }
     }
+    
+    print("HERE7")
     
     cText += "\treturn self \n" +
         

@@ -1,7 +1,7 @@
 /** 
  * file MyTest.h 
  * 
- * Created by Mick Hawkins on 20:3, 28/9/2015 
+ * Created by Mick Hawkins on 18:50, 1/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * All rights reserved. 
  * 
