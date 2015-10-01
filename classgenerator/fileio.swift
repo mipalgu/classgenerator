@@ -179,7 +179,17 @@ func generateWbHeader(data: ClassData) -> String {
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
         "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
     
-    cStruct1 += "/** convert to a description string */  \n" +
+    for i in 0...inputData.count-1 {
+        
+        if inputData[i].varArraySize > 0 {
+            
+            cStruct1 += "#define \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE \(inputData[i].varArraySize) \n"
+        }
+    }
+    
+    
+    
+    cStruct1 += "\n/** convert to a description string */  \n" +
         "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ); \n\n" +
         "/** convert to a string */  \n" +
         "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ); \n\n" +
@@ -202,7 +212,7 @@ func generateWbHeader(data: ClassData) -> String {
             cStruct1 += "\tPROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
         }
         else {
-            cStruct1 += "\tARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(inputData[i].varArraySize))\n\n"
+            cStruct1 += "\tARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)\n\n"
         }
     }
     
@@ -412,8 +422,6 @@ func generateWbC(data: ClassData) -> String {
             "\t\tset_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
         }
     }
-    
-    print("HERE7")
     
     cText += "\treturn self \n" +
         
