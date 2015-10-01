@@ -471,7 +471,7 @@ func generateCPPStruct(data: ClassData) -> String {
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
         }
         else {   // an array
-            let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault
+            let defaultValue = inputData[i].varDefault == "" ? " " : String((inputData[i].varDefault).characters.dropFirst().dropLast())
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
             
             if defaultValue == " " {
