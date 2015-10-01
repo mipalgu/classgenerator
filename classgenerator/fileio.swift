@@ -464,13 +464,19 @@ func generateCPPStruct(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
+        
+        
         if inputData[i].varArraySize == 0 {
             let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
         }
         else {   // an array
-            cppStruct += "_\(inputData[i].varName)()"
-            memsetForArrays.append("\t\t\tmemset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+            let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault
+            cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
+            
+            if defaultValue == " " {
+                memsetForArrays.append("\t\t\tmemset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+            }
         }
         
         if i < inputData.count-1 {
