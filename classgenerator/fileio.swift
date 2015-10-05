@@ -148,7 +148,7 @@ func readVariables(inputFileName: String) -> String {
     
     if fs == nil {
         // file did not open
-        print("HERE: \(inputFileName) : No such file or directory\n")
+        print("\(inputFileName) : No such file or directory\n")
         exit(EXIT_FAILURE)
     }
     
@@ -713,32 +713,6 @@ func getToStringBufferSize() -> size_t {
             size += 255
         }
     }
-        
-        /*
-        switch type {
-        case "bool":
-            size += 5    // 'false' is 5 characters
-        case "int":
-            size += 11
-        case "int8_t":
-            size += 4
-        case "uint8_t":
-            size += 3
-        case "int16_t":
-            size += 6
-        case "uint16_t":
-            size += 5
-        case "int32_t":
-            size += 11
-        case "uint32_t":
-            size += 10
-        case "int64_t", "uint64_t":
-            size += 20
-        default:
-            print("Unknown variable type")
-        }
-        */
-    
     return size + 1
 }
 
