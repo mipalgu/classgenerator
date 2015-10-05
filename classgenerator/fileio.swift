@@ -175,9 +175,11 @@ func generateWbHeader(data: ClassData) -> String {
         "#define \(data.wb)_h \n\n" +
         "#include <gu_util.h> \n\n"
     
-    cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n" +
+    cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
+        "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
-        "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n\n"
+        "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n" +
+        "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     for i in 0...inputData.count-1 {
         
@@ -190,9 +192,9 @@ func generateWbHeader(data: ClassData) -> String {
     
     
     cStruct1 += "\n/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ); \n\n" +
+        "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize); \n\n" +
         "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ); \n\n" +
+        "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize); \n\n" +
         "/** convert from a string */  \n" +
         "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n\n"
     
@@ -206,13 +208,13 @@ func generateWbHeader(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        cStruct1 += "\t/** \(inputData[i].varName) COMMENT ON PROPERTY */ \n"
+        cStruct1 += "    /** \(inputData[i].varName) COMMENT ON PROPERTY */ \n"
         
         if inputData[i].varArraySize == 0 {  // not an array
-            cStruct1 += "\tPROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
+            cStruct1 += "    PROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
         }
         else {
-            cStruct1 += "\tARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)\n\n"
+            cStruct1 += "    ARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)\n\n"
         }
     }
     
@@ -236,10 +238,10 @@ func generateWbC(data: ClassData) -> String {
     
     // create description() method
     cText += "/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description( const struct \(data.wb)* self, char* descString, size_t bufferSize ) {\n"
+        "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) {\n"
     
     if inputData.count > 1 {
-        cText += "\tsize_t len; \n"
+        cText += "    size_t len; \n"
     }
     
     
@@ -254,23 +256,23 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "\tlen = gu_strlcat( descString, \", \", bufferSize ); \n\n"
+                cText += "    len = gu_strlcat( descString, \", \", bufferSize ); \n\n"
             }
             
             if !first {
-                cText += "\tif ( len < bufferSize ) { \n\t"
+                cText += "    if ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat( descString, \"\(inputData[i].varName)=\", bufferSize ); \n"
+            cText += "    gu_strlcat( descString, \"\(inputData[i].varName)=\", bufferSize ); \n"
             
             if !first {
-                cText += "\t"
+                cText += "    "
             }
             
-            cText += "\tgu_strlcat( descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
+            cText += "    gu_strlcat( descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
             
             if !first {
-                cText += "\t} \n\n "
+                cText += "    } \n\n "
             }
             
             first = false
@@ -282,17 +284,17 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\n"
                 }
                 else {
-                    cText += "\tlen = gu_strlcat( descString, \", \", bufferSize ); \n\n"
+                    cText += "    len = gu_strlcat( descString, \", \", bufferSize ); \n\n"
                 }
                 
                 if !first {
-                    cText += "\tif ( len < bufferSize ) { \n\t"
+                    cText += "    if ( len < bufferSize ) { \n    "
                 }
                 
-                cText += "\tsnprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
+                cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
                 
                 if !first {
-                    cText += "\t} \n\n"
+                    cText += "    } \n\n"
                 }
                 
                 first = false
@@ -307,10 +309,10 @@ func generateWbC(data: ClassData) -> String {
     
     // create to_string method
     cText += "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string( const struct \(data.wb)* self, char* toString, size_t bufferSize ) {\n"
+        "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize) {\n"
     
     if inputData.count > 1 {
-        cText += "\tsize_t len; \n"
+        cText += "    size_t len; \n"
     }
     
     first = true
@@ -324,17 +326,17 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "\tsgu_strlcat( toString, \", \", bufferSize ); \n\n"
+                cText += "    sgu_strlcat( toString, \", \", bufferSize ); \n\n"
             }
             
             if !first {
-                cText += "\tif ( len < bufferSize ) { \n\t"
+                cText += "    if ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tgu_strlcat( toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
+            cText += "    gu_strlcat( toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
             
             if !first {
-                cText += "\t} \n\n "
+                cText += "    } \n\n "
             }
             
             first = false
@@ -346,17 +348,17 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "\tlen = gu_strlcat( toString, \", \", bufferSize ); \n\n"
+                cText += "    len = gu_strlcat( toString, \", \", bufferSize ); \n\n"
             }
             
             if !first {
-                cText += "\tif ( len < bufferSize ) { \n\t"
+                cText += "    if ( len < bufferSize ) { \n\t"
             }
             
-            cText += "\tsnprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
+            cText += "    snprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
             
             if !first {
-                cText += "\t} \n\n "
+                cText += "    } \n\n "
             }
             
             first = false
@@ -370,60 +372,60 @@ func generateWbC(data: ClassData) -> String {
     cText += "/** convert from a string */  \n" +
     "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
     
-    cText += "\tchar* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "\tconst char s[3] = \", \";  // delimeter \n" +
-        "\tconst char e[2] = \"=\";   // delimeter \n" +
-        "\tchar* tokenS, *tokenE; \n" +
-        "\tchar* saveptr = NULL; \n\n" +
+    cText += "    char* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
+        "    const char s[3] = \", \";  // delimeter \n" +
+        "    const char e[2] = \"=\";   // delimeter \n" +
+        "    char* tokenS, *tokenE; \n" +
+        "    char* saveptr = NULL; \n\n" +
         
-        "\tfor ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
-        "\t\tint j = i; \n" +
-        "\t\ttokenS = strtok_r(str, s, &saveptr); \n\n" +
+        "    for ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
+        "        int j = i; \n" +
+        "        tokenS = strtok_r(str, s, &saveptr); \n\n" +
         
-        "\tif (tokenS) { \n" +
+        "    if (tokenS) { \n" +
         
-        "\t\ttokenE = strchr(tokenS, '='); \n\n" +
+        "        tokenE = strchr(tokenS, '='); \n\n" +
         
-        "\t\tif (tokenE == NULL) { \n " +
-        "\t\t\ttokenE = tokenS; \n " +
-        "\t\t} \n" +
-        "\t\telse { \n " +
-        "\t\t\ttokenE++; \n\n "
+        "        if (tokenE == NULL) { \n " +
+        "            tokenE = tokenS; \n " +
+        "        } \n" +
+        "        else { \n " +
+        "            tokenE++; \n\n "
         
         for i in 0...inputData.count-1 {
             
             if ( i == 0 ) {
-                cText += "\t\t\tif "
+                cText += "            if "
             }
             else {
-                cText += "\t\t\telse if "
+                cText += "            else if "
             }
             
             cText += "( strcmp(tokenS, \"\(inputData[i].varName)\") == 0 ) { \n " +
-                "\t\t\t\tj = \(i) \n " +
-                "\t\t\t} \n"
+                "                j = \(i) \n " +
+                "            } \n"
         }
     
-    cText += "\t\t} \n\n" +
+    cText += "        } \n\n" +
     
-        "\t\tstrings[j] = tokenE; \n" +
-        "\t} \n\n"
+        "        strings[j] = tokenE; \n" +
+        "    } \n\n"
     
     for i in 0...inputData.count-1 {
         
         if inputData[i].varType == "bool" {
             
-            cText += "\tif (strings[\(i)] != NULL) \n" +
-            "\t\tset_\(inputData[i].varName)(strings[\(i)]); \n\n"
+            cText += "    if (strings[\(i)] != NULL) \n" +
+            "        set_\(inputData[i].varName)(strings[\(i)]); \n\n"
         }
         // the variable is a number type
         else {
-            cText += "\tif (strings[\(i)] != NULL) \n" +
-            "\t\tset_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
+            cText += "    if (strings[\(i)] != NULL) \n" +
+            "        set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
         }
     }
     
-    cText += "\treturn self \n" +
+    cText += "    return self \n" +
         
         "} \n" +
     "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n"
@@ -450,21 +452,19 @@ func generateCPPStruct(data: ClassData) -> String {
         
         "namespace guWhiteboard {\n" +
         
-            "\t/** \n" +
-            "\t *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.cpp)\n" +
-            "\t * \n" +
-            "\t */ \n" +
+            "    /** \n" +
+            "     *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.cpp)\n" +
+            "     * \n" +
+            "     */ \n" +
         
-            "\tclass \(data.cpp): public \(data.wb) { \n\n" +
+            "    class \(data.cpp): public \(data.wb) { \n\n" +
         
-            "\t\t/** Default constructor */ \n" +
-            "\t\t\(data.cpp)() : "
+            "        /** Default constructor */ \n" +
+            "        \(data.cpp)() : "
     
     var memsetForArrays : [String] = []
     
     for i in 0...inputData.count-1 {
-        
-        
         
         if inputData[i].varArraySize == 0 {
             let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
@@ -475,7 +475,7 @@ func generateCPPStruct(data: ClassData) -> String {
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
             
             if defaultValue == " " {
-                memsetForArrays.append("\t\t\tmemset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+                memsetForArrays.append("            memset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
             }
         }
         
@@ -493,16 +493,16 @@ func generateCPPStruct(data: ClassData) -> String {
         for mem in memsetForArrays {
             cppStruct += "\(mem); \n"
         }
-        cppStruct += "\t\t} \n\n"
+        cppStruct += "        } \n\n"
     }
     
-    cppStruct += "\t\t/** Copy Constructor */ \n" +
-    "\t\t\(data.cpp)(const \(data.wb) &other) : \n"
+    cppStruct += "        /** Copy Constructor */ \n" +
+    "        \(data.cpp)(const \(data.wb) &other) : \n"
     
     
     for i in 0...inputData.count-1 {
         
-        cppStruct += "\t\t\t_\(inputData[i].varName)(other._\(inputData[i].varName))"
+        cppStruct += "            _\(inputData[i].varName)(other._\(inputData[i].varName))"
         
         if i < inputData.count-1 {
             cppStruct += ", \n"
@@ -511,29 +511,29 @@ func generateCPPStruct(data: ClassData) -> String {
     
     cppStruct += " {} \n\n" +
         
-        "\t\t/** Assignment Operator */ \n" +
-        "\t\t\(data.cpp) &operator= (const \(data.wb) &other) { \n"
+        "        /** Assignment Operator */ \n" +
+        "        \(data.cpp) &operator= (const \(data.wb) &other) { \n"
     
     
     for i in 0...inputData.count-1 {
         
-        cppStruct += "\t\t\t_\(inputData[i].varName) = other._\(inputData[i].varName); \n"
+        cppStruct += "            _\(inputData[i].varName) = other._\(inputData[i].varName); \n"
     }
     
-    cppStruct += "\t\t\treturn *this; \n" +
-                "\t\t} \n\n" +
+    cppStruct += "            return *this; \n" +
+                "        } \n\n" +
         
-                "\t\t#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
-                "\t\tstd::string description() { \n" +
-                "\t\t\t#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
-                "\t\t\tchar buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
-                "\t\t\t\(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
-                "\t\t\tstd::string descr = buffer; \n" +
-                "\t\t\treturn descr; \n" +
-                "\t\t\t#else \n" +
+                "        #ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+                "        std::string description() { \n" +
+                "            #ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
+                "            char buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
+                "            \(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
+                "            std::string descr = buffer; \n" +
+                "            return descr; \n" +
+                "            #else \n" +
         
-                "\t\t\tstd::string description() const { \n" +
-                "\t\t\t\tstd::ostringstream ss; \n"
+                "            std::string description() const { \n" +
+                "                std::ostringstream ss; \n"
     
                 var first = true
     
@@ -543,19 +543,19 @@ func generateCPPStruct(data: ClassData) -> String {
                         cppStruct += " << \", \"; \n "
                     }
                     
-                    cppStruct += "\t\t\t\tss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)"
+                    cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)"
                     first = false
                 }
 
-                cppStruct += ";\n\t\t\t\treturn ss.str(); \n" +
-                    "\t\t\t} \n" +
+                cppStruct += ";\n                return ss.str(); \n" +
+                    "                } \n" +
     
-                "\t\t\t#endif \n" +
+                "                #endif \n" +
         
-                "\t\t} \n" +
-                "\t\t#endif \n" +
+                "        } \n" +
+                "        #endif \n" +
         
-            "\t} \n" +
+            "    } \n" +
         "} \n"
 
     return cppStruct
