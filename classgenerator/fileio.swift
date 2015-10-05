@@ -378,35 +378,37 @@ func generateWbC(data: ClassData) -> String {
         "    char* tokenS, *tokenE; \n" +
         "    char* saveptr = NULL; \n\n" +
         
+        "    memset(strings, 0, sizeof(strings)); \n\n" +
+        
         "    for (int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++) { \n" +
         "        int j = i; \n" +
         "        tokenS = strtok_r(str, s, &saveptr); \n\n" +
         
-        "    if (tokenS) { \n" +
+        "        if (tokenS) { \n" +
         
-        "        tokenE = strchr(tokenS, '='); \n\n" +
+        "            tokenE = strchr(tokenS, '='); \n\n" +
         
-        "        if (tokenE == NULL) { \n " +
-        "            tokenE = tokenS; \n " +
-        "        } \n" +
-        "        else { \n " +
-        "            tokenE++; \n\n "
+        "            if (tokenE == NULL) { \n " +
+        "                tokenE = tokenS; \n " +
+        "            } \n" +
+        "            else { \n " +
+        "                tokenE++; \n\n "
         
         for i in 0...inputData.count-1 {
             
             if ( i == 0 ) {
-                cText += "            if "
+                cText += "                if "
             }
             else {
-                cText += "            else if "
+                cText += "                else if "
             }
             
             cText += "(strcmp(tokenS, \"\(inputData[i].varName)\") == 0) { \n " +
-                "                j = \(i); \n " +
-                "            } \n"
+                "                    j = \(i); \n " +
+                "                } \n"
         }
     
-    cText += "        } \n\n" +
+            cText += "            } \n\n" +
     
         "        strings[j] = tokenE; \n" +
         "    } \n\n"
