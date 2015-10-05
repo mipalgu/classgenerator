@@ -238,7 +238,8 @@ func generateWbC(data: ClassData) -> String {
     
     // create description() method
     cText += "/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) {\n"
+        "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) \n" +
+    "} \n\n"
     
     if inputData.count > 1 {
         cText += "    size_t len; \n"
@@ -260,7 +261,8 @@ func generateWbC(data: ClassData) -> String {
             }
             
             if !first {
-                cText += "    if (len < bufferSize) { \n\t"
+                cText += "    if (len < bufferSize) \n" +
+                         "{ \n    "
             }
             
             cText += "    gu_strlcat(descString, \"\(inputData[i].varName)=\", bufferSize); \n"
@@ -288,7 +290,8 @@ func generateWbC(data: ClassData) -> String {
                 }
                 
                 if !first {
-                    cText += "    if (len < bufferSize) { \n    "
+                    cText += "    if (len < bufferSize) \n" +
+                             "{ \n    "
                 }
                 
                 cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
@@ -309,7 +312,8 @@ func generateWbC(data: ClassData) -> String {
     
     // create to_string method
     cText += "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize) {\n"
+        "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize) \n" +
+        "{ \n"
     
     if inputData.count > 1 {
         cText += "    size_t len; \n"
@@ -330,7 +334,8 @@ func generateWbC(data: ClassData) -> String {
             }
             
             if !first {
-                cText += "    if (len < bufferSize) { \n\t"
+                cText += "    if (len < bufferSize) \n" +
+                "{ \n    "
             }
             
             cText += "    gu_strlcat(toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
@@ -352,7 +357,8 @@ func generateWbC(data: ClassData) -> String {
             }
             
             if !first {
-                cText += "    if (len < bufferSize) { \n\t"
+                cText += "    if (len < bufferSize) \n" +
+                "{ \n    "
             }
             
             cText += "    snprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
@@ -365,12 +371,13 @@ func generateWbC(data: ClassData) -> String {
         }
     }
     
-    cText += "\treturn toString; \n" +
+    cText += "    return toString; \n" +
     "} \n\n"
     
     // create from_string method
     cText += "/** convert from a string */  \n" +
-    "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
+        "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) \n" +
+        "{ \n"
     
     cText += "    char* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "    const char s[3] = \", \";  /// delimeter \n" +
@@ -380,18 +387,22 @@ func generateWbC(data: ClassData) -> String {
         
         "    memset(strings, 0, sizeof(strings)); \n\n" +
         
-        "    for (int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++) { \n" +
+        "    for (int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++) \n" +
+        "    { \n" +
         "        int j = i; \n" +
         "        tokenS = strtok_r(str, s, &saveptr); \n\n" +
         
-        "        if (tokenS) { \n" +
+        "        if (tokenS) \n" +
+        "        { \n" +
         
         "            tokenE = strchr(tokenS, '='); \n\n" +
         
-        "            if (tokenE == NULL) { \n " +
+        "            if (tokenE == NULL) \n" +
+        "            { \n " +
         "                tokenE = tokenS; \n " +
         "            } \n" +
-        "            else { \n " +
+        "            else \n" +
+        "            { \n " +
         "                tokenE++; \n\n "
         
         for i in 0...inputData.count-1 {
@@ -459,7 +470,8 @@ func generateCPPStruct(data: ClassData) -> String {
             "     * \n" +
             "     */ \n" +
         
-            "    class \(data.cpp): public \(data.wb) { \n\n" +
+            "    class \(data.cpp): public \(data.wb) \n" +
+            "    { \n\n" +
         
             "        /** Default constructor */ \n" +
             "        \(data.cpp)() : "
@@ -490,7 +502,7 @@ func generateCPPStruct(data: ClassData) -> String {
         cppStruct += "  {} \n\n"
     }
     else {
-        cppStruct += "  { \n"
+        cppStruct += "\n{ \n"
         
         for mem in memsetForArrays {
             cppStruct += "\(mem); \n"
@@ -514,7 +526,8 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += " {} \n\n" +
         
         "        /** Assignment Operator */ \n" +
-        "        \(data.cpp) &operator= (const \(data.wb) &other) { \n"
+        "        \(data.cpp) &operator= (const \(data.wb) &other) \n" +
+        "        { \n"
     
     
     for i in 0...inputData.count-1 {
@@ -526,7 +539,8 @@ func generateCPPStruct(data: ClassData) -> String {
                 "        } \n\n" +
         
                 "        #ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
-                "        std::string description() { \n" +
+                "        std::string description() \n" +
+                "        { \n" +
                 "            #ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
                 "            char buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
                 "            \(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
@@ -534,7 +548,8 @@ func generateCPPStruct(data: ClassData) -> String {
                 "            return descr; \n" +
                 "            #else \n" +
         
-                "            std::string description() const { \n" +
+                "            std::string description() const \n" +
+                "            { \n" +
                 "                std::ostringstream ss; \n"
     
                 var first = true
