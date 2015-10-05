@@ -89,7 +89,7 @@ func parseInput(inputText: String) -> String {
     
     
     // if a name was included in the input, use it, then remove it
-    if inputData[0].varType == "name" {
+    if inputData[0].varType == "author" {
 
         userName = inputData[0].varName
         inputData.removeAtIndex(0)
