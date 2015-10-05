@@ -1,0 +1,5 @@
+name	Mick Hawkins
+bool	is_pressed	true
+int16_t	pointX
+int16_t:4	array16	{1, 2, 3, 4}
+int32_t	array32[6]
