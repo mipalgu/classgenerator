@@ -1,7 +1,7 @@
 /** 
  * file MyTest.h 
  * 
- * Created by Mick Hawkins on 13:19, 5/10/2015 
+ * Created by Mick Hawkins on 14:2, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * All rights reserved. 
  * 
@@ -67,10 +67,12 @@
 #include <string.h> 
 #include <sstream> 
 #endif 
+
 #include <gu_util.h> 
 #include "wb_my_test.h" 
 
-namespace guWhiteboard {
+namespace guWhiteboard 
+{
     /** 
      *  ADD YOUR COMMENT DESCRIBING THE CLASS MyTest
      * 
@@ -100,15 +102,15 @@ namespace guWhiteboard {
             return *this; 
         } 
 
-        #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
         std::string description() 
         { 
-            #ifdef USE_WB_MY_TEST_C_CONVERSION 
+#ifdef USE_WB_MY_TEST_C_CONVERSION 
             char buffer[MY_TEST_DESC_BUFFER_SIZE]; 
             wb_my_test_description (this, buffer, sizeof(buffer)); 
             std::string descr = buffer; 
             return descr; 
-            #else 
+#else 
             std::string description() const 
             { 
                 std::ostringstream ss; 
@@ -118,9 +120,9 @@ namespace guWhiteboard {
                  ss << "longNum=" << longNum << ", "; 
                  ss << "decimalNum=" << decimalNum;
                 return ss.str(); 
-                } 
-                #endif 
+            } 
+#endif /// USE_WB_MY_TEST_C_CONVERSION
         } 
-        #endif 
-    } 
-} 
+#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION
+    }; 
+} /// namespace guWhiteboard 

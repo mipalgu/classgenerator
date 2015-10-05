@@ -561,7 +561,7 @@ func generateCPPStruct(data: ClassData) -> String {
                 for i in 0...inputData.count-1 {
                     
                     if !first {
-                        cppStruct += " << \", \"; \n "
+                        cppStruct += " << \", \"; \n"
                     }
                     
                     cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)"
@@ -570,14 +570,14 @@ func generateCPPStruct(data: ClassData) -> String {
 
                 cppStruct += ";\n                return ss.str(); \n" +
                     
-                "                } \n" +
+                "            } \n" +
     
-                "                #endif \n" +
+                "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
                 "        } \n" +
-                "#endif \n" +
+                "#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION\n" +
     
                 "    }; \n" +
-                "} \n"
+                "} /// namespace guWhiteboard \n"
 
     return cppStruct
 }

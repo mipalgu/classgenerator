@@ -1,7 +1,7 @@
 /** 
  * file wb_my_test.c 
  * 
- * Created by Mick Hawkins at 13:19, 5/10/2015 
+ * Created by Mick Hawkins at 14:2, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
  * This file was generated from my_test.txt 
