@@ -462,11 +462,12 @@ func generateCPPStruct(data: ClassData) -> String {
         "#include <cstdlib> \n" +
         "#include <string.h> \n" +
         "#include <sstream> \n" +
-        "#endif \n" +
+        "#endif \n\n" +
         "#include <gu_util.h> \n" +
         "#include \"\(data.wb).h\" \n\n" +
         
-        "namespace guWhiteboard {\n" +
+        "namespace guWhiteboard \n" +
+        "{\n" +
         
             "    /** \n" +
             "     *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.cpp)\n" +
@@ -541,15 +542,15 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "            return *this; \n" +
                 "        } \n\n" +
         
-                "        #ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+                "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
                 "        std::string description() \n" +
                 "        { \n" +
-                "            #ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
+                "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
                 "            char buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
                 "            \(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
                 "            std::string descr = buffer; \n" +
                 "            return descr; \n" +
-                "            #else \n" +
+                "#else \n" +
         
                 "            std::string description() const \n" +
                 "            { \n" +
@@ -573,9 +574,9 @@ func generateCPPStruct(data: ClassData) -> String {
     
                 "                #endif \n" +
                 "        } \n" +
-                "        #endif \n" +
+                "#endif \n" +
     
-                "    } \n" +
+                "    }; \n" +
                 "} \n"
 
     return cppStruct
