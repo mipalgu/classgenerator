@@ -36,13 +36,7 @@ class ClassData {
         self.cpp = cppWord(words)
         
         // get user name
-        if userName == "YOUR NAME" {
-            // no name supplied
-            self.userName = getUserName()
-        }
-        else {
-            self.userName = userName
-        }
+        self.userName = userName
         
         // get working directory
         self.workingDirectory = workingDirectory
@@ -58,17 +52,7 @@ class ClassData {
 }
 
 
-func getUserName() -> String {
-    
-    let pw = getpwuid(getuid())
-    
-    if pw != nil {
-        return String.fromCString(pw.memory.pw_name)!
-    }
-    else {
-        return "YOUR NAME"
-    }
-}
+
 
 
 

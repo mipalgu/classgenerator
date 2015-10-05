@@ -1,3 +1,4 @@
+alias	ALIAS_TesT
 author	Mick Hawkins
 bool	is_pressed	true
 int16_t	pointX

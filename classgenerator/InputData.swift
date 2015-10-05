@@ -6,6 +6,7 @@
 //  Copyright © 2015 Mick Hawkins. All rights reserved.
 //
 
+import Darwin
 
 struct inputVariable{
     
@@ -24,3 +25,17 @@ struct inputVariable{
 }
 
 var inputData : [inputVariable] = []
+
+
+
+func getUserName() -> String {
+    
+    let pw = getpwuid(getuid())
+    
+    if pw != nil {
+        return String.fromCString(pw.memory.pw_name)!
+    }
+    else {
+        return "YOUR NAME"
+    }
+}

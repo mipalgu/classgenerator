@@ -1,10 +1,10 @@
 /** 
- * file wb_my_test.c 
+ * file wb_MY_test.c 
  * 
- * Created by Mick Hawkins at 14:2, 5/10/2015 
+ * Created by Mick Hawkins at 14:36, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
- * This file was generated from my_test.txt 
+ * This file was generated from MY_test.txt 
  * 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -58,7 +58,7 @@
  */ 
 
 
-#include "wb_my_test.h" 
+#include "wb_MY_test.h" 
 #include <stdio.h> 
 #include <string.h> 
 #include <stdlib.h> 
@@ -66,7 +66,7 @@
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
 /** convert to a description string */  
-const char* wb_my_test_description(const struct wb_my_test* self, char* descString, size_t bufferSize) 
+const char* wb_MY_test_description(const struct wb_MY_test* self, char* descString, size_t bufferSize) 
 { 
     size_t len; 
 
@@ -105,7 +105,7 @@ const char* wb_my_test_description(const struct wb_my_test* self, char* descStri
 } 
 
 /** convert to a string */  
-const char* wb_my_test_to_string(const struct wb_my_test* self, char* toString, size_t bufferSize) 
+const char* wb_MY_test_to_string(const struct wb_MY_test* self, char* toString, size_t bufferSize) 
 { 
     size_t len; 
 
@@ -142,7 +142,7 @@ const char* wb_my_test_to_string(const struct wb_my_test* self, char* toString, 
 } 
 
 /** convert from a string */  
-struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* str) 
+struct wb_MY_test* wb_MY_test_from_string(struct wb_MY_test* self, const char* str) 
 { 
     char* strings[MY_TEST_NUMBER_OF_VARIABLES]; 
     const char s[3] = ", ";  /// delimeter 

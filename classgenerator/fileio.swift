@@ -11,12 +11,12 @@ import Darwin
 
 
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
+var classAlias : String = ""
 
 
 func parseInput(inputText: String) -> String {
     
     var lines = inputText.characters.split {$0 == "\n"}.map { String($0) }
-    var userName = "YOUR NAME"
     
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
@@ -88,11 +88,29 @@ func parseInput(inputText: String) -> String {
     
     
     
-    // if a name was included in the input, use it, then remove it
-    if inputData[0].varType == "author" {
-
-        userName = inputData[0].varName
-        inputData.removeAtIndex(0)
+    // if an author was included in the input, use it, then remove it
+    var foundUserName = false
+    var userName : String = ""
+    
+    for i in 0...inputData.count-1 {
+        if inputData[i].varType == "author" {
+            userName = inputData[i].varName
+            inputData.removeAtIndex(i)
+            foundUserName = true
+            break
+        }
+    }
+    if !foundUserName {
+            userName = getUserName()
+    }
+    
+    // if an alias was included in the input, use it, then remove it
+    for i in 0...inputData.count-1 {
+        if inputData[i].varType == "alias" {
+            classAlias = inputData[i].varName
+            inputData.removeAtIndex(i)
+            break
+        }
     }
 
     return userName
@@ -576,8 +594,17 @@ func generateCPPStruct(data: ClassData) -> String {
                 "        } \n" +
                 "#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION\n" +
     
-                "    }; \n" +
-                "} /// namespace guWhiteboard \n"
+                "    }; \n"
+                    
+    if classAlias != "" {
+        cppStruct += "/// \n" +
+            "/// Alias for compatibility with old code. \n" +
+            "/// Do not use for new code. \n" +
+            "/// \n" +
+            "class \(classAlias) : public \(data.cpp) {}; \n"
+    }
+    
+    cppStruct += "} /// namespace guWhiteboard \n"
 
     return cppStruct
 }

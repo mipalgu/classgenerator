@@ -1,11 +1,11 @@
 /** 
- * file MyTest.h 
+ * file MYTest.h 
  * 
- * Created by Mick Hawkins on 14:2, 5/10/2015 
+ * Created by Mick Hawkins on 14:36, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * All rights reserved. 
  * 
- * This file was generated from my_test.txt 
+ * This file was generated from MY_test.txt 
  * 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -59,8 +59,8 @@
  */ 
 
 
-#ifndef MyTest_DEFINED 
-#define MyTest_DEFINED 
+#ifndef MYTest_DEFINED 
+#define MYTest_DEFINED 
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 #include <cstdlib> 
@@ -69,22 +69,22 @@
 #endif 
 
 #include <gu_util.h> 
-#include "wb_my_test.h" 
+#include "wb_MY_test.h" 
 
 namespace guWhiteboard 
 {
     /** 
-     *  ADD YOUR COMMENT DESCRIBING THE CLASS MyTest
+     *  ADD YOUR COMMENT DESCRIBING THE CLASS MYTest
      * 
      */ 
-    class MyTest: public wb_my_test 
+    class MYTest: public wb_MY_test 
     { 
 
         /** Default constructor */ 
-        MyTest() : _is_pressed(true), _pointX(0), _pointY(2), _longNum(0), _decimalNum(0.0)  {} 
+        MYTest() : _is_pressed(true), _pointX(0), _pointY(2), _longNum(0), _decimalNum(0.0)  {} 
 
         /** Copy Constructor */ 
-        MyTest(const wb_my_test &other) : 
+        MYTest(const wb_MY_test &other) : 
             _is_pressed(other._is_pressed), 
             _pointX(other._pointX), 
             _pointY(other._pointY), 
@@ -92,7 +92,7 @@ namespace guWhiteboard
             _decimalNum(other._decimalNum) {} 
 
         /** Assignment Operator */ 
-        MyTest &operator= (const wb_my_test &other) 
+        MYTest &operator= (const wb_MY_test &other) 
         { 
             _is_pressed = other._is_pressed; 
             _pointX = other._pointX; 
@@ -107,7 +107,7 @@ namespace guWhiteboard
         { 
 #ifdef USE_WB_MY_TEST_C_CONVERSION 
             char buffer[MY_TEST_DESC_BUFFER_SIZE]; 
-            wb_my_test_description (this, buffer, sizeof(buffer)); 
+            wb_MY_test_description (this, buffer, sizeof(buffer)); 
             std::string descr = buffer; 
             return descr; 
 #else 
@@ -115,14 +115,19 @@ namespace guWhiteboard
             { 
                 std::ostringstream ss; 
                 ss << "is_pressed=" << is_pressed << ", "; 
-                 ss << "pointX=" << pointX << ", "; 
-                 ss << "pointY=" << pointY << ", "; 
-                 ss << "longNum=" << longNum << ", "; 
-                 ss << "decimalNum=" << decimalNum;
+                ss << "pointX=" << pointX << ", "; 
+                ss << "pointY=" << pointY << ", "; 
+                ss << "longNum=" << longNum << ", "; 
+                ss << "decimalNum=" << decimalNum;
                 return ss.str(); 
             } 
 #endif /// USE_WB_MY_TEST_C_CONVERSION
         } 
 #endif ///   WHITEBOARD_POSTER_STRING_CONVERSION
     }; 
+/// 
+/// Alias for compatibility with old code. 
+/// Do not use for new code. 
+/// 
+class ALIAS_TesT : public MYTest {}; 
 } /// namespace guWhiteboard 
