@@ -16,7 +16,7 @@ var classAlias : String = ""
 
 func parseInput(inputText: String) -> String {
     
-    var lines = inputText.characters.split {$0 == "\n"}.map { String($0) }
+    var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
     
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
@@ -31,12 +31,12 @@ func parseInput(inputText: String) -> String {
         
         var isArray = false
         var inputArraySize : Int = 0
-        var variable = line.characters.split {$0 == "\t"}.map { String($0) }
+        var variable = line.characters.split {$0 == "\t"}.map {String($0)}
         //var inputVar : inputVariable
         
         // check if this line is an array
         // first, check for [] notation
-        let bracketValues = variable[1].characters.split {$0 == "["}.map { String($0) }
+        let bracketValues = variable[1].characters.split {$0 == "["}.map {String($0)}
         
         if bracketValues.count == 2 {  // found bracket therefore array
             variable[1] = bracketValues[0]
@@ -53,7 +53,7 @@ func parseInput(inputText: String) -> String {
         
         if !isArray {
             
-            let colonValues = variable[0].characters.split {$0 == ":"}.map { String($0) }
+            let colonValues = variable[0].characters.split {$0 == ":"}.map {String($0)}
             
             if colonValues.count == 2 {  // found colon therefore array
                 variable[0] = colonValues[0]
