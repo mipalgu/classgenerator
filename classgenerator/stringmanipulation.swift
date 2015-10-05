@@ -23,6 +23,22 @@ func upperCase (ch: Character) -> Character {
 }
 
 
+func lowerCase (ch: Character) -> Character {
+    
+    if ( ch >= "A" ) && ( ch <= "Z" ){
+        
+        let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
+        let val = scalars[scalars.startIndex].value  // value of the unicode scalar
+        
+        return Character(UnicodeScalar(val + 32))    // return the lowercase
+    }
+    else {
+        
+        return ch                                    // return the character since it's not a lowercase letter
+    }
+}
+
+
 func capitalisedWord (word: String) -> String {
     
     var capWord = ""
@@ -52,6 +68,18 @@ func uppercaseWord (word: String) -> String {
     }
     
     return uppWord
+}
+
+func lowercaseWord (word: String) -> String {
+    
+    var word = ""
+    
+    for ch in word.characters {
+        word += String(lowerCase(ch))
+        print ("\(word)")
+    }
+    
+    return word
 }
 
 

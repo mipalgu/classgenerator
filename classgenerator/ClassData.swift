@@ -26,7 +26,7 @@ class ClassData {
         self.inputFilename = inputFilenameNoExtension + ".txt"
         
         // make wb_ name : the name not including .txt, with wb_ added
-        self.wb = "wb_" + inputFilenameNoExtension
+        self.wb = "wb_" + lowercaseWord(inputFilenameNoExtension)
         
         // split the name into words, delimited by underscore
         let words = inputFilenameNoExtension.characters.split {$0 == "_"}.map { String($0) }

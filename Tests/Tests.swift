@@ -126,6 +126,45 @@ class Tests: XCTestCase {
         XCTAssertEqual(arraySize, 8, "arraySize not set correctly")
     }
     
+    
+    
+    func lc (ch: Character) -> Character {
+        
+        if ( ch >= "A" ) && ( ch <= "Z" ){
+            
+            let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
+            let val = scalars[scalars.startIndex].value  // value of the unicode scalar
+            
+            return Character(UnicodeScalar(val + 32))    // return the lowercase
+        }
+        else {
+            
+            return ch                                    // return the character since it's not a lowercase letter
+        }
+    }
+    
+    func lcWord (word: String) -> String {
+        
+        var lcWord = ""
+        
+        for ch in word.characters {
+            lcWord += String(lc(ch))
+        }
+        
+        return lcWord
+    }
+    
+    func testLowerCaseWord(){
+        
+        let inputWord = "my_TEST_word"
+        let lowercase = lcWord(inputWord)
+        print("\(lowercase)")
+        
+        let desiredWord = "my_test_word"
+        
+        XCTAssertEqual(desiredWord, lowercase, "did not convert")
+    }
+    
 }
 
 

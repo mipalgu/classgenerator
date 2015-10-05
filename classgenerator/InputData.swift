@@ -36,6 +36,7 @@ func getUserName() -> String {
         return String.fromCString(pw.memory.pw_name)!
     }
     else {
+        print ("Could not determine system username.")
         return "YOUR NAME"
     }
 }

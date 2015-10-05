@@ -1,7 +1,7 @@
 /** 
  * file MYTest.h 
  * 
- * Created by Mick Hawkins on 14:36, 5/10/2015 
+ * Created by Mick Hawkins on 14:48, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * All rights reserved. 
  * 
@@ -69,7 +69,7 @@
 #endif 
 
 #include <gu_util.h> 
-#include "wb_MY_test.h" 
+#include "wb_.h" 
 
 namespace guWhiteboard 
 {
@@ -77,14 +77,14 @@ namespace guWhiteboard
      *  ADD YOUR COMMENT DESCRIBING THE CLASS MYTest
      * 
      */ 
-    class MYTest: public wb_MY_test 
+    class MYTest: public wb_ 
     { 
 
         /** Default constructor */ 
         MYTest() : _is_pressed(true), _pointX(0), _pointY(2), _longNum(0), _decimalNum(0.0)  {} 
 
         /** Copy Constructor */ 
-        MYTest(const wb_MY_test &other) : 
+        MYTest(const wb_ &other) : 
             _is_pressed(other._is_pressed), 
             _pointX(other._pointX), 
             _pointY(other._pointY), 
@@ -92,7 +92,7 @@ namespace guWhiteboard
             _decimalNum(other._decimalNum) {} 
 
         /** Assignment Operator */ 
-        MYTest &operator= (const wb_MY_test &other) 
+        MYTest &operator= (const wb_ &other) 
         { 
             _is_pressed = other._is_pressed; 
             _pointX = other._pointX; 
@@ -107,7 +107,7 @@ namespace guWhiteboard
         { 
 #ifdef USE_WB_MY_TEST_C_CONVERSION 
             char buffer[MY_TEST_DESC_BUFFER_SIZE]; 
-            wb_MY_test_description (this, buffer, sizeof(buffer)); 
+            wb__description (this, buffer, sizeof(buffer)); 
             std::string descr = buffer; 
             return descr; 
 #else 
