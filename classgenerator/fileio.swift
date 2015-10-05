@@ -256,20 +256,20 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    len = gu_strlcat( descString, \", \", bufferSize ); \n\n"
+                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
             }
             
             if !first {
-                cText += "    if ( len < bufferSize ) { \n\t"
+                cText += "    if (len < bufferSize) { \n\t"
             }
             
-            cText += "    gu_strlcat( descString, \"\(inputData[i].varName)=\", bufferSize ); \n"
+            cText += "    gu_strlcat(descString, \"\(inputData[i].varName)=\", bufferSize); \n"
             
             if !first {
                 cText += "    "
             }
             
-            cText += "    gu_strlcat( descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
+            cText += "    gu_strlcat(descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
             
             if !first {
                 cText += "    } \n\n "
@@ -284,11 +284,11 @@ func generateWbC(data: ClassData) -> String {
                     cText += "\n"
                 }
                 else {
-                    cText += "    len = gu_strlcat( descString, \", \", bufferSize ); \n\n"
+                    cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
                 }
                 
                 if !first {
-                    cText += "    if ( len < bufferSize ) { \n    "
+                    cText += "    if (len < bufferSize) { \n    "
                 }
                 
                 cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
@@ -326,14 +326,14 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    sgu_strlcat( toString, \", \", bufferSize ); \n\n"
+                cText += "    sgu_strlcat(toString, \", \", bufferSize); \n\n"
             }
             
             if !first {
-                cText += "    if ( len < bufferSize ) { \n\t"
+                cText += "    if (len < bufferSize) { \n\t"
             }
             
-            cText += "    gu_strlcat( toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize ); \n\n"
+            cText += "    gu_strlcat(toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
             
             if !first {
                 cText += "    } \n\n "
@@ -348,14 +348,14 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    len = gu_strlcat( toString, \", \", bufferSize ); \n\n"
+                cText += "    len = gu_strlcat(toString, \", \", bufferSize); \n\n"
             }
             
             if !first {
-                cText += "    if ( len < bufferSize ) { \n\t"
+                cText += "    if (len < bufferSize) { \n\t"
             }
             
-            cText += "    snprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
+            cText += "    snprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
             
             if !first {
                 cText += "    } \n\n "
@@ -373,12 +373,12 @@ func generateWbC(data: ClassData) -> String {
     "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) {\n\n"
     
     cText += "    char* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "    const char s[3] = \", \";  // delimeter \n" +
-        "    const char e[2] = \"=\";   // delimeter \n" +
+        "    const char s[3] = \", \";  /// delimeter \n" +
+        "    const char e[2] = \"=\";   /// delimeter \n" +
         "    char* tokenS, *tokenE; \n" +
         "    char* saveptr = NULL; \n\n" +
         
-        "    for ( int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++ ) { \n" +
+        "    for (int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++) { \n" +
         "        int j = i; \n" +
         "        tokenS = strtok_r(str, s, &saveptr); \n\n" +
         
@@ -401,8 +401,8 @@ func generateWbC(data: ClassData) -> String {
                 cText += "            else if "
             }
             
-            cText += "( strcmp(tokenS, \"\(inputData[i].varName)\") == 0 ) { \n " +
-                "                j = \(i) \n " +
+            cText += "(strcmp(tokenS, \"\(inputData[i].varName)\") == 0) { \n " +
+                "                j = \(i); \n " +
                 "            } \n"
         }
     
@@ -548,15 +548,15 @@ func generateCPPStruct(data: ClassData) -> String {
                 }
 
                 cppStruct += ";\n                return ss.str(); \n" +
-                    "                } \n" +
+                    
+                "                } \n" +
     
                 "                #endif \n" +
-        
                 "        } \n" +
                 "        #endif \n" +
-        
-            "    } \n" +
-        "} \n"
+    
+                "    } \n" +
+                "} \n"
 
     return cppStruct
 }
