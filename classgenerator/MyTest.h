@@ -1,7 +1,7 @@
 /** 
  * file MyTest.h 
  * 
- * Created by Mick Hawkins on 18:50, 1/10/2015 
+ * Created by Mick Hawkins on 13:19, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * All rights reserved. 
  * 
@@ -71,51 +71,56 @@
 #include "wb_my_test.h" 
 
 namespace guWhiteboard {
-	/** 
-	 *  ADD YOUR COMMENT DESCRIBING THE CLASS MyTest
-	 * 
-	 */ 
-	class MyTest: public wb_my_test { 
-		/** Default constructor */ 
-		MyTest() : _is_pressed(true), _pointX(0), _pointY(2), _longNum(0), _decimalNum(0.0)  {} 
+    /** 
+     *  ADD YOUR COMMENT DESCRIBING THE CLASS MyTest
+     * 
+     */ 
+    class MyTest: public wb_my_test 
+    { 
 
-		/** Copy Constructor */ 
-		MyTest(const wb_my_test &other) : 
-			_is_pressed(other._is_pressed), 
-			_pointX(other._pointX), 
-			_pointY(other._pointY), 
-			_longNum(other._longNum), 
-			_decimalNum(other._decimalNum) {} 
+        /** Default constructor */ 
+        MyTest() : _is_pressed(true), _pointX(0), _pointY(2), _longNum(0), _decimalNum(0.0)  {} 
 
-		/** Assignment Operator */ 
-		MyTest &operator= (const wb_my_test &other) { 
-			_is_pressed = other._is_pressed; 
-			_pointX = other._pointX; 
-			_pointY = other._pointY; 
-			_longNum = other._longNum; 
-			_decimalNum = other._decimalNum; 
-			return *this; 
-		} 
+        /** Copy Constructor */ 
+        MyTest(const wb_my_test &other) : 
+            _is_pressed(other._is_pressed), 
+            _pointX(other._pointX), 
+            _pointY(other._pointY), 
+            _longNum(other._longNum), 
+            _decimalNum(other._decimalNum) {} 
 
-		#ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
-		std::string description() { 
-			#ifdef USE_WB_MY_TEST_C_CONVERSION 
-			char buffer[MY_TEST_DESC_BUFFER_SIZE]; 
-			wb_my_test_description (this, buffer, sizeof(buffer)); 
-			std::string descr = buffer; 
-			return descr; 
-			#else 
-			std::string description() const { 
-				std::ostringstream ss; 
-				ss << "is_pressed=" << is_pressed << ", "; 
- 				ss << "pointX=" << pointX << ", "; 
- 				ss << "pointY=" << pointY << ", "; 
- 				ss << "longNum=" << longNum << ", "; 
- 				ss << "decimalNum=" << decimalNum;
-				return ss.str(); 
-			} 
-			#endif 
-		} 
-		#endif 
-	} 
+        /** Assignment Operator */ 
+        MyTest &operator= (const wb_my_test &other) 
+        { 
+            _is_pressed = other._is_pressed; 
+            _pointX = other._pointX; 
+            _pointY = other._pointY; 
+            _longNum = other._longNum; 
+            _decimalNum = other._decimalNum; 
+            return *this; 
+        } 
+
+        #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
+        std::string description() 
+        { 
+            #ifdef USE_WB_MY_TEST_C_CONVERSION 
+            char buffer[MY_TEST_DESC_BUFFER_SIZE]; 
+            wb_my_test_description (this, buffer, sizeof(buffer)); 
+            std::string descr = buffer; 
+            return descr; 
+            #else 
+            std::string description() const 
+            { 
+                std::ostringstream ss; 
+                ss << "is_pressed=" << is_pressed << ", "; 
+                 ss << "pointX=" << pointX << ", "; 
+                 ss << "pointY=" << pointY << ", "; 
+                 ss << "longNum=" << longNum << ", "; 
+                 ss << "decimalNum=" << decimalNum;
+                return ss.str(); 
+                } 
+                #endif 
+        } 
+        #endif 
+    } 
 } 

@@ -1,7 +1,7 @@
 /** 
  * file wb_my_test.c 
  * 
- * Created by Mick Hawkins at 18:50, 1/10/2015 
+ * Created by Mick Hawkins at 13:19, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
  * This file was generated from my_test.txt 
@@ -59,7 +59,6 @@
 
 
 #include "wb_my_test.h" 
-#include <gu_util.h> 
 #include <stdio.h> 
 #include <string.h> 
 #include <stdlib.h> 
@@ -67,111 +66,150 @@
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 
 /** convert to a description string */  
-const char* wb_my_test_description( const struct wb_my_test* self, char* descString, size_t bufferSize ) {
-	size_t len; 
+const char* wb_my_test_description(const struct wb_my_test* self, char* descString, size_t bufferSize) 
+{ 
+    size_t len; 
 
-	gu_strlcat( descString, "is_pressed=", bufferSize ); 
-	gu_strlcat( descString, is_pressed ? "true" : "false", bufferSize ); 
+    gu_strlcat(descString, "is_pressed=", bufferSize); 
+    gu_strlcat(descString, is_pressed ? "true" : "false", bufferSize); 
 
-	len = gu_strlcat( descString, ", ", bufferSize ); 
+    len = gu_strlcat(descString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "pointX=", pointX ); 
-	} 
+    if (len < bufferSize) 
+    { 
+        snprintf(descString+len, bufferSize-len, "pointX=%d", pointX ); 
+    } 
 
-	len = gu_strlcat( descString, ", ", bufferSize ); 
+    len = gu_strlcat(descString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "pointY=", pointY ); 
-	} 
+    if (len < bufferSize) 
+    { 
+        snprintf(descString+len, bufferSize-len, "pointY=%u", pointY ); 
+    } 
 
-	len = gu_strlcat( descString, ", ", bufferSize ); 
+    len = gu_strlcat(descString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "longNum=", longNum ); 
-	} 
+    if (len < bufferSize) 
+    { 
+        snprintf(descString+len, bufferSize-len, "longNum=%ld", longNum ); 
+    } 
 
-	len = gu_strlcat( descString, ", ", bufferSize ); 
+    len = gu_strlcat(descString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		snprintf(descString+len, bufferSize-len, "decimalNum=", decimalNum ); 
-	} 
+    if (len < bufferSize) 
+    { 
+        snprintf(descString+len, bufferSize-len, "decimalNum=%lf", decimalNum ); 
+    } 
 
 	return descString; 
 } 
 
 /** convert to a string */  
-const char* wb_my_test_to_string( const struct wb_my_test* self, char* toString, size_t bufferSize ) {
-	size_t len; 
+const char* wb_my_test_to_string(const struct wb_my_test* self, char* toString, size_t bufferSize) 
+{ 
+    size_t len; 
 
-	len = gu_strlcat( toString, ", ", bufferSize ); 
+    snprintf(toString+len, bufferSize-len, "is_pressed=", is_pressed); 
+    len = gu_strlcat(toString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		} 
+    if (len < bufferSize) 
+    { 
+        snprintf(toString+len, bufferSize-len, "pointX=%d", pointX); 
+    } 
 
- 	len = gu_strlcat( toString, ", ", bufferSize ); 
+     len = gu_strlcat(toString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		} 
+    if (len < bufferSize) 
+    { 
+        snprintf(toString+len, bufferSize-len, "pointY=%u", pointY); 
+    } 
 
- 	len = gu_strlcat( toString, ", ", bufferSize ); 
+     len = gu_strlcat(toString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		} 
+    if (len < bufferSize) 
+    { 
+        snprintf(toString+len, bufferSize-len, "longNum=%ld", longNum); 
+    } 
 
- 	len = gu_strlcat( toString, ", ", bufferSize ); 
+     len = gu_strlcat(toString, ", ", bufferSize); 
 
-	if ( len < bufferSize ) { 
-		} 
+    if (len < bufferSize) 
+    { 
+        snprintf(toString+len, bufferSize-len, "decimalNum=%lf", decimalNum); 
+    } 
 
- 	return toString; 
+     return toString; 
 } 
 
 /** convert from a string */  
-struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* str) {
+struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* str) 
+{ 
+    char* strings[MY_TEST_NUMBER_OF_VARIABLES]; 
+    const char s[3] = ", ";  /// delimeter 
+    const char e[2] = "=";   /// delimeter 
+    char* tokenS, *tokenE; 
+    char* saveptr = NULL; 
 
-	char* strings[MY_TEST_NUMBER_OF_VARIABLES]; 
-	const char s[3] = ", ";  // delimeter 
-	const char e[2] = "=";   // delimeter 
-	char* tokenS, *tokenE; 
-	char* saveptr = NULL; 
+    memset(strings, 0, sizeof(strings)); 
 
-	for ( int i = 0; i < MY_TEST_NUMBER_OF_VARIABLES; i++ ) { 
-		int j = i; 
-		tokenS = strtok_r(str, s, &saveptr); 
+    for (int i = 0; i < MY_TEST_NUMBER_OF_VARIABLES; i++) 
+    { 
+        int j = i; 
+        tokenS = strtok_r(str, s, &saveptr); 
 
-	if (tokenS) { 
-		tokenE = strchr(tokenS, '='); 
+        if (tokenS) 
+        { 
+            tokenE = strchr(tokenS, '='); 
 
-		if (tokenE == NULL) { 
- 			tokenE = tokenS; 
- 		} 
-		else { 
- 			tokenE++; 
+            if (tokenE == NULL) 
+            { 
+                 tokenE = tokenS; 
+            } 
+            else 
+            { 
+                 tokenE++; 
 
- 			if ( strcmp(tokenS, "is_pressed") == 0 ) { 
- 				j = 0 
- 			} 
-			else if ( strcmp(tokenS, "pointX") == 0 ) { 
- 				j = 1 
- 			} 
-			else if ( strcmp(tokenS, "pointY") == 0 ) { 
- 				j = 2 
- 			} 
-			else if ( strcmp(tokenS, "longNum") == 0 ) { 
- 				j = 3 
- 			} 
-			else if ( strcmp(tokenS, "decimalNum") == 0 ) { 
- 				j = 4 
- 			} 
-		} 
+                if (strcmp(tokenS, "is_pressed") == 0) 
+                { 
+                    j = 0; 
+                } 
+                else if (strcmp(tokenS, "pointX") == 0) 
+                { 
+                    j = 1; 
+                } 
+                else if (strcmp(tokenS, "pointY") == 0) 
+                { 
+                    j = 2; 
+                } 
+                else if (strcmp(tokenS, "longNum") == 0) 
+                { 
+                    j = 3; 
+                } 
+                else if (strcmp(tokenS, "decimalNum") == 0) 
+                { 
+                    j = 4; 
+                } 
+            } 
 
-		strings[j] = tokenE; 
-	} 
+            strings[j] = tokenE; 
+        } 
+    } 
 
-	if (strings[0] != NULL) 
-		set_is_pressed(strings[0]); 
+    if (strings[0] != NULL) 
+        set_is_pressed(strings[0]); 
 
-	return self 
-} 
-#endif // WHITEBOARD_POSTER_STRING_CONVERSION 
+    if (strings[1] != NULL) 
+        set_pointX((int16_t)atoi(strings[1])); 
+
+    if (strings[2] != NULL) 
+        set_pointY((uint32_t)atoi(strings[2])); 
+
+    if (strings[3] != NULL) 
+        set_longNum((long)atol(strings[3])); 
+
+    if (strings[4] != NULL) 
+        set_decimalNum((double)atof(strings[4])); 
+
+    return self 
+}; 
+#endif /// WHITEBOARD_POSTER_STRING_CONVERSION 

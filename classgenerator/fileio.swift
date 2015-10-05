@@ -173,13 +173,14 @@ func generateWbHeader(data: ClassData) -> String {
     
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         "#define \(data.wb)_h \n\n" +
-        "#include <gu_util.h> \n\n"
+        "#include <gu_util.h> \n" +
+        "#include \"gusimplewhiteboard.h\" \n\n"
     
     cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
         "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n" +
-        "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
+        "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     for i in 0...inputData.count-1 {
         
@@ -204,7 +205,8 @@ func generateWbHeader(data: ClassData) -> String {
         " * \n" +
         " */ \n" +
         
-        "struct \(data.wb) { \n"
+        "struct \(data.wb) \n" +
+        "{ \n"
     
     for i in 0...inputData.count-1 {
         
@@ -229,7 +231,6 @@ func generateWbHeader(data: ClassData) -> String {
 func generateWbC(data: ClassData) -> String {
     
     var cText = "#include \"\(data.wb).h\" \n" +
-    "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
     "#include <stdlib.h> \n\n"
@@ -239,7 +240,7 @@ func generateWbC(data: ClassData) -> String {
     // create description() method
     cText += "/** convert to a description string */  \n" +
         "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) \n" +
-    "} \n\n"
+    "{ \n"
     
     if inputData.count > 1 {
         cText += "    size_t len; \n"
@@ -262,7 +263,7 @@ func generateWbC(data: ClassData) -> String {
             
             if !first {
                 cText += "    if (len < bufferSize) \n" +
-                         "{ \n    "
+                         "    { \n    "
             }
             
             cText += "    gu_strlcat(descString, \"\(inputData[i].varName)=\", bufferSize); \n"
@@ -291,7 +292,7 @@ func generateWbC(data: ClassData) -> String {
                 
                 if !first {
                     cText += "    if (len < bufferSize) \n" +
-                             "{ \n    "
+                             "    { \n    "
                 }
                 
                 cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
@@ -335,13 +336,13 @@ func generateWbC(data: ClassData) -> String {
             
             if !first {
                 cText += "    if (len < bufferSize) \n" +
-                "{ \n    "
+                         "    { \n    "
             }
             
             cText += "    gu_strlcat(toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
             
             if !first {
-                cText += "    } \n\n "
+                cText += "    } \n\n"
             }
             
             first = false
@@ -358,7 +359,7 @@ func generateWbC(data: ClassData) -> String {
             
             if !first {
                 cText += "    if (len < bufferSize) \n" +
-                "{ \n    "
+                         "    { \n    "
             }
             
             cText += "    snprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
@@ -399,11 +400,11 @@ func generateWbC(data: ClassData) -> String {
         
         "            if (tokenE == NULL) \n" +
         "            { \n " +
-        "                tokenE = tokenS; \n " +
+        "                tokenE = tokenS; \n" +
         "            } \n" +
         "            else \n" +
         "            { \n " +
-        "                tokenE++; \n\n "
+        "                tokenE++; \n\n"
         
         for i in 0...inputData.count-1 {
             
@@ -414,14 +415,16 @@ func generateWbC(data: ClassData) -> String {
                 cText += "                else if "
             }
             
-            cText += "(strcmp(tokenS, \"\(inputData[i].varName)\") == 0) { \n " +
-                "                    j = \(i); \n " +
-                "                } \n"
+            cText += "(strcmp(tokenS, \"\(inputData[i].varName)\") == 0) \n" +
+                     "                { \n" +
+                     "                    j = \(i); \n" +
+                     "                } \n"
         }
     
             cText += "            } \n\n" +
     
-        "        strings[j] = tokenE; \n" +
+        "            strings[j] = tokenE; \n" +
+        "        } \n" +
         "    } \n\n"
     
     for i in 0...inputData.count-1 {
@@ -440,8 +443,8 @@ func generateWbC(data: ClassData) -> String {
     
     cText += "    return self \n" +
         
-        "} \n" +
-    "#endif // WHITEBOARD_POSTER_STRING_CONVERSION \n"
+        "}; \n" +
+    "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION \n"
     
     return cText
 }

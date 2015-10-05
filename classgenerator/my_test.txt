@@ -1,4 +1,4 @@
-name	Mick Hawkins
+author	Mick Hawkins
 bool	is_pressed	true
 int16_t	pointX
 uint32_t	pointY	2

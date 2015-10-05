@@ -1,7 +1,7 @@
 /** 
  * file wb_my_test.h 
  * 
- * Created by Mick Hawkins at 18:50, 1/10/2015 
+ * Created by Mick Hawkins at 13:19, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
  * This file was generated from my_test.txt 
@@ -62,16 +62,21 @@
 #define wb_my_test_h 
 
 #include <gu_util.h> 
+#include "gusimplewhiteboard.h" 
 
 #define MY_TEST_NUMBER_OF_VARIABLES 5 
+
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 #define MY_TEST_DESC_BUFFER_SIZE 149 
 #define MY_TEST_TO_STRING_BUFFER_SIZE 105 
+#endif /// WHITEBOARD_POSTER_STRING_CONVERSION 
+
 
 /** convert to a description string */  
-const char* wb_my_test_description( const struct wb_my_test* self, char* descString, size_t bufferSize ); 
+const char* wb_my_test_description(const struct wb_my_test* self, char* descString, size_t bufferSize); 
 
 /** convert to a string */  
-const char* wb_my_test_to_string( const struct wb_my_test* self, char* toString, size_t bufferSize ); 
+const char* wb_my_test_to_string(const struct wb_my_test* self, char* toString, size_t bufferSize); 
 
 /** convert from a string */  
 struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* str); 
@@ -80,20 +85,21 @@ struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* s
  *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_test
  * 
  */ 
-struct wb_my_test { 
-	/** is_pressed COMMENT ON PROPERTY */ 
-	PROPERTY(bool, is_pressed)
+struct wb_my_test 
+{ 
+    /** is_pressed COMMENT ON PROPERTY */ 
+    PROPERTY(bool, is_pressed)
 
-	/** pointX COMMENT ON PROPERTY */ 
-	PROPERTY(int16_t, pointX)
+    /** pointX COMMENT ON PROPERTY */ 
+    PROPERTY(int16_t, pointX)
 
-	/** pointY COMMENT ON PROPERTY */ 
-	PROPERTY(uint32_t, pointY)
+    /** pointY COMMENT ON PROPERTY */ 
+    PROPERTY(uint32_t, pointY)
 
-	/** longNum COMMENT ON PROPERTY */ 
-	PROPERTY(long, longNum)
+    /** longNum COMMENT ON PROPERTY */ 
+    PROPERTY(long, longNum)
 
-	/** decimalNum COMMENT ON PROPERTY */ 
-	PROPERTY(double, decimalNum)
+    /** decimalNum COMMENT ON PROPERTY */ 
+    PROPERTY(double, decimalNum)
 
 }; 
