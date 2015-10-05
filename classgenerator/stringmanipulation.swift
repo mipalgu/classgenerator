@@ -72,14 +72,13 @@ func uppercaseWord (word: String) -> String {
 
 func lowercaseWord (word: String) -> String {
     
-    var word = ""
+    var lowWord = ""
     
     for ch in word.characters {
-        word += String(lowerCase(ch))
-        print ("\(word)")
+        lowWord += String(lowerCase(ch))
     }
     
-    return word
+    return lowWord
 }
 
 

@@ -1,7 +1,7 @@
 /** 
- * file wb_MY_test.h 
+ * file wb_my_test.h 
  * 
- * Created by Mick Hawkins at 14:36, 5/10/2015 
+ * Created by Mick Hawkins at 15:4, 5/10/2015 
  * Copyright (c) 2015 Mick Hawkins 
  * 
  * This file was generated from MY_test.txt 
@@ -58,8 +58,8 @@
  */ 
 
 
-#ifndef wb_MY_test_h 
-#define wb_MY_test_h 
+#ifndef wb_my_test_h 
+#define wb_my_test_h 
 
 #include <gu_util.h> 
 #include "gusimplewhiteboard.h" 
@@ -73,19 +73,19 @@
 
 
 /** convert to a description string */  
-const char* wb_MY_test_description(const struct wb_MY_test* self, char* descString, size_t bufferSize); 
+const char* wb_my_test_description(const struct wb_my_test* self, char* descString, size_t bufferSize); 
 
 /** convert to a string */  
-const char* wb_MY_test_to_string(const struct wb_MY_test* self, char* toString, size_t bufferSize); 
+const char* wb_my_test_to_string(const struct wb_my_test* self, char* toString, size_t bufferSize); 
 
 /** convert from a string */  
-struct wb_MY_test* wb_MY_test_from_string(struct wb_MY_test* self, const char* str); 
+struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* str); 
 
 /** 
- *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_MY_test
+ *  ADD YOUR COMMENT DESCRIBING THE STRUCT wb_my_test
  * 
  */ 
-struct wb_MY_test 
+struct wb_my_test 
 { 
     /** is_pressed COMMENT ON PROPERTY */ 
     PROPERTY(bool, is_pressed)
