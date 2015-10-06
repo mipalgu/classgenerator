@@ -53,7 +53,7 @@ class Tests: XCTestCase {
     }
     
     
-    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false", varArraySize: 0)
+    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false", varArraySize: 0, varComment: "a comment here")
     
     let inputType = "bool"
     let inputName = "is_pressed"
@@ -166,22 +166,56 @@ class Tests: XCTestCase {
     }
     
     
-/*    func testFindComment(){
+    func testFindComment(){
         
-        var foundComment = ""
-        let inputComment = "this is a test * A comment"
-        let desired = " A comment"
+        var structComment : [String] = []
+        var variables : [String] = []
+        var foundReturn = false
         
-        var lines = inputComment.characters.split {$0 == "*"}.map {String($0)}
+        let inputText = "int\tnumber\nbool\tpressed\n\nthis is a comment\nso is this\n"
+        let comment1 = "this is a comment"
+        let comment2 = "so is this"
+        let var1 = "int\tnumber"
+        let var2 = "bool\tpressed"
         
-        if lines.count == 2 {
-            foundComment = lines[1]
+        var commentPosition : Int = 0
+        
+        for ch in inputText.characters {
+            
+            if ch == "\n" {
+                
+                if foundReturn {
+                    break
+                }
+                else {
+                    foundReturn = true
+                }
+                commentPosition++
+            }
+            else {
+                foundReturn = false
+            }
         }
         
-        XCTAssertEqual(desired, foundComment, "did not find comment")
+        print("\(commentPosition)")
+        var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
+        
+        for i in commentPosition...lines.count-1 {
+            structComment.append(lines[i])
+        }
+        
+        for i in 0...commentPosition-1 {
+            variables.append(lines[i])
+        }
+        
+        XCTAssertEqual(comment1, structComment[0], "did not find comment1")
+        XCTAssertEqual(comment2, structComment[1], "did not find comment2")
+        
+        XCTAssertEqual(var1, variables[0], "did not find var1")
+        XCTAssertEqual(var2, variables[1], "did not find var2")
+        
     }
-*/
-
+    
 }
 
 

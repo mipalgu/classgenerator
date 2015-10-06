@@ -12,12 +12,9 @@ import Darwin
 
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 var classAlias : String = ""
-// var structComment : String = ""
+var structComment : [String] = []
 
 func parseInput(inputText: String) -> String {
-    
-
-    var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
     
     /*
     // check for case where the file had a return/s at the end or between lines
@@ -30,21 +27,48 @@ func parseInput(inputText: String) -> String {
     }
     */
     
+    var structComment : [String] = []
+    var variables : [String] = []
+    var foundReturn = false
     
-    let numberOfLines = lines.count
-    for var i = numberOfLines-1; i >= 0; i-- {
-        if lines[i] == "" {
-            lines.removeAtIndex(i)
+    var commentPosition : Int = 0
+    
+    for ch in inputText.characters {
+        
+        if ch == "\n" {
+            
+            if foundReturn {
+                break
+            }
+            else {
+                foundReturn = true
+            }
+            commentPosition++
+        }
+        else {
+            foundReturn = false
         }
     }
     
+    var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
+    
+    for i in commentPosition...lines.count-1 {
+        structComment.append(lines[i])
+    }
+    
+    for i in 0...commentPosition-1 {
+        variables.append(lines[i])
+    }
+
+
     
     
-    for line in lines {
+    
+    for v in variables {
         
         var isArray = false
         var inputArraySize : Int = 0
-        var variable = line.characters.split {$0 == "\t"}.map {String($0)}
+        var variable = v.characters.split {$0 == "\t"}.map {String($0)}
         //var inputVar : inputVariable
         
         // check if this line is an array
@@ -82,13 +106,13 @@ func parseInput(inputText: String) -> String {
         
         if variable.count == 3 {
 
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varArraySize: inputArraySize)
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varArraySize: inputArraySize, varComment: "")
             inputData.append(inputVar)
             //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
         }
         else if variable.count == 2 {  // no default
             
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varArraySize: inputArraySize)
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varArraySize: inputArraySize, varComment: "")
             inputData.append(inputVar)
             //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
         }
