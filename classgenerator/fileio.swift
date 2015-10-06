@@ -13,6 +13,7 @@ import Darwin
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 var classAlias : String = ""
 var structComment : [String] = []
+var foundVariables : [String] = []
 
 func parseInput(inputText: String) -> String {
     
@@ -27,8 +28,7 @@ func parseInput(inputText: String) -> String {
     }
     */
     
-    var structComment : [String] = []
-    var variables : [String] = []
+    
     var foundReturn = false
     
     var commentPosition : Int = 0
@@ -57,14 +57,14 @@ func parseInput(inputText: String) -> String {
     }
     
     for i in 0...commentPosition-1 {
-        variables.append(lines[i])
+        foundVariables.append(lines[i])
     }
 
 
     
     
     
-    for v in variables {
+    for v in foundVariables {
         
         var isArray = false
         var inputArraySize : Int = 0
@@ -253,10 +253,13 @@ func generateWbHeader(data: ClassData) -> String {
         "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n\n"
     
     
-    cStruct1 += "/** \n" +
-        " *  ADD YOUR COMMENT DESCRIBING THE STRUCT \(data.wb)\n" +
-        " * \n" +
-        " */ \n" +
+    cStruct1 += "/** \n"
+    
+    for line in structComment {
+        cStruct1 += " * \(line) \n"
+    }
+    
+    cStruct1 += " */ \n" +
         
         "struct \(data.wb) \n" +
         "{ \n"
@@ -520,12 +523,15 @@ func generateCPPStruct(data: ClassData) -> String {
         "#include \"\(data.wb).h\" \n\n" +
         
         "namespace guWhiteboard \n" +
-        "{\n" +
+        "{\n\n" +
         
-            "    /** \n" +
-            "     *  ADD YOUR COMMENT DESCRIBING THE CLASS \(data.cpp)\n" +
-            "     * \n" +
-            "     */ \n" +
+        "    /** \n"
+    
+    for line in structComment {
+        cppStruct += "     * \(line) \n"
+    }
+    
+    cppStruct += "     */ \n" +
         
             "    class \(data.cpp): public \(data.wb) \n" +
             "    { \n\n" +

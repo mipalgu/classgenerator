@@ -5,3 +5,7 @@ int16_t	pointX
 uint32_t	pointY	2
 long	longNum
 double	decimalNum
+
+This is a comment
+This is the second line of a comment
+
