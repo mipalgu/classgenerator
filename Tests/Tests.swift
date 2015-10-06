@@ -165,6 +165,23 @@ class Tests: XCTestCase {
         XCTAssertEqual(desiredWord, lowercase, "did not convert")
     }
     
+    
+/*    func testFindComment(){
+        
+        var foundComment = ""
+        let inputComment = "this is a test * A comment"
+        let desired = " A comment"
+        
+        var lines = inputComment.characters.split {$0 == "*"}.map {String($0)}
+        
+        if lines.count == 2 {
+            foundComment = lines[1]
+        }
+        
+        XCTAssertEqual(desired, foundComment, "did not find comment")
+    }
+*/
+
 }
 
 

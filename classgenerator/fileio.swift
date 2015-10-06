@@ -12,12 +12,14 @@ import Darwin
 
 let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
 var classAlias : String = ""
-
+// var structComment : String = ""
 
 func parseInput(inputText: String) -> String {
     
+
     var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
     
+    /*
     // check for case where the file had a return/s at the end or between lines
     // counting backwards so not to change indexes
     let numberOfLines = lines.count
@@ -26,6 +28,17 @@ func parseInput(inputText: String) -> String {
             lines.removeAtIndex(i)
         }
     }
+    */
+    
+    
+    let numberOfLines = lines.count
+    for var i = numberOfLines-1; i >= 0; i-- {
+        if lines[i] == "" {
+            lines.removeAtIndex(i)
+        }
+    }
+    
+    
     
     for line in lines {
         
@@ -85,9 +98,6 @@ func parseInput(inputText: String) -> String {
         }
     }
     
-    
-    
-    
     // if an author was included in the input, use it, then remove it
     var foundUserName = false
     var userName : String = ""
@@ -101,7 +111,7 @@ func parseInput(inputText: String) -> String {
         }
     }
     if !foundUserName {
-            userName = getUserName()
+        userName = getUserName()
     }
     
     // if an alias was included in the input, use it, then remove it
@@ -112,6 +122,7 @@ func parseInput(inputText: String) -> String {
             break
         }
     }
+    
 
     return userName
 }
@@ -293,7 +304,7 @@ func generateWbC(data: ClassData) -> String {
             cText += "    gu_strlcat(descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
             
             if !first {
-                cText += "    } \n\n "
+                cText += "    } \n\n"
             }
             
             first = false
