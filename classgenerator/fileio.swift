@@ -28,9 +28,9 @@ func parseInput(inputText: String) -> String {
     }
     */
     
-    
+    var foundUserName = false
+    var userName : String = ""
     var foundReturn = false
-    
     var commentPosition : Int = 0
     
     for ch in inputText.characters {
@@ -59,8 +59,6 @@ func parseInput(inputText: String) -> String {
     for i in 0...commentPosition-1 {
         foundVariables.append(lines[i])
     }
-
-
     
     
     
@@ -69,7 +67,7 @@ func parseInput(inputText: String) -> String {
         var isArray = false
         var inputArraySize : Int = 0
         var variable = v.characters.split {$0 == "\t"}.map {String($0)}
-        //var inputVar : inputVariable
+        
         
         // check if this line is an array
         // first, check for [] notation
@@ -104,49 +102,46 @@ func parseInput(inputText: String) -> String {
             }
         }
         
-        if variable.count == 3 {
+        if variable.count == 4 { // includes default
 
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varArraySize: inputArraySize, varComment: "")
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: variable[3], varArraySize: inputArraySize)
             inputData.append(inputVar)
             //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
         }
-        else if variable.count == 2 {  // no default
+        else if variable.count == 3 {  // no default
             
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varArraySize: inputArraySize, varComment: "")
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: "", varArraySize: inputArraySize)
             inputData.append(inputVar)
             //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
+        }
+        else if variable.count == 2 {
+            
+            // if an author was included in the input, use it, then remove it
+            if variable[0] == "author" {
+                userName = variable[1]
+                foundUserName = true
+            }
+            
+            // if an alias was included in the input, use it, then remove it
+            else if variable[0] == "alias" {
+                    classAlias = variable[1]
+            }
+            else {
+                print("Input text file contains too many or not enough values for a variable.")
+                exit(EXIT_FAILURE)
+            }
         }
         else {
             print("Input text file contains too many or not enough values for a variable.")
             exit(EXIT_FAILURE)
         }
     }
-    
-    // if an author was included in the input, use it, then remove it
-    var foundUserName = false
-    var userName : String = ""
-    
-    for i in 0...inputData.count-1 {
-        if inputData[i].varType == "author" {
-            userName = inputData[i].varName
-            inputData.removeAtIndex(i)
-            foundUserName = true
-            break
-        }
-    }
+
+
     if !foundUserName {
         userName = getUserName()
     }
-    
-    // if an alias was included in the input, use it, then remove it
-    for i in 0...inputData.count-1 {
-        if inputData[i].varType == "alias" {
-            classAlias = inputData[i].varName
-            inputData.removeAtIndex(i)
-            break
-        }
-    }
-    
+
 
     return userName
 }
@@ -266,7 +261,7 @@ func generateWbHeader(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        cStruct1 += "    /** \(inputData[i].varName) COMMENT ON PROPERTY */ \n"
+        cStruct1 += "    /** \(inputData[i].varComment) */ \n"
         
         if inputData[i].varArraySize == 0 {  // not an array
             cStruct1 += "    PROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"

@@ -12,17 +12,19 @@ struct inputVariable{
     
     var varType : String
     var varName : String
+    var varComment : String
     var varDefault : String
     var varArraySize : Int
-    var varComment : String
     
-    init(varType: String, varName: String, varDefault: String, varArraySize : Int, varComment : String) {
+    
+    init(varType: String, varName: String, varComment : String, varDefault: String, varArraySize : Int) {
         
         self.varType = varType
         self.varName = varName
+        self.varComment = varComment
         self.varDefault = varDefault
         self.varArraySize = varArraySize
-        self.varComment = varComment
+        
     }
 }
 
