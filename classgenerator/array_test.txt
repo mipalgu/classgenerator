@@ -2,3 +2,5 @@ author	Mick Hawkins
 bool	is_pressed	a comment	true
 int16_t	pointX	a comment
 int16_t	array16[4]	a comment	{1,2,3,4}
+
+Struct comment goes here

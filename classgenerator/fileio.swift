@@ -53,7 +53,7 @@ func parseInput(inputText: String) -> String {
     
     var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
     
-    if lines.count-1 > commentPosition {
+    if lines.count > commentPosition {
         for i in commentPosition...lines.count-1 {
             structComment.append(lines[i])
         }
@@ -527,6 +527,7 @@ func generateCPPStruct(data: ClassData) -> String {
             "        \(data.cpp)() : "
     
     var memsetForArrays : [String] = []
+    var memcpyForArrays : [String] = []
     
     for i in 0...inputData.count-1 {
         
@@ -539,8 +540,10 @@ func generateCPPStruct(data: ClassData) -> String {
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
             
             if defaultValue == " " {
-                memsetForArrays.append("            memset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+                memsetForArrays.append("memset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
             }
+            
+            memcpyForArrays.append("memcpy(\(inputData[i].varName), &other, sizeof(\(data.wb)))")
         }
         
         if i < inputData.count-1 {
@@ -549,13 +552,13 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     
     if memsetForArrays.count == 0 {
-        cppStruct += "  {} \n\n"
+        cppStruct += " {} \n\n"
     }
     else {
         cppStruct += "\n{ \n"
         
         for mem in memsetForArrays {
-            cppStruct += "\(mem); \n"
+            cppStruct += "            \(mem); \n"
         }
         cppStruct += "        } \n\n"
     }
@@ -563,17 +566,34 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "        /** Copy Constructor */ \n" +
     "        \(data.cpp)(const \(data.wb) &other) : \n"
     
+    var first = true
     
     for i in 0...inputData.count-1 {
         
-        cppStruct += "            _\(inputData[i].varName)(other._\(inputData[i].varName))"
-        
-        if i < inputData.count-1 {
-            cppStruct += ", \n"
+        if inputData[i].varArraySize == 0 {
+            
+            if !first {
+                cppStruct += ", \n"
+            }
+            
+            cppStruct += "            _\(inputData[i].varName)(other._\(inputData[i].varName))"
+            first = false
         }
     }
     
-    cppStruct += " {} \n\n" +
+    if memcpyForArrays.count == 0 {
+        cppStruct += " {} \n\n"
+    }
+    else {
+        
+        cppStruct += "\n        { \n"
+        
+        for mem in memcpyForArrays {
+            cppStruct += "            \(mem); \n"
+        }
+    }
+
+    cppStruct += "        } \n\n" +
         
         "        /** Assignment Operator */ \n" +
         "        \(data.cpp) &operator= (const \(data.wb) &other) \n" +
@@ -582,7 +602,13 @@ func generateCPPStruct(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        cppStruct += "            _\(inputData[i].varName) = other._\(inputData[i].varName); \n"
+        if inputData[i].varArraySize == 0 {
+            cppStruct += "            _\(inputData[i].varName) = other._\(inputData[i].varName); \n"
+        }
+    }
+    
+    for mem in memcpyForArrays {
+        cppStruct += "            \(mem); \n"
     }
     
     cppStruct += "            return *this; \n" +
@@ -602,7 +628,7 @@ func generateCPPStruct(data: ClassData) -> String {
                 "            { \n" +
                 "                std::ostringstream ss; \n"
     
-                var first = true
+                first = true
     
                 for i in 0...inputData.count-1 {
                     
