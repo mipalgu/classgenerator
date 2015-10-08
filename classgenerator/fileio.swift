@@ -50,21 +50,26 @@ func parseInput(inputText: String) -> String {
         }
     }
     
+    
     var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
     
-    for i in commentPosition...lines.count-1 {
-        structComment.append(lines[i])
+    if lines.count-1 > commentPosition {
+        for i in commentPosition...lines.count-1 {
+            structComment.append(lines[i])
+        }
+        
+        for i in 0...commentPosition-1 {
+            foundVariables.append(lines[i])
+        }
     }
-    
-    for i in 0...commentPosition-1 {
-        foundVariables.append(lines[i])
+    else {
+        print("Struct comment needs to be specified. Please see the user manual.")
+        exit(EXIT_FAILURE)
     }
-    
     
     
     for v in foundVariables {
         
-        var isArray = false
         var inputArraySize : Int = 0
         var variable = v.characters.split {$0 == "\t"}.map {String($0)}
         
@@ -72,38 +77,25 @@ func parseInput(inputText: String) -> String {
         // check if this line is an array
         // first, check for [] notation
         let bracketValues = variable[1].characters.split {$0 == "["}.map {String($0)}
+        variable[1] = bracketValues[0]
         
         if bracketValues.count == 2 {  // found bracket therefore array
-            variable[1] = bracketValues[0]
             let size : String = bracketValues[1]
             inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
-            isArray = true
         }
-        else if bracketValues.count == 1 {  // not an array
-            variable[1] = bracketValues[0]
-        }
-        else {
-            /// error    ****************************
-        }
+
+            
+        let colonValues = variable[0].characters.split {$0 == ":"}.map {String($0)}
+        variable[0] = colonValues[0]
         
-        if !isArray {
+        if colonValues.count == 2 {  // found colon therefore array
             
-            let colonValues = variable[0].characters.split {$0 == ":"}.map {String($0)}
-            
-            if colonValues.count == 2 {  // found colon therefore array
-                variable[0] = colonValues[0]
-                inputArraySize = Int(colonValues[1])!
-            }
-            else if colonValues.count == 1 {  // not an array
-                variable[0] = colonValues[0]
-            }
-            else {
-                /// error  **************************
-            }
+            inputArraySize = Int(colonValues[1])!
         }
+
         
         if variable.count == 4 { // includes default
-
+            
             let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: variable[3], varArraySize: inputArraySize)
             inputData.append(inputVar)
             //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
