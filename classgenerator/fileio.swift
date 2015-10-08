@@ -510,7 +510,7 @@ func generateCPPStruct(data: ClassData) -> String {
         "#include \"\(data.wb).h\" \n\n" +
         
         "namespace guWhiteboard \n" +
-        "{\n\n" +
+        "{\n" +
         
         "    /** \n"
     
@@ -633,14 +633,31 @@ func generateCPPStruct(data: ClassData) -> String {
                 for i in 0...inputData.count-1 {
                     
                     if !first {
-                        cppStruct += " << \", \"; \n"
+                        cppStruct += "                ss << \", \"; \n"
                     }
                     
-                    cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)"
+                    if inputData[i].varArraySize == 0 {
+                    
+                        cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName); \n"
+                    }
+                    else {
+                        
+                        cppStruct += "\n                bool \(inputData[i].varName)_first = true; \n"
+                            
+                        cppStruct += "                ss << \"\(inputData[i].varName)=\"; \n" +
+                        
+                            "                for (size_t i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1; i++) \n" +
+                            "                { \n" +
+                        
+                            "                    ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)[i]; \n" +
+                            "                    \(inputData[i].varName)_first = false;  \n" +
+                            "                } \n"
+
+                    }
                     first = false
                 }
 
-                cppStruct += ";\n                return ss.str(); \n" +
+                cppStruct += "\n                return ss.str(); \n" +
                     
                 "            } \n" +
     
