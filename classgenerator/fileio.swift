@@ -449,8 +449,59 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
+        /// if the variable is an array                    // ****** tidy up all the !first  ************
+        if inputData[i].varArraySize > 0 {
+            
+            if first {
+                cText += "\n"
+            }
+            else {
+                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+            }
+            
+            if !first {
+                cText += "    if (len < bufferSize) \n" +
+                "    { \n"
+            }
+            
+            
+            if !first {
+                cText += "    "
+            }
+            
+            cText += "    len = gu_strlcat(descString, \"{\", bufferSize); \n"
+            
+            if !first {
+                cText += "    } \n\n"
+            }
+            
+            cText += "    int \(inputData[i].varName)_first = 0; \n\n" +
+                "    for (int i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; i++) \n" +
+                "    { \n"  +
+                "        if (len < bufferSize) \n" +
+                "        { \n" +
+                "            if (\(inputData[i].varName)_first == 1) \n" +
+                "            { \n" +
+                "                len = gu_strlcat(descString, \",\", bufferSize); \n" +
+            "            } \n"
+            
+            if inputData[i].varType == "bool" {
+                cText += "            gu_strlcat(descString, \(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
+            }
+            else {
+                cText += "            snprintf(descString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)[i]); \n"
+            }
+            
+            cText += "        } \n" +
+                "        \(inputData[i].varName)_first = 1; \n" +
+                "    } \n"  +
+            "    gu_strlcat(descString, \"}\", bufferSize); \n\n"
+            
+            first = false
+        }
+        
         // if the variable is a bool
-        if inputData[i].varType == "bool" {
+        else if inputData[i].varType == "bool" {
             
             if first {
                 cText += "\n"
