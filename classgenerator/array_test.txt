@@ -1,6 +1,4 @@
 author	Mick Hawkins
-bool	is_pressed=true	// a comment	
-int16_t	pointX	// a comment
 int16_t	array16[4]={1,2,3,4}	// a comment
 int32_t	array32[2]={6,7}	// a comment
 

@@ -102,7 +102,7 @@ func parseInput(inputText: String) -> String {
                 var varName = ""
                 let varType = variable[0]
                 let varComment = removeCommentNotation(variable[2])
-                var inputArraySize : Int = 0
+                var varArraySize : Int = 0
             
                 var nameAndDefault = variable[1].characters.split {$0 == "="}.map {String($0)}
             
@@ -114,7 +114,7 @@ func parseInput(inputText: String) -> String {
                 // found bracket therefore array
                 if bracketValues.count == 2 {
                     let size : String = bracketValues[1]
-                    inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
+                    varArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
                 }
             
             /*
@@ -133,7 +133,7 @@ func parseInput(inputText: String) -> String {
                     varDefault = nameAndDefault[1]
                 }
             
-                let inputVar = inputVariable(varType: varType, varName: varName, varDefault: varDefault, varComment: varComment, varArraySize: inputArraySize)
+                let inputVar = inputVariable(varType: varType, varName: varName, varDefault: varDefault, varComment: varComment, varArraySize: varArraySize)
                 inputData.append(inputVar)
         }
         else if variable.count == 2 { // not a variable
@@ -323,8 +323,61 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
+        /// if the variable is an array                    // ****** tidy up all the !first  ************
+        if inputData[i].varArraySize > 0 {
+        
+            if first {
+                cText += "\n"
+            }
+            else {
+                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+            }
+            
+            if !first {
+                cText += "    if (len < bufferSize) \n" +
+                "    { \n"
+            }
+            
+            
+            if !first {
+                cText += "    "
+            }
+            
+            cText += "    len = gu_strlcat(descString, \"\(inputData[i].varName)={\", bufferSize); \n"
+            
+            if !first {
+                cText += "    } \n\n"
+            }
+                
+            cText += "    int \(inputData[i].varName)_first = 0; \n\n" +
+                "    for (int i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; i++) \n" +
+                "    { \n"  +
+                "        if (len < bufferSize) \n" +
+                "        { \n" +
+                "            if (\(inputData[i].varName)_first == 1) \n" +
+                "            { \n" +
+                "                len = gu_strlcat(descString, \",\", bufferSize); \n" +
+                "            } \n"
+            
+            if inputData[i].varType == "bool" {
+                cText += "            gu_strlcat(descString, \(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
+            }
+            else {
+                cText += "            snprintf(descString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)[i]); \n"
+            }
+            
+            cText += "        } \n" +
+                "        \(inputData[i].varName)_first = 1; \n" +
+                "    } \n"  +
+                "    gu_strlcat(descString, \"}\", bufferSize); \n\n"
+            
+            first = false
+        }
+        
+        
+        
         // if the variable is a bool
-        if inputData[i].varType == "bool" {
+        else if inputData[i].varType == "bool" {
             
             if first {
                 cText += "\n"
@@ -344,7 +397,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "    "
             }
             
-            cText += "    gu_strlcat(descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
+            cText += "    gu_strlcat(descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n"
             
             if !first {
                 cText += "    } \n\n"
@@ -367,7 +420,7 @@ func generateWbC(data: ClassData) -> String {
                              "    { \n    "
                 }
                 
-                cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName) ); \n"
+                cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
                 
                 if !first {
                     cText += "    } \n\n"
@@ -565,7 +618,7 @@ func generateCPPStruct(data: ClassData) -> String {
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
         }
         else {   // an array
-            let defaultValue = inputData[i].varDefault == "" ? " " : String((inputData[i].varDefault).characters.dropFirst().dropLast())
+            let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault  // String((inputData[i].varDefault).characters.dropFirst().dropLast())
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
             
             if defaultValue == " " {
