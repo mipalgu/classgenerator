@@ -79,21 +79,24 @@ func parseInput(inputText: String) -> String {
     for v in foundVariables {
         
         var inputArraySize : Int = 0
+        
+        /*
         var varComment : String = ""
         
         // split on the comment separator ';'
-        var foundComment = v.characters.split {$0 == ";"}.map {String($0)}
+        var foundComment = v.characters.split {$0 == "*"}.map {String($0)}
         
         // exit if there isn;t a comment for this variable
         if foundComment.count == 1 {
+            print("A comment needs to be specified for each variable. Please see the user manual.")
             exit(EXIT_FAILURE)
         }
         
         varComment = foundComment[1]
+        */
         
-        // split the non-comment part of the line
-        // where there are tabs
-        var variable = foundComment[0].characters.split {$0 == "\t"}.map {String($0)}
+        // split the line where there are tabs
+        var variable = v.characters.split {$0 == "\t"}.map {String($0)}
         
         
         // check if this line is an array
@@ -106,38 +109,39 @@ func parseInput(inputText: String) -> String {
             inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
         }
 
-            
+        // check if this line is an array
+        // first, check for : notation
         let colonValues = variable[0].characters.split {$0 == ":"}.map {String($0)}
         variable[0] = colonValues[0]
         
         if colonValues.count == 2 {  // found colon therefore array
-            
             inputArraySize = Int(colonValues[1])!
         }
 
         
-        if variable.count == 3 { // includes default
-            
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: variable[3], varArraySize: inputArraySize)
+        
+        if variable.count == 4 { // includes default
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[3], varDefault: variable[2], varArraySize: inputArraySize)
             inputData.append(inputVar)
         }
-        else if variable.count == 2 {  // no default, or is author, or is alias
-            
+        else if variable.count == 3 {  // no default
+                let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: "", varArraySize: inputArraySize)
+                inputData.append(inputVar)
+        }
+        else if variable.count == 2 {
             // if an author was included in the input, use it, then remove it
             if variable[0] == "author" {
                 userName = variable[1]
                 foundUserName = true
             }
                 
-            // if an alias was included in the input, use it, then remove it
+                // if an alias was included in the input, use it, then remove it
             else if variable[0] == "alias" {
                 classAlias = variable[1]
             }
-            
-            //
             else {
-                let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: varComment, varDefault: "", varArraySize: inputArraySize)
-                inputData.append(inputVar)
+                print("Input text file contains too many or not enough values for a variable.")
+                exit(EXIT_FAILURE)
             }
         }
         else {
