@@ -33,6 +33,9 @@ func parseInput(inputText: String) -> String {
     var foundReturn = false
     var commentPosition : Int = 0
     
+    
+    /// count to the line that has the struct comment
+    /// by finding 2 successive end of lines
     for ch in inputText.characters {
         
         if ch == "\n" {
@@ -50,14 +53,18 @@ func parseInput(inputText: String) -> String {
         }
     }
     
-    
+    /// split the input into lines
+    /// as separated by an end-of-line
     var lines = inputText.characters.split {$0 == "\n"}.map {String($0)}
     
     if lines.count > commentPosition {
+        
+        /// get the lines of the struct comment
         for i in commentPosition...lines.count-1 {
             structComment.append(lines[i])
         }
         
+        /// get the lines that have the variables
         for i in 0...commentPosition-1 {
             foundVariables.append(lines[i])
         }
@@ -68,10 +75,25 @@ func parseInput(inputText: String) -> String {
     }
     
     
+    /// parse the lines containing variables
     for v in foundVariables {
         
         var inputArraySize : Int = 0
-        var variable = v.characters.split {$0 == "\t"}.map {String($0)}
+        var varComment : String = ""
+        
+        // split on the comment separator ';'
+        var foundComment = v.characters.split {$0 == ";"}.map {String($0)}
+        
+        // exit if there isn;t a comment for this variable
+        if foundComment.count == 1 {
+            exit(EXIT_FAILURE)
+        }
+        
+        varComment = foundComment[1]
+        
+        // split the non-comment part of the line
+        // where there are tabs
+        var variable = foundComment[0].characters.split {$0 == "\t"}.map {String($0)}
         
         
         // check if this line is an array
@@ -94,33 +116,28 @@ func parseInput(inputText: String) -> String {
         }
 
         
-        if variable.count == 4 { // includes default
+        if variable.count == 3 { // includes default
             
             let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: variable[3], varArraySize: inputArraySize)
             inputData.append(inputVar)
-            //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
         }
-        else if variable.count == 3 {  // no default
-            
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: "", varArraySize: inputArraySize)
-            inputData.append(inputVar)
-            //print("\(inputVar.varType) : \(inputVar.varName) : \(inputVar.varDefault) : \(inputVar.varArraySize) ")
-        }
-        else if variable.count == 2 {
+        else if variable.count == 2 {  // no default, or is author, or is alias
             
             // if an author was included in the input, use it, then remove it
             if variable[0] == "author" {
                 userName = variable[1]
                 foundUserName = true
             }
-            
+                
             // if an alias was included in the input, use it, then remove it
             else if variable[0] == "alias" {
-                    classAlias = variable[1]
+                classAlias = variable[1]
             }
+            
+            //
             else {
-                print("Input text file contains too many or not enough values for a variable.")
-                exit(EXIT_FAILURE)
+                let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: varComment, varDefault: "", varArraySize: inputArraySize)
+                inputData.append(inputVar)
             }
         }
         else {
@@ -129,11 +146,10 @@ func parseInput(inputText: String) -> String {
         }
     }
 
-
+    /// if an author wasn't specified, use the system's username
     if !foundUserName {
         userName = getUserName()
     }
-
 
     return userName
 }
