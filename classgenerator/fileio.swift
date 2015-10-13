@@ -450,7 +450,7 @@ func generateWbC(data: ClassData) -> String {
     for i in 0...inputData.count-1 {
         
         // if the variable is a bool
-        if inputData[i].varName == "bool" {
+        if inputData[i].varType == "bool" {
             
             if first {
                 cText += "\n"
@@ -487,7 +487,7 @@ func generateWbC(data: ClassData) -> String {
                          "    { \n    "
             }
             
-            cText += "    snprintf(toString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
+            cText += "    snprintf(toString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
             
             if !first {
                 cText += "    } \n\n "
