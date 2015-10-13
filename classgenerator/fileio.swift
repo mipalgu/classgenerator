@@ -78,8 +78,6 @@ func parseInput(inputText: String) -> String {
     /// parse the lines containing variables
     for v in foundVariables {
         
-        var inputArraySize : Int = 0
-        
         /*
         var varComment : String = ""
         
@@ -98,44 +96,55 @@ func parseInput(inputText: String) -> String {
         // split the line where there are tabs
         var variable = v.characters.split {$0 == "\t"}.map {String($0)}
         
-        
-        // check if this line is an array
-        // first, check for [] notation
-        let bracketValues = variable[1].characters.split {$0 == "["}.map {String($0)}
-        variable[1] = bracketValues[0]
-        
-        if bracketValues.count == 2 {  // found bracket therefore array
-            let size : String = bracketValues[1]
-            inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
-        }
-
-        // check if this line is an array
-        // first, check for : notation
-        let colonValues = variable[0].characters.split {$0 == ":"}.map {String($0)}
-        variable[0] = colonValues[0]
-        
-        if colonValues.count == 2 {  // found colon therefore array
-            inputArraySize = Int(colonValues[1])!
-        }
-
-        
-        
-        if variable.count == 4 { // includes default
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varComment: removeCommentNotation(variable[3]), varArraySize: inputArraySize)
-            inputData.append(inputVar)
-        }
-        else if variable.count == 3 {  // no default
-                let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varComment: removeCommentNotation(variable[2]), varArraySize: inputArraySize)
+        if variable.count == 3 {  // is a variable
+            
+                var varDefault = ""
+                var varName = ""
+                let varType = variable[0]
+                let varComment = removeCommentNotation(variable[2])
+                var inputArraySize : Int = 0
+            
+                var nameAndDefault = variable[1].characters.split {$0 == "="}.map {String($0)}
+            
+                // check if this name is an array
+                // check for [] notation
+                let bracketValues = nameAndDefault[0].characters.split {$0 == "["}.map {String($0)}
+                varName = bracketValues[0]
+            
+                // found bracket therefore array
+                if bracketValues.count == 2 {
+                    let size : String = bracketValues[1]
+                    inputArraySize = Int(String(size.characters.dropLast()))!   // remove the ]
+                }
+            
+            /*
+                // check if this name is an array
+                // check for : notation
+                let colonValues = variable[0].characters.split {$0 == ":"}.map {String($0)}
+                varType = colonValues[0]
+                
+                if colonValues.count == 2 {  // found colon therefore array
+                    inputArraySize = Int(colonValues[1])!
+                }
+            */
+            
+                // if a default was specified, use it
+                if nameAndDefault.count == 2 {
+                    varDefault = nameAndDefault[1]
+                }
+            
+                let inputVar = inputVariable(varType: varType, varName: varName, varDefault: varDefault, varComment: varComment, varArraySize: inputArraySize)
                 inputData.append(inputVar)
         }
-        else if variable.count == 2 {
-            // if an author was included in the input, use it, then remove it
+        else if variable.count == 2 { // not a variable
+            
+            // if an author was included in the input, use it
             if variable[0] == "author" {
                 userName = variable[1]
                 foundUserName = true
             }
                 
-                // if an alias was included in the input, use it, then remove it
+                // if an alias was included in the input, use it
             else if variable[0] == "alias" {
                 classAlias = variable[1]
             }

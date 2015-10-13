@@ -1,7 +1,7 @@
 author	Mick Hawkins
-bool	is_pressed	a comment	true
-int16_t	pointX	a comment
-int16_t	array16[4]	a comment	{1,2,3,4}
-int32_t	array32[2]	a comment	{6,7}
+bool	is_pressed=true	// a comment	
+int16_t	pointX	// a comment
+int16_t	array16[4]={1,2,3,4}	// a comment
+int32_t	array32[2]={6,7}	// a comment
 
 Struct comment goes here
