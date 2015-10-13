@@ -113,3 +113,24 @@ func cppWord(words: [String]) -> String {
     
     return cpp
 }
+
+
+/// removes "// " from the front of a comment
+func removeCommentNotation(inputText: String) -> String {
+    
+    var firstLetterFound = false
+    var foundComment = ""
+    
+    for ch in inputText.characters {
+        
+        if firstLetterFound {
+            foundComment += String(ch)
+        }
+        else if  ch != "/" && ch != " " {
+            firstLetterFound = true
+            foundComment += String(ch)
+        }
+    }
+    
+    return foundComment
+}

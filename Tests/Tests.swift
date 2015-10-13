@@ -218,8 +218,8 @@ class Tests: XCTestCase {
     
     func testRemoveLeadingCommentCharacters(){
         
-        let inputText = "// This is a comment"
-        let comment = "This is a comment"
+        let inputText = "// 7This is a comment"
+        let comment = "7This is a comment"
         
         var firstLetterFound = false
         var returnedString = ""
@@ -229,7 +229,7 @@ class Tests: XCTestCase {
             if firstLetterFound {
                 returnedString += String(ch)
             }
-            else if ( ch >= "a" && ch <= "z" ) || ( ch >= "A" && ch <= "Z" ) {
+            else if  ch != "/" && ch != " " {
                 firstLetterFound = true
                 returnedString += String(ch)
             }
