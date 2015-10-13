@@ -53,7 +53,7 @@ class Tests: XCTestCase {
     }
     
     
-    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false", varArraySize: 0, varComment: "a comment here")
+    let inputVar = inputVariable(varType: "bool", varName: "is_pressed", varDefault: "false", varComment: "a comment here", varArraySize: 0)
     
     let inputType = "bool"
     let inputName = "is_pressed"
@@ -214,6 +214,28 @@ class Tests: XCTestCase {
         XCTAssertEqual(var1, variables[0], "did not find var1")
         XCTAssertEqual(var2, variables[1], "did not find var2")
         
+    }
+    
+    func testRemoveLeadingCommentCharacters(){
+        
+        let inputText = "// This is a comment"
+        let comment = "This is a comment"
+        
+        var firstLetterFound = false
+        var returnedString = ""
+        
+        for ch in inputText.characters {
+            
+            if firstLetterFound {
+                returnedString += String(ch)
+            }
+            else if ( ch >= "a" && ch <= "z" ) || ( ch >= "A" && ch <= "Z" ) {
+                firstLetterFound = true
+                returnedString += String(ch)
+            }
+        }
+        
+        XCTAssertEqual(comment, returnedString, "did not find comment")
     }
     
 }

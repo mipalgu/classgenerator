@@ -121,11 +121,11 @@ func parseInput(inputText: String) -> String {
         
         
         if variable.count == 4 { // includes default
-            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[3], varDefault: variable[2], varArraySize: inputArraySize)
+            let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: variable[2], varComment: variable[3], varArraySize: inputArraySize)
             inputData.append(inputVar)
         }
         else if variable.count == 3 {  // no default
-                let inputVar = inputVariable(varType: variable[0], varName: variable[1], varComment: variable[2], varDefault: "", varArraySize: inputArraySize)
+                let inputVar = inputVariable(varType: variable[0], varName: variable[1], varDefault: "", varComment: variable[2], varArraySize: inputArraySize)
                 inputData.append(inputVar)
         }
         else if variable.count == 2 {

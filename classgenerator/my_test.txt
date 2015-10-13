@@ -1,8 +1,8 @@
 alias	ALIAS_TesT
 author	Mick Hawkins
-bool	is_pressed	true	is_pressed is a boolean	
-int16_t	pointX	pointX is a number
-uint32_t	pointY	2	pointY is a number as well
+bool	is_pressed	true	// is_pressed is a boolean	
+int16_t	pointX	// pointX is a number
+uint32_t	pointY	2	// pointY is a number as well
 
 This is a comment
 This is the second line of a comment
