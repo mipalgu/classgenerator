@@ -20,6 +20,8 @@ struct varData {
 // Are complex types needed?
 let variables = [
 
+    "string": varData(defaultValue: "", length: 0,  macro: "PROPERTY", format: "%s", converter: ""),
+    
     "bool": varData(defaultValue: "false", length: 5,  macro: "PROPERTY", format: "", converter: ""),
     
     "char":          varData(defaultValue: "0", length: 1, macro: "PROPERTY", format: "%c", converter: "atoi"),

@@ -303,6 +303,7 @@ func generateWbHeader(data: ClassData) -> String {
 func generateWbC(data: ClassData) -> String {
     
     var cText = "#include \"\(data.wb).h\" \n" +
+    "#include \"gusimplewhiteboard.h\" \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
     "#include <stdlib.h> \n\n"
@@ -572,7 +573,7 @@ func generateWbC(data: ClassData) -> String {
         "        if (tokenS) \n" +
         "        { \n" +
         
-        "            tokenE = strchr(tokenS, '='); \n\n" +
+        "            tokenE = strchr(tokenS, e); \n\n" +
         
         "            if (tokenE == NULL) \n" +
         "            { \n " +
@@ -603,9 +604,39 @@ func generateWbC(data: ClassData) -> String {
         "        } \n" +
         "    } \n\n"
     
+    var firstArray = true
+    
     for i in 0...inputData.count-1 {
         
-        if inputData[i].varType == "bool" {
+        /// if the variable is an array
+        if inputData[i].varArraySize > 0 {
+        
+            if firstArray {
+                cText += "    const char a[2] = \",\"; \n\n"
+                firstArray = false
+            }
+            
+            cText += "    char \(inputData[i].varName)_output[GU_SIMPLE_WHITEBOARD_BUFSIZE];\n" +
+                     "    memset(\(inputData[i].varName)_output, 0, sizeof(\(inputData[i].varName)_output)); \n\n" +
+            
+                     "    size_t \(inputData[i].varName)_input_length = strlen(strings[\(i)]); \n\n" +
+            
+                     "    if (\(inputData[i].varName)_input_length > 0) \n" +
+                     "        strcpy(\(inputData[i].varName)_output, ++strings[\(i)]]);          // remove the { \n\n" +
+                     "    if (\(inputData[i].varName)_input_length > 1) \n" +
+                     "        array16_output[\(inputData[i].varName)_input_length-2] = \"/0\";  // remove the } \n\n"
+            
+            cText += "    size_t \(inputData[i].varName)_smallest = (strlen(\(inputData[i].varName)_output)+1)/2 < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? (strlen(array16_output)+1)/2 : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
+            
+                     "    for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
+                     "    { \n" +
+                     "        char* token = strchr(\(inputData[i].varName)_output, a); \n" +
+                     "        if (token != NULL) \n" +
+                     "            set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(token, i); \n" +
+                     "    } \n\n"
+        
+        }
+        else if inputData[i].varType == "bool" {
             
             cText += "    if (strings[\(i)] != NULL) \n" +
             "        set_\(inputData[i].varName)(strings[\(i)]); \n\n"

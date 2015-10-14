@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00021F601B897D1100F7F681 /* GNUlicense.swift */; };
+		0052DF7D1BCE548A00CAF490 /* Tests-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = 0052DF7C1BCE4D1D00CAF490 /* Tests-Bridging-Header.h */; };
 		00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; settings = {ASSET_TAGS = (); }; };
 		00542AB31BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; settings = {ASSET_TAGS = (); }; };
 		00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
+		0052DF7C1BCE4D1D00CAF490 /* Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
 		00A9F9281BB621DD00F97E85 /* VariablesData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariablesData.swift; sourceTree = "<group>"; };
 		00BAD0A41B9827F200A3A062 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,6 +71,7 @@
 			children = (
 				00BAD0A61B9827F300A3A062 /* Tests.swift */,
 				00BAD0A81B9827F300A3A062 /* Info.plist */,
+				0052DF7C1BCE4D1D00CAF490 /* Tests-Bridging-Header.h */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0052DF7D1BCE548A00CAF490 /* Tests-Bridging-Header.h in Sources */,
 				00E383811BB92E2D00B5B76A /* InputData.swift in Sources */,
 				00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */,
 				00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */,

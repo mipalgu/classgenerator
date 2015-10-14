@@ -238,6 +238,17 @@ class Tests: XCTestCase {
         XCTAssertEqual(comment, returnedString, "did not find comment")
     }
     
+/*
+    func testMyTestExample() {
+        
+        var testStruct : wb_my_test
+        
+        var toStringResult = wb_my_test_to_string
+        
+        
+    }
+*/    
+    
 }
 
 

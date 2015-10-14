@@ -1,5 +1,6 @@
 author	Mick Hawkins
-int16_t	array16[4]={1,2,3,4}	// a comment
-int32_t	array32[2]={6,7}	// a comment
+bool	pressed	// A comment about pressed
+int16_t	array16[4]={1,2,3,4}	// a comment about array16
+int32_t	array32[2]={6,7}	// a comment about array32
 
 Struct comment goes here
