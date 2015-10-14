@@ -700,10 +700,13 @@ func generateCPPStruct(data: ClassData) -> String {
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
         }
         else {   // an array
+ 
             let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault  // String((inputData[i].varDefault).characters.dropFirst().dropLast())
             cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
             
             if defaultValue == " " {
+                
+                print("Unspecified array of type \(inputData[i].varType) set to all: \(variables[inputData[i].varType]!.defaultValue).")
                 memsetForArrays.append("memset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
             }
             
@@ -719,7 +722,7 @@ func generateCPPStruct(data: ClassData) -> String {
         cppStruct += " {} \n\n"
     }
     else {
-        cppStruct += "\n{ \n"
+        cppStruct += "\n        { \n"
         
         for mem in memsetForArrays {
             cppStruct += "            \(mem); \n"
