@@ -242,7 +242,6 @@ func generateWbHeader(data: ClassData) -> String {
     
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         "#define \(data.wb)_h \n\n" +
-        "#include <gu_util.h> \n" +
         "#include \"gusimplewhiteboard.h\" \n\n"
     
     cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
@@ -303,7 +302,7 @@ func generateWbHeader(data: ClassData) -> String {
 func generateWbC(data: ClassData) -> String {
     
     var cText = "#include \"\(data.wb).h\" \n" +
-    "#include \"gusimplewhiteboard.h\" \n" +
+    "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
     "#include <stdlib.h> \n\n"
@@ -670,7 +669,6 @@ func generateCPPStruct(data: ClassData) -> String {
         "#include <string.h> \n" +
         "#include <sstream> \n" +
         "#endif \n\n" +
-        "#include <gu_util.h> \n" +
         "#include \"\(data.wb).h\" \n\n" +
         
         "namespace guWhiteboard \n" +
