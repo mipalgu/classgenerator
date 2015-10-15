@@ -10,6 +10,7 @@
 		00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00021F601B897D1100F7F681 /* GNUlicense.swift */; };
 		00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; settings = {ASSET_TAGS = (); }; };
 		00542AB31BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; settings = {ASSET_TAGS = (); }; };
+		00863BFB1BCFB4CF008F443D /* CTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 00863BFA1BCFB4CF008F443D /* CTest.m */; };
 		00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
 		00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
 		00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BAD0A61B9827F300A3A062 /* Tests.swift */; };
@@ -35,6 +36,9 @@
 /* Begin PBXFileReference section */
 		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
 		00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
+		00863BF81BCFB4CF008F443D /* CTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00863BFA1BCFB4CF008F443D /* CTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTest.m; sourceTree = "<group>"; };
+		00863BFC1BCFB4CF008F443D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A9F9281BB621DD00F97E85 /* VariablesData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariablesData.swift; sourceTree = "<group>"; };
 		00BAD0A41B9827F200A3A062 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BAD0A61B9827F300A3A062 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
@@ -47,6 +51,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		00863BF51BCFB4CF008F443D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00BAD0A11B9827F200A3A062 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,6 +75,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00863BF91BCFB4CF008F443D /* CTest */ = {
+			isa = PBXGroup;
+			children = (
+				00863BFA1BCFB4CF008F443D /* CTest.m */,
+				00863BFC1BCFB4CF008F443D /* Info.plist */,
+			);
+			path = CTest;
+			sourceTree = "<group>";
+		};
 		00BAD0A51B9827F300A3A062 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +98,7 @@
 			children = (
 				00BCC1031B7EDA17002C72B7 /* classgenerator */,
 				00BAD0A51B9827F300A3A062 /* Tests */,
+				00863BF91BCFB4CF008F443D /* CTest */,
 				00BCC1021B7EDA17002C72B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,6 +108,7 @@
 			children = (
 				00BCC1011B7EDA17002C72B7 /* classgenerator */,
 				00BAD0A41B9827F200A3A062 /* Tests.xctest */,
+				00863BF81BCFB4CF008F443D /* CTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,6 +130,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		00863BF71BCFB4CF008F443D /* CTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00863BFD1BCFB4CF008F443D /* Build configuration list for PBXNativeTarget "CTest" */;
+			buildPhases = (
+				00863BF41BCFB4CF008F443D /* Sources */,
+				00863BF51BCFB4CF008F443D /* Frameworks */,
+				00863BF61BCFB4CF008F443D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CTest;
+			productName = CTest;
+			productReference = 00863BF81BCFB4CF008F443D /* CTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		00BAD0A31B9827F200A3A062 /* Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00BAD0AC1B9827F300A3A062 /* Build configuration list for PBXNativeTarget "Tests" */;
@@ -153,6 +192,9 @@
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Mick Hawkins";
 				TargetAttributes = {
+					00863BF71BCFB4CF008F443D = {
+						CreatedOnToolsVersion = 7.0;
+					};
 					00BAD0A31B9827F200A3A062 = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -175,11 +217,19 @@
 			targets = (
 				00BCC1001B7EDA17002C72B7 /* classgenerator */,
 				00BAD0A31B9827F200A3A062 /* Tests */,
+				00863BF71BCFB4CF008F443D /* CTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		00863BF61BCFB4CF008F443D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00BAD0A21B9827F200A3A062 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -190,6 +240,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		00863BF41BCFB4CF008F443D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00863BFB1BCFB4CF008F443D /* CTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00BAD0A01B9827F200A3A062 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -218,6 +276,41 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		00863BFE1BCFB4CF008F443D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = CTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.CTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		00863BFF1BCFB4CF008F443D /* Debug CG */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = CTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.CTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug CG";
+		};
+		00863C001BCFB4CF008F443D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.CTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		00BAD09E1B98242200A3A062 /* Debug CG */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -271,30 +364,35 @@
 		00BAD0A91B9827F300A3A062 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		00BAD0AA1B9827F300A3A062 /* Debug CG */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = "Debug CG";
 		};
 		00BAD0AB1B9827F300A3A062 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -398,6 +496,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00863BFD1BCFB4CF008F443D /* Build configuration list for PBXNativeTarget "CTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00863BFE1BCFB4CF008F443D /* Debug */,
+				00863BFF1BCFB4CF008F443D /* Debug CG */,
+				00863C001BCFB4CF008F443D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		00BAD0AC1B9827F300A3A062 /* Build configuration list for PBXNativeTarget "Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -2,6 +2,6 @@ author	Mick Hawkins
 bool	pressed	// A comment about pressed
 int16_t	array16[4]={1,2,3,4}	// a comment about array16
 int32_t	array32[2]	// a comment about array32
-bool	bools[3]={true,false,false}	// a comment about bools
+bool	bools[3]	// a comment about bools
 
 Struct comment goes here
