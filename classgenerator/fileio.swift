@@ -507,7 +507,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    sgu_strlcat(toString, \", \", bufferSize); \n\n"
+                cText += "    gu_strlcat(toString, \", \", bufferSize); \n\n"
             }
             
             if !first {
@@ -615,24 +615,39 @@ func generateWbC(data: ClassData) -> String {
                 firstArray = false
             }
             
-            cText += "    char \(inputData[i].varName)_output[GU_SIMPLE_WHITEBOARD_BUFSIZE];\n" +
+            cText += "    char \(inputData[i].varName)_output[strlen(strings[\(i)]+1)];\n" +
                      "    memset(\(inputData[i].varName)_output, 0, sizeof(\(inputData[i].varName)_output)); \n\n" +
+                
+                     "    char* c = strings[\(i)]+1; \n" +
+                     "    while (isspace(c)) c++; \n" +
+                     "    strings[\(i)] = c;           // remove the { \n\n" +
+
+                     "    array16_output[strlen(strings[\(i)])-1] = \"/0\";  // remove the } \n\n"
             
-                     "    size_t \(inputData[i].varName)_input_length = strlen(strings[\(i)]); \n\n" +
-            
-                     "    if (\(inputData[i].varName)_input_length > 0) \n" +
-                     "        strcpy(\(inputData[i].varName)_output, ++strings[\(i)]]);          // remove the { \n\n" +
-                     "    if (\(inputData[i].varName)_input_length > 1) \n" +
-                     "        array16_output[\(inputData[i].varName)_input_length-2] = \"/0\";  // remove the } \n\n"
-            
-            cText += "    size_t \(inputData[i].varName)_smallest = (strlen(\(inputData[i].varName)_output)+1)/2 < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? (strlen(array16_output)+1)/2 : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
+            cText += "    size_t \(inputData[i].varName)_smallest; \n\n" +
+                     "    if (strlen(array16_output) == 0) \n" +
+                     "    { \n" +
+                     "        \(inputData[i].varName)_smallest = \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n" +
+                     "    } \n" +
+                     "    else \n" +
+                     "    { \n" +
+                     "        \(inputData[i].varName)_smallest = (strlen(\(inputData[i].varName)_output)+1)/2 < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? (strlen(array16_output)+1)/2 : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n" +
+                     "    } \n\n" +
             
                      "    for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
                      "    { \n" +
                      "        char* token = strchr(\(inputData[i].varName)_output, a); \n" +
-                     "        if (token != NULL) \n" +
-                     "            set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(token, i); \n" +
+                     "        if (token != NULL) \n"
+            
+            
+            if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
+                cText += "            set_\(inputData[i].varName)(token == \"true\" ? true : false, i); \n" +
+                "    } \n\n"
+            }
+            else {
+                cText += "            set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(token), i); \n" +
                      "    } \n\n"
+            }
         
         }
         else if inputData[i].varType == "bool" {
