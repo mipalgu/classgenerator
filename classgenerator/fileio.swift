@@ -690,7 +690,7 @@ func generateCPPStruct(data: ClassData) -> String {
             "        /** Default constructor */ \n" +
             "        \(data.cpp)() : "
     
-    var memsetForArrays : [String] = []
+    var initialiseArrays : [String] = []
     var memcpyForArrays : [String] = []
     
     for i in 0...inputData.count-1 {
@@ -701,13 +701,16 @@ func generateCPPStruct(data: ClassData) -> String {
         }
         else {   // an array
  
-            let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault  // String((inputData[i].varDefault).characters.dropFirst().dropLast())
-            cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
+            //let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault  // String((inputData[i].varDefault).characters.dropFirst().dropLast())
+            cppStruct += "_\(inputData[i].varName)()"
             
-            if defaultValue == " " {
+            if inputData[i].varDefault == "" {
                 
-                print("Unspecified array of type \(inputData[i].varType) set to all: \(variables[inputData[i].varType]!.defaultValue).")
-                memsetForArrays.append("memset(\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+                print("Unspecified array of type \(inputData[i].varType) set to all: \(variables[inputData[i].varType]!.defaultValue)")
+                initialiseArrays.append("memset(_\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+            }
+            else {
+                initialiseArrays.append("_\(inputData[i].varName) = \(inputData[i].varDefault)")
             }
             
             memcpyForArrays.append("memcpy(\(inputData[i].varName), &other, sizeof(\(data.wb)))")
@@ -718,14 +721,14 @@ func generateCPPStruct(data: ClassData) -> String {
         }
     }
     
-    if memsetForArrays.count == 0 {
+    if initialiseArrays.count == 0 {
         cppStruct += " {} \n\n"
     }
     else {
         cppStruct += "\n        { \n"
         
-        for mem in memsetForArrays {
-            cppStruct += "            \(mem); \n"
+        for a in initialiseArrays {
+            cppStruct += "            \(a); \n"
         }
         cppStruct += "        } \n\n"
     }
