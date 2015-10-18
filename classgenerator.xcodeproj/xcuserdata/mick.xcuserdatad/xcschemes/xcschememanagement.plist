@@ -4,25 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CClassTests.xcscheme</key>
+		<key>ClassgeneratorCTests3.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
-		</dict>
-		<key>CTest.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>4</integer>
 		</dict>
 		<key>Tests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
-		</dict>
-		<key>WBTests.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
 		</dict>
 		<key>classgenerator.xcscheme</key>
 		<dict>
@@ -37,6 +27,21 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>0080F9561BD1D9AB003450D0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0080F9631BD1DA33003450D0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0080F9701BD1DD78003450D0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>00863BC91BCFA83A008F443D</key>
 		<dict>
 			<key>primary</key>
@@ -53,6 +58,16 @@
 			<true/>
 		</dict>
 		<key>00863BF71BCFB4CF008F443D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>009DB61F1BD399D000EA74C9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>009DB62C1BD3AEDA00EA74C9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

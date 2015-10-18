@@ -291,7 +291,8 @@ func generateWbHeader(data: ClassData) -> String {
         }
     }
     
-    cStruct1 += "}; \n"
+    cStruct1 += "}; \n" +
+    "#endif /// \(data.wb)_h \n"
     
     return cStruct1
 }
@@ -619,7 +620,7 @@ func generateWbC(data: ClassData) -> String {
                      "    memset(\(inputData[i].varName)_output, 0, sizeof(\(inputData[i].varName)_output)); \n\n" +
                 
                      "    char* c = strings[\(i)]+1; \n" +
-                     "    while (isspace(c)) c++; \n" +
+                     "    while (isspace(*c)) c++; \n" +
                      "    strings[\(i)] = c;           // remove the { \n\n" +
 
                      "    array16_output[strlen(strings[\(i)])-1] = \"/0\";  // remove the } \n\n"
