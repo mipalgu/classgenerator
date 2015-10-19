@@ -14,8 +14,8 @@
 		00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
 		00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
 		00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 00B451341BD4F066001E6AB5 /* wb_my_test.c */; settings = {ASSET_TAGS = (); }; };
-		00B451371BD4F075001E6AB5 /* wb_my_test.h in Sources */ = {isa = PBXBuildFile; fileRef = 00B451351BD4F066001E6AB5 /* wb_my_test.h */; };
-		00B451391BD4F23D001E6AB5 /* gu_util.h in Sources */ = {isa = PBXBuildFile; fileRef = 00B451381BD4F235001E6AB5 /* gu_util.h */; };
+		00B451371BD4F075001E6AB5 /* wb_my_test.h in Resources */ = {isa = PBXBuildFile; fileRef = 00B451351BD4F066001E6AB5 /* wb_my_test.h */; };
+		00B451391BD4F23D001E6AB5 /* gu_util.h in Resources */ = {isa = PBXBuildFile; fileRef = 00B451381BD4F235001E6AB5 /* gu_util.h */; };
 		00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BAD0A61B9827F300A3A062 /* Tests.swift */; };
 		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
 		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
@@ -236,6 +236,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00B451391BD4F23D001E6AB5 /* gu_util.h in Resources */,
+				00B451371BD4F075001E6AB5 /* wb_my_test.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,8 +255,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00B451391BD4F23D001E6AB5 /* gu_util.h in Sources */,
-				00B451371BD4F075001E6AB5 /* wb_my_test.h in Sources */,
 				00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */,
 				009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */,
 			);
@@ -295,7 +295,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator",
+					"$(SRCROOT)/classgenerator/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -312,7 +312,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator",
+					"$(SRCROOT)/classgenerator/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -329,7 +329,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator",
+					"$(SRCROOT)/classgenerator/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";

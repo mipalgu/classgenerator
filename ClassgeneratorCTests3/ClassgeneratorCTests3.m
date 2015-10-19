@@ -39,6 +39,7 @@
     char* descString;
     
  //   XCTAssertEqual(wb_my_test_description(&testStruct, descString, 128), desiredDescString);
+    XCTAssertTrue(strcmp(wb_my_test_description(testStruct, descString, 128), desiredDescString) == 0);
 }
 
 
@@ -52,7 +53,7 @@
     char* desiredToString = "false, 5, 11";
     char* aToString;
     
-    XCTAssertTrue(strcmp(wb_my_test_to_string(&testStruct, aToString, 128), desiredToString) == 0);
+    XCTAssertTrue(strcmp(wb_my_test_to_string(testStruct, aToString, 128), desiredToString) == 0);
 }
 
 
