@@ -61,7 +61,7 @@
 #ifndef wb_my_test_h 
 #define wb_my_test_h 
 
-#include "gusimplewhiteboard.h" 
+#include "gu_util.h"
 
 #define MY_TEST_NUMBER_OF_VARIABLES 3 
 
@@ -87,13 +87,13 @@ struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* s
 struct wb_my_test 
 { 
     /** a boolean */ 
-    PROPERTY(bool, pressed)
+    PROPERTY(bool, pressed);
 
     /** pointX is a number */ 
-    PROPERTY(int16_t, pointX)
+    PROPERTY(int16_t, pointX);
 
     /** pointY is a number */ 
-    PROPERTY(int16_t, pointY)
+    PROPERTY(int16_t, pointY);
 
 }; 
 #endif /// wb_my_test_h 

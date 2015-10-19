@@ -13,6 +13,9 @@
 		009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */ = {isa = PBXBuildFile; fileRef = 009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */; };
 		00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
 		00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; settings = {ASSET_TAGS = (); }; };
+		00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 00B451341BD4F066001E6AB5 /* wb_my_test.c */; settings = {ASSET_TAGS = (); }; };
+		00B451371BD4F075001E6AB5 /* wb_my_test.h in Sources */ = {isa = PBXBuildFile; fileRef = 00B451351BD4F066001E6AB5 /* wb_my_test.h */; };
+		00B451391BD4F23D001E6AB5 /* gu_util.h in Sources */ = {isa = PBXBuildFile; fileRef = 00B451381BD4F235001E6AB5 /* gu_util.h */; };
 		00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BAD0A61B9827F300A3A062 /* Tests.swift */; };
 		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
 		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
@@ -40,6 +43,9 @@
 		009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassgeneratorCTests3.m; sourceTree = "<group>"; };
 		009DB6311BD3AEDB00EA74C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A9F9281BB621DD00F97E85 /* VariablesData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariablesData.swift; sourceTree = "<group>"; };
+		00B451341BD4F066001E6AB5 /* wb_my_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_my_test.c; path = classgenerator/wb_my_test.c; sourceTree = SOURCE_ROOT; };
+		00B451351BD4F066001E6AB5 /* wb_my_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_my_test.h; path = classgenerator/wb_my_test.h; sourceTree = SOURCE_ROOT; };
+		00B451381BD4F235001E6AB5 /* gu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gu_util.h; path = ../../../Common/gu_util.h; sourceTree = "<group>"; };
 		00BAD0A41B9827F200A3A062 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BAD0A61B9827F300A3A062 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		00BAD0A81B9827F300A3A062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -80,6 +86,9 @@
 			children = (
 				009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */,
 				009DB6311BD3AEDB00EA74C9 /* Info.plist */,
+				00B451341BD4F066001E6AB5 /* wb_my_test.c */,
+				00B451351BD4F066001E6AB5 /* wb_my_test.h */,
+				00B451381BD4F235001E6AB5 /* gu_util.h */,
 			);
 			path = ClassgeneratorCTests3;
 			sourceTree = "<group>";
@@ -244,6 +253,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00B451391BD4F23D001E6AB5 /* gu_util.h in Sources */,
+				00B451371BD4F075001E6AB5 /* wb_my_test.h in Sources */,
+				00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */,
 				009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +299,7 @@
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.ClassgeneratorCTests3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -303,6 +316,7 @@
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.ClassgeneratorCTests3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -319,6 +333,7 @@
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.griffith.ict.prog.ClassgeneratorCTests3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -522,6 +537,7 @@
 				009DB6351BD3AEDB00EA74C9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		00BAD0AC1B9827F300A3A062 /* Build configuration list for PBXNativeTarget "Tests" */ = {
 			isa = XCConfigurationList;

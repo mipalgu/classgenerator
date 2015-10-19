@@ -28,7 +28,7 @@
     [super tearDown];
 }
 
-- (void)test_wb_description {
+- (void)testWBdescription {
     
     struct wb_my_test testStruct;
     testStruct.pressed = false;
@@ -42,7 +42,7 @@
 }
 
 
-- (void)test_wb_toString {
+- (void)testWBtoString {
     
     struct wb_my_test testStruct;
     testStruct.pressed = false;
@@ -52,7 +52,7 @@
     char* desiredToString = "false, 5, 11";
     char* aToString;
     
-//    XCTAssertEqual(wb_my_test_to_string(&testStruct, aToString, 128), desiredToString);
+    XCTAssertTrue(strcmp(wb_my_test_to_string(&testStruct, aToString, 128), desiredToString) == 0);
 }
 
 
@@ -82,32 +82,13 @@
     
     strcpy(c, strings[1]);
     
-    /*
-    int i = strlen(c) - 1;
-    
-    while ( i > 0 )
+    size_t n = strlen(c);
+    while (n > 0 && isspace((unsigned char)c[n-1]))
     {
-        if ( isspace(c[i]) )
-        {
-            c[i] = 0;
-        }
-        else
-        {
-            break;
-        }
-        i--;
+        n--;
     }
-    */
+    c[n] = '\0';
 
-        size_t n = strlen(c);
-        while (n > 0 && isspace((unsigned char)c[n-1]))
-        {
-            c[n-1] = '/0';
-            n--;
-        }
-    
-    
-    
     
     //strings[1] = c;           // remove the {
     
@@ -116,7 +97,7 @@
     printf("desired:*%s*\n", desired);
     printf("c:*%s*\n", c);
     
-   // XCTAssertTrue(strcmp(c,desired) == 0);
+    XCTAssertTrue(strcmp(c,desired) == 0);
 }
 
 

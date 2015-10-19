@@ -242,7 +242,7 @@ func generateWbHeader(data: ClassData) -> String {
     
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         "#define \(data.wb)_h \n\n" +
-        "#include \"gusimplewhiteboard.h\" \n\n"
+        "#include \"gu_util.h\" \n\n"
     
     cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
@@ -284,10 +284,10 @@ func generateWbHeader(data: ClassData) -> String {
         cStruct1 += "    /** \(inputData[i].varComment) */ \n"
         
         if inputData[i].varArraySize == 0 {  // not an array
-            cStruct1 += "    PROPERTY(\(inputData[i].varType), \(inputData[i].varName))\n\n"
+            cStruct1 += "    PROPERTY(\(inputData[i].varType), \(inputData[i].varName)); \n\n"
         }
         else {
-            cStruct1 += "    ARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)\n\n"
+            cStruct1 += "    ARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE);\n\n"
         }
     }
     
