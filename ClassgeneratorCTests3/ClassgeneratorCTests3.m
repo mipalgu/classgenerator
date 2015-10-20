@@ -38,7 +38,10 @@
     char* desiredDescString = "pressed=false, pointX=5, pointY=11";
     char descString[128];
     
- //   XCTAssertTrue(strcmp(wb_my_test_description(&testStruct, descString, sizeof(descString)), desiredDescString) == 0);
+    wb_my_test_description(&testStruct, descString, sizeof(descString));
+    
+    printf("descString: %s\n", descString);
+    XCTAssertTrue(strcmp(descString, desiredDescString) == 0);
 }
 
 
@@ -50,9 +53,12 @@
     testStruct.pointY = 11;
     
     char* desiredToString = "false, 5, 11";
-    char* aToString[128];
+    char aToString[128];
     
- //   XCTAssertTrue(strcmp(wb_my_test_to_string(&testStruct, aToString, sizeof(aToString)), desiredToString) == 0);
+    wb_my_test_to_string(&testStruct, aToString, sizeof(aToString));
+  
+    printf("tostring: %s\n", aToString);
+    XCTAssertTrue(strcmp(aToString, desiredToString) == 0);
 }
 
 
