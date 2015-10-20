@@ -1,7 +1,7 @@
 alias	ALIAS_TesT
 author	Mick Hawkins
-bool	pressed	// a boolean
-int16_t	pointX	// pointX is a number
+bool	pressed=true	// a boolean
+int16_t	pointX=2	// pointX is a number
 int16_t	pointY	// pointY is a number
 
 This is a comment

@@ -251,21 +251,10 @@ func generateWbHeader(data: ClassData) -> String {
         "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     for i in 0...inputData.count-1 {
-        
         if inputData[i].varArraySize > 0 {
-            
             cStruct1 += "#define \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE \(inputData[i].varArraySize) \n"
         }
     }
-    
-    
-    
-    cStruct1 += "\n/** convert to a description string */  \n" +
-        "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize); \n\n" +
-        "/** convert to a string */  \n" +
-        "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize); \n\n" +
-        "/** convert from a string */  \n" +
-        "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n\n"
     
     
     cStruct1 += "/** \n"
@@ -291,8 +280,19 @@ func generateWbHeader(data: ClassData) -> String {
         }
     }
     
-    cStruct1 += "}; \n" +
-    "#endif /// \(data.wb)_h \n"
+    cStruct1 += "}; \n\n"
+    
+    cStruct1 += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
+        "/** convert to a description string */  \n" +
+        "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize); \n\n" +
+        "/** convert to a string */  \n" +
+        "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize); \n\n" +
+        "/** convert from a string */  \n" +
+        "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str); \n" +
+        "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION \n\n" +
+    
+    
+        "#endif /// \(data.wb)_h \n"
     
     return cStruct1
 }
@@ -303,12 +303,11 @@ func generateWbHeader(data: ClassData) -> String {
 func generateWbC(data: ClassData) -> String {
     
     var cText = "#include \"\(data.wb).h\" \n" +
-    "#include <gu_util.h> \n" +
+//    "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
     "#include <stdlib.h> \n\n"
     
-    cText += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n\n"
     
     // create description() method
     cText += "/** convert to a description string */  \n" +
@@ -398,7 +397,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "    "
             }
             
-            cText += "    gu_strlcat(descString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n"
+            cText += "    gu_strlcat(descString, self->\(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n"
             
             if !first {
                 cText += "    } \n\n"
@@ -421,7 +420,7 @@ func generateWbC(data: ClassData) -> String {
                              "    { \n    "
                 }
                 
-                cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
+                cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
                 
                 if !first {
                     cText += "    } \n\n"
@@ -516,7 +515,7 @@ func generateWbC(data: ClassData) -> String {
                          "    { \n    "
             }
             
-            cText += "    gu_strlcat(toString, \(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
+            cText += "    gu_strlcat(toString, self->\(inputData[i].varName) ? \"true\" : \"false\", bufferSize); \n\n"
             
             if !first {
                 cText += "    } \n\n"
@@ -539,7 +538,7 @@ func generateWbC(data: ClassData) -> String {
                          "    { \n    "
             }
             
-            cText += "    snprintf(toString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)); \n"
+            cText += "    snprintf(toString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
             
             if !first {
                 cText += "    } \n\n "
@@ -663,10 +662,9 @@ func generateWbC(data: ClassData) -> String {
         }
     }
     
-    cText += "    return self \n" +
+    cText += "    return self; \n" +
         
-        "}; \n" +
-    "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION \n"
+        "}; \n"
     
     return cText
 }
