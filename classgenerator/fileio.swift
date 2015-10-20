@@ -558,7 +558,7 @@ func generateWbC(data: ClassData) -> String {
     
     cText += "    char* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "    const char s[3] = \", \";  /// delimeter \n" +
-        "    const char e[2] = \"=\";   /// delimeter \n" +
+        "    const char e = '=';        /// delimeter \n" +
         "    char* tokenS, *tokenE; \n" +
         "    char* saveptr = NULL; \n\n" +
         
@@ -611,7 +611,7 @@ func generateWbC(data: ClassData) -> String {
         if inputData[i].varArraySize > 0 {
         
             if firstArray {
-                cText += "    const char a[2] = \",\"; \n\n"
+                cText += "    const char a = ','; \n\n"
                 firstArray = false
             }
             
@@ -653,17 +653,18 @@ func generateWbC(data: ClassData) -> String {
         else if inputData[i].varType == "bool" {
             
             cText += "    if (strings[\(i)] != NULL) \n" +
-            "        set_\(inputData[i].varName)(strings[\(i)]); \n\n"
+//            "        set_\(inputData[i].varName)(strings[\(i)]); \n\n"
+              "        PROPERTY_SETTER(strings[\(i)], self.\(inputData[i].varName)); \n\n"
         }
         // the variable is a number type
         else {
             cText += "    if (strings[\(i)] != NULL) \n" +
-            "        set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
+              "        PROPERTY_SETTER((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]), self.\(inputData[i].varName)); \n\n"
+//            "        set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
         }
     }
     
     cText += "    return self; \n" +
-        
         "}; \n"
     
     return cText
