@@ -360,10 +360,10 @@ func generateWbC(data: ClassData) -> String {
                 "            } \n"
             
             if inputData[i].varType == "bool" {
-                cText += "            gu_strlcat(descString, \(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
+                cText += "            gu_strlcat(descString, self->\(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
             }
             else {
-                cText += "            snprintf(descString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)[i]); \n"
+                cText += "            snprintf(descString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
@@ -456,7 +456,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+                cText += "    len = gu_strlcat(toString, \", \", bufferSize); \n\n"
             }
             
             if !first {
@@ -469,7 +469,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "    "
             }
             
-            cText += "    len = gu_strlcat(descString, \"{\", bufferSize); \n"
+            cText += "    len = gu_strlcat(toString, \"{\", bufferSize); \n"
             
             if !first {
                 cText += "    } \n\n"
@@ -482,20 +482,20 @@ func generateWbC(data: ClassData) -> String {
                 "        { \n" +
                 "            if (\(inputData[i].varName)_first == 1) \n" +
                 "            { \n" +
-                "                len = gu_strlcat(descString, \",\", bufferSize); \n" +
+                "                len = gu_strlcat(toString, \",\", bufferSize); \n" +
             "            } \n"
             
             if inputData[i].varType == "bool" {
-                cText += "            gu_strlcat(descString, \(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
+                cText += "            gu_strlcat(toString, self->\(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
             }
             else {
-                cText += "            snprintf(descString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", \(inputData[i].varName)[i]); \n"
+                cText += "            snprintf(toString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
                 "        \(inputData[i].varName)_first = 1; \n" +
                 "    } \n"  +
-            "    gu_strlcat(descString, \"}\", bufferSize); \n\n"
+            "    gu_strlcat(toString, \"}\", bufferSize); \n\n"
             
             first = false
         }
@@ -618,9 +618,9 @@ func generateWbC(data: ClassData) -> String {
             cText += "    char \(inputData[i].varName)_output[strlen(strings[\(i)]+1)];\n" +
                      "    memset(\(inputData[i].varName)_output, 0, sizeof(\(inputData[i].varName)_output)); \n\n" +
                 
-                     "    char* c = strings[\(i)]+1; \n" +
-                     "    while (isspace(*c)) c++; \n" +
-                     "    strings[\(i)] = c;           // remove the { \n\n" +
+                     "    char* \(inputData[i].varName)_c = strings[\(i)]+1; \n" +
+                     "    while (isspace(*\(inputData[i].varName)_c)) \(inputData[i].varName)_c++; \n" +
+                     "    strings[\(i)] = \(inputData[i].varName)_c;           // remove the { \n\n" +
 
                      "    array16_output[strlen(strings[\(i)])-1] = \"/0\";  // remove the } \n\n"
             
@@ -641,11 +641,11 @@ func generateWbC(data: ClassData) -> String {
             
             
             if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
-                cText += "            set_\(inputData[i].varName)(token == \"true\" ? true : false, i); \n" +
+                cText += "            ARRAY_PROPERTY_SETTER(token == \"true\" ? true : false, \(inputData[i].varName)[i]); \n" +
                 "    } \n\n"
             }
             else {
-                cText += "            set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(token), i); \n" +
+                cText += "            ARRAY_PROPERTY_SETTER((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(token), \(inputData[i].varName)[i]); \n" +
                      "    } \n\n"
             }
         

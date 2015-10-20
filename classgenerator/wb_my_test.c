@@ -118,14 +118,14 @@ struct wb_my_test* wb_my_test_from_string(struct wb_my_test* self, const char* s
     const char s[3] = ", ";  /// delimeter 
     const char e = '=';   /// delimeter 
     char* tokenS, *tokenE; 
-    char* saveptr = NULL; 
+    char* saveptr = NULL;
 
     memset(strings, 0, sizeof(strings)); 
 
     for (int i = 0; i < MY_TEST_NUMBER_OF_VARIABLES; i++) 
     { 
         int j = i; 
-        tokenS = strtok_r(str, s, &saveptr); 
+        tokenS = i == 0 ? strtok_r(str, s, &saveptr) : strtok_r(NULL, s, &saveptr);
 
         if (tokenS) 
         { 

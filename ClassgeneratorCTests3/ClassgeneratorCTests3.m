@@ -11,6 +11,7 @@
 #import "gu_util.h"
 #import "gusimplewhiteboard.h"
 #import "wb_my_test.h"
+#import "wb_array_test.h"
 
 @interface ClassgeneratorCTests3 : XCTestCase
 
@@ -28,6 +29,7 @@
     [super tearDown];
 }
 
+// simple variables
 - (void)testWBdescription {
     
     struct wb_my_test testStruct;
@@ -45,6 +47,7 @@
 }
 
 
+// simple variables
 - (void)testWBtoString {
     
     struct wb_my_test testStruct;
@@ -53,12 +56,51 @@
     testStruct.pointY = 11;
     
     char* desiredToString = "false, 5, 11";
+    char toString[128];
+    
+    wb_my_test_to_string(&testStruct, toString, sizeof(toString));
+    
+    printf("descString: %s\n", toString);
+    XCTAssertTrue(strcmp(toString, desiredToString) == 0);
+}
+
+// simple arrays
+- (void)testWBtoStringArray {
+    
+    struct wb_array_test testStruct = {false, {5,6,7,8}, {false,true,true}};
+    
+    char* desiredToString = "false, {5,6,7,8}, {false,true,true}";
     char aToString[128];
     
     wb_my_test_to_string(&testStruct, aToString, sizeof(aToString));
   
-    printf("tostring: %s\n", aToString);
+    printf("ARRAYtostring: %s\n", aToString);
     XCTAssertTrue(strcmp(aToString, desiredToString) == 0);
+}
+
+
+// simple variables
+- (void)testWBFromString {
+/*
+    char* str = "false, 5, 11";
+    const char * s = ",";  /// delimete
+    char* tokenS;
+    char* saveptr = NULL;
+
+    tokenS = strtok_r(str, s, &saveptr);
+    
+    printf("tokenS: %s\n", tokenS);
+*/
+/*
+    struct wb_my_test testStruct;
+    char* descString = "pressed=false, pointX=5, pointY=11";
+    
+    wb_my_test_from_string(&testStruct, descString);
+    
+    XCTAssertEqual(testStruct.pressed, false, "pressed not set");
+    XCTAssertEqual(testStruct.pointX, 5, "pointX not set");
+    XCTAssertEqual(testStruct.pointY, 11, "pointY not set");
+*/
 }
 
 
