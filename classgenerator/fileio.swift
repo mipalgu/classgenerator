@@ -641,7 +641,7 @@ func generateWbC(data: ClassData) -> String {
             
             
             if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
-                cText += "            ARRAY_PROPERTY_SETTER(token == \"true\" ? true : false, \(inputData[i].varName)[i]); \n" +
+                cText += "            ARRAY_PROPERTY_SETTER((token == \"true\") || (token == \"1\") ? true : false, \(inputData[i].varName)[i]); \n" +
                 "    } \n\n"
             }
             else {
