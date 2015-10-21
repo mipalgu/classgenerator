@@ -6,18 +6,19 @@
 //  Copyright © 2015 Mick Hawkins. All rights reserved.
 //
 
+
 struct varData {
     
     let defaultValue : String
-    let length : Int
+    let length : Int       // maximum number of characters in a string of this type
     let macro : String
     let format : String    // format specifier to use
-    let converter: String
-    
+    let converter: String  // how to convert from a string to this type
 }
 
 
-// Are complex types needed?
+
+// A dictionary of the varible tyoes
 let variables = [
 
     "string": varData(defaultValue: "", length: 0,  macro: "PROPERTY", format: "%s", converter: ""),
@@ -65,13 +66,13 @@ let variables = [
     "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll"),
     "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll"),
     
-    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),    // length ???
+    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),
     "float_t": varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof"),
     
-    "double":   varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),   // length ???
+    "double":   varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),
     "double_t": varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof"),
     
-    "long double":   varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof"), // length ???
+    "long double":   varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof"),
     "double double": varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof")
 ]
 

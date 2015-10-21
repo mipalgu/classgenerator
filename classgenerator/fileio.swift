@@ -9,13 +9,25 @@
 import Darwin
 
 
-
-let fileSize = 4096                /// find a way to get EOF to work so I dont need to do this
+/// globals for use in file reading and output
+let fileSize = 4096
 var classAlias : String = ""
 var structComment : [String] = []
 var foundVariables : [String] = []
 
+/**
+ * This function take the contents of a file as a single string
+ * and parses to find the variables, comments, author and alias.
+ * If an authour is not specified, the system's user name is returned.
+ * @param inputText is the text of the input file
+ * @return Returns the author's name
+ */
 func parseInput(inputText: String) -> String {
+    
+    var foundUserName = false
+    var userName : String = ""
+    var foundReturn = false
+    var commentPosition : Int = 0
     
     /*
     // check for case where the file had a return/s at the end or between lines
@@ -27,11 +39,6 @@ func parseInput(inputText: String) -> String {
         }
     }
     */
-    
-    var foundUserName = false
-    var userName : String = ""
-    var foundReturn = false
-    var commentPosition : Int = 0
     
     
     /// count to the line that has the struct comment
@@ -168,6 +175,12 @@ func parseInput(inputText: String) -> String {
 }
 
 
+/**
+ * If a default value was not specified for the variable, this
+ * function retrieves the default value from the dictionary.
+ * @param varType is the type of variable
+ * @return Returns the default value as a string
+ */
 func setDefault(varType: String) -> String {
     
     if let defaultValue = variables[varType]?.defaultValue {
@@ -181,7 +194,10 @@ func setDefault(varType: String) -> String {
 }
 
 
-
+/**
+ * Closes an open filestream.
+ * @param fileStream is a pointer to an open file stream
+ */
 func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
     
     if (fclose(fileStream) != 0) {
@@ -191,7 +207,11 @@ func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
 }
 
 
-
+/**
+ * Reads the content of a text file.
+ * @param inputFileName is the filename (including path) of the file to read
+ * @return The contents of the file as a single string
+ */
 func readVariables(inputFileName: String) -> String {
     
     // open a filestream for reading
@@ -205,36 +225,30 @@ func readVariables(inputFileName: String) -> String {
     
     // read from the opened file
     // then close the stream
-    
-    let line = UnsafeMutablePointer<Int8>.alloc(fileSize)  /// ***** size of file as const?
-    // var variables = [String]()
-    
-    
-    //while Int32(line.memory) != EOF {          /// cant get EOF to work!!!!
-    // check for errors while reading
-    
-    
+    let line = UnsafeMutablePointer<Int8>.alloc(fileSize)  // size of file as const declared above.
+
     if (ferror(fs) != 0) {
-        
         print("Unable to read")
         exit(EXIT_FAILURE)
     }
     
-    //fgets(line, MAXNAMLEN, fs)
-    fread(line, fileSize, 1, fs)       /// ***** size of file as const? declared above.  
+    fread(line, fileSize, 1, fs)       // size of file as const declared above.
     
-    let variable = String.fromCString(line)
-    //}
+    let contents = String.fromCString(line)
     
     closeFileStream(fs)
     line.destroy()
     
-    return variable! // variables
+    return contents!
 }
 
 
 
-
+/**
+ * This function generates the text to comprise a whiteboard C header file
+ * @param data is an object containing information about the class to generate
+ * @return A string which will become the C header file
+ */
 func generateWbHeader(data: ClassData) -> String {
     
     let toStringBufferSize = getToStringBufferSize()
@@ -299,7 +313,11 @@ func generateWbHeader(data: ClassData) -> String {
 
 
 
-
+/**
+ * This function generates the text to comprise a whiteboard C .c file
+ * @param data is an object containing information about the class to generate
+ * @return A string which will become the C .c file
+ */
 func generateWbC(data: ClassData) -> String {
     
     var cText = "#include \"\(data.wb).h\" \n" +
@@ -672,7 +690,11 @@ func generateWbC(data: ClassData) -> String {
 
 
 
-
+/**
+* This function generates the text to comprise a whiteboard C++ wrapper file
+* @param data is an object containing information about the class to generate
+* @return A string which will become the C++ wrapper file
+*/
 func generateCPPStruct(data: ClassData) -> String {
     
     var cppStruct = "#ifndef \(data.cpp)_DEFINED \n" +
@@ -866,7 +888,11 @@ func generateCPPStruct(data: ClassData) -> String {
 
 
 
-
+/**
+ * This function opens the file streams and writes the whiteboard C files
+ * It uses helper functions to generate the content, including the license information
+ * @param data is an object containing information about the class to generate
+ */
 func generateWBFiles(data: ClassData) -> Void {
 
     // make header file
@@ -884,9 +910,9 @@ func generateWBFiles(data: ClassData) -> Void {
     var commentText = getCreatorDetailsCommentWB(data, fileType: ".h")
     let licenseText = getLicense(data)
     
-    let headerText =  commentText + licenseText + generateWbHeader(data)
+    let headerText =  commentText + licenseText + generateWbHeader(data)   // generate the header file content
     
-    fputs( headerText, fsh )    /// perhaps use multiple fputs statements instead ????
+    fputs( headerText, fsh )
     closeFileStream(fsh)
     
     
@@ -904,14 +930,18 @@ func generateWBFiles(data: ClassData) -> Void {
     
     commentText = getCreatorDetailsCommentWB(data, fileType: ".c")
     
-    let cText =  commentText + licenseText + generateWbC(data)
+    let cText =  commentText + licenseText + generateWbC(data)   // generate the .c file content
     
-    fputs( cText, fsc )    /// perhaps use multiple fputs statements instead ????
+    fputs( cText, fsc )
     closeFileStream(fsc)
 }
 
 
-
+/**
+ * This function opens a file stream and writes the C++ wrapper
+ * It uses helper functions to generate the content, including the license information
+ * @param data is an object containing information about the class to generate
+ */
 func generateCPPFile(data: ClassData) -> Void {
     
     let filePath = data.workingDirectory + "/" + data.cpp + ".h"
@@ -927,17 +957,21 @@ func generateCPPFile(data: ClassData) -> Void {
     
     let text = getCreatorDetailsCommentCPP(data) + getLicense(data) + generateCPPStruct(data)
     
-    fputs( text, fs )    /// perhaps use multiple fputs statements instead ????
+    fputs( text, fs )
     
     closeFileStream(fs)
 }
 
 
+/**
+ * This determines the description string buffer size
+ * which will be declared as a constant in the generated files
+ * @param toStringbufferSize the size of the toString buffer
+ * @return the size of the buffer
+ */
 func getDescriptionBufferSize(toStringbufferSize: size_t) -> size_t {
     
-    
     // total the number of characters in the descrption string
-    
     var size: size_t = toStringbufferSize
     
     size += (inputData.count)      // equals signs
@@ -952,6 +986,13 @@ func getDescriptionBufferSize(toStringbufferSize: size_t) -> size_t {
 }
 
 
+
+/**
+ * This determines the tostring buffer size
+ * which will be declared as a constant in the generated files.
+ * It uses information about the variables as stored in the dictionary.
+ * @return the size of the buffer
+ */
 func getToStringBufferSize() -> size_t {
     
     var size: size_t = 0

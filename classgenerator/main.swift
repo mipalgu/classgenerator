@@ -29,7 +29,8 @@ if input.count == 0 {
     exit(EXIT_FAILURE)
 }
 
-
+// check args
+// find filename
 for argument in input {
     switch argument {
         case "c", "-c":
