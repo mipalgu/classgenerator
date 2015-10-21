@@ -60,7 +60,7 @@
     
     wb_my_test_to_string(&testStruct, toString, sizeof(toString));
     
-    printf("descString: %s\n", toString);
+    printf("toString: %s\n", toString);
     XCTAssertTrue(strcmp(toString, desiredToString) == 0);
 }
 
@@ -69,15 +69,39 @@
     
     struct wb_array_test testStruct = {false, {5,6,7,8}, {false,true,true}};
     
-    char* desiredToString = "false, {5,6,7,8}, {false,true,true}";
-    char aToString[128];
+    //testStruct.pressed = false;
+    //testStruct.array16 = {5,6,7,8};
+    //testStruct.bools = {false,true,true};
     
-    wb_my_test_to_string(&testStruct, aToString, sizeof(aToString));
+    char* desiredToString = "false, {5,6,7,8}, {false,true,true}";
+    char toString[128];
+    
+    wb_array_test_to_string(&testStruct, toString, sizeof(toString));
+    
+    printf("toString: %s\n", toString);
   
-    printf("ARRAYtostring: %s\n", aToString);
-    XCTAssertTrue(strcmp(aToString, desiredToString) == 0);
+    XCTAssertTrue(strcmp(toString, desiredToString) == 0);
 }
 
+
+// simple arrays
+- (void)testWBdescStringArray {
+    
+    struct wb_array_test testStruct = {false, {5,6,7,8}, {false,true,true}};
+    
+    //testStruct.pressed = false;
+    //testStruct.array16 = {5,6,7,8};
+    //testStruct.bools = {false,true,true};
+    
+    char* desiredDescString = "pressed=false, array16={5,6,7,8}, bools={false,true,true}";
+    char descString[128];
+    
+    wb_array_test_description(&testStruct, descString, sizeof(descString));
+    
+    printf("\n\ndescString: %s\n\n", descString);
+    
+    XCTAssertTrue(strcmp(descString, desiredDescString) == 0);
+}
 
 // simple variables
 - (void)testWBFromString {
