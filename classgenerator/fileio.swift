@@ -618,7 +618,7 @@ func generateWbC(data: ClassData) -> String {
     
             cText += "            } \n\n" +
     
-        "            strings[j] = tokenE; \n" +
+        "            strings[j] = gu_strtrim(tokenE); \n" +
         "        } \n" +
         "    } \n\n"
     
@@ -673,17 +673,19 @@ func generateWbC(data: ClassData) -> String {
             
             cText += "    if (strings[\(i)] != NULL) \n" +
 //            "        set_\(inputData[i].varName)(strings[\(i)]); \n\n"
-              "        PROPERTY_SETTER(strings[\(i)], self.\(inputData[i].varName)); \n\n"
+//            "        PROPERTY_SETTER(strings[\(i)], self.\(inputData[i].varName)); \n\n"
+              "        self->\(inputData[i].varName) = strings[\(i)] == \"true\" || strings[\(i)] == \"1\" ? true : false; \n\n"
         }
         // the variable is a number type
         else {
             cText += "    if (strings[\(i)] != NULL) \n" +
-              "        PROPERTY_SETTER((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]), self.\(inputData[i].varName)); \n\n"
+//            "        PROPERTY_SETTER((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]), self.\(inputData[i].varName)); \n\n"
 //            "        set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
+              "        self->\(inputData[i].varName) = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n\n"
         }
     }
     
-    cText += "free(str_copy) \n\n" +
+    cText += "    free(str_copy); \n\n" +
         "    return self; \n" +
         "}; \n"
     

@@ -104,7 +104,7 @@
 }
 
 // simple variables
-- (void)testWBFromString {
+- (void)test_strtok_r {
 
     const char* str = "false, 5, 11";
     const char * s = ",";  /// delimete
@@ -123,19 +123,22 @@
         tokenS = i == 0 ? strtok_r(str_copy, s, &saveptr) : strtok_r(NULL, s, &saveptr);
         printf("tokenS: %s\n", gu_strtrim(tokenS));
     }
-
-/*
-    struct wb_my_test testStruct;
-    char* descString = "pressed=false, pointX=5, pointY=11";
-    
-    wb_my_test_from_string(&testStruct, descString);
-    
-    XCTAssertEqual(testStruct.pressed, false, "pressed not set");
-    XCTAssertEqual(testStruct.pointX, 5, "pointX not set");
-    XCTAssertEqual(testStruct.pointY, 11, "pointY not set");
-*/
     
     free(str_copy);
+}
+
+
+// simple variables
+- (void)testFromString {
+    
+     struct wb_my_test testStruct;
+     const char* descString = "pressed=false, pointX=5, pointY=11";
+     
+     wb_my_test_from_string(&testStruct, descString);
+     
+     XCTAssertEqual(testStruct.pressed, false, "pressed not set");
+     XCTAssertEqual(testStruct.pointX, 5, "pointX not set");
+     XCTAssertEqual(testStruct.pointY, 11, "pointY not set");
 }
 
 
@@ -158,8 +161,7 @@
 
 
 - (void)testRemoveTrailingSpaces {
-    
-    
+
     char* strings[2] = {" 5 ", "77  "};
     char c[strlen(strings[1])];
     
@@ -186,26 +188,5 @@
 
 @end
 
-/*
- char *trimwhitespace(char *str)
- {
-    char *end;
- 
-    // Trim leading space
-    while(isspace(*str)) str++;
- 
-    if(*str == 0)  // All spaces?
-    return str;
- 
-    // Trim trailing space
-    end = str + strlen(str) - 1;
-    while(end > str && isspace(*end)) end--;
- 
-    // Write new null terminator
-    *(end+1) = 0;
- 
-    return str;
- }
- */
 
 

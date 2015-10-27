@@ -182,14 +182,16 @@ struct wb_array_test* wb_array_test_from_string(struct wb_array_test* self, cons
     const char s[3] = ", ";  /// delimeter 
     const char e = '=';        /// delimeter 
     char* tokenS, *tokenE; 
-    char* saveptr = NULL; 
-
+    char* saveptr = NULL;
+	
+	char* str_copy  = gu_strdup(str);
+   
     memset(strings, 0, sizeof(strings)); 
 
     for (int i = 0; i < ARRAY_TEST_NUMBER_OF_VARIABLES; i++) 
     { 
         int j = i; 
-        tokenS = strtok_r(str, s, &saveptr); 
+        tokenS = i == 0 ? strtok_r(str_copy, s, &saveptr) : strtok_r(NULL, s, &saveptr); 
 
         if (tokenS) 
         { 
