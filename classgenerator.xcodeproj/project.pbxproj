@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00021F601B897D1100F7F681 /* GNUlicense.swift */; };
+		00340C321BDF3F2100501211 /* gu_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00340C311BDF3F2100501211 /* gu_util.cpp */; settings = {ASSET_TAGS = (); }; };
 		00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; };
 		00542AB31BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; };
 		009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */ = {isa = PBXBuildFile; fileRef = 009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
+		00340C311BDF3F2100501211 /* gu_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gu_util.cpp; path = ../../../Common/gu_util.cpp; sourceTree = "<group>"; };
 		00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
 		009DB62D1BD3AEDA00EA74C9 /* ClassgeneratorCTests3.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClassgeneratorCTests3.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassgeneratorCTests3.m; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				00B451341BD4F066001E6AB5 /* wb_my_test.c */,
 				00B451351BD4F066001E6AB5 /* wb_my_test.h */,
 				00B451381BD4F235001E6AB5 /* gu_util.h */,
+				00340C311BDF3F2100501211 /* gu_util.cpp */,
 				00BA37541BD6514300169017 /* wb_array_test.c */,
 				00BA37551BD6514300169017 /* wb_array_test.h */,
 			);
@@ -257,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */,
+				00340C321BDF3F2100501211 /* gu_util.cpp in Sources */,
 				00BA37561BD6514300169017 /* wb_array_test.c in Sources */,
 				00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */,
 			);

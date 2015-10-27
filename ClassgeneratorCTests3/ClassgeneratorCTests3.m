@@ -105,16 +105,25 @@
 
 // simple variables
 - (void)testWBFromString {
-/*
-    char* str = "false, 5, 11";
+
+    const char* str = "false, 5, 11";
     const char * s = ",";  /// delimete
     char* tokenS;
     char* saveptr = NULL;
-
-    tokenS = strtok_r(str, s, &saveptr);
     
-    printf("tokenS: %s\n", tokenS);
-*/
+    char* str_copy = strdup(str);
+
+    //tokenS = strtok_r(str_copy, s, &saveptr);
+    
+    //printf("tokenS: %s\n", tokenS);
+    
+    
+    for (int i = 0; i < 3; i++)
+    {
+        tokenS = i == 0 ? strtok_r(str_copy, s, &saveptr) : strtok_r(NULL, s, &saveptr);
+        printf("tokenS: %s\n", gu_strtrim(tokenS));
+    }
+
 /*
     struct wb_my_test testStruct;
     char* descString = "pressed=false, pointX=5, pointY=11";
@@ -125,6 +134,8 @@
     XCTAssertEqual(testStruct.pointX, 5, "pointX not set");
     XCTAssertEqual(testStruct.pointY, 11, "pointY not set");
 */
+    
+    free(str_copy);
 }
 
 

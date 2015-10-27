@@ -41,7 +41,7 @@ class ClassData {
         // get working directory
         self.workingDirectory = workingDirectory
         
-        var t = time(nil)     // ********* error check *********
+        var t = time(nil)   
         var timeInfo = tm()
         localtime_r(&t, &timeInfo)
         

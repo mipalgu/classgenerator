@@ -575,17 +575,18 @@ func generateWbC(data: ClassData) -> String {
         "{ \n"
     
     cText += "    char* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "    const char s[3] = \", \";  /// delimeter \n" +
+        "    const char s[3] = \",\";  /// delimeter \n" +
         "    const char e = '=';        /// delimeter \n" +
         "    char* tokenS, *tokenE; \n" +
-        "    char* saveptr = NULL; \n\n" +
+        "    char* saveptr; \n" +
+        "    char* str_copy = gu_strdup(str); \n\n" +
         
         "    memset(strings, 0, sizeof(strings)); \n\n" +
         
         "    for (int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++) \n" +
         "    { \n" +
         "        int j = i; \n" +
-        "        tokenS = strtok_r(str, s, &saveptr); \n\n" +
+        "        tokenS = i == 0 ? strtok_r(str_copy, s, &saveptr) : strtok_r(NULL, s, &saveptr); \n\n" +
         
         "        if (tokenS) \n" +
         "        { \n" +
@@ -682,7 +683,8 @@ func generateWbC(data: ClassData) -> String {
         }
     }
     
-    cText += "    return self; \n" +
+    cText += "free(str_copy) \n\n" +
+        "    return self; \n" +
         "}; \n"
     
     return cText
