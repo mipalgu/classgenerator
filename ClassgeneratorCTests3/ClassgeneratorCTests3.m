@@ -128,11 +128,111 @@
 }
 
 
+- (void)testOneAtATime {
+    
+    char* strings[80];
+    const char s[2] = ",";  /// delimeter
+    const char e = '=';     /// delimeter
+    const char b1 = '{';
+    const char b2 = '}';
+    char* tokenS, *tokenE, *tokenB1, *tokenB2;
+    char* saveptr;
+    
+    char* array16_values[4];
+    int array16_count = 0;
+    int isArray16 = 1;
+    
+    char* bools_values[3];
+    int bools_count = 0;
+    int isBools = 1;
+
+     const char* str = "  pressed = false, pointX = 5 , pointY=11";
+    // const char* str = "pressed=false, array16={5,6,7,8}, bools={false,true,true}";
+    // const char* str = "false, {5,6,7,8}, {false,true,true}";
+    //const char* str = "false, 5, 11";
+    char* str_copy = gu_strdup(str);
+    
+    tokenS = strtok_r(str_copy, s, &saveptr);
+    
+    int j = 0;
+    int isArray = 0;
+    
+    while (tokenS != NULL)
+    {
+            tokenE = strchr(tokenS, e);
+            
+            if (tokenE == NULL)
+            {
+                tokenE = tokenS;
+            }
+            else
+            {
+                tokenE++;
+            }
+        
+        tokenB1 = strchr(gu_strtrim(tokenE), b1);
+        
+        if (tokenB1 == NULL)
+        {
+            tokenB1 = tokenE;
+        }
+        else
+        {
+            // start of an array
+            tokenB1++;
+            isArray = 1;
+        }
+        
+        if (isArray)
+        {
+            if (isArray16 == 1)
+            {
+                tokenB2 = strchr(gu_strtrim(tokenB1), b2);
+                
+                if (tokenB2 != NULL)
+                {
+                    tokenB1[strlen(tokenB1)-1] = 0;
+                    isArray16 == 0;
+                }
+                
+                array16_values[array16_count] = tokenB1;
+                puts(array16_values[array16_count]);
+                array16_count++;
+            }
+            else if (isBools == 1)
+            {
+                tokenB2 = strchr(gu_strtrim(tokenB1), b2);
+                
+                if (tokenB2 != NULL)
+                {
+                    tokenB1[strlen(tokenB1)-1] = 0;
+                    isBools == 0;
+                }
+                
+                bools_values[bools_count] = tokenB1;
+                puts(bools_values[bools_count]);
+                bools_count++;
+            }
+        }
+        else
+        {
+            strings[j] = gu_strtrim(tokenB1);
+            puts(strings[j]);
+        }
+    
+        j++;
+        tokenS = strtok_r(NULL, s, &saveptr);
+    }
+    
+}
+
+
+
 // simple variables
 - (void)testFromString {
     
      struct wb_my_test testStruct;
-     const char* descString = "pressed=false, pointX=5, pointY=11";
+     const char* descString = "  pressed = false, pointX   = 5 , pointY=11";
      
      wb_my_test_from_string(&testStruct, descString);
      
@@ -140,6 +240,31 @@
      XCTAssertEqual(testStruct.pointX, 5, "pointX not set");
      XCTAssertEqual(testStruct.pointY, 11, "pointY not set");
 }
+
+
+// simple arrays
+- (void)testWBFromStringArray {
+    
+    struct wb_array_test testStruct; // = {false, {5,6,7,8}, {false,true,true}};
+    
+    //char* descString = "pressed=true, array16={5,6,7,8}, bools={true,true,true}";
+    char* descString = "true, {5 ,6,7,8}, {true, true,true }";
+    
+    wb_array_test_from_string(&testStruct, descString);
+    
+    XCTAssertEqual(testStruct.pressed, true, "pressed not set");
+    
+    XCTAssertEqual(testStruct.array16[0], 5, "array16[0] not set");
+    XCTAssertEqual(testStruct.array16[1], 6, "array16[1] not set");
+    XCTAssertEqual(testStruct.array16[2], 7, "array16[2] not set");
+    XCTAssertEqual(testStruct.array16[3], 8, "array16[3] not set");
+    
+    XCTAssertEqual(testStruct.bools[0], true, "bools[0] not set");
+    XCTAssertEqual(testStruct.bools[1], true, "bools[1] not set");
+    XCTAssertEqual(testStruct.bools[2], true, "bools[2] not set");
+}
+
+
 
 
 - (void)testRemoveLeadingSpaces {

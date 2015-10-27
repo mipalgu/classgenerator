@@ -575,113 +575,153 @@ func generateWbC(data: ClassData) -> String {
         "{ \n"
     
     cText += "    char* strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "    const char s[3] = \",\";  /// delimeter \n" +
-        "    const char e = '=';        /// delimeter \n" +
-        "    char* tokenS, *tokenE; \n" +
+        "    memset(strings, 0, sizeof(strings)); \n" +
         "    char* saveptr; \n" +
-        "    char* str_copy = gu_strdup(str); \n\n" +
-        
-        "    memset(strings, 0, sizeof(strings)); \n\n" +
-        
-        "    for (int i = 0; i < \(data.caps)_NUMBER_OF_VARIABLES; i++) \n" +
-        "    { \n" +
-        "        int j = i; \n" +
-        "        tokenS = i == 0 ? strtok_r(str_copy, s, &saveptr) : strtok_r(NULL, s, &saveptr); \n\n" +
-        
-        "        if (tokenS) \n" +
-        "        { \n" +
-        
-        "            tokenE = strchr(tokenS, e); \n\n" +
-        
-        "            if (tokenE == NULL) \n" +
-        "            { \n " +
-        "                tokenE = tokenS; \n" +
-        "            } \n" +
-        "            else \n" +
-        "            { \n " +
-        "                tokenE++; \n\n"
-        
-        for i in 0...inputData.count-1 {
-            
-            if ( i == 0 ) {
-                cText += "                if "
-            }
-            else {
-                cText += "                else if "
-            }
-            
-            cText += "(strcmp(tokenS, \"\(inputData[i].varName)\") == 0) \n" +
-                     "                { \n" +
-                     "                    j = \(i); \n" +
-                     "                } \n"
-        }
+        "    int count = 0; \n\n" +
+        "    char* str_copy = gu_strdup(str); \n\n"
     
-            cText += "            } \n\n" +
-    
-        "            strings[j] = gu_strtrim(tokenE); \n" +
-        "        } \n" +
-        "    } \n\n"
     
     var firstArray = true
+    var thereAreArrays = false
     
     for i in 0...inputData.count-1 {
         
         /// if the variable is an array
         if inputData[i].varArraySize > 0 {
-        
+            
+            thereAreArrays = true
+            
             if firstArray {
-                cText += "    const char a = ','; \n\n"
+                cText += "    int isArray = 0; \n\n"
                 firstArray = false
             }
             
-            cText += "    char \(inputData[i].varName)_output[strlen(strings[\(i)]+1)];\n" +
-                     "    memset(\(inputData[i].varName)_output, 0, sizeof(\(inputData[i].varName)_output)); \n\n" +
-                
-                     "    char* \(inputData[i].varName)_c = strings[\(i)]+1; \n" +
-                     "    while (isspace(*\(inputData[i].varName)_c)) \(inputData[i].varName)_c++; \n" +
-                     "    strings[\(i)] = \(inputData[i].varName)_c;           // remove the { \n\n" +
+            cText += "    char* \(inputData[i].varName)_values[\(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE]; \n" +
+            
+            "    int \(inputData[i].varName)_count = 0; \n" +
+            "    int is_\(inputData[i].varName) = 1; \n\n"
+        }
+    }
 
-                     "    array16_output[strlen(strings[\(i)])-1] = \"/0\";  // remove the } \n\n"
+    cText += "    const char s[2] = \",\";    /// delimeter \n" +
+        "    const char e = '=';    /// delimeter \n"
+    
+    if thereAreArrays {
+        cText += "    const char b1 = '{';    /// delimeter \n" +
+            "    const char b2 = '}';    /// delimeter \n" +
+            "    char* tokenS, *tokenE, *tokenB1, *tokenB2; \n\n"
+    }
+    else {
+        cText += "    char* tokenS, *tokenE; \n\n"
+    }
+        
+    cText +=
+        "    tokenS = strtok_r(str_copy, s, &saveptr); \n\n" +
+    
+        
+        "    while (tokenS != NULL) \n" +
+        "    { \n" +
+        "        tokenE = strchr(tokenS, e); \n\n" +
+        
+        "        if (tokenE == NULL) \n" +
+        "        { \n " +
+        "            tokenE = tokenS; \n" +
+        "        } \n" +
+        "        else \n" +
+        "        { \n " +
+        "            tokenE++; \n" +
+        "        } \n\n"
+    
+    firstArray = true
+    
+    if thereAreArrays {
+        cText += "        tokenB1 = strchr(gu_strtrim(tokenE), b1); \n\n" +
+    
+        "        if (tokenB1 == NULL) \n" +
+        "        { \n" +
+        "            tokenB1 = tokenE; \n" +
+        "        } \n" +
+        "        else \n" +
+        "        { \n" +
+        "            // start of an array \n" +
+        "            tokenB1++; \n" +
+        "            isArray = 1; \n"
+        "        } \n\n" +
+        
+        "        if (isArray) \n" +
+        "        { \n" +
+        "            tokenB2 = strchr(gu_strtrim(tokenB1), b2); \n"
+        
+        for i in 0...inputData.count-1 {
             
-            cText += "    size_t \(inputData[i].varName)_smallest; \n\n" +
-                     "    if (strlen(array16_output) == 0) \n" +
-                     "    { \n" +
-                     "        \(inputData[i].varName)_smallest = \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n" +
-                     "    } \n" +
-                     "    else \n" +
-                     "    { \n" +
-                     "        \(inputData[i].varName)_smallest = (strlen(\(inputData[i].varName)_output)+1)/2 < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? (strlen(array16_output)+1)/2 : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n" +
-                     "    } \n\n" +
+            /// if the variable is an array
+            if inputData[i].varArraySize > 0 {
+                if !firstArray {
+                    cText += "            else "
+                }
+                else {
+                    firstArray = false
+                    
+                    cText += "            if (is_\(inputData[i].varName) == 1) \n" +
+                            "            { \n" +
+                            "                if (tokenB2 != NULL) \n" +
+                            "                { \n" +
+                            "                    tokenB1[strlen(tokenB1)-1] = 0; \n" +
+                            "                    is_\(inputData[i].varName) = 0; \n" +
+                            "                } \n\n" +
+                        
+                            "                \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
+                            "                \(inputData[i].varName)_count++; \n" +
+                            "            } \n"
+                }
+            }
+        }
+        
+    
+    cText += "        else \n" +
+            "        { \n" +
+            "            strings[count] = gu_strtrim(tokenE); \n" +
+            "        } \n\n"
+    }
+    else {
+        cText += "        strings[count] = gu_strtrim(tokenE); \n\n"
+    }
+    
+    cText += "        count++; \n" +
+            "        tokenS = strtok_r(NULL, s, &saveptr); \n" +
+            "    } \n\n"
+    
+    
+    for i in 0...inputData.count-1 {
+        
+        /// if the variable is an array
+        if inputData[i].varArraySize > 0 {
             
-                     "    for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
-                     "    { \n" +
-                     "        char* token = strchr(\(inputData[i].varName)_output, a); \n" +
-                     "        if (token != NULL) \n"
+            cText += "    size_t \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE) ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE); \n\n" +
             
+            "    for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
+            "    { \n"
             
             if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
-                cText += "            ARRAY_PROPERTY_SETTER((token == \"true\") || (token == \"1\") ? true : false, \(inputData[i].varName)[i]); \n" +
-                "    } \n\n"
+                cText += "            self->\(inputData[i].varName)[i] = strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false; \n"
             }
             else {
-                cText += "            ARRAY_PROPERTY_SETTER((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(token), \(inputData[i].varName)[i]); \n" +
-                     "    } \n\n"
+                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n"
             }
-        
-        }
-        else if inputData[i].varType == "bool" {
             
-            cText += "    if (strings[\(i)] != NULL) \n" +
-//            "        set_\(inputData[i].varName)(strings[\(i)]); \n\n"
-//            "        PROPERTY_SETTER(strings[\(i)], self.\(inputData[i].varName)); \n\n"
-              "        self->\(inputData[i].varName) = strings[\(i)] == \"true\" || strings[\(i)] == \"1\" ? true : false; \n\n"
+            cText += "    } \n\n"
         }
-        // the variable is a number type
         else {
-            cText += "    if (strings[\(i)] != NULL) \n" +
-//            "        PROPERTY_SETTER((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]), self.\(inputData[i].varName)); \n\n"
-//            "        set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
-              "        self->\(inputData[i].varName) = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n\n"
+            cText += "    if (strings[\(i)] != NULL) \n"
+            
+            if inputData[i].varType == "bool" {
+                
+                cText += "            self->\(inputData[i].varName) = strcmp(strings[\(i)], \"true\") == 0  || strcmp(strings[\(i)], \"1\") == 0 ? true : false; \n\n"
+            }
+            else {
+                cText += "       self->\(inputData[i].varName) = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n\n"
+            }
+            
         }
     }
     
