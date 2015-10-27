@@ -603,8 +603,8 @@ func generateWbC(data: ClassData) -> String {
         }
     }
 
-    cText += "    const char s[2] = \",\";    /// delimeter \n" +
-        "    const char e = '=';    /// delimeter \n"
+    cText += "    const char s[2] = \",\";   /// delimeter \n" +
+        "    const char e = '=';      /// delimeter \n"
     
     if thereAreArrays {
         cText += "    const char b1 = '{';    /// delimeter \n" +
@@ -660,7 +660,7 @@ func generateWbC(data: ClassData) -> String {
                     cText += "            else "
                 }
                 else {
-                    cText += "            " 
+                    cText += "            "
                 }
                 
                 firstArray = false
@@ -718,7 +718,7 @@ func generateWbC(data: ClassData) -> String {
             
             if inputData[i].varType == "bool" {
                 
-                cText += "            self->\(inputData[i].varName) = strcmp(strings[\(i)], \"true\") == 0  || strcmp(strings[\(i)], \"1\") == 0 ? true : false; \n\n"
+                cText += "       self->\(inputData[i].varName) = strcmp(strings[\(i)], \"true\") == 0  || strcmp(strings[\(i)], \"1\") == 0 ? true : false; \n\n"
             }
             else {
                 cText += "       self->\(inputData[i].varName) = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n\n"
