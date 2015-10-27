@@ -645,7 +645,7 @@ func generateWbC(data: ClassData) -> String {
         "        { \n" +
         "            // start of an array \n" +
         "            tokenB1++; \n" +
-        "            isArray = 1; \n"
+        "            isArray = 1; \n" +
         "        } \n\n" +
         
         "        if (isArray) \n" +
@@ -660,20 +660,22 @@ func generateWbC(data: ClassData) -> String {
                     cText += "            else "
                 }
                 else {
-                    firstArray = false
-                    
-                    cText += "            if (is_\(inputData[i].varName) == 1) \n" +
-                            "            { \n" +
-                            "                if (tokenB2 != NULL) \n" +
-                            "                { \n" +
-                            "                    tokenB1[strlen(tokenB1)-1] = 0; \n" +
-                            "                    is_\(inputData[i].varName) = 0; \n" +
-                            "                } \n\n" +
-                        
-                            "                \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
-                            "                \(inputData[i].varName)_count++; \n" +
-                            "            } \n"
+                    cText += "            " 
                 }
+                
+                firstArray = false
+                
+                cText += "if (is_\(inputData[i].varName) == 1) \n" +
+                        "            { \n" +
+                        "                if (tokenB2 != NULL) \n" +
+                        "                { \n" +
+                        "                    tokenB1[strlen(tokenB1)-1] = 0; \n" +
+                        "                    is_\(inputData[i].varName) = 0; \n" +
+                        "                } \n\n" +
+                    
+                        "                \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
+                        "                \(inputData[i].varName)_count++; \n" +
+                        "            } \n"
             }
         }
         
