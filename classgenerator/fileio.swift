@@ -843,12 +843,11 @@ func generateCPPStruct(data: ClassData) -> String {
         for mem in memcpyForArrays {
             cppStruct += "            \(mem); \n"
         }
+        cppStruct += "        } \n\n"
     }
 
-    cppStruct += "        } \n\n" +
-        
-        "        /** Assignment Operator */ \n" +
-        "        \(data.cpp) &operator= (const \(data.wb) &other) \n" +
+    cppStruct += "        /** Assignment Operator */ \n" +
+        "        \(data.cpp) &operator = (const \(data.wb) &other) \n" +
         "        { \n"
     
     
