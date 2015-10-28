@@ -247,8 +247,8 @@
     
     struct wb_array_test testStruct; // = {false, {5,6,7,8}, {false,true,true}};
     
-    //char* descString = "pressed=true, array16={5,6,7,8}, bools={true,true,true}";
-    char* descString = "true, {5 ,6,7,8}, {true, true,true }";
+    char* descString = "pressed = true, array16={ 5,6,7,8 }, bools= { true ,true, true}";
+    //char* descString = "true, {5 ,6,7,8}, {true, true,true }";
     
     wb_array_test_from_string(&testStruct, descString);
     

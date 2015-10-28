@@ -680,7 +680,8 @@ func generateWbC(data: ClassData) -> String {
         }
         
     
-    cText += "        else \n" +
+    cText += "        } \n" +
+            "        else \n" +
             "        { \n" +
             "            strings[count] = gu_strtrim(tokenE); \n" +
             "        } \n\n"
@@ -699,7 +700,7 @@ func generateWbC(data: ClassData) -> String {
         /// if the variable is an array
         if inputData[i].varArraySize > 0 {
             
-            cText += "    size_t \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE) ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE); \n\n" +
+            cText += "    size_t \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
             
             "    for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
             "    { \n"
@@ -708,7 +709,7 @@ func generateWbC(data: ClassData) -> String {
                 cText += "            self->\(inputData[i].varName)[i] = strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false; \n"
             }
             else {
-                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n"
+                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(\(inputData[i].varName)_values[i]); \n"
             }
             
             cText += "    } \n\n"
