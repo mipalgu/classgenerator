@@ -4,10 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>ClassgeneratorCTests3.xcscheme</key>
+		<key>ClassgeneratorCPPTests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
+		</dict>
+		<key>ClassgeneratorCTests3.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
 		</dict>
 		<key>Tests.xcscheme</key>
 		<dict>
@@ -68,6 +73,11 @@
 			<true/>
 		</dict>
 		<key>009DB62C1BD3AEDA00EA74C9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>00B7E2E31BE0594900B7B779</key>
 		<dict>
 			<key>primary</key>
 			<true/>
