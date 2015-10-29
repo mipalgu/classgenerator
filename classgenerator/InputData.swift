@@ -5,6 +5,8 @@
 //  Created by Mick Hawkins on 28/09/2015.
 //  Copyright © 2015 Mick Hawkins. All rights reserved.
 //
+//  This struct stores the properties of the input variables
+//
 
 import Darwin
 
@@ -27,19 +29,8 @@ struct inputVariable{
     }
 }
 
+/// the variables to be used are stored in an array
 var inputData : [inputVariable] = []
 
 
 
-func getUserName() -> String {
-    
-    let pw = getpwuid(getuid())
-    
-    if pw != nil {
-        return String.fromCString(pw.memory.pw_name)!
-    }
-    else {
-        print ("Could not determine system username.")
-        return "YOUR NAME"
-    }
-}

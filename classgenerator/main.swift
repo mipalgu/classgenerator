@@ -10,10 +10,8 @@
 
 import Darwin
 
-/**
- * Get input filename from command line args
- */
 
+// Get input filename from command line args
 var inputFilenameNoExtension = ""
 
 var makeCPPWrapper = false
@@ -48,7 +46,7 @@ for argument in input {
             exit(EXIT_FAILURE);
 
         default:
-            // is this argument a filename?
+            // check, is this argument a filename?
             let nameWithoutExtension = argument.characters.split {$0 == "."}.map { String($0) }
         
             if nameWithoutExtension.count == 2 {   // have found an extension
@@ -59,12 +57,16 @@ for argument in input {
                     foundFilename = true
                 }
                 else {
-                    print("Unknown file type or too many files specified. USAGE information to be added....")
+                    print("Unknown file type or too many files specified.")
+                    print("Usage is: classgenerator filename.txt [cs]")
+                    print("Please see the user manual for more information.")
                     exit(EXIT_FAILURE)
                 }
             }
             else {
-                print("Unknown argument. USAGE information to be added....")
+                print("Unknown argument.")
+                print("Usage is: classgenerator filename.txt [cs]")
+                print("Please see the user manual for more information.")
                 exit(EXIT_FAILURE)
             }
     }
@@ -91,11 +93,14 @@ var inputText = readVariables(workingDirectory + inputFilenameNoExtension + ".tx
 // return the user name from the inut file
 var userName = parseInput(inputText)
 
+// determine information about the class to be generated
 var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)
 
+// generate the WB files
 generateWBFiles(data)
 print("Generated WB files")
 
+// generate the c++ wrapper
 if makeCPPWrapper {
     generateCPPFile(data)
     print("Generated C++ wrapper")

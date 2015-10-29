@@ -5,13 +5,15 @@
 //  Created by Mick Hawkins on 26/09/2015.
 //  Copyright © 2015 Mick Hawkins. All rights reserved.
 //
+//  VariablesData.swift contains a dictionary which stores information about the available data types
+//
 
 
 struct varData {
     
     let defaultValue : String
     let length : Int       // maximum number of characters in a string of this type
-    let macro : String
+    let macro : String     // the whiteboard macro
     let format : String    // format specifier to use
     let converter: String  // how to convert from a string to this type
     let swift: String      // the equivalent Swift data type
@@ -19,7 +21,7 @@ struct varData {
 
 
 
-// A dictionary of the varible tyoes
+// A dictionary of the varible types
 let variables = [
 
     "string": varData(defaultValue: "", length: 0,  macro: "PROPERTY", format: "%s", converter: "", swift: "String"),

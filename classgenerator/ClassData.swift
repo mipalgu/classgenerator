@@ -5,6 +5,8 @@
 //  Created by Mick Hawkins on 22/08/2015.
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
+//  This class stores information abou the classes to be generated
+//
 
 
 import Darwin
@@ -13,10 +15,10 @@ class ClassData {
     
     var inputFilename: String     // user's filename including .txt
     var workingDirectory: String
-    var wb: String          // name for wb class/struct, lower case with underscores starting with wb_
-    var camel: String       // camel case, without underscores
-    var caps: String        // upper case, including underscores
-    var cpp: String         // c++ class
+    var wb: String                // name for wb class/struct, lower case with underscores starting with wb_
+    var camel: String             // camel case, without underscores
+    var caps: String              // upper case, including underscores
+    var cpp: String               // c++ class
     var userName: String
     var creationDate: String
     var year: Int
@@ -46,13 +48,30 @@ class ClassData {
         localtime_r(&t, &timeInfo)
         
         self.year = Int(timeInfo.tm_year) + 1900
-//        self.creationDate = String.fromCString(ctime(&t))!
+//      self.creationDate = String.fromCString(ctime(&t))!
         self.creationDate = "\(timeInfo.tm_hour):\(timeInfo.tm_min), \(timeInfo.tm_mday)/\(timeInfo.tm_mon+1)/\(timeInfo.tm_year+1900)"
     }
 }
 
 
 
+/**
+ * This function is called when the author has not been specified
+ * @return Returns the system's user name as a string
+ */
+func getUserName() -> String {
+    
+    let pw = getpwuid(getuid())
+    
+    if pw != nil {
+        return String.fromCString(pw.memory.pw_name)!
+    }
+    else {
+        print ("Could not determine system username.")
+        print ("Please check the generated files.")
+        return "YOUR NAME GOES HERE"
+    }
+}
 
 
 

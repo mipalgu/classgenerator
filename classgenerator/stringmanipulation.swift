@@ -5,8 +5,18 @@
 //  Created by Mick Hawkins on 19/09/2015.
 //  Copyright © 2015 Mick Hawkins. All rights reserved.
 //
+//  Because this software will be ported to Linux, Swift's Foundation API can not be used.
+//  This means that strings needed to be manipulated manually.
+//
 
 
+
+/**
+ * This function returns the upper case version of a lower case character.
+ * Any other characters are returned unchanged.
+ * @param ch is a character
+ * @return Returns the character, or its upper case version
+ */
 func upperCase (ch: Character) -> Character {
     
     if ( ch >= "a" ) && ( ch <= "z" ){
@@ -23,6 +33,13 @@ func upperCase (ch: Character) -> Character {
 }
 
 
+
+/**
+ * This function returns the lower case version of an upper case character.
+ * Any other characters are returned unchanged.
+ * @param ch is a character
+ * @return Returns the character, or its lower case version
+ */
 func lowerCase (ch: Character) -> Character {
     
     if ( ch >= "A" ) && ( ch <= "Z" ){
@@ -39,6 +56,13 @@ func lowerCase (ch: Character) -> Character {
 }
 
 
+/**
+ * This function makes the first character of a word upper case
+ * The rest of the word is unchanged.
+ * If the first character is not a lowercase character, it is unchanged.
+ * @param word is a string
+ * @return Returns the capitalised word as a string
+ */
 func capitalisedWord (word: String) -> String {
     
     var capWord = ""
@@ -59,6 +83,13 @@ func capitalisedWord (word: String) -> String {
 }
 
 
+
+/**
+ * This function makes all the characters of a word upper case
+ * If any characters are not a lowercase character, they are unchanged.
+ * @param word is a string
+ * @return Returns the uppercase word as a string
+ */
 func uppercaseWord (word: String) -> String {
     
     var uppWord = ""
@@ -82,6 +113,13 @@ func lowercaseWord (word: String) -> String {
 }
 
 
+
+/**
+ * This function makes words into a camel case word.
+ * If any characters are not a lowercase character, they are unchanged.
+ * @param words is an array of strings
+ * @return Returns the word as a string
+ */
 func camelCaseWord(words: [String]) -> String {
     
     var camelCase: String = ""
@@ -100,6 +138,13 @@ func camelCaseWord(words: [String]) -> String {
 
 
 
+/**
+ * This function makes words into a C++ struct name.
+ * That is, a camel case word with the first letter also upper case.
+ * If any characters are not a lowercase character, they are unchanged.
+ * @param words is an array of strings
+ * @return Returns the word as a string
+ */
 func cppWord(words: [String]) -> String {
     
     var cpp: String = ""
@@ -115,7 +160,12 @@ func cppWord(words: [String]) -> String {
 }
 
 
-/// removes "// " from the front of a comment
+
+/**
+ * This function removes "// " from the front of a string.
+ * @param inputText is a string
+ * @return Returns the trimmed string
+ */
 func removeCommentNotation(inputText: String) -> String {
     
     var firstLetterFound = false

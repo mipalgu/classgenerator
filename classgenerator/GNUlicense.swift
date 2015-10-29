@@ -5,9 +5,17 @@
 //  Created by Mick Hawkins on 23/08/2015.
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
+//  Produces the top comment for each of the generated files, including the GNU license.
+//
 
 
-
+/**
+ * This function produces the comment for a generated C file
+ * including the author, creation time and copyright clause.
+ * @param data is the classdata object
+ * @param fileType the file extension of the file to be generated
+ * @return Returns the comment as a string
+ */
 func getCreatorDetailsCommentWB(data: ClassData, fileType: String) -> String {
     
     let comment = "/** \n" +
@@ -23,6 +31,13 @@ func getCreatorDetailsCommentWB(data: ClassData, fileType: String) -> String {
     return comment
 }
 
+
+/**
+ * This function produces the comment for a generated C++ file
+ * including the author, creation time and copyright clause.
+ * @param data is the classdata object
+ * @return Returns the comment as a string
+ */
 func getCreatorDetailsCommentCPP(data: ClassData) -> String {
     
     let comment = "/** \n" +
@@ -40,6 +55,12 @@ func getCreatorDetailsCommentCPP(data: ClassData) -> String {
 }
 
 
+
+/**
+ * This function produces the GNUlicense for a generated file.
+ * @param data is the classdata object
+ * @return Returns the comment as a string
+ */
 func getLicense(data: ClassData) -> String {
     
     let license = " * Redistribution and use in source and binary forms, with or without \n" +

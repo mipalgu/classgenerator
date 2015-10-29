@@ -1,9 +1,12 @@
 //
-//  fileio.swift
+//  FileIO.swift
 //  classgenerator
 //
 //  Created by Mick Hawkins on 15/08/2015.
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
+//  
+//  Parses the input file to identify the variables.
+//  Creates the generated files.
 //
 
 import Darwin
