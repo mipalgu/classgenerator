@@ -1,0 +1,6 @@
+author	Mick Hawkins
+bool	pressed=true	// Pressed is a boolean that has an initial value of true
+int16_t	point2D[2]={10, 11}	// Point2D is an array of int16_t
+
+This sample class contains two variables.
+A boolean and an array of integers.
