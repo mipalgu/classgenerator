@@ -19,8 +19,6 @@ struct varData {
     let swift: String      // the equivalent Swift data type
 }
 
-
-
 // A dictionary of the varible types
 let variables = [
 
@@ -54,28 +52,28 @@ let variables = [
     "unsigned short":    varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%u", converter: "atoi", swift: "UInt16"),
     "unsigned short int":varData(defaultValue: "0", length: 6,  macro: "PROPERTY", format: "%u", converter: "atoi", swift: "UInt16"),
     
-    "long":              varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "String"),
-    "long int":          varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "String"),
-    "signed long":       varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "String"),
-    "signed long int":   varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "String"),
-    "unsigned long":     varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%lu", converter: "atol", swift: "String"),
-    "unsigned long int": varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%lu", converter: "atol", swift: "String"),
+    "long":              varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "Int32"),
+    "long int":          varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "Int32"),
+    "signed long":       varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "Int32"),
+    "signed long int":   varData(defaultValue: "0", length: 11, macro: "PROPERTY", format: "%ld", converter: "atol", swift: "Int32"),
+    "unsigned long":     varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%lu", converter: "atol", swift: "UInt32"),
+    "unsigned long int": varData(defaultValue: "0", length: 10, macro: "PROPERTY", format: "%lu", converter: "atol", swift: "UInt32"),
     
-    "long long":              varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "String"),
-    "long long int":          varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "String"),
-    "signed long long":       varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "String"),
-    "signed long long int":   varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "String"),
-    "unsigned long long":     varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll", swift: "String"),
-    "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll", swift: "String"),
-    "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "String"),
+    "long long":              varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "Int64"),
+    "long long int":          varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "Int64"),
+    "signed long long":       varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "Int64"),
+    "signed long long int":   varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "Int64"),
+    "unsigned long long":     varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll", swift: "UInt64"),
+    "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll", swift: "UInt64"),
+    "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "Int64"),
     
-    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "String"),
-    "float_t": varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "String"),
+    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "Float"),
+    "float_t": varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "Float"),
     
-    "double":   varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof", swift: "String"),
-    "double_t": varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof", swift: "String"),
+    "double":   varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof", swift: "Double"),
+    "double_t": varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof", swift: "Double"),
     
-    "long double":   varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof", swift: "String"),
-    "double double": varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof", swift: "String")
+    "long double":   varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof", swift: "Float80"),
+    "double double": varData(defaultValue: "0.0", length: 80, macro: "PROPERTY", format: "%Lf", converter: "atof", swift: "Float80")
 ]
 
