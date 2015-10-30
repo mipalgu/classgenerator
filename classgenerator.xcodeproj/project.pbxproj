@@ -9,16 +9,15 @@
 /* Begin PBXBuildFile section */
 		00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00021F601B897D1100F7F681 /* GNUlicense.swift */; };
 		00340C321BDF3F2100501211 /* gu_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00340C311BDF3F2100501211 /* gu_util.cpp */; settings = {ASSET_TAGS = (); }; };
+		003579CE1BE354650031D894 /* wb_array_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 003579CA1BE354650031D894 /* wb_array_test.c */; settings = {ASSET_TAGS = (); }; };
+		003579CF1BE354650031D894 /* wb_my_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 003579CC1BE354650031D894 /* wb_my_test.c */; settings = {ASSET_TAGS = (); }; };
 		00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; };
 		00542AB31BACEDDD0074AD7D /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */; };
 		009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */ = {isa = PBXBuildFile; fileRef = 009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */; };
 		00A9F9291BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; };
 		00A9F92A1BB621DD00F97E85 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9F9281BB621DD00F97E85 /* VariablesData.swift */; };
-		00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 00B451341BD4F066001E6AB5 /* wb_my_test.c */; };
 		00B7E2E71BE0594900B7B779 /* ClassgeneratorCPPTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 00B7E2E61BE0594900B7B779 /* ClassgeneratorCPPTests.mm */; };
 		00B7E2F11BE05DAF00B7B779 /* gu_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00B7E2EF1BE05DAF00B7B779 /* gu_util.cpp */; settings = {ASSET_TAGS = (); }; };
-		00B7E2F31BE067CD00B7B779 /* Wrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B7E2F21BE067CD00B7B779 /* Wrapper.swift */; settings = {ASSET_TAGS = (); }; };
-		00BA37561BD6514300169017 /* wb_array_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 00BA37541BD6514300169017 /* wb_array_test.c */; settings = {ASSET_TAGS = (); }; };
 		00BAD0A71B9827F300A3A062 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BAD0A61B9827F300A3A062 /* Tests.swift */; };
 		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
 		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
@@ -42,24 +41,23 @@
 /* Begin PBXFileReference section */
 		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
 		00340C311BDF3F2100501211 /* gu_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gu_util.cpp; path = ../../../Common/gu_util.cpp; sourceTree = "<group>"; };
+		003579CA1BE354650031D894 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = classgenerator/testfiles/wb_array_test.c; sourceTree = SOURCE_ROOT; };
+		003579CB1BE354650031D894 /* wb_array_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_array_test.h; path = classgenerator/testfiles/wb_array_test.h; sourceTree = SOURCE_ROOT; };
+		003579CC1BE354650031D894 /* wb_my_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_my_test.c; path = classgenerator/testfiles/wb_my_test.c; sourceTree = SOURCE_ROOT; };
+		003579CD1BE354650031D894 /* wb_my_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_my_test.h; path = classgenerator/testfiles/wb_my_test.h; sourceTree = SOURCE_ROOT; };
+		003579D01BE3547F0031D894 /* ArrayTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArrayTest.h; path = classgenerator/testfiles/ArrayTest.h; sourceTree = SOURCE_ROOT; };
+		003579D11BE3547F0031D894 /* MYTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MYTest.h; path = classgenerator/testfiles/MYTest.h; sourceTree = SOURCE_ROOT; };
 		00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
 		009DB62D1BD3AEDA00EA74C9 /* ClassgeneratorCTests3.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClassgeneratorCTests3.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassgeneratorCTests3.m; sourceTree = "<group>"; };
 		009DB6311BD3AEDB00EA74C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A9F9281BB621DD00F97E85 /* VariablesData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariablesData.swift; sourceTree = "<group>"; };
-		00B451341BD4F066001E6AB5 /* wb_my_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_my_test.c; path = classgenerator/wb_my_test.c; sourceTree = SOURCE_ROOT; };
-		00B451351BD4F066001E6AB5 /* wb_my_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_my_test.h; path = classgenerator/wb_my_test.h; sourceTree = SOURCE_ROOT; };
 		00B451381BD4F235001E6AB5 /* gu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gu_util.h; path = ../../../Common/gu_util.h; sourceTree = "<group>"; };
 		00B7E2E41BE0594900B7B779 /* ClassgeneratorCPPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClassgeneratorCPPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00B7E2E61BE0594900B7B779 /* ClassgeneratorCPPTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ClassgeneratorCPPTests.mm; sourceTree = "<group>"; };
 		00B7E2E81BE0594900B7B779 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00B7E2ED1BE05ACE00B7B779 /* ArrayTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArrayTest.h; path = classgenerator/ArrayTest.h; sourceTree = SOURCE_ROOT; };
-		00B7E2EE1BE05ACE00B7B779 /* MyTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyTest.h; path = classgenerator/MyTest.h; sourceTree = SOURCE_ROOT; };
 		00B7E2EF1BE05DAF00B7B779 /* gu_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gu_util.cpp; path = ../../../Common/gu_util.cpp; sourceTree = "<group>"; };
 		00B7E2F01BE05DAF00B7B779 /* gu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gu_util.h; path = ../../../Common/gu_util.h; sourceTree = "<group>"; };
-		00B7E2F21BE067CD00B7B779 /* Wrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapper.swift; sourceTree = "<group>"; };
-		00BA37541BD6514300169017 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = classgenerator/wb_array_test.c; sourceTree = SOURCE_ROOT; };
-		00BA37551BD6514300169017 /* wb_array_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_array_test.h; path = classgenerator/wb_array_test.h; sourceTree = SOURCE_ROOT; };
 		00BAD0A41B9827F200A3A062 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BAD0A61B9827F300A3A062 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		00BAD0A81B9827F300A3A062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,12 +105,12 @@
 			children = (
 				009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */,
 				009DB6311BD3AEDB00EA74C9 /* Info.plist */,
-				00B451341BD4F066001E6AB5 /* wb_my_test.c */,
-				00B451351BD4F066001E6AB5 /* wb_my_test.h */,
 				00B451381BD4F235001E6AB5 /* gu_util.h */,
 				00340C311BDF3F2100501211 /* gu_util.cpp */,
-				00BA37541BD6514300169017 /* wb_array_test.c */,
-				00BA37551BD6514300169017 /* wb_array_test.h */,
+				003579CA1BE354650031D894 /* wb_array_test.c */,
+				003579CB1BE354650031D894 /* wb_array_test.h */,
+				003579CC1BE354650031D894 /* wb_my_test.c */,
+				003579CD1BE354650031D894 /* wb_my_test.h */,
 			);
 			path = ClassgeneratorCTests3;
 			sourceTree = "<group>";
@@ -123,8 +121,8 @@
 				00B7E2E61BE0594900B7B779 /* ClassgeneratorCPPTests.mm */,
 				00B7E2EF1BE05DAF00B7B779 /* gu_util.cpp */,
 				00B7E2F01BE05DAF00B7B779 /* gu_util.h */,
-				00B7E2ED1BE05ACE00B7B779 /* ArrayTest.h */,
-				00B7E2EE1BE05ACE00B7B779 /* MyTest.h */,
+				003579D01BE3547F0031D894 /* ArrayTest.h */,
+				003579D11BE3547F0031D894 /* MYTest.h */,
 				00B7E2E81BE0594900B7B779 /* Info.plist */,
 			);
 			path = ClassgeneratorCPPTests;
@@ -171,7 +169,6 @@
 				00D9678B1B886CAE00D47595 /* ClassData.swift */,
 				00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */,
 				00E3837F1BB92E2D00B5B76A /* InputData.swift */,
-				00B7E2F21BE067CD00B7B779 /* Wrapper.swift */,
 			);
 			path = classgenerator;
 			sourceTree = "<group>";
@@ -322,9 +319,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				009DB6301BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m in Sources */,
+				003579CE1BE354650031D894 /* wb_array_test.c in Sources */,
+				003579CF1BE354650031D894 /* wb_my_test.c in Sources */,
 				00340C321BDF3F2100501211 /* gu_util.cpp in Sources */,
-				00BA37561BD6514300169017 /* wb_array_test.c in Sources */,
-				00B451361BD4F066001E6AB5 /* wb_my_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +350,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E383801BB92E2D00B5B76A /* InputData.swift in Sources */,
-				00B7E2F31BE067CD00B7B779 /* Wrapper.swift in Sources */,
 				00021F611B897D1100F7F681 /* GNUlicense.swift in Sources */,
 				00BCC1051B7EDA17002C72B7 /* main.swift in Sources */,
 				00542AB21BACEDDD0074AD7D /* stringmanipulation.swift in Sources */,
@@ -373,7 +369,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator/**",
+					"$(SRCROOT)/classgenerator/testfiles/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -390,7 +386,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator/**",
+					"$(SRCROOT)/classgenerator/testfiles/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -407,7 +403,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator/**",
+					"$(SRCROOT)/classgenerator/testfiles/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -673,6 +669,7 @@
 				00B7E2EB1BE0594900B7B779 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		00BAD0AC1B9827F300A3A062 /* Build configuration list for PBXNativeTarget "Tests" */ = {
 			isa = XCConfigurationList;

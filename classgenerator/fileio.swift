@@ -344,7 +344,7 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        /// if the variable is an array                    // ****** tidy up all the !first  ************
+        /// if the variable is an array
         if inputData[i].varArraySize > 0 {
         
             if first {
@@ -470,7 +470,7 @@ func generateWbC(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        /// if the variable is an array                    // ****** tidy up all the !first  ************
+        /// if the variable is an array
         if inputData[i].varArraySize > 0 {
             
             if first {
@@ -936,6 +936,127 @@ func generateCPPStruct(data: ClassData) -> String {
 
 
 
+/**
+* This function generates the text to comprise a whiteboard Swiftwrapper file
+* @param data is an object containing information about the class to generate
+* @return A string which will become the Swift wrapper file
+*/
+func generateSwiftExtension(data: ClassData) -> String {
+    
+    
+    // Add the struct comment
+    var swiftExt = "/** \n"
+    
+    for line in structComment {
+        swiftExt += " * \(line) \n"
+    }
+    
+    swiftExt += " */ \n"
+    
+    
+    // Convenience constructor
+    swiftExt += "extension \(data.wb) { \n\n" +
+    
+        "    convenience init () { \n"
+    
+    for i in 0...inputData.count-1 {
+        
+        if inputData[i].varArraySize == 0 {
+            let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+            swiftExt += "        self.\(inputData[i].varName) = \(defaultValue) \n"
+        }
+        else {   // an array
+
+            if inputData[i].varDefault == "" {
+                
+                print("Unspecified array of type \(inputData[i].varType) set to all: \(variables[inputData[i].varType]!.defaultValue)")
+                swiftExt += "        self.\(inputData[i].varName) = \(makeArrayDefault(i)) \n"
+            }
+            else {
+                swiftExt += "        self.\(inputData[i].varName) = \(inputData[i].varDefault) \n"
+            }
+        }
+    }
+    
+    // extension
+    swiftExt += "    } \n" +
+        "} \n\n" +
+    
+        "extension \(data.wb): CustomStringConvertible { \n\n" +
+    
+        "/** convert to a description string */  \n" +
+        "    var description: String { \n\n" +
+        "        var descString = \"\" \n\n"
+    
+    // description
+    var first = true
+    
+    for i in 0...inputData.count-1 {
+        
+        if !first {
+            swiftExt += "        descString += \", \" \n"
+        }
+        
+        if inputData[i].varArraySize == 0 {
+            
+            swiftExt += "        descString += \"\(inputData[i].varName)= \\(\(inputData[i].varName)) \" \n"
+        }
+        else {
+            
+            swiftExt += "\n        var \(inputData[i].varName)_first = true \n\n"
+            
+            swiftExt += "        descString += \"\(inputData[i].varName)={\" \n\n" +
+                
+                "        for i in 0...\(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1 { \n\n" +
+            
+                "            descString += \(inputData[i].varName)_first ? \"\" : \",\"\n" +
+                "            descString += \"\\(\(inputData[i].varName)[i])\" \n\n" +
+                "            \(inputData[i].varName)_first = false  \n" +
+                "        } \n\n" +
+            
+                "        descString += \"}\" \n\n"
+        }
+        first = false
+    }
+    
+    swiftExt += "        return descString \n" +
+        
+    "  } \n" +
+    "} \n"
+    
+    return swiftExt
+}
+
+
+
+/**
+* This function generates the text to comprise default string for an array
+* @param ind is the index of the inputData[] array
+* @return A string which is the literal array default
+*/
+func makeArrayDefault (ind: Int) -> String {
+    
+    var defaultString = "{"
+    
+    var first = true
+    
+    for i in 0...inputData[ind].varArraySize-1 {
+        
+        if !first {
+            defaultString += ","
+        }
+        
+        defaultString += "\(variables[inputData[ind].varType]!.defaultValue)"
+        first = false
+    }
+    
+    defaultString += "}"
+
+    return defaultString
+}
+
+
+
 
 /**
  * This function opens the file streams and writes the whiteboard C files
@@ -1006,7 +1127,7 @@ func generateCPPFile(data: ClassData) -> Void {
     
     let text = getCreatorDetailsCommentCPP(data) + getLicense(data) + generateCPPStruct(data)
     
-    fputs( text, fs )
+    fputs(text, fs)
     
     closeFileStream(fs)
 }
@@ -1018,7 +1139,7 @@ func generateCPPFile(data: ClassData) -> Void {
 * It uses helper functions to generate the content, including the license information
 * @param data is an object containing information about the class to generate
 */
-func generateSwiftFile(data: ClassData) -> Void {
+func generateSwiftFiles(data: ClassData) -> Void {
     
     let filePath = data.workingDirectory + "/" + data.cpp + ".swift"
     
@@ -1033,9 +1154,29 @@ func generateSwiftFile(data: ClassData) -> Void {
     
     let text = getCreatorDetailsCommentSwift(data) + getLicense(data) + generateSwiftExtension(data)
     
-    fputs( text, fs )
+    fputs(text, fs)
     
     closeFileStream(fs)
+    
+    
+    // make a bridging header
+    // \(data.cpp)-Bridging-Header.h
+    let filePathBH = data.workingDirectory + "/" + data.cpp + "-Bridging-Header.h"
+    
+    // open a filestream for reading
+    let fsbh : UnsafeMutablePointer<FILE> = fopen( filePathBH, "w" )
+    
+    if fsbh == nil {
+        // file did not open
+        print("\(data.cpp)-Bridging-Header.h : Could not create file\n")
+        exit(EXIT_FAILURE)
+    }
+    
+    let textbh = getCreatorDetailsCommentSwiftBH(data) + getLicense(data) + "#import \"\(data.wb).h\" \n"
+    
+    fputs(textbh, fsbh)
+    
+    closeFileStream(fsbh)
 }
 
 

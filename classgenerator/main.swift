@@ -97,19 +97,20 @@ var userName = parseInput(inputText)
 var data = ClassData(workingDirectory: workingDirectory, inputFilenameNoExtension: inputFilenameNoExtension, userName: userName)
 
 // generate the WB files
+print("\nGenerating WB files...")
 generateWBFiles(data)
-print("Generated WB files")
+
 
 // generate the c++ wrapper
 if makeCPPWrapper {
+    print("\nGenerated C++ wrapper...")
     generateCPPFile(data)
-    print("Generated C++ wrapper")
 }
 
 // generate the Swift wrapper
 if makeSwiftWrapper {
-    generateSwiftFile(data)
-    print("Generated Swift wrapper")
+    print("\nGenerating Swift wrapper and Bridging Header...")
+    generateSwiftFiles(data)
 }
 
 
