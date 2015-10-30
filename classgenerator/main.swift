@@ -106,8 +106,11 @@ if makeCPPWrapper {
     print("Generated C++ wrapper")
 }
 
-
-
+// generate the Swift wrapper
+if makeSwiftWrapper {
+    generateSwiftFile(data)
+    print("Generated Swift wrapper")
+}
 
 
 

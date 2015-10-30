@@ -1012,6 +1012,34 @@ func generateCPPFile(data: ClassData) -> Void {
 }
 
 
+
+/**
+* This function opens a file stream and writes the C++ wrapper
+* It uses helper functions to generate the content, including the license information
+* @param data is an object containing information about the class to generate
+*/
+func generateSwiftFile(data: ClassData) -> Void {
+    
+    let filePath = data.workingDirectory + "/" + data.cpp + ".swift"
+    
+    // open a filestream for reading
+    let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
+    
+    if fs == nil {
+        // file did not open
+        print("\(data.cpp).swift : Could not create file\n")
+        exit(EXIT_FAILURE)
+    }
+    
+    let text = getCreatorDetailsCommentSwift(data) + getLicense(data) + generateSwiftExtension(data)
+    
+    fputs( text, fs )
+    
+    closeFileStream(fs)
+}
+
+
+
 /**
  * This determines the description string buffer size
  * which will be declared as a constant in the generated files
