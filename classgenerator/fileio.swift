@@ -841,7 +841,7 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     else {
         
-        cppStruct += "        { \n"
+        cppStruct += "\n        { \n"
         
         for mem in memcpyForArrays {
             cppStruct += "            \(mem); \n"
