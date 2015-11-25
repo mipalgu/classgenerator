@@ -929,7 +929,8 @@ func generateCPPStruct(data: ClassData) -> String {
             "class \(classAlias) : public \(data.cpp) {}; \n"
     }
     
-    cppStruct += "} /// namespace guWhiteboard \n"
+    cppStruct += "} /// namespace guWhiteboard \n" +
+        "#endif \(data.cpp)_DEFINED \n"
 
     return cppStruct
 }
