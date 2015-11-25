@@ -841,7 +841,7 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     else {
         
-        cppStruct += "\n        { \n"
+        cppStruct += "        { \n"
         
         for mem in memcpyForArrays {
             cppStruct += "            \(mem); \n"
@@ -930,7 +930,7 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     
     cppStruct += "} /// namespace guWhiteboard \n" +
-        "#endif \(data.cpp)_DEFINED \n"
+        "#endif /// \(data.cpp)_DEFINED \n"
 
     return cppStruct
 }
