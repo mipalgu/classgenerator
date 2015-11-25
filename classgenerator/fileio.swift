@@ -290,10 +290,10 @@ func generateWbHeader(data: ClassData) -> String {
         cStruct1 += "    /** \(inputData[i].varComment) */ \n"
         
         if inputData[i].varArraySize == 0 {  // not an array
-            cStruct1 += "    PROPERTY(\(inputData[i].varType), \(inputData[i].varName)); \n\n"
+            cStruct1 += "    PROPERTY(\(inputData[i].varType), \(inputData[i].varName)) \n\n"
         }
         else {
-            cStruct1 += "    ARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE);\n\n"
+            cStruct1 += "    ARRAY_PROPERTY(\(inputData[i].varType), \(inputData[i].varName), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)\n\n"
         }
     }
     
