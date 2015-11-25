@@ -77,13 +77,13 @@
 struct wb_my_test 
 { 
     /** a boolean */ 
-    PROPERTY(bool, pressed); 
+    PROPERTY(bool, pressed) 
 
     /** pointX is a number */ 
-    PROPERTY(int16_t, pointX); 
+    PROPERTY(int16_t, pointX) 
 
     /** pointY is a number */ 
-    PROPERTY(int16_t, pointY); 
+    PROPERTY(int16_t, pointY) 
 
 }; 
 

@@ -78,10 +78,10 @@
 struct wb_sample_input 
 { 
     /** Pressed is a boolean that has an initial value of true */ 
-    PROPERTY(bool, pressed); 
+    PROPERTY(bool, pressed) 
 
     /** Point2D is an array of int16_t */ 
-    ARRAY_PROPERTY(int16_t, point2D, SAMPLE_INPUT_POINT2D_ARRAY_SIZE);
+    ARRAY_PROPERTY(int16_t, point2D, SAMPLE_INPUT_POINT2D_ARRAY_SIZE)
 
 }; 
 

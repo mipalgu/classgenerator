@@ -78,13 +78,13 @@
 struct wb_array_test 
 { 
     /** A comment about pressed */ 
-    PROPERTY(bool, pressed); 
+    PROPERTY(bool, pressed) 
 
     /** a comment about array16 */ 
-    ARRAY_PROPERTY(int16_t, array16, ARRAY_TEST_ARRAY16_ARRAY_SIZE);
+    ARRAY_PROPERTY(int16_t, array16, ARRAY_TEST_ARRAY16_ARRAY_SIZE)
 
     /** a comment about bools */ 
-    ARRAY_PROPERTY(bool, bools, ARRAY_TEST_BOOLS_ARRAY_SIZE);
+    ARRAY_PROPERTY(bool, bools, ARRAY_TEST_BOOLS_ARRAY_SIZE)
 
 }; 
 
