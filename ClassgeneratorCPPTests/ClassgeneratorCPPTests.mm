@@ -17,18 +17,26 @@
 
 @implementation ClassgeneratorCPPTests
 
-- (void)testSimpleDefaultConstructor {
+- (void)testSimpleConstructors {
 
-    wb_my_test testStruct;
+    wb_my_test testStruct;         // pressed=true, pointX=2, pointY=0
+    wb_my_test testStructCopy;
     
-    XCTAssertEqual(testStruct.pressed, true, "pressed not set");
-    XCTAssertEqual(testStruct.pointX, 2, "pointX not set");
-    XCTAssertEqual(testStruct.pointY, 0, "pointY not set");
+    testStruct.pressed() = false;
+    testStruct.pointX() = 5;
+    testStruct.pointY() = 7;
+    
+    testStructCopy = testStruct;
+
+    XCTAssertEqual(testStructCopy.pressed(), false, @"pressednot set");
+    XCTAssertEqual(testStructCopy.pointX(), 5, @"pointX not set");
+    XCTAssertEqual(testStructCopy.pointY(), 7, @"pointY not set");
 }
 
 
 - (void)testArraysDefaultConstructor {
     
+    /*
     wb_array_test testStruct;
     
     XCTAssertEqual(testStruct.pressed, false, "pressed not set");
@@ -41,6 +49,7 @@
     XCTAssertEqual(testStruct.bools[0], false, "bools[0] not set");
     XCTAssertEqual(testStruct.bools[1], false, "bools[1] not set");
     XCTAssertEqual(testStruct.bools[2], false, "bools[2] not set");
+     */
 }
 
 

@@ -773,16 +773,24 @@ func generateCPPStruct(data: ClassData) -> String {
             "    { \n\n" +
         
             "        /** Default constructor */ \n" +
-            "        \(data.cpp)() : "
+            "        \(data.cpp)("
     
     var initialiseArrays : [String] = []
     var memcpyForArrays : [String] = []
     
+    var first = true
+    
     for i in 0...inputData.count-1 {
         
         if inputData[i].varArraySize == 0 {
+            
+            if !first {
+                cppStruct += ", "
+            }
+            
             let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
-            cppStruct += "_\(inputData[i].varName)(\(defaultValue))"
+            cppStruct += "\(inputData[i].varType) \(inputData[i].varName) = \(defaultValue)"
+            first = false
         }
         else {   // an array
  
@@ -801,13 +809,14 @@ func generateCPPStruct(data: ClassData) -> String {
             memcpyForArrays.append("memcpy(\(inputData[i].varName), &other, sizeof(\(data.wb)))")
         }
         
-        if i < inputData.count-1 {
-            cppStruct += ", "
-        }
+//        if i < inputData.count-1 {
+//            cppStruct += ", "
+//        }
     }
     
     if initialiseArrays.count == 0 {
-        cppStruct += " {} \n\n"
+        
+        cppStruct += "): \(data.wb)() {} \n\n"
     }
     else {
         cppStruct += "\n        { \n"
@@ -819,22 +828,8 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     
     cppStruct += "        /** Copy Constructor */ \n" +
-    "        \(data.cpp)(const \(data.wb) &other) : \n"
+    "        \(data.cpp)(const \(data.cpp) &other) : \(data.wb)()"
     
-    var first = true
-    
-    for i in 0...inputData.count-1 {
-        
-        if inputData[i].varArraySize == 0 {
-            
-            if !first {
-                cppStruct += ", \n"
-            }
-            
-            cppStruct += "            _\(inputData[i].varName)(other._\(inputData[i].varName))"
-            first = false
-        }
-    }
     
     if memcpyForArrays.count == 0 {
         cppStruct += " {} \n\n"
@@ -850,14 +845,14 @@ func generateCPPStruct(data: ClassData) -> String {
     }
 
     cppStruct += "        /** Assignment Operator */ \n" +
-        "        \(data.cpp) &operator = (const \(data.wb) &other) \n" +
+        "        \(data.cpp) &operator = (const \(data.cpp) &other) \n" +
         "        { \n"
     
     
     for i in 0...inputData.count-1 {
         
         if inputData[i].varArraySize == 0 {
-            cppStruct += "            _\(inputData[i].varName) = other._\(inputData[i].varName); \n"
+            cppStruct += "            set_\(inputData[i].varName)(other.\(inputData[i].varName)()); \n"
         }
     }
     
