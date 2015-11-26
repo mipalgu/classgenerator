@@ -782,20 +782,22 @@ func generateCPPStruct(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
+        if !first {
+            cppStruct += ", "
+        }
+        
+        first = false
+        
         if inputData[i].varArraySize == 0 {
-            
-            if !first {
-                cppStruct += ", "
-            }
             
             let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
             cppStruct += "\(inputData[i].varType) \(inputData[i].varName) = \(defaultValue)"
-            first = false
+            
         }
         else {   // an array
  
             //let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault  // String((inputData[i].varDefault).characters.dropFirst().dropLast())
-            cppStruct += "_\(inputData[i].varName)()"
+//            cppStruct += "\(inputData[i].varType) \(inputData[i].varName)[\(inputData[i].varArraySize)] = "
             
             if inputData[i].varDefault == "" {
                 
@@ -819,7 +821,7 @@ func generateCPPStruct(data: ClassData) -> String {
         cppStruct += "): \(data.wb)() {} \n\n"
     }
     else {
-        cppStruct += "\n        { \n"
+        cppStruct += ")\n        { \n"
         
         for a in initialiseArrays {
             cppStruct += "            \(a); \n"
@@ -828,10 +830,10 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     
     cppStruct += "        /** Copy Constructor */ \n" +
-    "        \(data.cpp)(const \(data.cpp) &other) : \(data.wb)()"
+    "        \(data.cpp)(const \(data.cpp) &other) : \(data.wb)() {}"
     
     
-    if memcpyForArrays.count == 0 {
+/*    if memcpyForArrays.count == 0 {
         cppStruct += " {} \n\n"
     }
     else {
@@ -843,7 +845,7 @@ func generateCPPStruct(data: ClassData) -> String {
         }
         cppStruct += "        } \n\n"
     }
-
+*/
     cppStruct += "        /** Assignment Operator */ \n" +
         "        \(data.cpp) &operator = (const \(data.cpp) &other) \n" +
         "        { \n"

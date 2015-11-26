@@ -10,6 +10,7 @@
 #import "gu_util.h"
 #import "gusimplewhiteboard.h"
 #import "MYTest.h"
+#import "ArrayTest.h"
 
 @interface ClassgeneratorCPPTests : XCTestCase
 
@@ -34,9 +35,9 @@
 }
 
 
-- (void)testArraysDefaultConstructor {
+- (void)testArraysConstructors {
     
-    /*
+    
     wb_array_test testStruct;
     
     XCTAssertEqual(testStruct.pressed, false, "pressed not set");
@@ -49,7 +50,7 @@
     XCTAssertEqual(testStruct.bools[0], false, "bools[0] not set");
     XCTAssertEqual(testStruct.bools[1], false, "bools[1] not set");
     XCTAssertEqual(testStruct.bools[2], false, "bools[2] not set");
-     */
+     
 }
 
 
