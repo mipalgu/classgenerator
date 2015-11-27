@@ -80,7 +80,9 @@ namespace guWhiteboard
     { 
 
         /** Default constructor */ 
-        MYTest(bool pressed = true, int16_t pointX = 2, int16_t pointY = 0): wb_my_test() {} 
+        MYTest(): pressed(true), pointX(2), pointY(0) {
+	
+	} 
 
         /** Copy Constructor */ 
         MYTest(const MYTest &other) : wb_my_test() {} 

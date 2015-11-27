@@ -79,9 +79,12 @@ namespace guWhiteboard
     { 
 
         /** Default constructor */ 
-        ArrayTest(bool pressed = false)
+        ArrayTest(bool pressed = false) : pressed(false)
         { 
-            int16_t array16[4] = {1,2,3,4}; 
+	    set_array16(val, 0);
+	    set_propertName(0, val);
+	    set_propertName(0, val);
+	    set_propertName(0, val);
             memset(_bools, false, ARRAY_TEST_BOOLS_ARRAY_SIZE); 
         } 
 
@@ -98,6 +101,7 @@ namespace guWhiteboard
             set_pressed(other.pressed()); 
             memcpy(array16, &other, sizeof(wb_array_test)); 
             memcpy(bools, &other, sizeof(wb_array_test)); 
+	    set_array16(other.array16(0), 0);
             return *this; 
         } 
 
