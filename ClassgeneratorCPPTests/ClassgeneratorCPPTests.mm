@@ -10,7 +10,7 @@
 #import "gu_util.h"
 #import "gusimplewhiteboard.h"
 #import "MYTest.h"
-//#import "ArrayTest.h"
+#import "ArrayTest.h"
 
 @interface ClassgeneratorCPPTests : XCTestCase
 
@@ -63,24 +63,62 @@
     XCTAssertEqual(testStructCopy.pointY(), 7, @"pointY not set");
 }
 
-- (void)testArraysConstructors {
+- (void)testArraysDefaultConstructor {
     
-    /*
-    wb_array_test testStruct;
+    guWhiteboard::ArrayTest testStruct;
     
-    XCTAssertEqual(testStruct.pressed, false, "pressed not set");
+    XCTAssertEqual(testStruct.pressed(), false, @"pressed not set");
     
-    XCTAssertEqual(testStruct.array16[0], 1, "array16[0] not set");
-    XCTAssertEqual(testStruct.array16[1], 2, "array16[1] not set");
-    XCTAssertEqual(testStruct.array16[2], 3, "array16[2] not set");
-    XCTAssertEqual(testStruct.array16[3], 4, "array16[3] not set");
+    XCTAssertEqual(testStruct.array16(0), 1, @"array16[0] not set");
+    XCTAssertEqual(testStruct.array16(1), 2, @"array16[1] not set");
+    XCTAssertEqual(testStruct.array16(2), 3, @"array16[2] not set");
+    XCTAssertEqual(testStruct.array16(3), 4, @"array16[3] not set");
     
-    XCTAssertEqual(testStruct.bools[0], false, "bools[0] not set");
-    XCTAssertEqual(testStruct.bools[1], false, "bools[1] not set");
-    XCTAssertEqual(testStruct.bools[2], false, "bools[2] not set");
-     */
-     
+    XCTAssertEqual(testStruct.bools(0), false, @"bools[0] not set");
+    XCTAssertEqual(testStruct.bools(1), false, @"bools[1] not set");
+    XCTAssertEqual(testStruct.bools(2), false, @"bools[2] not set");
 }
+
+
+- (void)testArraysCopyConstructor {
+    
+    guWhiteboard::ArrayTest testStructFirst;
+    
+    guWhiteboard::ArrayTest testStruct(testStructFirst);
+    
+    XCTAssertEqual(testStruct.pressed(), false, @"pressed not set");
+    
+    XCTAssertEqual(testStruct.array16(0), 1, @"array16[0] not set");
+    XCTAssertEqual(testStruct.array16(1), 2, @"array16[1] not set");
+    XCTAssertEqual(testStruct.array16(2), 3, @"array16[2] not set");
+    XCTAssertEqual(testStruct.array16(3), 4, @"array16[3] not set");
+    
+    XCTAssertEqual(testStruct.bools(0), false, @"bools[0] not set");
+    XCTAssertEqual(testStruct.bools(1), false, @"bools[1] not set");
+    XCTAssertEqual(testStruct.bools(2), false, @"bools[2] not set");
+}
+
+- (void)testArraysCopyConstructor2 {
+    
+    guWhiteboard::ArrayTest testStructFirst;
+    
+    testStructFirst.array16(1) = 666;
+    testStructFirst.bools(0) = true;
+    
+    guWhiteboard::ArrayTest testStruct(testStructFirst);
+    
+    XCTAssertEqual(testStruct.pressed(), false, @"pressed not set");
+    
+    XCTAssertEqual(testStruct.array16(0), 1, @"array16[0] not set");
+    XCTAssertEqual(testStruct.array16(1), 666, @"array16[1] not set");
+    XCTAssertEqual(testStruct.array16(2), 3, @"array16[2] not set");
+    XCTAssertEqual(testStruct.array16(3), 4, @"array16[3] not set");
+    
+    XCTAssertEqual(testStruct.bools(0), true, @"bools[0] not set");
+    XCTAssertEqual(testStruct.bools(1), false, @"bools[1] not set");
+    XCTAssertEqual(testStruct.bools(2), false, @"bools[2] not set");
+}
+
 
 
 @end

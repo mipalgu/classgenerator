@@ -77,31 +77,53 @@ namespace guWhiteboard
      */ 
     class ArrayTest: public wb_array_test 
     { 
-
+    public:    
         /** Default constructor */ 
-        ArrayTest(bool pressed = false) : pressed(false)
-        { 
-	    set_array16(val, 0);
-	    set_propertName(0, val);
-	    set_propertName(0, val);
-	    set_propertName(0, val);
-            memset(_bools, false, ARRAY_TEST_BOOLS_ARRAY_SIZE); 
+        ArrayTest()
+        {
+            set_pressed(false);
+            
+            set_array16(1, 0);
+            set_array16(2, 1);
+            set_array16(3, 2);
+            set_array16(4, 3);
+            
+            set_bools(false, 0);
+            set_bools(false, 1);
+            set_bools(false, 2);
         } 
 
         /** Copy Constructor */ 
         ArrayTest(const ArrayTest &other) : wb_array_test()
         { 
-            memcpy(array16, &other, sizeof(wb_array_test)); 
-            memcpy(bools, &other, sizeof(wb_array_test)); 
+            set_pressed(other.pressed()); 
+        //    memcpy(array16, &other, sizeof(wb_array_test)); 
+        //    memcpy(bools, &other, sizeof(wb_array_test)); 
+            set_array16(other.array16(0), 0);
+            set_array16(other.array16(1), 1);
+            set_array16(other.array16(2), 2);
+            set_array16(other.array16(3), 3);
+            
+            set_bools(other.bools(0), 0);
+            set_bools(other.bools(1), 1);
+            set_bools(other.bools(2), 2);
         } 
 
         /** Assignment Operator */ 
         ArrayTest &operator = (const ArrayTest &other) 
         { 
             set_pressed(other.pressed()); 
-            memcpy(array16, &other, sizeof(wb_array_test)); 
-            memcpy(bools, &other, sizeof(wb_array_test)); 
-	    set_array16(other.array16(0), 0);
+        //    memcpy(array16, &other, sizeof(wb_array_test)); 
+        //    memcpy(bools, &other, sizeof(wb_array_test)); 
+            set_array16(other.array16(0), 0);
+            set_array16(other.array16(1), 1);
+            set_array16(other.array16(2), 2);
+            set_array16(other.array16(3), 3);
+            
+            set_bools(other.bools(0), 0);
+            set_bools(other.bools(1), 1);
+            set_bools(other.bools(2), 2);
+            
             return *this; 
         } 
 
