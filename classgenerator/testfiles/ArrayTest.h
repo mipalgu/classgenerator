@@ -128,17 +128,17 @@ namespace guWhiteboard
             std::string descr = buffer; 
             return descr; 
 #else 
-            std::string description() const 
-            { 
+        //    std::string description() //const 
+        //    { 
                 std::ostringstream ss; 
-                ss << "pressed=" << pressed; 
+                ss << "pressed=" << pressed(); 
                 ss << ", "; 
 
                 bool array16_first = true; 
                 ss << "array16="; 
                 for (size_t i = 0; i < ARRAY_TEST_ARRAY16_ARRAY_SIZE-1; i++) 
                 { 
-                    ss << (array16_first ? "" : ",") << array16[i]; 
+                    ss << (array16_first ? "" : ",") << array16(i); 
                     array16_first = false;  
                 } 
                 ss << ", "; 
@@ -147,12 +147,12 @@ namespace guWhiteboard
                 ss << "bools="; 
                 for (size_t i = 0; i < ARRAY_TEST_BOOLS_ARRAY_SIZE-1; i++) 
                 { 
-                    ss << (bools_first ? "" : ",") << bools[i]; 
+                    ss << (bools_first ? "" : ",") << bools(i); 
                     bools_first = false;  
                 } 
 
                 return ss.str(); 
-            } 
+        //    } 
 #endif /// USE_WB_ARRAY_TEST_C_CONVERSION
         } 
 #endif ///   WHITEBOARD_POSTER_STRING_CONVERSION

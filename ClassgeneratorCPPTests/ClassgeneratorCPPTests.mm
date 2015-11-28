@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#include <iostream>
 #import "gu_util.h"
 #import "gusimplewhiteboard.h"
 #import "MYTest.h"
@@ -119,6 +120,15 @@
     XCTAssertEqual(testStruct.bools(2), false, @"bools[2] not set");
 }
 
+
+- (void)testWBPosterStringConversion {
+    
+    guWhiteboard::MYTest testStruct;
+    
+    std::string desc = testStruct.description();
+    
+    std::cout << desc;
+}
 
 
 @end

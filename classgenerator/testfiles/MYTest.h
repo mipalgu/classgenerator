@@ -59,6 +59,8 @@
  */ 
 
 
+#define WHITEBOARD_POSTER_STRING_CONVERSION 
+
 #ifndef MYTest_DEFINED 
 #define MYTest_DEFINED 
 
@@ -113,17 +115,17 @@ namespace guWhiteboard
             std::string descr = buffer; 
             return descr; 
 #else 
-            std::string description() const 
-            { 
+        //    std::string description() //const 
+        //    { 
                 std::ostringstream ss; 
-                ss << "pressed=" << pressed; 
+                ss << "pressed=" << pressed(); 
                 ss << ", "; 
-                ss << "pointX=" << pointX; 
+                ss << "pointX=" << pointX(); 
                 ss << ", "; 
-                ss << "pointY=" << pointY; 
+                ss << "pointY=" << pointY(); 
 
                 return ss.str(); 
-            } 
+        //    } 
 #endif /// USE_WB_MY_TEST_C_CONVERSION
         } 
 #endif ///   WHITEBOARD_POSTER_STRING_CONVERSION
