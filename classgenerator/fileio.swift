@@ -874,8 +874,6 @@ func generateCPPStruct(data: ClassData) -> String {
                 "            return descr; \n" +
                 "#else \n" +
         
-                "            std::string description() const \n" +
-                "            { \n" +
                 "                std::ostringstream ss; \n"
     
                 var first = true
@@ -886,30 +884,31 @@ func generateCPPStruct(data: ClassData) -> String {
                         cppStruct += "                ss << \", \"; \n"
                     }
                     
+                    // not an array
                     if inputData[i].varArraySize == 0 {
                     
-                        cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName); \n"
+                        cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)(); \n"
                     }
+                    // an array
                     else {
                         
                         cppStruct += "\n                bool \(inputData[i].varName)_first = true; \n"
                             
-                        cppStruct += "                ss << \"\(inputData[i].varName)=\"; \n" +
+                        cppStruct += "                ss << \"\(inputData[i].varName)={\"; \n" +
                         
                             "                for (size_t i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1; i++) \n" +
                             "                { \n" +
                         
-                            "                    ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)[i]; \n" +
+                            "                    ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i); \n" +
                             "                    \(inputData[i].varName)_first = false;  \n" +
                             "                } \n"
+                        cppStruct += "                ss << \"}\"; \n"
 
                     }
                     first = false
                 }
 
-                cppStruct += "\n                return ss.str(); \n" +
-                    
-                "            } \n" +
+                cppStruct += "\n                return ss.str(); \n\n" +
     
                 "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
                 "        } \n" +

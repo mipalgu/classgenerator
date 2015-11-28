@@ -131,4 +131,15 @@
 }
 
 
+- (void)testArraysWBPosterStringConversion {
+    
+    guWhiteboard::ArrayTest testStruct;
+    
+    std::string desc = testStruct.description();
+    
+    std::cout << desc;
+}
+
+
+
 @end
