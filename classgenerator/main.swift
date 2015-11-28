@@ -23,7 +23,9 @@ input.removeAtIndex(0)      //remove the program name
 
 if input.count == 0 {
     
-    print("Filename was not specified as an argument. USAGE...")
+    print("Filename was not specified as an argument.")
+    print("Usage is: classgenerator filename.txt [cs]")
+    print("Please see the user manual for more information.")
     exit(EXIT_FAILURE)
 }
 
@@ -42,7 +44,8 @@ for argument in input {
             makeSwiftWrapper = true
         
         case "usage", "-usage":
-            print(" USAGE information to be added.... ")
+            print("Usage is: classgenerator filename.txt [cs]")
+            print("Please see the user manual for more information.")
             exit(EXIT_FAILURE);
 
         default:
@@ -103,7 +106,7 @@ generateWBFiles(data)
 
 // generate the c++ wrapper
 if makeCPPWrapper {
-    print("\nGenerated C++ wrapper...")
+    print("\nGenerating C++ wrapper...")
     generateCPPFile(data)
 }
 
@@ -113,5 +116,6 @@ if makeSwiftWrapper {
     generateSwiftFiles(data)
 }
 
+print("\nFiles have been created.")
 
 

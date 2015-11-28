@@ -770,83 +770,78 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "     */ \n" +
         
             "    class \(data.cpp): public \(data.wb) \n" +
-            "    { \n\n" +
+            "    { \n" +
+            "    public:\n" +
         
-            "        /** Default constructor */ \n" +
-            "        \(data.cpp)("
-    
-    var initialiseArrays : [String] = []
-    var memcpyForArrays : [String] = []
-    
-    var first = true
+            "        /** Designated Constructor */ \n" +
+            "        \(data.cpp)()\n" +
+            "        { \n"
     
     for i in 0...inputData.count-1 {
-        
-        if !first {
-            cppStruct += ", "
-        }
-        
-        first = false
         
         if inputData[i].varArraySize == 0 {
             
             let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
-            cppStruct += "\(inputData[i].varType) \(inputData[i].varName) = \(defaultValue)"
+            cppStruct += "            set_\(inputData[i].varName)(\(defaultValue)); \n"
             
         }
         else {   // an array
- 
-            //let defaultValue = inputData[i].varDefault == "" ? " " : inputData[i].varDefault  // String((inputData[i].varDefault).characters.dropFirst().dropLast())
-//            cppStruct += "\(inputData[i].varType) \(inputData[i].varName)[\(inputData[i].varArraySize)] = "
             
+            // no defaults for arrays
             if inputData[i].varDefault == "" {
                 
-                print("Unspecified array of type \(inputData[i].varType) set to all: \(variables[inputData[i].varType]!.defaultValue)")
-                initialiseArrays.append("memset(_\(inputData[i].varName), \(variables[inputData[i].varType]!.defaultValue), \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE)")
+                let arrayDefault = variables[inputData[i].varType]!.defaultValue
+                
+                print("Unspecified array of type \(inputData[i].varType) set to all: \(arrayDefault)")
+                
+                for j in 0...inputData[i].varArraySize {
+                    
+                    cppStruct += "            set_\(inputData[i].varName)(\(arrayDefault), \(j)); \n"
+                }
             }
+            // use defaults specified for arrays
             else {
-                initialiseArrays.append("_\(inputData[i].varName) = \(inputData[i].varDefault)")
+                
+                let defaultString = String((inputData[i].varDefault).characters.dropFirst().dropLast())  // remove braces
+                let defaults = defaultString.characters.split {$0 == ","}.map { String($0) }
+
+                for j in 0...inputData[i].varArraySize-1 {
+                    cppStruct += "            set_\(inputData[i].varName)(\(defaults[j]), \(j)); \n"
+                }
+                
             }
-            
-            memcpyForArrays.append("memcpy(\(inputData[i].varName), &other, sizeof(\(data.wb)))")
+
         }
         
-//        if i < inputData.count-1 {
-//            cppStruct += ", "
-//        }
     }
     
-    if initialiseArrays.count == 0 {
-        
-        cppStruct += "): \(data.wb)() {} \n\n"
-    }
-    else {
-        cppStruct += ")\n        { \n"
-        
-        for a in initialiseArrays {
-            cppStruct += "            \(a); \n"
-        }
-        cppStruct += "        } \n\n"
-    }
+
+    cppStruct += "        } \n\n"
     
     cppStruct += "        /** Copy Constructor */ \n" +
-    "        \(data.cpp)(const \(data.cpp) &other) : \(data.wb)() {}"
+    "        \(data.cpp)(const \(data.cpp) &other) : \(data.wb)() \n" +
+    "        { \n"
+
+    for i in 0...inputData.count-1 {
     
-    
-/*    if memcpyForArrays.count == 0 {
-        cppStruct += " {} \n\n"
-    }
-    else {
-        
-        cppStruct += "\n        { \n"
-        
-        for mem in memcpyForArrays {
-            cppStruct += "            \(mem); \n"
+        if inputData[i].varArraySize == 0 {
+            
+            cppStruct += "            set_\(inputData[i].varName)(other.\(inputData[i].varName)()); \n"
         }
-        cppStruct += "        } \n\n"
+        else {   // an array
+        
+            for j in 0...inputData[i].varArraySize-1 {
+                
+                cppStruct += "            set_\(inputData[i].varName)(other.\(inputData[i].varName)(\(j)), \(j)); \n"
+            }
+        }
     }
-*/
-    cppStruct += "        /** Assignment Operator */ \n" +
+    
+    
+    cppStruct += "        } \n\n"
+    
+    
+    cppStruct += "        /** Copy Assignment Operator */ \n" +
         "        \(data.cpp) &operator = (const \(data.cpp) &other) \n" +
         "        { \n"
     
@@ -854,12 +849,16 @@ func generateCPPStruct(data: ClassData) -> String {
     for i in 0...inputData.count-1 {
         
         if inputData[i].varArraySize == 0 {
+            
             cppStruct += "            set_\(inputData[i].varName)(other.\(inputData[i].varName)()); \n"
         }
-    }
-    
-    for mem in memcpyForArrays {
-        cppStruct += "            \(mem); \n"
+        else {   // an array
+            
+            for j in 0...inputData[i].varArraySize-1 {
+                
+                cppStruct += "            set_\(inputData[i].varName)(other.\(inputData[i].varName)(\(j)), \(j)); \n"
+            }
+        }
     }
     
     cppStruct += "            return *this; \n" +
@@ -879,7 +878,7 @@ func generateCPPStruct(data: ClassData) -> String {
                 "            { \n" +
                 "                std::ostringstream ss; \n"
     
-                first = true
+                var first = true
     
                 for i in 0...inputData.count-1 {
                     
