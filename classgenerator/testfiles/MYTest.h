@@ -78,12 +78,19 @@ namespace guWhiteboard
      */ 
     class MYTest: public wb_my_test 
     { 
-
+    public:
         /** Default constructor */ 
-        MYTest(): pressed(true), pointX(2), pointY(0) {
-	
-	} 
-
+//       MYTest(): pressed(true), pointX(2), pointY(0)  {} //Eugene
+        MYTest(bool pressed = true, int16_t pointX = 2, int16_t pointY = 0)
+        {
+            set_pressed(pressed);
+            set_pointX(pointX);
+            set_pointY(pointY);
+        } 
+ 
+//        Point2D(int16_t x = 0, int16_t y = 0): wb_point2d(x,y)  { /* better than set_x(x); set_y(y) */ }
+        
+        
         /** Copy Constructor */ 
         MYTest(const MYTest &other) : wb_my_test() {} 
 
