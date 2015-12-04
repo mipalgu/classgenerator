@@ -821,8 +821,71 @@ func generateCPPStruct(data: ClassData) -> String {
     }
     
 
+    cppStruct += "        } \n\n" +
+            "        /** Constructor */ \n" +
+            "        \(data.cpp)("
+            
+    for i in 0...inputData.count-1 {
+        
+        if inputData[i].varArraySize == 0 {
+            
+            let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+            if i > 0 {
+                cppStruct += ", "
+            }
+            cppStruct += "\(inputData[i].varType) \(inputData[i].varName) = \(defaultValue)"
+            
+        }
+        else {   // an array
+           //XXX NYI 
+        }
+        
+    }
+            cppStruct += ")\n" +
+            "        { \n"
+    
+    for i in 0...inputData.count-1 {
+        
+        if inputData[i].varArraySize == 0 {
+            
+            let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+            cppStruct += "            set_\(inputData[i].varName)(\(inputData[i].varName)); \n"
+            
+        }
+        else {   // an array
+            
+            // no defaults for arrays
+            if inputData[i].varDefault == "" {
+                
+                let arrayDefault = variables[inputData[i].varType]!.defaultValue
+                
+                print("Unspecified array of type \(inputData[i].varType) set to all: \(arrayDefault)")
+                
+                for j in 0...inputData[i].varArraySize {
+                    
+                    cppStruct += "            set_\(inputData[i].varName)(\(arrayDefault), \(j)); \n"
+                }
+            }
+            // use defaults specified for arrays
+            else {
+                
+                let defaultString = String((inputData[i].varDefault).characters.dropFirst().dropLast())  // remove braces
+                let defaults = defaultString.characters.split {$0 == ","}.map { String($0) }
+
+                for j in 0...inputData[i].varArraySize-1 {
+                    cppStruct += "            set_\(inputData[i].varName)(\(defaults[j]), \(j)); \n"
+                }
+                
+            }
+
+        }
+        
+    }
+    
+
     cppStruct += "        } \n\n"
     
+
     cppStruct += "        /** Copy Constructor */ \n" +
     "        \(data.cpp)(const \(data.cpp) &other) : \(data.wb)() \n" +
     "        { \n"
