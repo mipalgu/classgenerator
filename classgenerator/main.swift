@@ -8,7 +8,12 @@
 //  Copyright (c) 2015 Mick Hawkins. All rights reserved.
 //
 
+#if os(Linux)
+import Glibc
+#else
 import Darwin
+#endif
+
 
 
 // Get input filename from command line args
@@ -86,8 +91,8 @@ if !makeCPPWrapper && !makeSwiftWrapper {
 */
 
 // get current working path
-var cwd: [Int8] = Array(count: Int(MAXPATHLEN), repeatedValue: 0)
-let path = getcwd(&cwd, Int(MAXPATHLEN))
+var cwd: [Int8] = Array(count: Int(PATH_MAX), repeatedValue: 0)
+let path = getcwd(&cwd, Int(PATH_MAX))
 let workingDirectory = String.fromCString(path)! + "/"
 
 // get the text from the input file

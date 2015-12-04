@@ -9,7 +9,12 @@
 //  Creates the generated files.
 //
 
+#if os(Linux)
+import Glibc
+#else
 import Darwin
+#endif
+
 
 
 /// globals for use in file reading and output

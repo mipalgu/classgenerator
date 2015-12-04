@@ -8,7 +8,12 @@
 //  This struct stores the properties of the input variables
 //
 
+#if os(Linux)
+import Glibc
+#else
 import Darwin
+#endif
+
 
 struct inputVariable{
     
