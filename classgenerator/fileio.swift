@@ -886,9 +886,12 @@ func generateCPPStruct(data: ClassData) -> String {
     
     cppStruct += "            return *this; \n" +
                 "        } \n\n" +
-        
-                "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
-                "        std::string description() \n" +
+                "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n"
+
+    cppStruct += "        /** String Constructor */ \n" +
+    "        \(data.cpp)(const std::string &str) { \(data.wb)_from_string(this, str.c_str(); }  \n\n"
+
+     cppStruct += "        std::string description() \n" +
                 "        { \n" +
                 "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
                 "            char buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
