@@ -991,6 +991,174 @@ func generateCPPStruct(data: ClassData) -> String {
     
     
     
+    cppStruct += "        std::string from_string(const std::string &str) \n" +
+        "        { \n" +
+        "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
+        "            \(data.wb)_from_string(this, str); \n" +
+        "            return this; \n" +
+        
+        "#else \n"
+    
+////
+
+    cppStruct += "                std::istringstream iss; \n"
+        "                std::string strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
+        "                memset(strings, 0, sizeof(strings)); \n" +
+        "                std::string tokenS, tokenE; \n" +
+        "                int count = 0; \n"
+    
+    
+    var firstArray = true
+    var thereAreArrays = false
+    
+    for i in 0...inputData.count-1 {
+        
+        /// if the variable is an array
+        if inputData[i].varArraySize > 0 {
+            
+            thereAreArrays = true
+            
+            if firstArray {
+                cppStruct += "                int isArray = 0; \n"
+                "                std::string tokenB1, tokenB2; \n" +
+                firstArray = false
+            }
+            
+            cppStruct += "                std::string \(inputData[i].varName)_values[\(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE]; \n" +
+                
+                "                int \(inputData[i].varName)_count = 0; \n" +
+                "                int is_\(inputData[i].varName) = 1; \n\n"
+        }
+    }
+
+    
+    cppStruct += "                getline(iss, tokenS, ','); \n\n" +
+        
+        
+        "    while (tokenS != NULL) \n" +
+        "    { \n" +
+        "        tokenE = strchr(tokenS, '='); \n\n" +
+        
+        "        if (tokenE == NULL) \n" +
+        "        { \n " +
+        "            tokenE = tokenS; \n" +
+        "        } \n" +
+        "        else \n" +
+        "        { \n " +
+        "            tokenE.erase(0,1); \n" +
+    "        } \n\n"
+    
+    firstArray = true
+    
+    if thereAreArrays {
+        cppStruct += "        tokenB1 = strchr(gu_strtrim(tokenE), '{'); \n\n" +
+            
+            "        if (tokenB1 == NULL) \n" +
+            "        { \n" +
+            "            tokenB1 = tokenE; \n" +
+            "        } \n" +
+            "        else \n" +
+            "        { \n" +
+            "            // start of an array \n" +
+            "            tokenB1.erase(0,1); \n" +
+            "            isArray = 1; \n" +
+            "        } \n\n" +
+            
+            "        if (isArray) \n" +
+            "        { \n" +
+        "            tokenB2 = strchr(gu_strtrim(tokenB1), '}'); \n"
+        
+        for i in 0...inputData.count-1 {
+            
+            /// if the variable is an array
+            if inputData[i].varArraySize > 0 {
+                if !firstArray {
+                    cppStruct += "            else "
+                }
+                else {
+                    cppStruct += "            "
+                }
+                
+                firstArray = false
+                
+                cppStruct += "if (is_\(inputData[i].varName) == 1) \n" +
+                    "            { \n" +
+                    "                if (tokenB2 != NULL) \n" +
+                    "                { \n" +
+                    "                    tokenB1[strlen(tokenB1)-1] = 0; \n" +
+                    "                    is_\(inputData[i].varName) = 0; \n" +
+                    "                    isArray = 0; \n" +
+                    "                } \n\n" +
+                    
+                    "                \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
+                    "                \(inputData[i].varName)_count++; \n" +
+                "            } \n"
+            }
+        }
+        
+        
+        cppStruct += "        } \n" +
+            "        else \n" +
+            "        { \n" +
+            "            strings[count] = gu_strtrim(tokenE); \n" +
+        "        } \n\n"
+    }
+    else {
+        cppStruct += "        strings[count] = gu_strtrim(tokenE); \n\n"
+    }
+    
+    cppStruct += "        count++; \n" +
+        "        getline(iss, tokenS, ','); \n" +
+    "    } \n\n"
+    
+    
+    for i in 0...inputData.count-1 {
+        
+        /// if the variable is an array
+        if inputData[i].varArraySize > 0 {
+            
+            cppStruct += "    size_t \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
+                
+                "    for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
+            "    { \n"
+            
+            if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
+                cppStruct += "            set_\(inputData[i].varName)[i](std::strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || std::strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false); \n"
+            }
+            else {
+                cppStruct += "       set_\(inputData[i].varName)[i]((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(\(inputData[i].varName)_values[i])); \n"
+            }
+            
+            cppStruct += "    } \n\n"
+        }
+        else {
+            cppStruct += "    if (strings[\(i)] != NULL) \n"
+            
+            if inputData[i].varType == "bool" {
+                
+                cppStruct += "       set_\(inputData[i].varName)(std::strcmp(strings[\(i)], \"true\") == 0  || std::strcmp(strings[\(i)], \"1\") == 0 ? true : false); \n\n"
+            }
+            else {
+                cppStruct += "       set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
+            }
+            
+        }
+    }
+
+    
+    
+    
+/////
+    
+    
+    cppStruct +=
+        
+        "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
+    "        } \n"
+    
+    
+    
+    
     
     cppStruct += "#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION\n" +
     
