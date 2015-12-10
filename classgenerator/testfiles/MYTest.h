@@ -57,8 +57,8 @@
  * or write to the Free Software Foundation, Inc., 51 Franklin Street, 
  * Fifth Floor, Boston, MA  02110-1301, USA. 
  */ 
-#define WHITEBOARD_POSTER_STRING_CONVERSION
-#define USE_WB_MY_TEST_C_CONVERSION 
+#define WHITEBOARD_POSTER_STRING_CONVERSION      // just added for unit testing purposes, not in generated file
+#define USE_WB_MY_TEST_C_CONVERSION           // just added for unti testing purposes, not in generated file
 
 #ifndef MYTest_DEFINED 
 #define MYTest_DEFINED 
@@ -109,8 +109,8 @@ namespace guWhiteboard
         std::string description() 
         { 
 #ifdef USE_WB_MY_TEST_C_CONVERSION 
-            char buffer[MY_TEST_DESC_BUFFER_SIZE]; 
-            wb_my_test_description (this, buffer, sizeof(buffer)); 
+            char buffer[MY_TEST_DESC_BUFFER_SIZE];
+            wb_my_test_description(this, buffer, sizeof(buffer)); 
             std::string descr = buffer; 
             return descr; 
 #else 

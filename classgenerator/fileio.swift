@@ -792,7 +792,8 @@ func generateCPPStruct(data: ClassData) -> String {
             
         }
         else {   // an array
-           //XXX NYI 
+           
+           //  do nothing -- not including arrays as parameters yet
         }
         
     }
@@ -895,7 +896,7 @@ func generateCPPStruct(data: ClassData) -> String {
                 "        { \n" +
                 "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
                 "            char buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
-                "            \(data.wb)_description (this, buffer, sizeof(buffer)); \n" +
+                "            \(data.wb)_description(this, buffer, sizeof(buffer)); \n" +
                 "            std::string descr = buffer; \n" +
                 "            return descr; \n" +
                 "#else \n" +
@@ -919,7 +920,7 @@ func generateCPPStruct(data: ClassData) -> String {
                     else {
                         
                         cppStruct += "\n                bool \(inputData[i].varName)_first = true; \n"
-                            
+                        
                         cppStruct += "                ss << \"\(inputData[i].varName)={\"; \n" +
                         
                             "                for (size_t i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1; i++) \n" +
@@ -937,11 +938,64 @@ func generateCPPStruct(data: ClassData) -> String {
                 cppStruct += "\n                return ss.str(); \n\n" +
     
                 "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
-                "        } \n" +
-                "#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION\n" +
+                "        } \n\n"
+    
+    
+    cppStruct += "        std::string to_string() \n" +
+        "        { \n" +
+        "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
+        "            char buffer[\(data.caps)_DESC_BUFFER_SIZE]; \n" +
+        "            \(data.wb)_to_string(this, buffer, sizeof(buffer)); \n" +
+        "            std::string toString = buffer; \n" +
+        "            return toString; \n" +
+        "#else \n" +
+        
+    "                std::ostringstream ss; \n"
+    
+    first = true
+    
+    for i in 0...inputData.count-1 {
+        
+        if !first {
+            cppStruct += "                ss << \", \"; \n"
+        }
+        
+        // not an array
+        if inputData[i].varArraySize == 0 {
+            
+            cppStruct += "                ss << \(inputData[i].varName)(); \n"
+        }
+            // an array
+        else {
+            
+            cppStruct += "\n                bool \(inputData[i].varName)_first = true; \n"
+            
+            cppStruct += "                ss << \"{\"; \n" +
+                
+                "                for (size_t i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1; i++) \n" +
+                "                { \n" +
+                
+                "                    ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i); \n" +
+                "                    \(inputData[i].varName)_first = false;  \n" +
+            "                } \n"
+            cppStruct += "                ss << \"}\"; \n"
+            
+        }
+        first = false
+    }
+    
+    cppStruct += "\n                return ss.str(); \n\n" +
+        
+        "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
+        "        } \n"
+    
+    
+    
+    
+    cppStruct += "#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION\n" +
     
                 "    }; \n"
-                    
+    
     if classAlias != "" {
         cppStruct += "/// \n" +
             "/// Alias for compatibility with old code. \n" +
