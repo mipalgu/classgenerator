@@ -803,8 +803,7 @@ func generateCPPStruct(data: ClassData) -> String {
     for i in 0...inputData.count-1 {
         
         if inputData[i].varArraySize == 0 {
-            
-            let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+
             cppStruct += "            set_\(inputData[i].varName)(\(inputData[i].varName)); \n"
             
         }
@@ -1073,26 +1072,26 @@ func generateCPPStruct(data: ClassData) -> String {
             /// if the variable is an array
             if inputData[i].varArraySize > 0 {
                 if !firstArray {
-                    cppStruct += "                    else "
+                    cppStruct += "                        else "
                 }
                 else {
-                    cppStruct += "                    "
+                    cppStruct += "                        "
                 }
                 
                 firstArray = false
                 
                 cppStruct += "if (is_\(inputData[i].varName) == 1) \n" +
-                    "                    { \n" +
-                    "                        if (tokenB2 != NULL) \n" +
                     "                        { \n" +
-                    "                            tokenB1[tokenB1.length())-1] = 0; \n" +
-                    "                            is_\(inputData[i].varName) = 0; \n" +
-                    "                            isArray = 0; \n" +
-                    "                        } \n\n" +
+                    "                            if (tokenB2 != NULL) \n" +
+                    "                            { \n" +
+                    "                                tokenB1[tokenB1.length())-1] = 0; \n" +
+                    "                                is_\(inputData[i].varName) = 0; \n" +
+                    "                                isArray = 0; \n" +
+                    "                            } \n\n" +
                     
-                    "                        \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
-                    "                        \(inputData[i].varName)_count++; \n" +
-                    "                    } \n"
+                    "                            \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
+                    "                            \(inputData[i].varName)_count++; \n" +
+                    "                        } \n"
             }
         }
         
@@ -1284,7 +1283,7 @@ func makeArrayDefault (ind: Int) -> String {
     
     var first = true
     
-    for i in 0...inputData[ind].varArraySize-1 {
+    for _ in 0...inputData[ind].varArraySize-1 {
         
         if !first {
             defaultString += ","
