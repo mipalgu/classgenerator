@@ -126,7 +126,6 @@
     guWhiteboard::MYTest testStruct;
     
     std::string desc = testStruct.description();
-    
     std::cout << desc;
 }
 

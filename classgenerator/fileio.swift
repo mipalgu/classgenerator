@@ -1003,7 +1003,7 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "                std::istringstream iss; \n" +
         "                std::string strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
         "                memset(strings, 0, sizeof(strings)); \n" +
-        "                std::string tokenS, tokenE; \n" +
+        "                std::string tokenS; \n" +
         "                int count = 0; \n"
     
     
@@ -1018,8 +1018,7 @@ func generateCPPStruct(data: ClassData) -> String {
             thereAreArrays = true
             
             if firstArray {
-                cppStruct += "                int isArray = 0; \n" +
-                "                std::string tokenB1, tokenB2; \n"
+                cppStruct += "                int isArray = 0; \n"
                 firstArray = false
             }
             
@@ -1034,11 +1033,11 @@ func generateCPPStruct(data: ClassData) -> String {
     cppStruct += "                getline(iss, tokenS, ','); \n\n" +
         
         
-        "                while (tokenS != NULL) \n" +
+        "                while (!tokenS.empty()) \n" +
         "                { \n" +
         "                    tokenE = strchr(tokenS, '='); \n\n" +
-        
-        "                    if (tokenE == NULL) \n" +
+          
+        "                    if (tokenE.empty()) \n" +
         "                    { \n " +
         "                        tokenE = tokenS; \n" +
         "                    } \n" +
@@ -1052,7 +1051,7 @@ func generateCPPStruct(data: ClassData) -> String {
     if thereAreArrays {
         cppStruct += "                    tokenB1 = strchr(gu_strtrim(tokenE), '{'); \n\n" +
             
-            "                    if (tokenB1 == NULL) \n" +
+            "                    if (tokenB1.empty()) \n" +
             "                    { \n" +
             "                        tokenB1 = tokenE; \n" +
             "                    } \n" +
@@ -1082,9 +1081,9 @@ func generateCPPStruct(data: ClassData) -> String {
                 
                 cppStruct += "if (is_\(inputData[i].varName) == 1) \n" +
                     "                        { \n" +
-                    "                            if (tokenB2 != NULL) \n" +
+                    "                            if (!tokenB2.empty()) \n" +
                     "                            { \n" +
-                    "                                tokenB1[tokenB1.length())-1] = 0; \n" +
+                    "                                tokenB1[tokenB1.length()-1] = 0; \n" +
                     "                                is_\(inputData[i].varName) = 0; \n" +
                     "                                isArray = 0; \n" +
                     "                            } \n\n" +
