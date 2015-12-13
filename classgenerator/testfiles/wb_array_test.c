@@ -58,10 +58,11 @@
  */ 
 
 
-#include "wb_array_test.h" 
+
 #include <stdio.h> 
 #include <string.h> 
-#include <stdlib.h> 
+#include <stdlib.h>
+#include "wb_array_test.h" 
 
 /** convert to a description string */  
 const char* wb_array_test_description(const struct wb_array_test* self, char* descString, size_t bufferSize) 
@@ -271,7 +272,7 @@ struct wb_array_test* wb_array_test_from_string(struct wb_array_test* self, cons
 
     for (int i = 0; i < array16_smallest; i++) 
     { 
-       self->array16[i] = (int16_t)atoi(array16_values[i]); 
+       self->array16[i] = (int16_t)(atoi(array16_values[i])); 
     } 
 
     size_t bools_smallest = bools_count < ARRAY_TEST_BOOLS_ARRAY_SIZE ? bools_count : ARRAY_TEST_BOOLS_ARRAY_SIZE; 

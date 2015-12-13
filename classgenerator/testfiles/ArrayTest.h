@@ -57,7 +57,8 @@
  * or write to the Free Software Foundation, Inc., 51 Franklin Street, 
  * Fifth Floor, Boston, MA  02110-1301, USA. 
  */ 
-#define WHITEBOARD_POSTER_STRING_CONVERSION 
+#define WHITEBOARD_POSTER_STRING_CONVERSION
+
 
 #ifndef ArrayTest_DEFINED 
 #define ArrayTest_DEFINED 
@@ -65,7 +66,7 @@
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
 #include <cstdlib> 
 #include <string.h> 
-#include <sstream> 
+#include <sstream>
 #endif 
 
 #include "wb_array_test.h" 
@@ -85,11 +86,11 @@ namespace guWhiteboard
             set_array16(1, 0); 
             set_array16(2, 1); 
             set_array16(3, 2); 
-            set_array16(4, 3); 
+            set_array16(4, 3);   
             set_bools(false, 0); 
             set_bools(false, 1); 
             set_bools(false, 2); 
-            set_bools(false, 3); 
+ //           set_bools(false, 3);       ////////////////!!!!!!!
         } 
 
         /** Copy Constructor */ 
@@ -121,23 +122,27 @@ namespace guWhiteboard
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
         /** String Constructor */ 
-        ArrayTest(const std::string &str) { wb_array_test_from_string(this, str.c_str()); }  
+        // ArrayTest(const std::string &str) { wb_array_test_from_string(this, str.c_str()); }  
 
         std::string description() 
-        { 
+        {
+            
+            std::cout << "***********HERE!!!**********" << std::endl;
+            
 #ifdef USE_WB_ARRAY_TEST_C_CONVERSION 
             char buffer[ARRAY_TEST_DESC_BUFFER_SIZE]; 
             wb_array_test_description(this, buffer, sizeof(buffer)); 
-            std::string descr = buffer; 
+            std::string descr = buffer;
             return descr; 
-#else 
+#else
+                
                 std::ostringstream ss; 
                 ss << "pressed=" << pressed(); 
                 ss << ", "; 
 
                 bool array16_first = true; 
                 ss << "array16={"; 
-                for (size_t i = 0; i < ARRAY_TEST_ARRAY16_ARRAY_SIZE-1; i++) 
+                for (size_t i = 0; i < ARRAY_TEST_ARRAY16_ARRAY_SIZE; i++) 
                 { 
                     ss << (array16_first ? "" : ",") << array16(i); 
                     array16_first = false;  
@@ -147,7 +152,7 @@ namespace guWhiteboard
 
                 bool bools_first = true; 
                 ss << "bools={"; 
-                for (size_t i = 0; i < ARRAY_TEST_BOOLS_ARRAY_SIZE-1; i++) 
+                for (size_t i = 0; i < ARRAY_TEST_BOOLS_ARRAY_SIZE; i++) 
                 { 
                     ss << (bools_first ? "" : ",") << bools(i); 
                     bools_first = false;  
@@ -173,7 +178,7 @@ namespace guWhiteboard
 
                 bool array16_first = true; 
                 ss << "{"; 
-                for (size_t i = 0; i < ARRAY_TEST_ARRAY16_ARRAY_SIZE-1; i++) 
+                for (size_t i = 0; i < ARRAY_TEST_ARRAY16_ARRAY_SIZE; i++) 
                 { 
                     ss << (array16_first ? "" : ",") << array16(i); 
                     array16_first = false;  
@@ -183,7 +188,7 @@ namespace guWhiteboard
 
                 bool bools_first = true; 
                 ss << "{"; 
-                for (size_t i = 0; i < ARRAY_TEST_BOOLS_ARRAY_SIZE-1; i++) 
+                for (size_t i = 0; i < ARRAY_TEST_BOOLS_ARRAY_SIZE; i++) 
                 { 
                     ss << (bools_first ? "" : ",") << bools(i); 
                     bools_first = false;  
@@ -193,14 +198,15 @@ namespace guWhiteboard
                 return ss.str(); 
 
 #endif /// USE_WB_ARRAY_TEST_C_CONVERSION
-        } 
-        std::string from_string(const std::string &str) 
+        }
+        
+        void from_string(const std::string &str) 
         { 
 #ifdef USE_WB_ARRAY_TEST_C_CONVERSION 
             wb_array_test_from_string(this, str); 
-            return this; 
+        //    return this; 
 #else 
-                std::istringstream iss; 
+                std::istringstream iss(str); 
                 std::string strings[ARRAY_TEST_NUMBER_OF_VARIABLES]; 
                 memset(strings, 0, sizeof(strings)); 
                 std::string tokenS, tokenE; 
@@ -216,11 +222,14 @@ namespace guWhiteboard
                 int is_bools = 1; 
 
                 getline(iss, tokenS, ','); 
-pressed=true
+
                 while (!tokenS.empty()) 
-                { 
+                {
+                    tokenS.erase(tokenS.find_last_not_of(' ') + 1);   // trim right
+                    tokenS.erase(0, tokenS.find_first_not_of(' '));   // trim left
+                    
                     //tokenE = strchr(tokenS, '=');
-                    std::string::size_t pos = tokenS.find('=');
+                    size_t pos = tokenS.find('=');
 
                     //if (tokenE == NULL)
                     if (pos != std::string::npos)
@@ -233,23 +242,22 @@ pressed=true
 
                  //   tokenB1 = strchr(gu_strtrim(tokenS), '{');
                  
-                    pos = gu_strtrim(tokenS).find('{');
+                    pos = tokenS.find('{');
 
                     if (pos != std::string::npos)
                     { 
                         // start of an array 
-                        tokenS.erase(0,1); 
+                        tokenS.erase(0,pos+1);
                         isArray = 1; 
                     }
                     
                     
-                    
-
                     if (isArray) 
                     { 
                         //tokenB2 = strchr(gu_strtrim(tokenB1), '}'); 
                         
-                        pos = gu_strtrim(tokenS).find('}');
+                        
+                        pos = tokenS.find('}');
                         
                         if (is_array16 == 1) 
                         { 
@@ -257,52 +265,57 @@ pressed=true
                             if (pos != std::string::npos)
                             { 
                                 //tokenB1[tokenB1.length()-1] = 0;
-                                tokenS.erase(pos,1);
+                                tokenS.erase(pos,tokenS.length()-pos);
                                 is_array16 = 0; 
                                 isArray = 0; 
                             } 
 
-                            array16_values[array16_count] = gu_strtrim(tokenS); 
+                            array16_values[array16_count] = tokenS; 
                             array16_count++; 
                         } 
                         else if (is_bools == 1) 
                         { 
-                            if (!tokenB2.empty()) 
+                            //if (!tokenB2.empty())
+                            if (pos != std::string::npos)
                             { 
-                                tokenB1[tokenB1.length()-1] = 0; 
+                                tokenS.erase(pos,tokenS.length()-pos);
                                 is_bools = 0; 
                                 isArray = 0; 
                             } 
 
-                            bools_values[bools_count] = gu_strtrim(tokenB1); 
+                            tokenS.erase(tokenS.find_last_not_of(' ') + 1);   // trim right
+                            tokenS.erase(0, tokenS.find_first_not_of(' '));   // trim left
+                            bools_values[bools_count] = tokenS; 
                             bools_count++; 
                         } 
                     } 
                     else 
                     { 
-                        strings[count] = gu_strtrim(tokenE); 
+                        tokenS.erase(tokenS.find_last_not_of(' ') + 1);   // trim right
+                        tokenS.erase(0, tokenS.find_first_not_of(' '));   // trim left
+                        strings[count] = tokenS; 
                     } 
 
                     count++; 
                     getline(iss, tokenS, ','); 
                 } 
 
-                if (strings[0] != NULL) 
-                    set_pressed(std::strcmp(strings[0], "true") == 0  || std::strcmp(strings[0], "1") == 0 ? true : false); 
+                if (!strings[0].empty()) 
+                    set_pressed(strings[0].compare("true") == 0  || strings[0].compare("1") == 0 ? true : false); 
 
                 size_t array16_smallest = array16_count < ARRAY_TEST_ARRAY16_ARRAY_SIZE ? array16_count : ARRAY_TEST_ARRAY16_ARRAY_SIZE; 
 
                 for (int i = 0; i < array16_smallest; i++) 
                 { 
-                    set_array16[i]((int16_t)atoi(array16_values[i])); 
+                    set_array16(int16_t(atoi(array16_values[i].c_str())), i); 
                 } 
 
                 size_t bools_smallest = bools_count < ARRAY_TEST_BOOLS_ARRAY_SIZE ? bools_count : ARRAY_TEST_BOOLS_ARRAY_SIZE; 
 
                 for (int i = 0; i < bools_smallest; i++) 
                 { 
-                    set_bools[i](std::strcmp(bools_values[i], "true") == 0  || std::strcmp(bools_values[i], "1") == 0 ? true : false); 
-                } 
+                    set_bools(bools_values[i].compare("true") == 0  || bools_values[i].compare("1") == 0 ? true : false, i); 
+                }
 
 #endif /// USE_WB_ARRAY_TEST_C_CONVERSION
         } 

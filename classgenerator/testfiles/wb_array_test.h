@@ -61,7 +61,7 @@
 #ifndef wb_array_test_h 
 #define wb_array_test_h 
 
-#include "gu_util.h" 
+#include <gu_util.h>
 
 #define ARRAY_TEST_NUMBER_OF_VARIABLES 3 
 

@@ -10,8 +10,9 @@
 #include <iostream>
 #import "gu_util.h"
 #import "gusimplewhiteboard.h"
-#import "MYTest.h"
+//#import "MYTest.h"
 #import "ArrayTest.h"
+//#import "wb_array_test.c"
 
 @interface ClassgeneratorCPPTests : XCTestCase
 
@@ -19,7 +20,7 @@
 
 @implementation ClassgeneratorCPPTests
 
-
+/*
 - (void)testSimpleDefaultConstructor {
     
    // wb_my_test testStruct;         // pressed=true, pointX=2, pointY=0
@@ -31,7 +32,7 @@
     XCTAssertEqual(testStruct.pointY(), 0, @"pointY not set");
 }
 
-/*
+
 - (void)testSimpleAssignmentConstructor {
 
     guWhiteboard::MYTest testStruct;         // pressed=true, pointX=2, pointY=0
@@ -47,7 +48,7 @@
     XCTAssertEqual(testStructCopy.pointX(), 5, @"pointX not set");
     XCTAssertEqual(testStructCopy.pointY(), 7, @"pointY not set");
 }
-*/
+
 
 - (void)testSimpleCopyConstructor {
     
@@ -64,6 +65,8 @@
     XCTAssertEqual(testStructCopy.pointY(), 7, @"pointY not set");
 }
 
+ */
+ 
 - (void)testArraysDefaultConstructor {
     
     guWhiteboard::ArrayTest testStruct;
@@ -120,7 +123,39 @@
     XCTAssertEqual(testStruct.bools(2), false, @"bools[2] not set");
 }
 
+// simple arrays
+- (void)testCPPdescStringArray {
+    
+    guWhiteboard::ArrayTest testStruct;
+    
+    std::string desiredDescString = "pressed=0, array16={1,2,3,4}, bools={0,0,0}";
+    std::string descString = testStruct.description();
+    
+    std::cout << descString << std::endl;
+    
+    //printf("\n\ndescString: %s\n\n", descString.c_str());
+    
+    XCTAssertTrue(descString.compare(desiredDescString) == 0);
+}
 
+
+- (void)testCPPtoStringArray {
+    
+    guWhiteboard::ArrayTest testStruct;
+    
+    std::string desiredToString = "0, {1,2,3,4}, {0,0,0}";
+    std::string tString = testStruct.to_string();
+    
+    std::cout << tString << std::endl;
+    
+    //printf("\n\ndescString: %s\n\n", descString.c_str());
+    
+    XCTAssertTrue(tString.compare(desiredToString) == 0);
+}
+
+
+
+/*
 - (void)testWBPosterStringConversion {
     
     guWhiteboard::MYTest testStruct;
@@ -128,7 +163,7 @@
     std::string desc = testStruct.description();
     std::cout << desc;
 }
-
+*/
 
 - (void)testArraysWBPosterStringConversion {
     
