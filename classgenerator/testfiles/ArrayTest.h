@@ -209,10 +209,10 @@ namespace guWhiteboard
                 std::istringstream iss(str); 
                 std::string strings[ARRAY_TEST_NUMBER_OF_VARIABLES]; 
                 memset(strings, 0, sizeof(strings)); 
-                std::string tokenS, tokenE; 
+                std::string token;
                 int count = 0; 
                 int isArray = 0; 
-                std::string tokenB1, tokenB2; 
+ //               std::string tokenB1, tokenB2; 
                 std::string array16_values[ARRAY_TEST_ARRAY16_ARRAY_SIZE]; 
                 int array16_count = 0; 
                 int is_array16 = 1; 
@@ -221,34 +221,34 @@ namespace guWhiteboard
                 int bools_count = 0; 
                 int is_bools = 1; 
 
-                getline(iss, tokenS, ','); 
-
-                while (!tokenS.empty()) 
+                while (getline(iss, token, ',')) 
                 {
-                    tokenS.erase(tokenS.find_last_not_of(' ') + 1);   // trim right
-                    tokenS.erase(0, tokenS.find_first_not_of(' '));   // trim left
+                    std::cout << token << " :: " << count << std::endl; 
+                    
+                    token.erase(token.find_last_not_of(' ') + 1);   // trim right
+                    token.erase(0, token.find_first_not_of(' '));   // trim left
                     
                     //tokenE = strchr(tokenS, '=');
-                    size_t pos = tokenS.find('=');
+                    size_t pos = token.find('=');
 
                     //if (tokenE == NULL)
                     if (pos != std::string::npos)
                     { 
                         //tokenE = tokenS;
-                        tokenS.erase(0, pos+1);
-                    } 
+                        token.erase(0, pos+1);
+                    }
                     
-                    //tokenE = tokenS; 
+  //                  tokenE = tokenS; 
 
                  //   tokenB1 = strchr(gu_strtrim(tokenS), '{');
                  
-                    pos = tokenS.find('{');
+                    pos = token.find('{');
 
                     if (pos != std::string::npos)
                     { 
                         // start of an array 
-                        tokenS.erase(0,pos+1);
-                        isArray = 1; 
+                        token.erase(0,pos+1);
+                        isArray = 1;
                     }
                     
                     
@@ -257,7 +257,7 @@ namespace guWhiteboard
                         //tokenB2 = strchr(gu_strtrim(tokenB1), '}'); 
                         
                         
-                        pos = tokenS.find('}');
+                        pos = token.find('}');
                         
                         if (is_array16 == 1) 
                         { 
@@ -265,12 +265,14 @@ namespace guWhiteboard
                             if (pos != std::string::npos)
                             { 
                                 //tokenB1[tokenB1.length()-1] = 0;
-                                tokenS.erase(pos,tokenS.length()-pos);
+                                token.erase(pos,token.length()-pos);
                                 is_array16 = 0; 
-                                isArray = 0; 
+                                isArray = 0;
+                                count++;
+         //                       std::cout << "here1" << std::endl; 
                             } 
 
-                            array16_values[array16_count] = tokenS; 
+                            array16_values[array16_count] = token; 
                             array16_count++; 
                         } 
                         else if (is_bools == 1) 
@@ -278,26 +280,26 @@ namespace guWhiteboard
                             //if (!tokenB2.empty())
                             if (pos != std::string::npos)
                             { 
-                                tokenS.erase(pos,tokenS.length()-pos);
+                                token.erase(pos,token.length()-pos);
                                 is_bools = 0; 
-                                isArray = 0; 
+                                isArray = 0;
+                                count++;
+          //                      std::cout << "here2" << std::endl; 
                             } 
 
-                            tokenS.erase(tokenS.find_last_not_of(' ') + 1);   // trim right
-                            tokenS.erase(0, tokenS.find_first_not_of(' '));   // trim left
-                            bools_values[bools_count] = tokenS; 
+                            token.erase(token.find_last_not_of(' ') + 1);   // trim right
+                            token.erase(0, token.find_first_not_of(' '));   // trim left
+                            bools_values[bools_count] = token; 
                             bools_count++; 
                         } 
                     } 
                     else 
                     { 
-                        tokenS.erase(tokenS.find_last_not_of(' ') + 1);   // trim right
-                        tokenS.erase(0, tokenS.find_first_not_of(' '));   // trim left
-                        strings[count] = tokenS; 
-                    } 
-
-                    count++; 
-                    getline(iss, tokenS, ','); 
+                        token.erase(token.find_last_not_of(' ') + 1);   // trim right
+                        token.erase(0, token.find_first_not_of(' '));   // trim left
+                        strings[count] = token;
+                        count++;              
+                    }
                 } 
 
                 if (!strings[0].empty()) 

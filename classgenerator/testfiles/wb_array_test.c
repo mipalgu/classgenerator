@@ -238,7 +238,8 @@ struct wb_array_test* wb_array_test_from_string(struct wb_array_test* self, cons
                 if (tokenB2 != NULL) 
                 { 
                     tokenB1[strlen(tokenB1)-1] = 0; 
-                    is_array16 = 0; 
+                    is_array16 = 0;
+					isArray = 0;
                 } 
 
                 array16_values[array16_count] = gu_strtrim(tokenB1); 
@@ -249,7 +250,8 @@ struct wb_array_test* wb_array_test_from_string(struct wb_array_test* self, cons
                 if (tokenB2 != NULL) 
                 { 
                     tokenB1[strlen(tokenB1)-1] = 0; 
-                    is_bools = 0; 
+                    is_bools = 0;
+					isArray = 0;
                 } 
 
                 bools_values[bools_count] = gu_strtrim(tokenB1); 

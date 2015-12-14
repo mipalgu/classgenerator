@@ -155,6 +155,36 @@
 
 
 
+// simple arrays
+- (void)testCPPFromStringArray {
+    
+    guWhiteboard::ArrayTest testStruct; // = {false, {5,6,7,8}, {false,true,true}};
+    
+    //std::string descString = "pressed = true, array16={ 5,666,7,8 }, bools= { true ,true, true}";
+    std::string descString = "true, {5 ,666, 7 ,8}, {true, true,true }";
+    
+    testStruct.from_string(descString);
+    
+    //wb_array_test_from_string(&testStruct, descString);
+    
+    XCTAssertEqual(testStruct.pressed(), true, "pressed not set");
+    
+    XCTAssertEqual(testStruct.array16(0), 5, @"array16[0] not set");
+    XCTAssertEqual(testStruct.array16(1), 666, @"array16[1] not set");
+    XCTAssertEqual(testStruct.array16(2), 7, @"array16[2] not set");
+    XCTAssertEqual(testStruct.array16(3), 8, @"array16[3] not set");
+    
+    XCTAssertEqual(testStruct.bools(0), true, @"bools[0] not set");
+    XCTAssertEqual(testStruct.bools(1), true, @"bools[1] not set");
+    XCTAssertEqual(testStruct.bools(2), true, @"bools[2] not set");
+}
+
+
+
+
+
+
+
 /*
 - (void)testWBPosterStringConversion {
     
