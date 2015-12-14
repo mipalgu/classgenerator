@@ -12,6 +12,7 @@
 #import "gusimplewhiteboard.h"
 #import "wb_my_test.h"
 #import "wb_array_test.h"
+#import "wb_all_test.h"
 
 @interface ClassgeneratorCTests3 : XCTestCase
 
@@ -103,6 +104,71 @@
     XCTAssertTrue(strcmp(descString, desiredDescString) == 0);
 }
 
+// simple arrays
+- (void)testWBdescStringAll {
+    
+    struct wb_all_test testStruct = {false, {5,6,7,8}, 12.500000 , {false,true,true}};
+    
+    //testStruct.pressed = false;
+    //testStruct.array16 = {5,6,7,8};
+    //testStruct.bools = {false,true,true};
+    
+    char* desiredDescString = "pressed=false, array16={5,6,7,8}, number=12.500000, bools={false,true,true}";
+    char descString[128];
+    
+    wb_all_test_description(&testStruct, descString, sizeof(descString));
+    
+    printf("\n\ndescString: %s\n\n", descString);
+    
+    XCTAssertTrue(strcmp(descString, desiredDescString) == 0);
+}
+
+
+- (void)testWBtoStringAll {
+    
+    struct wb_all_test testStruct = {false, {5,6,7,8}, 13.123456, {false,true,true}};
+    
+    //testStruct.pressed = false;
+    //testStruct.array16 = {5,6,7,8};
+    //testStruct.bools = {false,true,true};
+    
+    char* desiredToString = "false, {5,6,7,8}, 13.123456, {false,true,true}";
+    char toString[128];
+    
+    wb_all_test_to_string(&testStruct, toString, sizeof(toString));
+    
+    printf("toString: %s\n", toString);
+    
+    XCTAssertTrue(strcmp(toString, desiredToString) == 0);
+}
+
+// simple arrays
+- (void)testWBFromStringAll {
+    
+    struct wb_all_test testStruct; // = {false, {5,6,7,8}, {false,true,true}};
+    
+    //char* descString = "pressed = true, array16={ 5,6,7,8 }, bools= { true ,true, true}";
+    char* descString = "true, {5 ,6,7,8}, 13.111111111, {true, true,true }";
+    
+    wb_all_test_from_string(&testStruct, descString);
+    
+    XCTAssertEqual(testStruct.pressed, true, "pressed not set");
+    
+    XCTAssertEqual(testStruct.array16[0], 5, "array16[0] not set");
+    XCTAssertEqual(testStruct.array16[1], 6, "array16[1] not set");
+    XCTAssertEqual(testStruct.array16[2], 7, "array16[2] not set");
+    XCTAssertEqual(testStruct.array16[3], 8, "array16[3] not set");
+    
+    XCTAssertEqual(testStruct.number, 13.111111111, "number not set");
+    
+    XCTAssertEqual(testStruct.bools[0], true, "bools[0] not set");
+    XCTAssertEqual(testStruct.bools[1], true, "bools[1] not set");
+    XCTAssertEqual(testStruct.bools[2], true, "bools[2] not set");
+}
+
+
+
+
 // simple variables
 - (void)test_strtok_r {
 
@@ -127,7 +193,7 @@
     free(str_copy);
 }
 
-
+/*
 - (void)testOneAtATime {
     
     char* strings[80];
@@ -225,7 +291,7 @@
     }
     
 }
-
+*/
 
 
 // simple variables

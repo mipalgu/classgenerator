@@ -10,8 +10,9 @@
 #include <iostream>
 #import "gu_util.h"
 #import "gusimplewhiteboard.h"
-//#import "MYTest.h"
+#import "MYTest.h"
 #import "ArrayTest.h"
+#import "AllTest.h"
 //#import "wb_array_test.c"
 
 @interface ClassgeneratorCPPTests : XCTestCase
@@ -20,7 +21,7 @@
 
 @implementation ClassgeneratorCPPTests
 
-/*
+
 - (void)testSimpleDefaultConstructor {
     
    // wb_my_test testStruct;         // pressed=true, pointX=2, pointY=0
@@ -32,7 +33,7 @@
     XCTAssertEqual(testStruct.pointY(), 0, @"pointY not set");
 }
 
-
+/*
 - (void)testSimpleAssignmentConstructor {
 
     guWhiteboard::MYTest testStruct;         // pressed=true, pointX=2, pointY=0
@@ -48,7 +49,7 @@
     XCTAssertEqual(testStructCopy.pointX(), 5, @"pointX not set");
     XCTAssertEqual(testStructCopy.pointY(), 7, @"pointY not set");
 }
-
+*/
 
 - (void)testSimpleCopyConstructor {
     
@@ -65,7 +66,7 @@
     XCTAssertEqual(testStructCopy.pointY(), 7, @"pointY not set");
 }
 
- */
+ 
  
 - (void)testArraysDefaultConstructor {
     
@@ -181,6 +182,64 @@
 
 
 
+
+
+// simple arrays
+- (void)testCPPdescStringAll {
+    
+    guWhiteboard::AllTest testStruct;
+    
+    std::string desiredDescString = "pressed=1, array16={1,2,3,4}, number=0, bools={0,0,0}";
+    std::string descString = testStruct.description();
+    
+    std::cout << descString << std::endl;
+    
+    //printf("\n\ndescString: %s\n\n", descString.c_str());
+    
+    XCTAssertTrue(descString.compare(desiredDescString) == 0);
+}
+
+
+// simple arrays
+- (void)testCPPtoStringAll {
+    
+    guWhiteboard::AllTest testStruct;
+    
+    std::string desiredToString = "1, {1,2,3,4}, 0, {0,0,0}";
+    std::string descString = testStruct.to_string();
+    
+    std::cout << descString << std::endl;
+    
+    //printf("\n\ndescString: %s\n\n", descString.c_str());
+    
+    XCTAssertTrue(descString.compare(desiredToString) == 0);
+}
+
+
+- (void)testCPPFromStringAll {
+    
+    guWhiteboard::AllTest testStruct; // = {false, {5,6,7,8}, {false,true,true}};
+    
+    //std::string descString = "pressed = true, array16={ 5,666,7,8 }, bools= { true ,true, true}";
+    std::string descString = "true, {5 ,666, 7 ,8}, 5 , {true, true,true }";
+    
+    testStruct.from_string(descString);
+    
+    //wb_array_test_from_string(&testStruct, descString);
+    
+    XCTAssertEqual(testStruct.pressed(), true, "pressed not set");
+    
+    XCTAssertEqual(testStruct.array16(0), 5, @"array16[0] not set");
+    XCTAssertEqual(testStruct.array16(1), 666, @"array16[1] not set");
+    XCTAssertEqual(testStruct.array16(2), 7, @"array16[2] not set");
+    XCTAssertEqual(testStruct.array16(3), 8, @"array16[3] not set");
+    
+    XCTAssertEqual(testStruct.number(), 5, "number not set");
+    
+    XCTAssertEqual(testStruct.bools(0), true, @"bools[0] not set");
+    XCTAssertEqual(testStruct.bools(1), true, @"bools[1] not set");
+    XCTAssertEqual(testStruct.bools(2), true, @"bools[2] not set");
+}
 
 
 

@@ -279,7 +279,7 @@ func generateWbHeader(data: ClassData) -> String {
     }
     
     
-    cStruct1 += "/** \n"
+    cStruct1 += "\n/** \n"
     
     for line in structComment {
         cStruct1 += " * \(line) \n"
@@ -679,6 +679,8 @@ func generateWbC(data: ClassData) -> String {
                         "                { \n" +
                         "                    tokenB1[strlen(tokenB1)-1] = 0; \n" +
                         "                    is_\(inputData[i].varName) = 0; \n" +
+                        "                    isArray = 0; \n" +
+                        "                    count++; \n" +
                         "                } \n\n" +
                     
                         "                \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
@@ -692,14 +694,19 @@ func generateWbC(data: ClassData) -> String {
             "        else \n" +
             "        { \n" +
             "            strings[count] = gu_strtrim(tokenE); \n" +
+            "            count++; \n" +
             "        } \n\n"
     }
     else {
         cText += "        strings[count] = gu_strtrim(tokenE); \n\n"
     }
     
-    cText += "        count++; \n" +
-            "        tokenS = strtok_r(NULL, s, &saveptr); \n" +
+    if !thereAreArrays {
+        
+        cText += "        count++; \n"
+    }
+    
+    cText += "        tokenS = strtok_r(NULL, s, &saveptr); \n" +
             "    } \n\n"
     
     
@@ -782,7 +789,7 @@ func generateCPPStruct(data: ClassData) -> String {
             
     for i in 0...inputData.count-1 {
         
-        if inputData[i].varArraySize == 0 {
+        if inputData[i].varArraySize == 0 {   // not an array
             
             let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
             if i > 0 {
@@ -793,7 +800,7 @@ func generateCPPStruct(data: ClassData) -> String {
         }
         else {   // an array
            
-           //  do nothing -- not including arrays as parameters yet
+           //  do nothing, not including arrays as parameters... yet
         }
         
     }
@@ -802,7 +809,7 @@ func generateCPPStruct(data: ClassData) -> String {
     
     for i in 0...inputData.count-1 {
         
-        if inputData[i].varArraySize == 0 {
+        if inputData[i].varArraySize == 0 {  // not an array
 
             cppStruct += "            set_\(inputData[i].varName)(\(inputData[i].varName)); \n"
             
@@ -816,7 +823,7 @@ func generateCPPStruct(data: ClassData) -> String {
                 
                 print("Unspecified array of type \(inputData[i].varType) set to all: \(arrayDefault)")
                 
-                for j in 0...inputData[i].varArraySize {
+                for j in 0...inputData[i].varArraySize-1 {
                     
                     cppStruct += "            set_\(inputData[i].varName)(\(arrayDefault), \(j)); \n"
                 }
@@ -888,8 +895,8 @@ func generateCPPStruct(data: ClassData) -> String {
                 "        } \n\n" +
                 "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n"
 
-    cppStruct += "        /** String Constructor */ \n" +
-    "        \(data.cpp)(const std::string &str) { \(data.wb)_from_string(this, str.c_str()); }  \n\n"
+    cppStruct += "        /** String Constructor -- is this needed? */ \n" +
+    "        // \(data.cpp)(const std::string &str) { \(data.wb)_from_string(this, str.c_str()); }  \n\n"
 
      cppStruct += "        std::string description() \n" +
                 "        { \n" +
@@ -900,41 +907,41 @@ func generateCPPStruct(data: ClassData) -> String {
                 "            return descr; \n" +
                 "#else \n" +
         
-                "                std::ostringstream ss; \n"
+                "            std::ostringstream ss; \n"
     
                 var first = true
     
                 for i in 0...inputData.count-1 {
                     
                     if !first {
-                        cppStruct += "                ss << \", \"; \n"
+                        cppStruct += "            ss << \", \"; \n"
                     }
                     
                     // not an array
                     if inputData[i].varArraySize == 0 {
                     
-                        cppStruct += "                ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)(); \n"
+                        cppStruct += "            ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)(); \n"
                     }
                     // an array
                     else {
                         
-                        cppStruct += "\n                bool \(inputData[i].varName)_first = true; \n"
+                        cppStruct += "\n            bool \(inputData[i].varName)_first = true; \n"
                         
-                        cppStruct += "                ss << \"\(inputData[i].varName)={\"; \n" +
+                        cppStruct += "            ss << \"\(inputData[i].varName)={\"; \n" +
                         
-                            "                for (size_t i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1; i++) \n" +
-                            "                { \n" +
+                            "            for (int i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; i++) \n" +
+                            "            { \n" +
                         
-                            "                    ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i); \n" +
-                            "                    \(inputData[i].varName)_first = false;  \n" +
-                            "                } \n"
-                        cppStruct += "                ss << \"}\"; \n"
+                            "                ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i); \n" +
+                            "                \(inputData[i].varName)_first = false;  \n" +
+                            "            } \n"
+                        cppStruct += "            ss << \"}\"; \n"
 
                     }
                     first = false
                 }
 
-                cppStruct += "\n                return ss.str(); \n\n" +
+                cppStruct += "\n            return ss.str(); \n\n" +
     
                 "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
                 "        } \n\n"
@@ -949,62 +956,61 @@ func generateCPPStruct(data: ClassData) -> String {
         "            return toString; \n" +
         "#else \n" +
         
-    "                std::ostringstream ss; \n"
+    "            std::ostringstream ss; \n"
     
     first = true
     
     for i in 0...inputData.count-1 {
         
         if !first {
-            cppStruct += "                ss << \", \"; \n"
+            cppStruct += "            ss << \", \"; \n"
         }
         
         // not an array
         if inputData[i].varArraySize == 0 {
             
-            cppStruct += "                ss << \(inputData[i].varName)(); \n"
+            cppStruct += "            ss << \(inputData[i].varName)(); \n"
         }
             // an array
         else {
             
-            cppStruct += "\n                bool \(inputData[i].varName)_first = true; \n"
+            cppStruct += "\n            bool \(inputData[i].varName)_first = true; \n"
             
-            cppStruct += "                ss << \"{\"; \n" +
+            cppStruct += "            ss << \"{\"; \n" +
                 
-                "                for (size_t i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE-1; i++) \n" +
-                "                { \n" +
+                "            for (int i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; i++) \n" +
+                "            { \n" +
                 
-                "                    ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i); \n" +
-                "                    \(inputData[i].varName)_first = false;  \n" +
-            "                } \n"
-            cppStruct += "                ss << \"}\"; \n"
+                "                ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i); \n" +
+                "                \(inputData[i].varName)_first = false;  \n" +
+                "            } \n"
+            cppStruct += "            ss << \"}\"; \n"
             
         }
         first = false
     }
     
-    cppStruct += "\n                return ss.str(); \n\n" +
+    cppStruct += "\n            return ss.str(); \n\n" +
         
         "#endif /// USE_WB_\(data.caps)_C_CONVERSION\n" +
-        "        } \n"
+        "        } \n\n"
     
     
     
-    cppStruct += "        std::string from_string(const std::string &str) \n" +
+    cppStruct += "        void from_string(const std::string &str) \n" +
         "        { \n" +
         "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
         "            \(data.wb)_from_string(this, str); \n" +
-        "            return this; \n" +
         
         "#else \n"
     
 ////
 
-    cppStruct += "                std::istringstream iss; \n" +
-        "                std::string strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "                memset(strings, 0, sizeof(strings)); \n" +
-        "                std::string tokenS; \n" +
-        "                int count = 0; \n"
+    cppStruct += "            std::istringstream iss(str); \n" +
+        "            std::string strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
+        "            memset(strings, 0, sizeof(strings)); \n" +
+        "            std::string token; \n" +
+        "            int count = 0; \n"
     
     
     var firstArray = true
@@ -1018,96 +1024,95 @@ func generateCPPStruct(data: ClassData) -> String {
             thereAreArrays = true
             
             if firstArray {
-                cppStruct += "                int isArray = 0; \n"
+                cppStruct += "\n            int isArray = 0; \n"
                 firstArray = false
             }
             
-            cppStruct += "                std::string \(inputData[i].varName)_values[\(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE]; \n" +
+            cppStruct += "            std::string \(inputData[i].varName)_values[\(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE]; \n" +
                 
-                "                int \(inputData[i].varName)_count = 0; \n" +
-                "                int is_\(inputData[i].varName) = 1; \n\n"
+                "            int \(inputData[i].varName)_count = 0; \n" +
+                "            int is_\(inputData[i].varName) = 1; \n\n"
         }
     }
 
     
-    cppStruct += "                getline(iss, tokenS, ','); \n\n" +
-        
-        
-        "                while (!tokenS.empty()) \n" +
-        "                { \n" +
-        "                    tokenE = strchr(tokenS, '='); \n\n" +
+    cppStruct += "            while (getline(iss, token, ',')) \n" +
+        "            { \n" +
+        "                token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
+        "                token.erase(0, token.find_first_not_of(' '));   // trim left \n\n" +
           
-        "                    if (tokenE.empty()) \n" +
-        "                    { \n " +
-        "                        tokenE = tokenS; \n" +
-        "                    } \n" +
-        "                    else \n" +
-        "                    { \n " +
-        "                        tokenE.erase(0,1); \n" +
-        "                    } \n\n"
+        "                size_t pos = token.find('='); \n\n" +
+    
+        "                if (pos != std::string::npos) \n" +
+        "                { \n " +
+        "                    token.erase(0, pos+1); \n" +
+        "                } \n\n"
     
     firstArray = true
     
     if thereAreArrays {
-        cppStruct += "                    tokenB1 = strchr(gu_strtrim(tokenE), '{'); \n\n" +
+        cppStruct += "                pos = token.find('{'); \n\n" +
             
-            "                    if (tokenB1.empty()) \n" +
-            "                    { \n" +
-            "                        tokenB1 = tokenE; \n" +
-            "                    } \n" +
-            "                    else \n" +
-            "                    { \n" +
-            "                        // start of an array \n" +
-            "                        tokenB1.erase(0,1); \n" +
-            "                        isArray = 1; \n" +
-            "                    } \n\n" +
+            "                if (pos != std::string::npos) \n" +
+            "                { \n" +
+            "                    // start of an array \n" +
+            "                    token.erase(0,pos+1); \n" +
+            "                    isArray = 1; \n" +
+            "                } \n\n" +
             
-            "                    if (isArray) \n" +
-            "                    { \n" +
-            "                        tokenB2 = strchr(gu_strtrim(tokenB1), '}'); \n"
+            "                if (isArray) \n" +
+            "                { \n" +
+            "                     pos = token.find('}'); \n\n"
         
         for i in 0...inputData.count-1 {
             
             /// if the variable is an array
             if inputData[i].varArraySize > 0 {
                 if !firstArray {
-                    cppStruct += "                        else "
+                    cppStruct += "                    else "
                 }
                 else {
-                    cppStruct += "                        "
+                    cppStruct += "                    "
                 }
                 
                 firstArray = false
                 
                 cppStruct += "if (is_\(inputData[i].varName) == 1) \n" +
+                    "                    { \n" +
+                    "                        if (pos != std::string::npos) \n" +
                     "                        { \n" +
-                    "                            if (!tokenB2.empty()) \n" +
-                    "                            { \n" +
-                    "                                tokenB1[tokenB1.length()-1] = 0; \n" +
-                    "                                is_\(inputData[i].varName) = 0; \n" +
-                    "                                isArray = 0; \n" +
-                    "                            } \n\n" +
+                    "                            token.erase(pos,token.length()-pos); \n" +
+                    "                            is_\(inputData[i].varName) = 0; \n" +
+                    "                            isArray = 0; \n" +
+                    "                            count++; \n" +
+                    "                        } \n\n" +
                     
-                    "                            \(inputData[i].varName)_values[\(inputData[i].varName)_count] = gu_strtrim(tokenB1); \n" +
-                    "                            \(inputData[i].varName)_count++; \n" +
-                    "                        } \n"
+                    "                        token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
+                    "                        token.erase(0, token.find_first_not_of(' '));   // trim left \n" +
+                    "                        \(inputData[i].varName)_values[\(inputData[i].varName)_count] = token; \n" +
+                    "                        \(inputData[i].varName)_count++; \n" +
+                    "                    } \n"
             }
         }
         
         
-        cppStruct += "                    } \n" +
-            "                    else \n" +
-            "                    { \n" +
-            "                        strings[count] = gu_strtrim(tokenE); \n" +
-            "                    } \n\n"
+        cppStruct += "                } \n" +
+            "                else \n" +
+            "                { \n" +
+            "                    token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
+            "                    token.erase(0, token.find_first_not_of(' '));   // trim left \n" +
+            "                    strings[count] = token; \n" +
+            "                    count++; \n" +
+            "                } \n"
     }
     else {
-        cppStruct += "                    strings[count] = gu_strtrim(tokenE); \n\n"
+        cppStruct += "                token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
+                     "                token.erase(0, token.find_first_not_of(' '));   // trim left \n" +
+                     "                strings[count] = token; \n" +
+                     "                count++; \n"
     }
     
-    cppStruct += "                    count++; \n" +
-        "                    getline(iss, tokenS, ','); \n" +
-        "                } \n\n"
+    cppStruct += "            } \n\n"
     
     
     for i in 0...inputData.count-1 {
@@ -1115,29 +1120,29 @@ func generateCPPStruct(data: ClassData) -> String {
         /// if the variable is an array
         if inputData[i].varArraySize > 0 {
             
-            cppStruct += "                size_t \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
+            cppStruct += "            int \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
                 
-                "                for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
-            "                { \n"
+            "            for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
+            "            { \n"
             
             if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
-                cppStruct += "                    set_\(inputData[i].varName)[i](std::strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || std::strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false); \n"
+                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varName)_values[i].compare(\"true\") == 0  || \(inputData[i].varName)_values[i].compare(\"1\") == 0 ? true : false, i); \n"
             }
             else {
-                cppStruct += "                    set_\(inputData[i].varName)[i]((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(\(inputData[i].varName)_values[i])); \n"
+                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(variables[inputData[i].varType]!.converter)(\(inputData[i].varName)_values[i].c_str())), i); \n"
             }
             
-            cppStruct += "                } \n\n"
+            cppStruct += "            } \n\n"
         }
         else {
-            cppStruct += "                if (strings[\(i)] != NULL) \n"
+            cppStruct += "            if (!strings[\(i)].empty()) \n"
             
             if inputData[i].varType == "bool" {
                 
-                cppStruct += "                    set_\(inputData[i].varName)(std::strcmp(strings[\(i)], \"true\") == 0  || std::strcmp(strings[\(i)], \"1\") == 0 ? true : false); \n\n"
+                cppStruct += "                set_\(inputData[i].varName)(strings[\(i)].compare(\"true\") == 0  || strings[\(i)].compare(\"1\") == 0 ? true : false); \n\n"
             }
             else {
-                cppStruct += "                    set_\(inputData[i].varName)((\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)])); \n\n"
+                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(variables[inputData[i].varType]!.converter)(strings[\(i)].c_str()))); \n\n"
             }
             
         }
