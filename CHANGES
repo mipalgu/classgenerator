@@ -1,0 +1,15 @@
+Proposed:
+    Any whitespace after author can be ignored and parse for the name until a newline is found
+        This is instead of the tab character
+    Rework parser to match a standard compiler
+        Any whitespace after a datatype is fine, don't rely on a tab character being there.
+        Comments after variable definition rely on '//' or matching '/*' '*/' pairs
+        Multiline commenting in variable definitions
+    Auto output from a doc target
+        Generated ebnf (or similar) graphing format file to illustrate data type format
+            Maybe use Andrew Rocks syntrax to generate the diagram
+    Add custom jenkins job to auto-regenerate wb types on the server
+
+
+
+
