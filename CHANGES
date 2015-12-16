@@ -9,6 +9,7 @@ Proposed:
         Generated ebnf (or similar) graphing format file to illustrate data type format
             Maybe use Andrew Rocks syntrax to generate the diagram
     Add custom jenkins job to auto-regenerate wb types on the server
+    Come up with a new Whiteboard class directory structure to separate the generated files, the parsed files and any customisation classes which inherit from the generated files.
 
 
 
