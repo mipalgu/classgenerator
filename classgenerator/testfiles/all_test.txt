@@ -1,0 +1,7 @@
+author	Mick Hawkins
+bool	pressed=true	// A comment about pressed
+int16_t	array16[4]={1,2,3,4}	// a comment about array16
+float	number	// a comment about number
+bool	bools[3]	// a comment about bools
+
+Struct comment goes here

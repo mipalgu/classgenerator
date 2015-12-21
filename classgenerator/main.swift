@@ -118,6 +118,7 @@ if makeCPPWrapper {
 // generate the Swift wrapper
 if makeSwiftWrapper {
     print("\nGenerating Swift wrapper and Bridging Header...")
+    print("\nNote: The Swift wrapper is in progress.")
     generateSwiftFiles(data)
 }
 

@@ -22,8 +22,10 @@
 		00BCC1051B7EDA17002C72B7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC1041B7EDA17002C72B7 /* main.swift */; };
 		00BCC10F1B7EFE28002C72B7 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BCC10E1B7EFE28002C72B7 /* fileio.swift */; };
 		00D9678C1B886CAE00D47595 /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D9678B1B886CAE00D47595 /* ClassData.swift */; };
+		00DA5CA91C1BA9A40005BEE5 /* wb_all_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 00DA5CA71C1BA9A40005BEE5 /* wb_all_test.c */; settings = {ASSET_TAGS = (); }; };
 		00E383801BB92E2D00B5B76A /* InputData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E3837F1BB92E2D00B5B76A /* InputData.swift */; };
 		00E383811BB92E2D00B5B76A /* InputData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E3837F1BB92E2D00B5B76A /* InputData.swift */; };
+		00F6451E1C1C0CCA00BB0CA8 /* wb_array_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 00F6451D1C1C0CCA00BB0CA8 /* wb_array_test.c */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,7 +67,11 @@
 		00BCC1041B7EDA17002C72B7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		00BCC10E1B7EFE28002C72B7 /* fileio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = fileio.swift; sourceTree = "<group>"; };
 		00D9678B1B886CAE00D47595 /* ClassData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
+		00DA5CA71C1BA9A40005BEE5 /* wb_all_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_all_test.c; path = classgenerator/testfiles/wb_all_test.c; sourceTree = SOURCE_ROOT; };
+		00DA5CA81C1BA9A40005BEE5 /* wb_all_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_all_test.h; path = classgenerator/testfiles/wb_all_test.h; sourceTree = SOURCE_ROOT; };
+		00DA5CAA1C1BA9BF0005BEE5 /* AllTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllTest.h; path = classgenerator/testfiles/AllTest.h; sourceTree = SOURCE_ROOT; };
 		00E3837F1BB92E2D00B5B76A /* InputData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputData.swift; sourceTree = "<group>"; };
+		00F6451D1C1C0CCA00BB0CA8 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = classgenerator/testfiles/wb_array_test.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +117,8 @@
 				003579CB1BE354650031D894 /* wb_array_test.h */,
 				003579CC1BE354650031D894 /* wb_my_test.c */,
 				003579CD1BE354650031D894 /* wb_my_test.h */,
+				00DA5CA71C1BA9A40005BEE5 /* wb_all_test.c */,
+				00DA5CA81C1BA9A40005BEE5 /* wb_all_test.h */,
 			);
 			path = ClassgeneratorCTests3;
 			sourceTree = "<group>";
@@ -121,7 +129,9 @@
 				00B7E2E61BE0594900B7B779 /* ClassgeneratorCPPTests.mm */,
 				00B7E2EF1BE05DAF00B7B779 /* gu_util.cpp */,
 				00B7E2F01BE05DAF00B7B779 /* gu_util.h */,
+				00DA5CAA1C1BA9BF0005BEE5 /* AllTest.h */,
 				003579D01BE3547F0031D894 /* ArrayTest.h */,
+				00F6451D1C1C0CCA00BB0CA8 /* wb_array_test.c */,
 				003579D11BE3547F0031D894 /* MYTest.h */,
 				00B7E2E81BE0594900B7B779 /* Info.plist */,
 			);
@@ -322,6 +332,7 @@
 				003579CE1BE354650031D894 /* wb_array_test.c in Sources */,
 				003579CF1BE354650031D894 /* wb_my_test.c in Sources */,
 				00340C321BDF3F2100501211 /* gu_util.cpp in Sources */,
+				00DA5CA91C1BA9A40005BEE5 /* wb_all_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00B7E2E71BE0594900B7B779 /* ClassgeneratorCPPTests.mm in Sources */,
+				00F6451E1C1C0CCA00BB0CA8 /* wb_array_test.c in Sources */,
 				00B7E2F11BE05DAF00B7B779 /* gu_util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
