@@ -128,7 +128,7 @@ class Tests: XCTestCase {
     
     
     
-    func lc (ch: Character) -> Character {
+    func lc (_ ch: Character) -> Character {
         
         if ( ch >= "A" ) && ( ch <= "Z" ){
             
@@ -143,7 +143,7 @@ class Tests: XCTestCase {
         }
     }
     
-    func lcWord (word: String) -> String {
+    func lcWord (_ word: String) -> String {
         
         var lcWord = ""
         
@@ -190,7 +190,7 @@ class Tests: XCTestCase {
                 else {
                     foundReturn = true
                 }
-                commentPosition++
+                commentPosition += 1
             }
             else {
                 foundReturn = false
