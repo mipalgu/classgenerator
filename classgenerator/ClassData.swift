@@ -68,7 +68,7 @@ func getUserName() -> String {
     let pw = getpwuid(getuid())
     
     if pw != nil {
-        return String.fromCString(pw.memory.pw_name)!
+        return String(validatingUTF8: pw.pointee.pw_name)!
     }
     else {
         print ("Could not determine system username.")

@@ -16,7 +16,7 @@
  * @param fileType the file extension of the file to be generated
  * @return Returns the comment as a string
  */
-func getCreatorDetailsCommentWB(data: ClassData, fileType: String) -> String {
+func getCreatorDetailsCommentWB(_ data: ClassData, fileType: String) -> String {
     
     let comment = "/** \n" +
         " * file \(data.wb)\(fileType) \n" +
@@ -38,7 +38,7 @@ func getCreatorDetailsCommentWB(data: ClassData, fileType: String) -> String {
  * @param data is the classdata object
  * @return Returns the comment as a string
  */
-func getCreatorDetailsCommentCPP(data: ClassData) -> String {
+func getCreatorDetailsCommentCPP(_ data: ClassData) -> String {
     
     let comment = "/** \n" +
         " * file \(data.cpp).h \n" +
@@ -62,7 +62,7 @@ func getCreatorDetailsCommentCPP(data: ClassData) -> String {
 * @param data is the classdata object
 * @return Returns the comment as a string
 */
-func getCreatorDetailsCommentSwift(data: ClassData) -> String {
+func getCreatorDetailsCommentSwift(_ data: ClassData) -> String {
     
     let comment = "/** \n" +
         " * file \(data.cpp).swift \n" +
@@ -85,7 +85,7 @@ func getCreatorDetailsCommentSwift(data: ClassData) -> String {
 * @param data is the classdata object
 * @return Returns the comment as a string
 */
-func getCreatorDetailsCommentSwiftBH(data: ClassData) -> String {
+func getCreatorDetailsCommentSwiftBH(_ data: ClassData) -> String {
     
     let comment = "/** \n" +
         " * file \(data.cpp)-Bridging-Header.h \n" +
@@ -109,7 +109,7 @@ func getCreatorDetailsCommentSwiftBH(data: ClassData) -> String {
  * @param data is the classdata object
  * @return Returns the comment as a string
  */
-func getLicense(data: ClassData) -> String {
+func getLicense(_ data: ClassData) -> String {
     
     let license = " * Redistribution and use in source and binary forms, with or without \n" +
     " * modification, are permitted provided that the following conditions \n" +

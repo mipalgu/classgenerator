@@ -30,7 +30,7 @@ var foundVariables : [String] = []
  * @param inputText is the text of the input file
  * @return Returns the author's name
  */
-func parseInput(inputText: String) -> String {
+func parseInput(_ inputText: String) -> String {
     
     var foundUserName = false
     var userName : String = ""
@@ -61,7 +61,7 @@ func parseInput(inputText: String) -> String {
             else {
                 foundReturn = true
             }
-            commentPosition++
+            commentPosition += 1
         }
         else {
             foundReturn = false
@@ -189,7 +189,7 @@ func parseInput(inputText: String) -> String {
  * @param varType is the type of variable
  * @return Returns the default value as a string
  */
-func setDefault(varType: String) -> String {
+func setDefault(_ varType: String) -> String {
     
     if let defaultValue = variables[varType]?.defaultValue {
         print ("Unspecified \(varType) set to default value of: \(defaultValue)")
@@ -206,7 +206,7 @@ func setDefault(varType: String) -> String {
  * Closes an open filestream.
  * @param fileStream is a pointer to an open file stream
  */
-func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
+func closeFileStream(_ fileStream: UnsafeMutablePointer<FILE>) -> Void {
     
     if (fclose(fileStream) != 0) {
         print("Unable to close file\n")
@@ -220,12 +220,10 @@ func closeFileStream(fileStream: UnsafeMutablePointer<FILE>) -> Void {
  * @param inputFileName is the filename (including path) of the file to read
  * @return The contents of the file as a single string
  */
-func readVariables(inputFileName: String) -> String {
+func readVariables(_ inputFileName: String) -> String {
     
     // open a filestream for reading
-    let fs : UnsafeMutablePointer<FILE> = fopen( inputFileName, "r" )
-    
-    if fs == nil {
+    guard let fs = fopen( inputFileName, "r" ) else {
         // file did not open
         print("\(inputFileName) : No such file or directory\n")
         exit(EXIT_FAILURE)
@@ -233,7 +231,7 @@ func readVariables(inputFileName: String) -> String {
     
     // read from the opened file
     // then close the stream
-    let line = UnsafeMutablePointer<Int8>.alloc(fileSize)  // size of file as const declared above.
+    let line = UnsafeMutablePointer<Int8>(allocatingCapacity: fileSize)  // size of file as const declared above.
 
     if (ferror(fs) != 0) {
         print("Unable to read")
@@ -242,10 +240,10 @@ func readVariables(inputFileName: String) -> String {
     
     fread(line, fileSize, 1, fs)       // size of file as const declared above.
     
-    let contents = String.fromCString(line)
+    let contents = String(validatingUTF8: line)
     
     closeFileStream(fs)
-    line.destroy()
+    line.deinitialize(count:)()
     
     return contents!
 }
@@ -257,7 +255,7 @@ func readVariables(inputFileName: String) -> String {
  * @param data is an object containing information about the class to generate
  * @return A string which will become the C header file
  */
-func generateWbHeader(data: ClassData) -> String {
+func generateWbHeader(_ data: ClassData) -> String {
     
     let toStringBufferSize = getToStringBufferSize()
     let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
@@ -326,7 +324,7 @@ func generateWbHeader(data: ClassData) -> String {
  * @param data is an object containing information about the class to generate
  * @return A string which will become the C .c file
  */
-func generateWbC(data: ClassData) -> String {
+func generateWbC(_ data: ClassData) -> String {
     
     var cText = "#include \"\(data.wb).h\" \n" +
 //    "#include <gu_util.h> \n" +
@@ -757,7 +755,7 @@ func generateWbC(data: ClassData) -> String {
 * @param data is an object containing information about the class to generate
 * @return A string which will become the C++ wrapper file
 */
-func generateCPPStruct(data: ClassData) -> String {
+func generateCPPStruct(_ data: ClassData) -> String {
     
     var cppStruct = "#ifndef \(data.cpp)_DEFINED \n" +
         
@@ -1188,7 +1186,7 @@ func generateCPPStruct(data: ClassData) -> String {
 * @param data is an object containing information about the class to generate
 * @return A string which will become the Swift wrapper file
 */
-func generateSwiftExtension(data: ClassData) -> String {
+func generateSwiftExtension(_ data: ClassData) -> String {
     
     
     // Add the struct comment
@@ -1281,7 +1279,7 @@ func generateSwiftExtension(data: ClassData) -> String {
 * @param ind is the index of the inputData[] array
 * @return A string which is the literal array default
 */
-func makeArrayDefault (ind: Int) -> String {
+func makeArrayDefault(_ ind: Int) -> String {
     
     var defaultString = "{"
     
@@ -1310,15 +1308,13 @@ func makeArrayDefault (ind: Int) -> String {
  * It uses helper functions to generate the content, including the license information
  * @param data is an object containing information about the class to generate
  */
-func generateWBFiles(data: ClassData) -> Void {
+func generateWBFiles(_ data: ClassData) -> Void {
 
     // make header file
     let headerFilePath = data.workingDirectory + "/" + data.wb + ".h"
     
     // open a filestream for reading
-    let fsh : UnsafeMutablePointer<FILE> = fopen( headerFilePath, "w" )
-    
-    if fsh == nil {
+    guard let fsh = fopen( headerFilePath, "w" ) else {
         // file did not open
         print("\(data.wb).h : Could not create file\n")
         exit(EXIT_FAILURE)
@@ -1337,9 +1333,7 @@ func generateWBFiles(data: ClassData) -> Void {
     let cFilePath = data.workingDirectory + "/" + data.wb + ".c"
     
     // open a filestream for reading
-    let fsc : UnsafeMutablePointer<FILE> = fopen( cFilePath, "w" )
-    
-    if fsc == nil {
+    guard let fsc = fopen( cFilePath, "w" ) else {
         // file did not open
         print("\(data.wb).c : Could not create file\n")
         exit(EXIT_FAILURE)
@@ -1359,14 +1353,12 @@ func generateWBFiles(data: ClassData) -> Void {
  * It uses helper functions to generate the content, including the license information
  * @param data is an object containing information about the class to generate
  */
-func generateCPPFile(data: ClassData) -> Void {
+func generateCPPFile(_ data: ClassData) -> Void {
     
     let filePath = data.workingDirectory + "/" + data.cpp + ".h"
     
     // open a filestream for reading
-    let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
-    
-    if fs == nil {
+    guard let fs = fopen( filePath, "w" ) else {
         // file did not open
         print("\(data.cpp).h : Could not create file\n")
         exit(EXIT_FAILURE)
@@ -1386,14 +1378,12 @@ func generateCPPFile(data: ClassData) -> Void {
 * It uses helper functions to generate the content, including the license information
 * @param data is an object containing information about the class to generate
 */
-func generateSwiftFiles(data: ClassData) -> Void {
+func generateSwiftFiles(_ data: ClassData) -> Void {
     
     let filePath = data.workingDirectory + "/" + data.cpp + ".swift"
     
     // open a filestream for reading
-    let fs : UnsafeMutablePointer<FILE> = fopen( filePath, "w" )
-    
-    if fs == nil {
+    guard let fs = fopen( filePath, "w" ) else {
         // file did not open
         print("\(data.cpp).swift : Could not create file\n")
         exit(EXIT_FAILURE)
@@ -1411,9 +1401,7 @@ func generateSwiftFiles(data: ClassData) -> Void {
     let filePathBH = data.workingDirectory + "/" + data.cpp + "-Bridging-Header.h"
     
     // open a filestream for reading
-    let fsbh : UnsafeMutablePointer<FILE> = fopen( filePathBH, "w" )
-    
-    if fsbh == nil {
+    guard let fsbh = fopen( filePathBH, "w" ) else {
         // file did not open
         print("\(data.cpp)-Bridging-Header.h : Could not create file\n")
         exit(EXIT_FAILURE)
@@ -1434,7 +1422,7 @@ func generateSwiftFiles(data: ClassData) -> Void {
  * @param toStringbufferSize the size of the toString buffer
  * @return the size of the buffer
  */
-func getDescriptionBufferSize(toStringbufferSize: size_t) -> size_t {
+func getDescriptionBufferSize(_ toStringbufferSize: size_t) -> size_t {
     
     // total the number of characters in the descrption string
     var size: size_t = toStringbufferSize

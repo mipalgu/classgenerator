@@ -17,7 +17,7 @@
  * @param ch is a character
  * @return Returns the character, or its upper case version
  */
-func upperCase (ch: Character) -> Character {
+func upperCase(_ ch: Character) -> Character {
     
     if ( ch >= "a" ) && ( ch <= "z" ){
         
@@ -40,7 +40,7 @@ func upperCase (ch: Character) -> Character {
  * @param ch is a character
  * @return Returns the character, or its lower case version
  */
-func lowerCase (ch: Character) -> Character {
+func lowerCase(_ ch: Character) -> Character {
     
     if ( ch >= "A" ) && ( ch <= "Z" ){
         
@@ -63,7 +63,7 @@ func lowerCase (ch: Character) -> Character {
  * @param word is a string
  * @return Returns the capitalised word as a string
  */
-func capitalisedWord (word: String) -> String {
+func capitalisedWord(_ word: String) -> String {
     
     var capWord = ""
     var firstLetter = true
@@ -90,7 +90,7 @@ func capitalisedWord (word: String) -> String {
  * @param word is a string
  * @return Returns the uppercase word as a string
  */
-func uppercaseWord (word: String) -> String {
+func uppercaseWord(_ word: String) -> String {
     
     var uppWord = ""
     
@@ -101,7 +101,7 @@ func uppercaseWord (word: String) -> String {
     return uppWord
 }
 
-func lowercaseWord (word: String) -> String {
+func lowercaseWord(_ word: String) -> String {
     
     var lowWord = ""
     
@@ -120,7 +120,7 @@ func lowercaseWord (word: String) -> String {
  * @param words is an array of strings
  * @return Returns the word as a string
  */
-func camelCaseWord(words: [String]) -> String {
+func camelCaseWord(_ words: [String]) -> String {
     
     var camelCase: String = ""
     var wordToAdd = words[0]
@@ -145,7 +145,7 @@ func camelCaseWord(words: [String]) -> String {
  * @param words is an array of strings
  * @return Returns the word as a string
  */
-func cppWord(words: [String]) -> String {
+func cppWord(_ words: [String]) -> String {
     
     var cpp: String = ""
     var wordToAdd: String = ""
@@ -166,7 +166,7 @@ func cppWord(words: [String]) -> String {
  * @param inputText is a string
  * @return Returns the trimmed string
  */
-func removeCommentNotation(inputText: String) -> String {
+func removeCommentNotation(_ inputText: String) -> String {
     
     var firstLetterFound = false
     var foundComment = ""

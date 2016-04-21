@@ -24,7 +24,7 @@ var makeSwiftWrapper = false
 var foundFilename = false
   
 var input: [String] = Process.arguments
-input.removeAtIndex(0)      //remove the program name
+input.remove(at: 0)      //remove the program name
 
 if input.count == 0 {
     
@@ -91,9 +91,9 @@ if !makeCPPWrapper && !makeSwiftWrapper {
 */
 
 // get current working path
-var cwd: [Int8] = Array(count: Int(PATH_MAX), repeatedValue: 0)
+var cwd: [Int8] = Array(repeating: 0, count: Int(PATH_MAX))
 let path = getcwd(&cwd, Int(PATH_MAX))
-let workingDirectory = String.fromCString(path)! + "/"
+let workingDirectory = String(validatingUTF8: path)! + "/"
 
 // get the text from the input file
 var inputText = readVariables(workingDirectory + inputFilenameNoExtension + ".txt")
