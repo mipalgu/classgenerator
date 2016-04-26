@@ -339,7 +339,7 @@ func generateWbC(_ data: ClassData) -> String {
     "{ \n"
     
     if inputData.count > 1 {
-        cText += "    size_t len; \n"
+        cText += "    size_t len = 0; \n"
     }
     
     
@@ -466,7 +466,7 @@ func generateWbC(_ data: ClassData) -> String {
         "{ \n"
     
     if inputData.count > 1 {
-        cText += "    size_t len; \n"
+        cText += "    size_t len = 0; \n"
     }
     
     first = true
