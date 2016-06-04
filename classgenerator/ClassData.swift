@@ -64,17 +64,14 @@ class ClassData {
  * @return Returns the system's user name as a string
  */
 func getUserName() -> String {
-    
-    let pw = getpwuid(getuid())
-    
-    if pw != nil {
-        return String(validatingUTF8: pw.pointee.pw_name)!
-    }
-    else {
+    guard let pw = getpwuid(getuid()),
+            name = String(validatingUTF8: pw.pointee.pw_name) else {
         print ("Could not determine system username.")
         print ("Please check the generated files.")
         return "YOUR NAME GOES HERE"
     }
+
+    return name
 }
 
 

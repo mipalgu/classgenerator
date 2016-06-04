@@ -92,8 +92,10 @@ if !makeCPPWrapper && !makeSwiftWrapper {
 
 // get current working path
 var cwd: [Int8] = Array(repeating: 0, count: Int(PATH_MAX))
-let path = getcwd(&cwd, Int(PATH_MAX))
-let workingDirectory = String(validatingUTF8: path)! + "/"
+guard let path = getcwd(&cwd, Int(PATH_MAX)) else {
+    fatalError("Cannot get current directory")
+}
+let workingDirectory = String(cString: path) + "/"
 
 // get the text from the input file
 var inputText = readVariables(workingDirectory + inputFilenameNoExtension + ".txt")
