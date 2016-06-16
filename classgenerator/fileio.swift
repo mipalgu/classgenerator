@@ -326,7 +326,8 @@ func generateWbHeader(_ data: ClassData) -> String {
  */
 func generateWbC(_ data: ClassData) -> String {
     
-    var cText = "#include \"\(data.wb).h\" \n" +
+    var cText = "#define WHITEBOARD_POSTER_STRING_CONVERSION\n" +
+    "#include \"\(data.wb).h\" \n" +
 //    "#include <gu_util.h> \n" +
     "#include <stdio.h> \n" +
     "#include <string.h> \n" +
@@ -387,7 +388,7 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "            gu_strlcat(descString, self->\(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
             }
             else {
-                cText += "            snprintf(descString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
+                cText += "            snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
@@ -444,7 +445,7 @@ func generateWbC(_ data: ClassData) -> String {
                              "    { \n    "
                 }
                 
-                cText += "    snprintf(descString+len, bufferSize-len, \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
+                cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
                 
                 if !first {
                     cText += "    } \n\n"
@@ -513,7 +514,7 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "            gu_strlcat(toString, self->\(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
             }
             else {
-                cText += "            snprintf(toString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
+                cText += "            snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
@@ -562,7 +563,7 @@ func generateWbC(_ data: ClassData) -> String {
                          "    { \n    "
             }
             
-            cText += "    snprintf(toString+len, bufferSize-len, \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
+            cText += "    snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
             
             if !first {
                 cText += "    } \n\n "
