@@ -263,6 +263,10 @@ func generateWbHeader(_ data: ClassData) -> String {
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         "#define \(data.wb)_h \n\n" +
         "#include \"gu_util.h\" \n\n"
+
+    if let _ = inputData.lazy.filter({requiresStdInt($0.varType)}).first {
+       cStruct1 += "#include <stdint.h> \n\n"
+    }
     
     cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
@@ -315,6 +319,13 @@ func generateWbHeader(_ data: ClassData) -> String {
         "#endif /// \(data.wb)_h \n"
     
     return cStruct1
+}
+
+func requiresStdInt(_ v: String) -> Bool {
+    return v == "int8_t" || v == "uint8_t"
+        || v == "int16_t" || v == "uint16_t"
+        || v == "int32_t" || v == "uint32_t"
+        || v == "int64_t" || v == "uint64_t"
 }
 
 
