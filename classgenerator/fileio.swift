@@ -1214,7 +1214,7 @@ func generateSwiftExtension(_ data: ClassData) -> String {
     // Convenience constructor
     swiftExt += "extension \(data.wb) { \n\n" +
     
-        "    convenience init () { \n"
+        "    init () { \n"
     
     for i in 0...inputData.count-1 {
         
@@ -1242,7 +1242,7 @@ func generateSwiftExtension(_ data: ClassData) -> String {
         "extension \(data.wb): CustomStringConvertible { \n\n" +
     
         "/** convert to a description string */  \n" +
-        "    var description: String { \n\n" +
+        "    public var description: String { \n\n" +
         "        var descString = \"\" \n\n"
     
     // description
