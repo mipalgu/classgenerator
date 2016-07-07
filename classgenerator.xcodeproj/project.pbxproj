@@ -43,12 +43,12 @@
 /* Begin PBXFileReference section */
 		00021F601B897D1100F7F681 /* GNUlicense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
 		00340C311BDF3F2100501211 /* gu_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gu_util.cpp; path = ../../../Common/gu_util.cpp; sourceTree = "<group>"; };
-		003579CA1BE354650031D894 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = classgenerator/testfiles/wb_array_test.c; sourceTree = SOURCE_ROOT; };
-		003579CB1BE354650031D894 /* wb_array_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_array_test.h; path = classgenerator/testfiles/wb_array_test.h; sourceTree = SOURCE_ROOT; };
-		003579CC1BE354650031D894 /* wb_my_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_my_test.c; path = classgenerator/testfiles/wb_my_test.c; sourceTree = SOURCE_ROOT; };
-		003579CD1BE354650031D894 /* wb_my_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_my_test.h; path = classgenerator/testfiles/wb_my_test.h; sourceTree = SOURCE_ROOT; };
-		003579D01BE3547F0031D894 /* ArrayTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArrayTest.h; path = classgenerator/testfiles/ArrayTest.h; sourceTree = SOURCE_ROOT; };
-		003579D11BE3547F0031D894 /* MYTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MYTest.h; path = classgenerator/testfiles/MYTest.h; sourceTree = SOURCE_ROOT; };
+		003579CA1BE354650031D894 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = testfiles/wb_array_test.c; sourceTree = SOURCE_ROOT; };
+		003579CB1BE354650031D894 /* wb_array_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_array_test.h; path = testfiles/wb_array_test.h; sourceTree = SOURCE_ROOT; };
+		003579CC1BE354650031D894 /* wb_my_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_my_test.c; path = testfiles/wb_my_test.c; sourceTree = SOURCE_ROOT; };
+		003579CD1BE354650031D894 /* wb_my_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_my_test.h; path = testfiles/wb_my_test.h; sourceTree = SOURCE_ROOT; };
+		003579D01BE3547F0031D894 /* ArrayTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArrayTest.h; path = testfiles/ArrayTest.h; sourceTree = SOURCE_ROOT; };
+		003579D11BE3547F0031D894 /* MYTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MYTest.h; path = testfiles/MYTest.h; sourceTree = SOURCE_ROOT; };
 		00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
 		009DB62D1BD3AEDA00EA74C9 /* ClassgeneratorCTests3.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClassgeneratorCTests3.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		009DB62F1BD3AEDB00EA74C9 /* ClassgeneratorCTests3.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassgeneratorCTests3.m; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 		00B451381BD4F235001E6AB5 /* gu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gu_util.h; path = ../../../Common/gu_util.h; sourceTree = "<group>"; };
 		00B7E2E41BE0594900B7B779 /* ClassgeneratorCPPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClassgeneratorCPPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00B7E2E61BE0594900B7B779 /* ClassgeneratorCPPTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ClassgeneratorCPPTests.mm; sourceTree = "<group>"; };
-		00B7E2E81BE0594900B7B779 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00B7E2E81BE0594900B7B779 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Tests/Info.plist; sourceTree = "<group>"; };
 		00B7E2EF1BE05DAF00B7B779 /* gu_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gu_util.cpp; path = ../../../Common/gu_util.cpp; sourceTree = "<group>"; };
 		00B7E2F01BE05DAF00B7B779 /* gu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gu_util.h; path = ../../../Common/gu_util.h; sourceTree = "<group>"; };
 		00BAD0A41B9827F200A3A062 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,11 +67,11 @@
 		00BCC1041B7EDA17002C72B7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		00BCC10E1B7EFE28002C72B7 /* fileio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = fileio.swift; sourceTree = "<group>"; };
 		00D9678B1B886CAE00D47595 /* ClassData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
-		00DA5CA71C1BA9A40005BEE5 /* wb_all_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_all_test.c; path = classgenerator/testfiles/wb_all_test.c; sourceTree = SOURCE_ROOT; };
-		00DA5CA81C1BA9A40005BEE5 /* wb_all_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_all_test.h; path = classgenerator/testfiles/wb_all_test.h; sourceTree = SOURCE_ROOT; };
-		00DA5CAA1C1BA9BF0005BEE5 /* AllTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllTest.h; path = classgenerator/testfiles/AllTest.h; sourceTree = SOURCE_ROOT; };
+		00DA5CA71C1BA9A40005BEE5 /* wb_all_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_all_test.c; path = testfiles/wb_all_test.c; sourceTree = SOURCE_ROOT; };
+		00DA5CA81C1BA9A40005BEE5 /* wb_all_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb_all_test.h; path = testfiles/wb_all_test.h; sourceTree = SOURCE_ROOT; };
+		00DA5CAA1C1BA9BF0005BEE5 /* AllTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllTest.h; path = testfiles/AllTest.h; sourceTree = SOURCE_ROOT; };
 		00E3837F1BB92E2D00B5B76A /* InputData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputData.swift; sourceTree = "<group>"; };
-		00F6451D1C1C0CCA00BB0CA8 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = classgenerator/testfiles/wb_array_test.c; sourceTree = SOURCE_ROOT; };
+		00F6451D1C1C0CCA00BB0CA8 /* wb_array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wb_array_test.c; path = testfiles/wb_array_test.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +150,7 @@
 		00BCC0F81B7EDA17002C72B7 = {
 			isa = PBXGroup;
 			children = (
-				00BCC1031B7EDA17002C72B7 /* classgenerator */,
+				00BCC1031B7EDA17002C72B7 /* Sources */,
 				00BAD0A51B9827F300A3A062 /* Tests */,
 				009DB62E1BD3AEDB00EA74C9 /* ClassgeneratorCTests3 */,
 				00B7E2E51BE0594900B7B779 /* ClassgeneratorCPPTests */,
@@ -169,7 +169,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		00BCC1031B7EDA17002C72B7 /* classgenerator */ = {
+		00BCC1031B7EDA17002C72B7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				00BCC1041B7EDA17002C72B7 /* main.swift */,
@@ -180,7 +180,7 @@
 				00542AB11BACEDDD0074AD7D /* stringmanipulation.swift */,
 				00E3837F1BB92E2D00B5B76A /* InputData.swift */,
 			);
-			path = classgenerator;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -383,7 +383,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator/testfiles/**",
+					"$(SRCROOT)/testfiles/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -400,7 +400,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator/testfiles/**",
+					"$(SRCROOT)/testfiles/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -417,7 +417,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../Common",
 					"$(SRCROOT)/../gusimplewhiteboard",
-					"$(SRCROOT)/classgenerator/testfiles/**",
+					"$(SRCROOT)/testfiles/**",
 				);
 				INFOPLIST_FILE = ClassgeneratorCTests3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
