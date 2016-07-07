@@ -397,9 +397,10 @@ func generateWbC(_ data: ClassData) -> String {
             
             if inputData[i].varType == "bool" {
                 cText += "            gu_strlcat(descString, self->\(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
-            }
-            else {
-                cText += "            snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
+            } else if let varInfo = variables[inputData[i].varType] {
+                cText += "            snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(varInfo.format)\", self->\(inputData[i].varName)[i]); \n"
+            } else { // FIXME: structs/classes need to use their description function
+                cText += "            snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"%p\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
@@ -523,9 +524,10 @@ func generateWbC(_ data: ClassData) -> String {
             
             if inputData[i].varType == "bool" {
                 cText += "            gu_strlcat(toString, self->\(inputData[i].varName)[i] ? \"true\" : \"false\", bufferSize); \n"
-            }
-            else {
-                cText += "            snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)[i]); \n"
+            } else if let varInfo = variables[inputData[i].varType] {
+                cText += "            snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(varInfo.format)\", self->\(inputData[i].varName)[i]); \n"
+            } else { // FIXME: structs/classes need to use their description function
+                cText += "            snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"%p\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
@@ -732,10 +734,12 @@ func generateWbC(_ data: ClassData) -> String {
             
             if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
                 cText += "            self->\(inputData[i].varName)[i] = strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false; \n"
+            } else if let varInfo = variables[inputData[i].varType] {
+                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(varInfo.converter)(\(inputData[i].varName)_values[i]); \n"
+            } else { // FIXME: needs to use string initialiser
+                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))(\(inputData[i].varName)_values[i]); \n"
             }
-            else {
-                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(\(inputData[i].varName)_values[i]); \n"
-            }
+
             
             cText += "    } \n\n"
         }
