@@ -832,14 +832,11 @@ func generateCPPStruct(_ data: ClassData) -> String {
             
             // no defaults for arrays
             if inputData[i].varDefault == "" {
-                
-                let arrayDefault = variables[inputData[i].varType]!.defaultValue
-                
-                print("Unspecified array of type \(inputData[i].varType) set to all: \(arrayDefault)")
-                
-                for j in 0...inputData[i].varArraySize-1 {
-                    
-                    cppStruct += "            set_\(inputData[i].varName)(\(arrayDefault), \(j)); \n"
+                if let arrayDefault = variables[inputData[i].varType]?.defaultValue {
+                    print("Unspecified array of type \(inputData[i].varType) set to all: \(arrayDefault)")
+                    for j in 0...inputData[i].varArraySize-1 {
+                        cppStruct += "            set_\(inputData[i].varName)(\(arrayDefault), \(j)); \n"
+                    }
                 }
             }
             // use defaults specified for arrays
@@ -1141,14 +1138,13 @@ func generateCPPStruct(_ data: ClassData) -> String {
             
             if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
                 cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varName)_values[i].compare(\"true\") == 0  || \(inputData[i].varName)_values[i].compare(\"1\") == 0 ? true : false, i); \n"
+            } else if let varInfo = variables[inputData[i].varType] {
+                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(\(inputData[i].varName)_values[i].c_str())), i); \n"
+            } else { // FIXME: call string constructor
+//                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(\(inputData[i].varName)_values[i].c_str())), i); \n"
             }
-            else {
-                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(variables[inputData[i].varType]!.converter)(\(inputData[i].varName)_values[i].c_str())), i); \n"
-            }
-            
             cppStruct += "            } \n\n"
-        }
-        else {
+        } else {
             cppStruct += "            if (!strings[\(i)].empty()) \n"
             
             if inputData[i].varType == "bool" {
@@ -1229,9 +1225,12 @@ func generateSwiftExtension(_ data: ClassData) -> String {
         else {   // an array
 
             if inputData[i].varDefault == "" {
-                
-                print("Unspecified array of type \(inputData[i].varType) set to all: \(variables[inputData[i].varType]!.defaultValue)")
-                swiftExt += "        self.\(inputData[i].varName) = \(makeArrayDefault(i)) \n"
+                if let varInfo = variables[inputData[i].varType] {
+                    print("Unspecified array of type \(inputData[i].varType) set to all: \(varInfo.defaultValue)")
+                    swiftExt += "        self.\(inputData[i].varName) = \(makeArrayDefault(i)) \n"
+                } else {
+                    // FIXME: call string constructor for default default values
+                }
             }
             else {
                 swiftExt += "        self.\(inputData[i].varName) = \(inputData[i].varDefault) \n"
