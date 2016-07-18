@@ -934,7 +934,7 @@ func generateCPPStruct(_ data: ClassData) -> String {
                         cppStruct += "            ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)(); \n"
                     }
                     // an array
-                    else {
+                    else if let _ = variables[inputData[i].varType] {
                         
                         cppStruct += "\n            bool \(inputData[i].varName)_first = true; \n"
                         
@@ -948,6 +948,20 @@ func generateCPPStruct(_ data: ClassData) -> String {
                             "            } \n"
                         cppStruct += "            ss << \"}\"; \n"
 
+                    } else {
+                        
+                        cppStruct += "\n            bool \(inputData[i].varName)_first = true; \n"
+                        
+                        cppStruct += "            ss << \"\(inputData[i].varName)={\"; \n" +
+                            
+                            "            for (int i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; i++) \n" +
+                            "            { \n" +
+                            
+                            "                ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i).description(); \n" +
+                            "                \(inputData[i].varName)_first = false;  \n" +
+                        "            } \n"
+                        cppStruct += "            ss << \"}\"; \n"
+                        
                     }
                     first = false
                 }
