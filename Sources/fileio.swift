@@ -957,7 +957,7 @@ func generateCPPStruct(_ data: ClassData) -> String {
                             "            for (int i = 0; i < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; i++) \n" +
                             "            { \n" +
                             
-                            "                ss << (\(inputData[i].varName)_first ? \"\" : \",\") << \(inputData[i].varName)(i).description(); \n" +
+                            "                ss << (\(inputData[i].varName)_first ? \"\" : \",\") << static_cast<\(data.cpp) *>(&\(inputData[i].varName)(i))->description(); \n" +
                             "                \(inputData[i].varName)_first = false;  \n" +
                         "            } \n"
                         cppStruct += "            ss << \"}\"; \n"
