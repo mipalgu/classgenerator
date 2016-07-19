@@ -407,8 +407,6 @@ func generateWbC(_ data: ClassData) -> String {
                 "        \(inputData[i].varName)_first = 1; \n" +
                 "    } \n"  +
                 "    gu_strlcat(descString, \"}\", bufferSize); \n\n"
-            
-            first = false
         }
         
         
@@ -439,12 +437,7 @@ func generateWbC(_ data: ClassData) -> String {
             if !first {
                 cText += "    } \n\n"
             }
-            
-            first = false
-        }
-        
-        // if the variable is a number type
-        else {
+        } else if let varInfo = variables[inputData[i].varType] { // if the variable is a number type
                 if first {
                     cText += "\n"
                 }
@@ -457,18 +450,39 @@ func generateWbC(_ data: ClassData) -> String {
                              "    { \n    "
                 }
                 
-                cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
+                cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
                 
                 if !first {
                     cText += "    } \n\n"
                 }
                 
-                first = false
+        } else if let varInfo = variables["int"] where
+                inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
+            if first {
+                cText += "\n"
+            }
+            else {
+                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+            }
+
+            if !first {
+                cText += "    if (len < bufferSize) \n" +
+                "    { \n    "
+            }
+
+            cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
+
+            if !first {
+                cText += "    } \n\n"
+            }
+
         }
 
+        first = false
+
     }
-    
-    
+
+
     cText += "\treturn descString; \n" +
     "} \n\n"
     
@@ -558,37 +572,50 @@ func generateWbC(_ data: ClassData) -> String {
             if !first {
                 cText += "    } \n\n"
             }
-            
-            first = false
-        }
-        // if the variable is a number type
-        else {
-                
+        } else if let varInfo = variables[inputData[i].varType] { // if the variable is a number type
             if first {
                 cText += "\n"
             }
             else {
-                cText += "    len = gu_strlcat(toString, \", \", bufferSize); \n\n"
+                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
             }
-            
+
             if !first {
                 cText += "    if (len < bufferSize) \n" +
-                         "    { \n    "
+                "    { \n    "
             }
-            
-            cText += "    snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(variables[inputData[i].varType]!.format)\", self->\(inputData[i].varName)); \n"
+
+            cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
+
+            if !first {
+                cText += "    } \n\n"
+            }
+
+        } else if let varInfo = variables["int"] where
+            inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
+            if first {
+                cText += "\n"
+            }
+            else {
+                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+            }
+
+            if !first {
+                cText += "    if (len < bufferSize) \n" +
+                "    { \n    "
+            }
+
+            cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
             
             if !first {
-                cText += "    } \n\n "
+                cText += "    } \n\n"
             }
-            
-            first = false
         }
+        first = false
     }
-    
     cText += "    return toString; \n" +
     "} \n\n"
-    
+
     // create from_string method
     cText += "/** convert from a string */  \n" +
         "struct \(data.wb)* \(data.wb)_from_string(struct \(data.wb)* self, const char* str) \n" +
@@ -739,21 +766,28 @@ func generateWbC(_ data: ClassData) -> String {
             } else { // FIXME: needs to use string initialiser
                 cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))(\(inputData[i].varName)_values[i]); \n"
             }
-
-            
             cText += "    } \n\n"
-        }
-        else {
+        } else if let varInfo = variables[inputData[i].varType] { // if the variable is a number type
             cText += "    if (strings[\(i)] != NULL) \n"
-            
+
             if inputData[i].varType == "bool" {
-                
+
                 cText += "       self->\(inputData[i].varName) = strcmp(strings[\(i)], \"true\") == 0  || strcmp(strings[\(i)], \"1\") == 0 ? true : false; \n\n"
             }
             else {
-                cText += "       self->\(inputData[i].varName) = (\(inputData[i].varType))\(variables[inputData[i].varType]!.converter)(strings[\(i)]); \n\n"
+                cText += "       self->\(inputData[i].varName) = (\(inputData[i].varType))\(varInfo.converter)(strings[\(i)]); \n\n"
             }
-            
+        } else if let varInfo = variables["int"] where
+            inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
+            cText += "    if (strings[\(i)] != NULL) \n"
+
+            if inputData[i].varType == "bool" {
+
+                cText += "       self->\(inputData[i].varName) = strcmp(strings[\(i)], \"true\") == 0  || strcmp(strings[\(i)], \"1\") == 0 ? true : false; \n\n"
+            }
+            else {
+                cText += "       self->\(inputData[i].varName) = (\(inputData[i].varType))\(varInfo.converter)(strings[\(i)]); \n\n"
+            }
         }
     }
     
@@ -1182,11 +1216,12 @@ func generateCPPStruct(_ data: ClassData) -> String {
             if inputData[i].varType == "bool" {
                 
                 cppStruct += "                set_\(inputData[i].varName)(strings[\(i)].compare(\"true\") == 0  || strings[\(i)].compare(\"1\") == 0 ? true : false); \n\n"
+            } else if let varInfo = variables[inputData[i].varType] { // if the variable is a number type
+                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
+            } else if let varInfo = variables["int"] where
+                inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
+                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
             }
-            else {
-                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(variables[inputData[i].varType]!.converter)(strings[\(i)].c_str()))); \n\n"
-            }
-            
         }
     }
 

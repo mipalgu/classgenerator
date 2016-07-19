@@ -193,6 +193,12 @@ extension String {
         return cppWord(words)
     }
 
+    /// return the substring before the given character
+    func substring(before c: Character) -> String? {
+        let words = characters.split {$0 == c}.map { String($0) }
+        return words.first
+    }
+
     /// return the substring after the given character
     func substring(after c: Character) -> String? {
         let words = characters.split {$0 == c}.map { String($0) }

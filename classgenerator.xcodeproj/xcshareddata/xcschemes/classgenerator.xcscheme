@@ -57,7 +57,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/rh/Devel/src/MiPal/GUNao/fsms/ric_komodo/komodo_position/my_custom_wb/typeClassDefs"
+      customWorkingDirectory = "/Users/rh/Devel/src/MiPal/GUNao/fsms/ric_komodo/gazebo_motion_switch/my_gazebo_motion_wb/typeClassDefs"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -79,6 +79,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "gazebo_world.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "gazebo_robot_doing_motion.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
