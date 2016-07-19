@@ -201,20 +201,6 @@ func setDefault(_ varType: String) -> String {
     }
 }
 
-
-/**
- * Closes an open filestream.
- * @param fileStream is a pointer to an open file stream
- */
-func closeFileStream(_ fileStream: UnsafeMutablePointer<FILE>) -> Void {
-    
-    if (fclose(fileStream) != 0) {
-        print("Unable to close file\n")
-        exit(EXIT_FAILURE)
-    }
-}
-
-
 /**
  * Reads the content of a text file.
  * @param inputFileName is the filename (including path) of the file to read
@@ -228,24 +214,24 @@ func readVariables(_ inputFileName: String) -> String {
         print("\(inputFileName) : No such file or directory\n")
         exit(EXIT_FAILURE)
     }
-    
+    defer { fclose(fs) }
+
     // read from the opened file
     // then close the stream
     let line = UnsafeMutablePointer<Int8>(allocatingCapacity: fileSize)  // size of file as const declared above.
 
     if (ferror(fs) != 0) {
-        print("Unable to read")
+        perror("Unable to read")
         exit(EXIT_FAILURE)
     }
     
     fread(line, fileSize, 1, fs)       // size of file as const declared above.
     
-    let contents = String(validatingUTF8: line)
+    let contents = String(cString: line)
     
-    closeFileStream(fs)
     line.deinitialize(count:)()
     
-    return contents!
+    return contents
 }
 
 
@@ -1364,23 +1350,29 @@ func generateSwiftExtension(_ data: ClassData) -> String {
 func makeArrayDefault(_ ind: Int) -> String {
     
     var defaultString = "{"
-    
-    var first = true
-    
-    for _ in 0...inputData[ind].varArraySize-1 {
-        
-        if !first {
-            defaultString += ","
-        }
-        
-        defaultString += "\(variables[inputData[ind].varType]!.defaultValue)"
-        first = false
+    let data = inputData[ind]
+    if let varInfo = variables[data.varType] {
+        defaultString += Array(repeating: varInfo.defaultValue, count: data.varArraySize).joined(separator: ",")
     }
-    
     defaultString += "}"
 
     return defaultString
 }
+
+
+
+/**
+ * Closes an open filestream.
+ * @param fileStream is a pointer to an open file stream
+ */
+func closeFileStream(_ fileStream: UnsafeMutablePointer<FILE>) -> Void {
+
+    if (fclose(fileStream) != 0) {
+        perror("Unable to close file\n")
+        exit(EXIT_FAILURE)
+    }
+}
+
 
 
 
@@ -1401,32 +1393,39 @@ func generateWBFiles(_ data: ClassData) -> Void {
         print("\(data.wb).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
-    
+    defer { closeFileStream(fsh) }
+
     var commentText = getCreatorDetailsCommentWB(data, fileType: ".h")
     let licenseText = getLicense(data)
     
     let headerText =  commentText + licenseText + generateWbHeader(data)   // generate the header file content
     
-    fputs( headerText, fsh )
-    closeFileStream(fsh)
+    guard fputs(headerText, fsh) != EOF else {
+        perror(headerFilePath)
+        exit(EXIT_FAILURE)
+    }
     
     
     // make c file
     let cFilePath = data.workingDirectory + "/" + data.wb + ".c"
     
     // open a filestream for reading
-    guard let fsc = fopen( cFilePath, "w" ) else {
+    guard let fsc = fopen(cFilePath, "w") else {
         // file did not open
         print("\(data.wb).c : Could not create file\n")
         exit(EXIT_FAILURE)
     }
-    
+    defer { closeFileStream(fsc) }
+
     commentText = getCreatorDetailsCommentWB(data, fileType: ".c")
     
     let cText =  commentText + licenseText + generateWbC(data)   // generate the .c file content
     
-    fputs( cText, fsc )
-    closeFileStream(fsc)
+    guard fputs(cText, fsc) != EOF else {
+        perror(cFilePath)
+        exit(EXIT_FAILURE)
+    }
+
 }
 
 
@@ -1440,17 +1439,19 @@ func generateCPPFile(_ data: ClassData) -> Void {
     let filePath = data.workingDirectory + "/" + data.cpp + ".h"
     
     // open a filestream for reading
-    guard let fs = fopen( filePath, "w" ) else {
+    guard let fs = fopen(filePath, "w") else {
         // file did not open
         print("\(data.cpp).h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
-    
+    defer { closeFileStream(fs) }
+
     let text = getCreatorDetailsCommentCPP(data) + getLicense(data) + generateCPPStruct(data)
     
-    fputs(text, fs)
-    
-    closeFileStream(fs)
+    guard fputs(text, fs) != EOF else {
+        perror(filePath)
+        exit(EXIT_FAILURE)
+    }
 }
 
 
@@ -1465,19 +1466,20 @@ func generateSwiftFiles(_ data: ClassData) -> Void {
     let filePath = data.workingDirectory + "/" + data.cpp + ".swift"
     
     // open a filestream for reading
-    guard let fs = fopen( filePath, "w" ) else {
+    guard let fs = fopen(filePath, "w" ) else {
         // file did not open
         print("\(data.cpp).swift : Could not create file\n")
         exit(EXIT_FAILURE)
     }
-    
+    defer { closeFileStream(fs) }
+
     let text = getCreatorDetailsCommentSwift(data) + getLicense(data) + generateSwiftExtension(data)
     
-    fputs(text, fs)
-    
-    closeFileStream(fs)
-    
-    
+    guard fputs(text, fs) != EOF else {
+        perror(filePath)
+        exit(EXIT_FAILURE)
+    }
+
     // make a bridging header
     // \(data.cpp)-Bridging-Header.h
     let filePathBH = data.workingDirectory + "/" + data.cpp + "-Bridging-Header.h"
@@ -1488,12 +1490,14 @@ func generateSwiftFiles(_ data: ClassData) -> Void {
         print("\(data.cpp)-Bridging-Header.h : Could not create file\n")
         exit(EXIT_FAILURE)
     }
-    
+    defer { closeFileStream(fsbh) }
+
     let textbh = getCreatorDetailsCommentSwiftBH(data) + getLicense(data) + "#import \"\(data.wb).h\" \n"
     
-    fputs(textbh, fsbh)
-    
-    closeFileStream(fsbh)
+    guard fputs(textbh, fsbh) != EOF else {
+        perror(filePath)
+        exit(EXIT_FAILURE)
+    }
 }
 
 
