@@ -16,20 +16,20 @@ import Darwin
 #endif
 
 class ClassData {
-    
-    var inputFilename: String     // user's filename including .txt
+    var baseName: String            ///< base class/input file name
+    var inputFilename: String       ///< user's filename including .txt
     var workingDirectory: String
-    var wb: String                // name for wb class/struct, lower case with underscores starting with wb_
-    var camel: String             // camel case, without underscores
-    var caps: String              // upper case, including underscores
-    var cpp: String               // c++ class
+    var wb: String                  ///< name for wb class/struct, lower case with underscores starting with wb_
+    var camel: String               ///< camel case, without underscores
+    var caps: String                ///< upper case, including underscores
+    var cpp: String                 ///< c++ class name
     var userName: String
     var creationDate: String
     var year: Int
     
     init(workingDirectory: String, inputFilenameNoExtension: String, userName: String) {
-        
-        self.inputFilename = inputFilenameNoExtension + ".txt"
+        baseName = inputFilenameNoExtension
+        inputFilename = inputFilenameNoExtension + ".txt"
         
         // make wb_ name : the name not including .txt, with wb_ added
         self.wb = "wb_" + lowercaseWord(inputFilenameNoExtension)

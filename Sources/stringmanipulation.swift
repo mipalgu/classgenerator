@@ -137,7 +137,6 @@ func camelCaseWord(_ words: [String]) -> String {
 }
 
 
-
 /**
  * This function makes words into a C++ struct name.
  * That is, a camel case word with the first letter also upper case.
@@ -183,4 +182,22 @@ func removeCommentNotation(_ inputText: String) -> String {
     }
     
     return foundComment
+}
+
+
+/// String convenience extension
+extension String {
+    /// convert a C-style identifier with underscores to C++ camel case
+    var cpp: String {
+        let words = characters.split {$0 == "_"}.map { String($0) }
+        return cppWord(words)
+    }
+
+    /// return the substring after the given character
+    func substring(after c: Character) -> String? {
+        let words = characters.split {$0 == c}.map { String($0) }
+        let n = words.count
+        guard n > 1 else { return nil }
+        return words[1..<n].joined(separator: String(c))
+    }
 }
