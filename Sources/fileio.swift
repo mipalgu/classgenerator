@@ -527,7 +527,7 @@ func generateWbC(_ data: ClassData) -> String {
             } else if let varInfo = variables[inputData[i].varType] {
                 cText += "            snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(varInfo.format)\", self->\(inputData[i].varName)[i]); \n"
             } else { // FIXME: structs/classes need to use their description function
-                cText += "            snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"%p\", self->\(inputData[i].varName)[i]); \n"
+                cText += "            snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"%p\", self->\(inputData[i].varName)[i]); \n"
             }
             
             cText += "        } \n" +
@@ -563,7 +563,7 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+                cText += "    len = gu_strlcat(toString, \", \", bufferSize); \n\n"
             }
 
             if !first {
@@ -571,7 +571,7 @@ func generateWbC(_ data: ClassData) -> String {
                 "    { \n    "
             }
 
-            cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
+            cText += "    snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
 
             if !first {
                 cText += "    } \n\n"
@@ -583,7 +583,7 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "\n"
             }
             else {
-                cText += "    len = gu_strlcat(descString, \", \", bufferSize); \n\n"
+                cText += "    len = gu_strlcat(toString, \", \", bufferSize); \n\n"
             }
 
             if !first {
@@ -591,7 +591,7 @@ func generateWbC(_ data: ClassData) -> String {
                 "    { \n    "
             }
 
-            cText += "    snprintf(descString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
+            cText += "    snprintf(toString\(first ? "" : "+len"), bufferSize\(first ? "" : "-len"), \"\(inputData[i].varName)=\(varInfo.format)\", self->\(inputData[i].varName)); \n"
             
             if !first {
                 cText += "    } \n\n"

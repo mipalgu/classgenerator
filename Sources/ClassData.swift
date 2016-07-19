@@ -65,7 +65,7 @@ class ClassData {
  */
 func getUserName() -> String {
     guard let pw = getpwuid(getuid()),
-            name = String(validatingUTF8: pw.pointee.pw_name) else {
+          let name = String(validatingUTF8: pw.pointee.pw_name) else {
         print ("Could not determine system username.")
         print ("Please check the generated files.")
         return "YOUR NAME GOES HERE"
