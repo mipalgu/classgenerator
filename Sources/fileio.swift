@@ -442,7 +442,7 @@ func generateWbC(_ data: ClassData) -> String {
                     cText += "    } \n\n"
                 }
                 
-        } else if let varInfo = variables["int"] where
+        } else if let varInfo = variables["int"],
                 inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
             if first {
                 cText += "\n"
@@ -577,7 +577,7 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "    } \n\n"
             }
 
-        } else if let varInfo = variables["int"] where
+        } else if let varInfo = variables["int"],
             inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
             if first {
                 cText += "\n"
@@ -763,7 +763,7 @@ func generateWbC(_ data: ClassData) -> String {
             else {
                 cText += "       self->\(inputData[i].varName) = (\(inputData[i].varType))\(varInfo.converter)(strings[\(i)]); \n\n"
             }
-        } else if let varInfo = variables["int"] where
+        } else if let varInfo = variables["int"],
             inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
             cText += "    if (strings[\(i)] != NULL) \n"
 
@@ -1204,7 +1204,7 @@ func generateCPPStruct(_ data: ClassData) -> String {
                 cppStruct += "                set_\(inputData[i].varName)(strings[\(i)].compare(\"true\") == 0  || strings[\(i)].compare(\"1\") == 0 ? true : false); \n\n"
             } else if let varInfo = variables[inputData[i].varType] { // if the variable is a number type
                 cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
-            } else if let varInfo = variables["int"] where
+            } else if let varInfo = variables["int"],
                 inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
                 cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
             }
