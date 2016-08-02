@@ -287,7 +287,13 @@ func generateWbHeader(_ data: ClassData) -> String {
     
     let toStringBufferSize = getToStringBufferSize()
     let descriptionBufferSize = getDescriptionBufferSize(toStringBufferSize)
-    
+    let preamble: String
+    if let preambleContent = String.from(file: data.preambleFile) {
+        preamble = preambleContent + "\n\n"
+    } else {
+        preamble = ""
+    }
+
     var cStruct1 = "#ifndef \(data.wb)_h \n" +
         "#define \(data.wb)_h \n\n" +
         "#include \"gu_util.h\" \n\n"
@@ -295,8 +301,9 @@ func generateWbHeader(_ data: ClassData) -> String {
     if let _ = inputData.lazy.filter({requiresStdInt($0.varType)}).first {
        cStruct1 += "#include <stdint.h> \n\n"
     }
-    
-    cStruct1 += "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
+
+    cStruct1 += preamble +
+        "#define \(data.caps)_NUMBER_OF_VARIABLES \(inputData.count) \n\n" +
         "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION \n" +
         "#define \(data.caps)_DESC_BUFFER_SIZE \(descriptionBufferSize) \n" +
         "#define \(data.caps)_TO_STRING_BUFFER_SIZE \(toStringBufferSize) \n" +

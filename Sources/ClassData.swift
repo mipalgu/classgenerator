@@ -18,6 +18,7 @@ import Darwin
 class ClassData {
     var baseName: String            ///< base class/input file name
     var inputFilename: String       ///< user's filename including .txt
+    var preambleFile: String        ///< header file preamble (<filename>.preamble)
     var workingDirectory: String
     var wb: String                  ///< name for wb class/struct, lower case with underscores starting with wb_
     var camel: String               ///< camel case, without underscores
@@ -30,6 +31,7 @@ class ClassData {
     init(workingDirectory: String, inputFilenameNoExtension: String, userName: String) {
         baseName = inputFilenameNoExtension
         inputFilename = inputFilenameNoExtension + ".txt"
+        preambleFile = inputFilenameNoExtension + ".preamble"
         
         // make wb_ name : the name not including .txt, with wb_ added
         self.wb = "wb_" + lowercaseWord(inputFilenameNoExtension)
