@@ -23,6 +23,69 @@ var classAlias : String = ""
 var structComment : [String] = []
 var foundVariables : [String] = []
 
+
+
+///
+/// Return the length of the given file or `nil` if an error occurred
+///
+func file_len(_ fn: CInt) -> Int? {
+    let offs = lseek(fn, 0, SEEK_CUR)
+    guard offs >= 0 else { return nil }
+    defer { lseek(fn, offs, SEEK_SET) }
+    let len = lseek(fn, 0, SEEK_END)
+    guard len >= 0 else { return nil }
+    return Int(len)
+}
+
+
+/// memory map the given file with the given protection and flags,
+/// then call the `process` function with the memory address of the
+/// mapped file
+///
+/// - parameter file:       name of the file to read
+/// - parameter protection: memory map protection (read/write)
+/// - parameter flags:      map privately or publicly
+/// - parameter process:    function/closure to process the data
+///
+/// - returns: an instance of T if successful or nil otherwise
+func with_mmap<T>(_ file: String, protection: Int32 = PROT_READ, flags: Int32 = MAP_PRIVATE, process: (UnsafeMutablePointer<Void>, Int) -> T) -> T? {
+    let fn = open(file, O_RDONLY)
+    guard fn >= 0 else {
+        perror("Cannot open '\(file)'")
+        return nil
+    }
+    defer { close(fn) }
+    guard let len = file_len(fn) else {
+        perror("Cannot get length of '\(file)'")
+        return nil
+    }
+    guard let mem = mmap(nil, len, protection, flags, fn, 0),
+        mem != UnsafeMutablePointer(bitPattern: -1) else {
+            perror("Cannot mmap \(len) bytes for '\(file)'")
+            return nil
+    }
+    defer { munmap(mem, len) }
+    return process(mem, len)
+}
+
+
+extension String {
+    /// Read the contents of a UTF-8 encoded file into a string
+    ///
+    /// - parameter file: name of the file to read
+    ///
+    /// - returns: file content as a string
+    static func from(file: String) -> String? {
+        return with_mmap(file) { (mem, len) -> String in
+            let buffer = UnsafeMutablePointer<CChar>.init(allocatingCapacity: len+1)
+            defer { buffer.deallocateCapacity(len+1) }
+            buffer.initializeFrom(UnsafePointer(mem), count: len)
+            buffer[len] = 0
+            return String(cString: buffer)
+        }
+    }
+}
+
 /**
  * This function take the contents of a file as a single string
  * and parses to find the variables, comments, author and alias.
@@ -201,36 +264,15 @@ func setDefault(_ varType: String) -> String {
     }
 }
 
-/**
- * Reads the content of a text file.
- * @param inputFileName is the filename (including path) of the file to read
- * @return The contents of the file as a single string
- */
+/// Reads the content of a text file.
+///
+/// - parameter inputFileName: filename (including path) of the file to read
+///
+/// - returns: contents of the file as a single string
 func readVariables(_ inputFileName: String) -> String {
-    
-    // open a filestream for reading
-    guard let fs = fopen( inputFileName, "r" ) else {
-        // file did not open
-        print("\(inputFileName) : No such file or directory\n")
+    guard let contents = String.from(file: inputFileName) else {
         exit(EXIT_FAILURE)
     }
-    defer { fclose(fs) }
-
-    // read from the opened file
-    // then close the stream
-    let line = UnsafeMutablePointer<Int8>(allocatingCapacity: fileSize)  // size of file as const declared above.
-
-    if (ferror(fs) != 0) {
-        perror("Unable to read")
-        exit(EXIT_FAILURE)
-    }
-    
-    fread(line, fileSize, 1, fs)       // size of file as const declared above.
-    
-    let contents = String(cString: line)
-    
-    line.deinitialize(count:)()
-    
     return contents
 }
 
