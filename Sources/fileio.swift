@@ -51,7 +51,9 @@ func file_len(_ fn: CInt) -> Int? {
 func with_mmap<T>(_ file: String, protection: Int32 = PROT_READ, flags: Int32 = MAP_PRIVATE, process: (UnsafeMutablePointer<Void>, Int) -> T) -> T? {
     let fn = open(file, O_RDONLY)
     guard fn >= 0 else {
-        perror("Cannot open '\(file)'")
+        if errno != ENOENT {
+            perror("Cannot open '\(file)'")
+        }
         return nil
     }
     defer { close(fn) }
