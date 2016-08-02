@@ -1206,7 +1206,7 @@ func generateCPPStruct(_ data: ClassData) -> String {
                 cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
             } else if let varInfo = variables["int"],
                 inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
-                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
+                cppStruct += "                set_\(inputData[i].varName)(static_cast<\(inputData[i].varType)>(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
             }
         }
     }
