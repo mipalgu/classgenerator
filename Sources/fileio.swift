@@ -527,7 +527,7 @@ func generateWbC(_ data: ClassData) -> String {
         "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize) \n" +
         "{ \n"
     
-    if inputData.count > 1 {
+    if inputData.count > 0 {
         cText += "    size_t len = 0; \n"
     }
     
@@ -798,7 +798,13 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "            self->\(inputData[i].varName)[i] = strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false; \n"
             } else if let varInfo = variables[inputData[i].varType] {
                 cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(varInfo.converter)(\(inputData[i].varName)_values[i]); \n"
-            } else { // FIXME: needs to use string initialiser
+            } else if inputData[i].varType.substring(before: " ") == "struct" {
+                guard let name_without_struct = inputData[i].varType.substring(after: " ") else {
+                    cText += "/* \(inputData[i].varType) is funny, giving up */\n"
+                    continue
+                }
+                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))*\(name_without_struct)_from_string(&self->\(inputData[i].varName)[i], \(inputData[i].varName)_values[i]); \n"
+            } else {
                 cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))(\(inputData[i].varName)_values[i]); \n"
             }
             cText += "    } \n\n"
