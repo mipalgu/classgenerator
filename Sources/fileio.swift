@@ -383,9 +383,9 @@ func generateWbC(_ data: ClassData) -> String {
     // create description() method
     cText += "/** convert to a description string */  \n" +
         "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) \n" +
-    "{ \n"
+    "{\n"
     
-    if inputData.count > 1 {
+    if inputData.count > 0 {
         cText += "    size_t len = 0; \n"
     }
     
