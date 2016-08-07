@@ -77,9 +77,9 @@ extension String {
     /// - returns: file content as a string
     static func from(file: String) -> String? {
         return with_mmap(file) { (mem, len) -> String in
-            let buffer = UnsafeMutablePointer<CChar>.init(allocatingCapacity: len+1)
-            defer { buffer.deallocateCapacity(len+1) }
-            buffer.initializeFrom(UnsafePointer(mem), count: len)
+            let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: len+1)
+            defer { buffer.deallocate(capacity: len+1) }
+            buffer.initialize(from: UnsafePointer(mem), count: len)
             buffer[len] = 0
             return String(cString: buffer)
         }
