@@ -79,9 +79,9 @@ extension String {
     /// - returns: file content as a string
     static func from(file: String) -> String? {
         return with_mmap(file) { (mem, len) -> String in
-            let buffer = UnsafeMutablePointer<CChar>.init(allocatingCapacity: len+1)
-            defer { buffer.deallocateCapacity(len+1) }
-            buffer.initializeFrom(UnsafePointer(mem), count: len)
+            let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: len+1)
+            defer { buffer.deallocate(capacity: len+1) }
+            buffer.initialize(from: UnsafePointer(mem), count: len)
             buffer[len] = 0
             return String(cString: buffer)
         }
@@ -385,9 +385,9 @@ func generateWbC(_ data: ClassData) -> String {
     // create description() method
     cText += "/** convert to a description string */  \n" +
         "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) \n" +
-    "{ \n"
+    "{\n"
     
-    if inputData.count > 1 {
+    if inputData.count > 0 {
         cText += "    size_t len = 0; \n"
     }
     
@@ -529,7 +529,7 @@ func generateWbC(_ data: ClassData) -> String {
         "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize) \n" +
         "{ \n"
     
-    if inputData.count > 1 {
+    if inputData.count > 0 {
         cText += "    size_t len = 0; \n"
     }
     
@@ -800,7 +800,13 @@ func generateWbC(_ data: ClassData) -> String {
                 cText += "            self->\(inputData[i].varName)[i] = strcmp(\(inputData[i].varName)_values[i], \"true\") == 0  || strcmp(\(inputData[i].varName)_values[i], \"1\") == 0 ? true : false; \n"
             } else if let varInfo = variables[inputData[i].varType] {
                 cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))\(varInfo.converter)(\(inputData[i].varName)_values[i]); \n"
-            } else { // FIXME: needs to use string initialiser
+            } else if inputData[i].varType.substring(before: " ") == "struct" {
+                guard let name_without_struct = inputData[i].varType.substring(after: " ") else {
+                    cText += "/* \(inputData[i].varType) is funny, giving up */\n"
+                    continue
+                }
+                cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))*\(name_without_struct)_from_string(&self->\(inputData[i].varName)[i], \(inputData[i].varName)_values[i]); \n"
+            } else {
                 cText += "       self->\(inputData[i].varName)[i] = (\(inputData[i].varType))(\(inputData[i].varName)_values[i]); \n"
             }
             cText += "    } \n\n"
