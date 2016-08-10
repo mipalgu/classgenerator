@@ -1324,7 +1324,7 @@ func generateSwiftExtension(_ data: ClassData) -> String {
     // Convenience constructor
     swiftExt += "extension \(data.wb) { \n\n" +
     
-        "    init () { \n"
+        "    public init () { \n"
     
     for i in 0...inputData.count-1 {
         
