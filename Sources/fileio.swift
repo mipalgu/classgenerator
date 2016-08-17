@@ -48,7 +48,7 @@ func file_len(_ fn: CInt) -> Int? {
 /// - parameter process:    function/closure to process the data
 ///
 /// - returns: an instance of T if successful or nil otherwise
-func with_mmap<T>(_ file: String, protection: Int32 = PROT_READ, flags: Int32 = MAP_PRIVATE, process: (UnsafeMutablePointer<Void>, Int) -> T) -> T? {
+func with_mmap<T>(_ file: String, protection: Int32 = PROT_READ, flags: Int32 = MAP_PRIVATE, process: (UnsafeMutableRawPointer, Int) -> T) -> T? {
     let fn = open(file, O_RDONLY)
     guard fn >= 0 else {
         if errno != ENOENT {
@@ -62,7 +62,7 @@ func with_mmap<T>(_ file: String, protection: Int32 = PROT_READ, flags: Int32 = 
         return nil
     }
     guard let mem = mmap(nil, len, protection, flags, fn, 0),
-        mem != UnsafeMutablePointer(bitPattern: -1) else {
+        mem != UnsafeMutableRawPointer(bitPattern: -1) else {
             perror("Cannot mmap \(len) bytes for '\(file)'")
             return nil
     }
@@ -81,7 +81,8 @@ extension String {
         return with_mmap(file) { (mem, len) -> String in
             let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: len+1)
             defer { buffer.deallocate(capacity: len+1) }
-            buffer.initialize(from: UnsafePointer(mem), count: len)
+            let buf = mem.assumingMemoryBound(to: CChar.self)
+            buffer.initialize(from: buf, count: len)
             buffer[len] = 0
             return String(cString: buffer)
         }

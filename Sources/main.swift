@@ -23,7 +23,7 @@ var makeCPPWrapper = false
 var makeSwiftWrapper = false
 var foundFilename = false
   
-var input: [String] = Process.arguments
+var input: [String] = CommandLine.arguments
 input.remove(at: 0)      //remove the program name
 
 if input.count == 0 {

@@ -21,10 +21,11 @@ func upperCase(_ ch: Character) -> Character {
     
     if ( ch >= "a" ) && ( ch <= "z" ){
         
-        let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
-        let val = scalars[scalars.startIndex].value  // value of the unicode scalar
+        let scalars = String(ch).unicodeScalars     // unicode scalar(s) of the character
+        let s = scalars[scalars.startIndex]
+        let val = s.value                           // value of the unicode scalar
         
-        return Character(UnicodeScalar(val - 32))    // return the capital
+        return Character(UnicodeScalar(val - 32) ?? s)    // return the capital
     }
     else {
         
@@ -44,10 +45,11 @@ func lowerCase(_ ch: Character) -> Character {
     
     if ( ch >= "A" ) && ( ch <= "Z" ){
         
-        let scalars = String(ch).unicodeScalars      // unicode scalar(s) of the character
-        let val = scalars[scalars.startIndex].value  // value of the unicode scalar
-        
-        return Character(UnicodeScalar(val + 32))    // return the lowercase
+        let scalars = String(ch).unicodeScalars         // unicode scalar(s) of the character
+        let s = scalars[scalars.startIndex]
+        let val = s.value                               // value of the unicode scalar
+
+        return Character(UnicodeScalar(val + 32) ?? s)  // return the lowercase
     }
     else {
         
