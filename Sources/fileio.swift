@@ -1060,9 +1060,8 @@ func generateCPPStruct(_ data: ClassData) -> String {
         "            std::string toString = buffer; \n" +
         "            return toString; \n" +
         "#else \n" +
-        
-    "            std::ostringstream ss; \n"
-    
+   "            std::ostringstream ss; \n"
+   // "var = [^,]" 
     first = true
     
     for i in 0...inputData.count-1 {
@@ -1123,151 +1122,32 @@ func generateCPPStruct(_ data: ClassData) -> String {
         "#ifdef USE_WB_\(data.caps)_C_CONVERSION \n" +
         "            \(data.wb)_from_string(this, str); \n" +
         
-        "#else \n"
+        "#else \n" +
     
 ////
-
-    cppStruct += "            std::istringstream iss(str); \n" +
-        "            std::string strings[\(data.caps)_NUMBER_OF_VARIABLES]; \n" +
-        "            memset(strings, 0, sizeof(strings)); \n" +
-        "            std::string token; \n" +
-        "            int count = 0; \n"
-    
-    
-    var firstArray = true
-    var thereAreArrays = false
-    
+    "            char var[100]; \n"
     for i in 0...inputData.count-1 {
         
-        /// if the variable is an array
-        if inputData[i].varArraySize > 0 {
-            
-            thereAreArrays = true
-            
-            if firstArray {
-                cppStruct += "\n            int isArray = 0; \n"
-                firstArray = false
-            }
-            
-            cppStruct += "            std::string \(inputData[i].varName)_values[\(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE]; \n" +
-                
-                "            int \(inputData[i].varName)_count = 0; \n" +
-                "            int is_\(inputData[i].varName) = 1; \n\n"
-        }
-    }
-
-    
-    cppStruct += "            while (getline(iss, token, ',')) \n" +
-        "            { \n" +
-        "                token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
-        "                token.erase(0, token.find_first_not_of(' '));   // trim left \n\n" +
-          
-        "                size_t pos = token.find('='); \n\n" +
-    
-        "                if (pos != std::string::npos) \n" +
-        "                { \n " +
-        "                    token.erase(0, pos+1); \n" +
-        "                } \n\n"
-    
-    firstArray = true
-    
-    if thereAreArrays {
-        cppStruct += "                pos = token.find('{'); \n\n" +
-            
-            "                if (pos != std::string::npos) \n" +
-            "                { \n" +
-            "                    // start of an array \n" +
-            "                    token.erase(0,pos+1); \n" +
-            "                    isArray = 1; \n" +
-            "                } \n\n" +
-            
-            "                if (isArray) \n" +
-            "                { \n" +
-            "                     pos = token.find('}'); \n\n"
-        
-        for i in 0...inputData.count-1 {
-            
-            /// if the variable is an array
-            if inputData[i].varArraySize > 0 {
-                if !firstArray {
-                    cppStruct += "                    else "
-                }
-                else {
-                    cppStruct += "                    "
-                }
-                
-                firstArray = false
-                
-                cppStruct += "if (is_\(inputData[i].varName) == 1) \n" +
-                    "                    { \n" +
-                    "                        if (pos != std::string::npos) \n" +
-                    "                        { \n" +
-                    "                            token.erase(pos,token.length()-pos); \n" +
-                    "                            is_\(inputData[i].varName) = 0; \n" +
-                    "                            isArray = 0; \n" +
-                    "                            count++; \n" +
-                    "                        } \n\n" +
-                    
-                    "                        token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
-                    "                        token.erase(0, token.find_first_not_of(' '));   // trim left \n" +
-                    "                        \(inputData[i].varName)_values[\(inputData[i].varName)_count] = token; \n" +
-                    "                        \(inputData[i].varName)_count++; \n" +
-                    "                    } \n"
-            }
-        }
-        
-        
-        cppStruct += "                } \n" +
-            "                else \n" +
-            "                { \n" +
-            "                    token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
-            "                    token.erase(0, token.find_first_not_of(' '));   // trim left \n" +
-            "                    strings[count] = token; \n" +
-            "                    count++; \n" +
-            "                } \n"
-    }
-    else {
-        cppStruct += "                token.erase(token.find_last_not_of(' ') + 1);   // trim right \n" +
-                     "                token.erase(0, token.find_first_not_of(' '));   // trim left \n" +
-                     "                strings[count] = token; \n" +
-                     "                count++; \n"
-    }
-    
-    cppStruct += "            } \n\n"
-    
-    
-    for i in 0...inputData.count-1 {
-        
-        /// if the variable is an array
-        if inputData[i].varArraySize > 0 {
-            
-            cppStruct += "            int \(inputData[i].varName)_smallest = \(inputData[i].varName)_count < \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE ? \(inputData[i].varName)_count : \(data.caps)_\(uppercaseWord(inputData[i].varName))_ARRAY_SIZE; \n\n" +
-                
-            "            for (int i = 0; i < \(inputData[i].varName)_smallest; i++) \n" +
-            "            { \n"
-            
-            if inputData[i].varType == "bool" {   /// array of bools... does not need a cast
-                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varName)_values[i].compare(\"true\") == 0  || \(inputData[i].varName)_values[i].compare(\"1\") == 0 ? true : false, i); \n"
-            } else if let varInfo = variables[inputData[i].varType] {
-                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(\(inputData[i].varName)_values[i].c_str())), i); \n"
-            } else { // FIXME: call string constructor
-//                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(\(inputData[i].varName)_values[i].c_str())), i); \n"
-            }
-            cppStruct += "            } \n\n"
-        } else {
-            cppStruct += "            if (!strings[\(i)].empty()) \n"
-            
+            cppStruct += "" +
+    "            unsigned long \(inputData[i].varName)_index = str.find(\"\(inputData[i].varName)\");\n" +
+    "            if(\(inputData[i].varName)_index != std::string::npos)\n" +
+    "            {\n" +
+    "                memset(&var[0], 0, sizeof(var));\n" +
+    "                if(sscanf(str.substr(\(inputData[i].varName)_index, str.length()).c_str(), \"\(inputData[i].varName) = %[^,]\", var) == 1)\n" +
+    "                {\n" +
+    "                    std::string value = std::string(var);\n" 
             if inputData[i].varType == "bool" {
                 
-                cppStruct += "                set_\(inputData[i].varName)(strings[\(i)].compare(\"true\") == 0  || strings[\(i)].compare(\"1\") == 0 ? true : false); \n\n"
+                cppStruct += "                    set_\(inputData[i].varName)(value.compare(\"true\") == 0  || value.compare(\"1\") == 0 ? true : false); \n"
             } else if let varInfo = variables[inputData[i].varType] { // if the variable is a number type
-                cppStruct += "                set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
+                cppStruct += "                    set_\(inputData[i].varName)(\(inputData[i].varType)(\(varInfo.converter)(value.c_str()))); \n"
             } else if let varInfo = variables["int"],
                 inputData[i].varType.substring(before: " ") == "enum" { // if the variable is an enum
-                cppStruct += "                set_\(inputData[i].varName)(static_cast<\(inputData[i].varType)>(\(varInfo.converter)(strings[\(i)].c_str()))); \n\n"
+                cppStruct += "                    set_\(inputData[i].varName)(static_cast<\(inputData[i].varType)>(\(varInfo.converter)(value.c_str()))); \n"
             }
+            cppStruct += "                } \n" 
+            cppStruct += "            } \n\n" 
         }
-    }
 
     
     
