@@ -388,7 +388,9 @@ func generateWbC(_ data: ClassData) -> String {
         "const char* \(data.wb)_description(const struct \(data.wb)* self, char* descString, size_t bufferSize) \n" +
     "{\n"
     
-    if inputData.count > 1 {
+    if inputData.count > 0 {
+        cText += "#pragma clang diagnostic push\n"
+        cText += "#pragma clang diagnostic ignored \"-Wunused-variable\"\n"
         cText += "    size_t len = 0; \n"
     }
     
@@ -530,7 +532,9 @@ func generateWbC(_ data: ClassData) -> String {
         "const char* \(data.wb)_to_string(const struct \(data.wb)* self, char* toString, size_t bufferSize) \n" +
         "{ \n"
     
-    if inputData.count > 1 {
+    if inputData.count > 0 {
+        cText += "#pragma clang diagnostic push\n"
+        cText += "#pragma clang diagnostic ignored \"-Wunused-variable\"\n"
         cText += "    size_t len = 0; \n"
     }
     
