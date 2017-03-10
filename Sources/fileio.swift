@@ -1240,9 +1240,8 @@ func generateSwiftExtension(_ data: ClassData) -> String {
         swiftExt += "        self.\(data.varName) = dictionary[\"\(data.varName)\"] as! \(variables[data.varType]!.swift)\n"
     }
     swiftExt += "    }\n"
-    swiftExt += 
-        "} \n\n" +
-    
+    swiftExt += "}\n\n"
+    swiftExt +=
         "extension \(data.wb): CustomStringConvertible { \n\n" +
     
         "/** convert to a description string */  \n" +
@@ -1284,6 +1283,16 @@ func generateSwiftExtension(_ data: ClassData) -> String {
         
     "  } \n" +
     "} \n"
+    swiftExt += "extension \(data.wb): Equatable {}\n\n"
+    swiftExt += "public func ==(lhs: \(data.wb), rhs: \(data.wb)) -> Bool {\n"
+    if let first = inputData.first {
+        swiftExt += inputData.dropFirst().reduce("    return lhs.\(first.varName) == rhs.\(first.varName)\n") {
+            $0 + "        && lhs.\($1.varName) == rhs.\($1.varName)\n"
+        }
+    } else {
+        swiftExt += "    return true\n"
+    }
+    swiftExt += "}\n"
     
     return swiftExt
 }
