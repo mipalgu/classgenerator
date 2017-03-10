@@ -1234,7 +1234,13 @@ func generateSwiftExtension(_ data: ClassData) -> String {
     }
     
     // extension
-    swiftExt += "    } \n" +
+    swiftExt += "    }\n\n"
+    swiftExt += "    public init(fromDictionary dictionary: [String: Any]) {\n"
+    for data in inputData {
+        swiftExt += "        self.\(data.varName) = dictionary[\"\(data.varName)\"] as! \(variables[data.varType]!.swift)\n"
+    }
+    swiftExt += "    }\n"
+    swiftExt += 
         "} \n\n" +
     
         "extension \(data.wb): CustomStringConvertible { \n\n" +
