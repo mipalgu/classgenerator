@@ -17,6 +17,33 @@ struct varData {
     let format : String    // format specifier to use
     let converter: String  // how to convert from a string to this type
     let swift: String      // the equivalent Swift data type
+    let swiftDefaultValue: String?
+
+    var swiftValue: String {
+        guard let v = self.swiftDefaultValue else {
+            return self.defaultValue
+        }
+        return v
+    }
+
+    init(
+        defaultValue: String,
+        length: Int,
+        macro: String,
+        format: String,
+        converter: String,
+        swift: String,
+        swiftDefaultValue: String? = nil
+    ) {
+        self.defaultValue = defaultValue
+        self.length = length
+        self.macro = macro
+        self.format = format
+        self.converter = converter
+        self.swift = swift
+        self.swiftDefaultValue = swiftDefaultValue
+    }
+
 }
 
 // A dictionary of the varible types
@@ -67,8 +94,8 @@ let variables = [
     "unsigned long long int": varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%llu", converter: "atoll", swift: "UInt64"),
     "long64_t":               varData(defaultValue: "0", length: 20, macro: "PROPERTY", format: "%lld", converter: "atoll", swift: "Int64"),
     
-    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "Float"),
-    "float_t": varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "Float"),
+    "float":   varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "Float", swiftDefaultValue: "0.0"),
+    "float_t": varData(defaultValue: "0.0f", length: 64, macro: "PROPERTY", format: "%f", converter: "atof", swift: "Float", swiftDefaultValue: "0.0"),
     
     "double":   varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof", swift: "Double"),
     "double_t": varData(defaultValue: "0.0", length: 64, macro: "PROPERTY", format: "%lf", converter: "atof", swift: "Double"),
