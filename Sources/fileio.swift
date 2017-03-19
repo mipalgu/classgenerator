@@ -1193,6 +1193,10 @@ func generateCPPStruct(_ data: ClassData) -> String {
     return cppStruct
 }
 
+func formatFloat(_ str: String) -> String {
+    return String(str.characters.filter { $0 != "f" })
+}
+
 
 
 /**
@@ -1221,7 +1225,10 @@ func generateSwiftExtension(_ data: ClassData) -> String {
     for i in 0...inputData.count-1 {
         
         if inputData[i].varArraySize == 0 {
-            let defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+            var defaultValue = inputData[i].varDefault == "" ? setDefault(inputData[i].varType) : inputData[i].varDefault
+            if ("float" == inputData[i].varType || "float_t" == inputData[i].varType) {
+                defaultValue = formatFloat(defaultValue)
+            }
             swiftExt += "        self.\(inputData[i].varName) = \(defaultValue) \n"
         }
         else {   // an array
