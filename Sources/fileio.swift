@@ -214,7 +214,7 @@ func parseInput(_ inputText: String) -> String {
                     varDefault = nameAndDefault[1]
                 }
             
-                let inputVar = inputVariable(varType: varType, varName: varName, varDefault: varDefault, varComment: varComment, varArraySize: varArraySize)
+                let inputVar = inputVariable(varType: trim(varType), varName: trim(varName), varDefault: trim(varDefault), varComment: trim(varComment), varArraySize: varArraySize)
                 inputData.append(inputVar)
         }
         else if variable.count == 2 { // not a variable
@@ -246,6 +246,13 @@ func parseInput(_ inputText: String) -> String {
     }
 
     return userName
+}
+
+/**
+ *  Remove newlines, tabs and spaces from a string.
+ */
+func trim(_ str: String) -> String {
+    return String(str.characters.filter { $0 != "\n" && $0 != "\t" && $0 != " " })
 }
 
 
