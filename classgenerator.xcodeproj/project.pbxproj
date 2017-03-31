@@ -155,7 +155,7 @@
             SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SWIFT_PACKAGE";
             SWIFT_FORCE_DYNAMIC_LINK_STDLIB = "YES";
             SWIFT_FORCE_STATIC_LINK_STDLIB = "NO";
-            SWIFT_VERSION = "3.0";
+            SWIFT_VERSION = "3.1";
             TARGET_NAME = "classgenerator";
          };
          name = "Debug";
@@ -185,7 +185,7 @@
             SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SWIFT_PACKAGE";
             SWIFT_FORCE_DYNAMIC_LINK_STDLIB = "YES";
             SWIFT_FORCE_STATIC_LINK_STDLIB = "NO";
-            SWIFT_VERSION = "3.0";
+            SWIFT_VERSION = "3.1";
             TARGET_NAME = "classgenerator";
          };
          name = "Release";
