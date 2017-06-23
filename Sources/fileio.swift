@@ -1251,7 +1251,10 @@ func generateSwiftExtension(_ data: ClassData) -> String {
     swiftExt += "    }\n\n"
     swiftExt += "    public init(fromDictionary dictionary: [String: Any]) {\n"
     for data in inputData {
-        swiftExt += "        self.\(data.varName) = dictionary[\"\(data.varName)\"] as! \(variables[data.varType]!.swift)\n"
+        guard let type = variables[data.varType]?.swift else {
+            continue
+        }
+        swiftExt += "        self.\(data.varName) = dictionary[\"\(data.varName)\"] as! \(type)\n"
     }
     swiftExt += "    }\n"
     swiftExt += "}\n\n"
