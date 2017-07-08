@@ -8,7 +8,7 @@
 //  Parses the input file to identify the variables.
 //  Creates the generated files.
 //
-
+import Foundation
 #if os(Linux)
 import Glibc
 #else
@@ -249,10 +249,11 @@ func parseInput(_ inputText: String) -> String {
 }
 
 /**
- *  Remove newlines, tabs and spaces from a string.
+ *  Remove newlines, tabs and spaces from the ends of a string.
  */
 func trim(_ str: String) -> String {
-    return String(str.characters.filter { $0 != "\n" && $0 != "\t" && $0 != " " })
+    let trimmedString = str.trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmedString
 }
 
 
