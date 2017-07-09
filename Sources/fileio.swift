@@ -1020,8 +1020,13 @@ func generateCPPStruct(_ data: ClassData) -> String {
                     
                     // not an array
                     if inputData[i].varArraySize == 0 {
-                    
-                        cppStruct += "            ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)(); \n"
+                        let type = inputData[i].varType
+                        if type.hasPrefix("struct"), let cppType = type.substring(after: "_")?.cpp {
+                                cppStruct += "            ss << \"\(inputData[i].varName)=\" << static_cast<\(cppType) *>(&\(inputData[i].varName)())->description(); \n"
+
+                        } else {
+                                cppStruct += "            ss << \"\(inputData[i].varName)=\" << \(inputData[i].varName)(); \n"
+                        }
                     }
                     // an array
                     else if let _ = variables[inputData[i].varType] {
@@ -1084,8 +1089,13 @@ func generateCPPStruct(_ data: ClassData) -> String {
         
         // not an array
         if inputData[i].varArraySize == 0 {
-            
-            cppStruct += "            ss << \(inputData[i].varName)(); \n"
+            let type = inputData[i].varType
+            if type.hasPrefix("struct"), let cppType = type.substring(after: "_")?.cpp {
+                cppStruct += "            ss << \"\(inputData[i].varName)=\" << static_cast<\(cppType) *>(&\(inputData[i].varName)())->to_string(); \n"
+                
+            } else {
+                cppStruct += "            ss << \(inputData[i].varName)(); \n"
+            }
         }
             // an array
         else if let _ = variables[inputData[i].varType] {
