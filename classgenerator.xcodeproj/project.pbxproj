@@ -1,346 +1,323 @@
 // !$*UTF8*$!
 {
-   archiveVersion = "1";
-   objectVersion = "46";
-   objects = {
-      OBJ_1 = {
-         isa = "PBXProject";
-         attributes = {
-            LastUpgradeCheck = "9999";
-         };
-         buildConfigurationList = OBJ_2;
-         compatibilityVersion = "Xcode 3.2";
-         developmentRegion = "English";
-         hasScannedForEncodings = "0";
-         knownRegions = (
-            "en",
-         );
-         mainGroup = OBJ_5;
-         productRefGroup = OBJ_22;
-         projectDirPath = ".";
-         targets = (
-            OBJ_24,
-         );
-      };
-      OBJ_10 = {
-         isa = "PBXFileReference";
-         path = "fileio.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_11 = {
-         isa = "PBXFileReference";
-         path = "GNUlicense.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_12 = {
-         isa = "PBXFileReference";
-         path = "InputData.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_13 = {
-         isa = "PBXFileReference";
-         path = "main.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_14 = {
-         isa = "PBXFileReference";
-         path = "stringmanipulation.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_15 = {
-         isa = "PBXFileReference";
-         path = "VariablesData.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_16 = {
-         isa = "PBXGroup";
-         children = (
-         );
-         path = "Tests";
-         sourceTree = "<group>";
-      };
-      OBJ_17 = {
-         isa = "PBXFileReference";
-         path = "ClassgeneratorCPPTests";
-         sourceTree = "SOURCE_ROOT";
-      };
-      OBJ_18 = {
-         isa = "PBXFileReference";
-         path = "ClassgeneratorCTests3";
-         sourceTree = "SOURCE_ROOT";
-      };
-      OBJ_19 = {
-         isa = "PBXFileReference";
-         path = "sampleinput";
-         sourceTree = "SOURCE_ROOT";
-      };
-      OBJ_2 = {
-         isa = "XCConfigurationList";
-         buildConfigurations = (
-            OBJ_3,
-            OBJ_4,
-         );
-         defaultConfigurationIsVisible = "0";
-         defaultConfigurationName = "Debug";
-      };
-      OBJ_20 = {
-         isa = "PBXFileReference";
-         path = "testfiles";
-         sourceTree = "SOURCE_ROOT";
-      };
-      OBJ_21 = {
-         isa = "PBXFileReference";
-         path = "usermanual";
-         sourceTree = "SOURCE_ROOT";
-      };
-      OBJ_22 = {
-         isa = "PBXGroup";
-         children = (
-            OBJ_23,
-         );
-         name = "Products";
-         path = "";
-         sourceTree = "BUILT_PRODUCTS_DIR";
-      };
-      OBJ_23 = {
-         isa = "PBXFileReference";
-         path = "classgenerator";
-         sourceTree = "BUILT_PRODUCTS_DIR";
-      };
-      OBJ_24 = {
-         isa = "PBXNativeTarget";
-         buildConfigurationList = OBJ_25;
-         buildPhases = (
-            OBJ_28,
-            OBJ_36,
-         );
-         dependencies = (
-         );
-         name = "classgenerator";
-         productName = "classgenerator";
-         productReference = OBJ_23;
-         productType = "com.apple.product-type.tool";
-      };
-      OBJ_25 = {
-         isa = "XCConfigurationList";
-         buildConfigurations = (
-            OBJ_26,
-            OBJ_27,
-         );
-         defaultConfigurationIsVisible = "0";
-         defaultConfigurationName = "Debug";
-      };
-      OBJ_26 = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-            FRAMEWORK_SEARCH_PATHS = (
-               "$(PLATFORM_DIR)/Developer/Library/Frameworks",
-            );
-            HEADER_SEARCH_PATHS = (
-            );
-            INFOPLIST_FILE = "classgenerator.xcodeproj/classgenerator_Info.plist";
-            LD_RUNPATH_SEARCH_PATHS = (
-               "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
-               "@executable_path",
-            );
-            OTHER_LDFLAGS = (
-               "$(inherited)",
-            );
-            OTHER_SWIFT_FLAGS = (
-               "$(inherited)",
-            );
-            SUPPORTED_PLATFORMS = (
-               "macosx",
-            );
-            SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SWIFT_PACKAGE";
-            SWIFT_FORCE_DYNAMIC_LINK_STDLIB = "YES";
-            SWIFT_FORCE_STATIC_LINK_STDLIB = "NO";
-            SWIFT_VERSION = "3.1";
-            TARGET_NAME = "classgenerator";
-         };
-         name = "Debug";
-      };
-      OBJ_27 = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-            FRAMEWORK_SEARCH_PATHS = (
-               "$(PLATFORM_DIR)/Developer/Library/Frameworks",
-            );
-            HEADER_SEARCH_PATHS = (
-            );
-            INFOPLIST_FILE = "classgenerator.xcodeproj/classgenerator_Info.plist";
-            LD_RUNPATH_SEARCH_PATHS = (
-               "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
-               "@executable_path",
-            );
-            OTHER_LDFLAGS = (
-               "$(inherited)",
-            );
-            OTHER_SWIFT_FLAGS = (
-               "$(inherited)",
-            );
-            SUPPORTED_PLATFORMS = (
-               "macosx",
-            );
-            SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SWIFT_PACKAGE";
-            SWIFT_FORCE_DYNAMIC_LINK_STDLIB = "YES";
-            SWIFT_FORCE_STATIC_LINK_STDLIB = "NO";
-            SWIFT_VERSION = "3.1";
-            TARGET_NAME = "classgenerator";
-         };
-         name = "Release";
-      };
-      OBJ_28 = {
-         isa = "PBXSourcesBuildPhase";
-         files = (
-            OBJ_29,
-            OBJ_30,
-            OBJ_31,
-            OBJ_32,
-            OBJ_33,
-            OBJ_34,
-            OBJ_35,
-         );
-      };
-      OBJ_29 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_9;
-      };
-      OBJ_3 = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-            COMBINE_HIDPI_IMAGES = "YES";
-            COPY_PHASE_STRIP = "NO";
-            DEBUG_INFORMATION_FORMAT = "dwarf";
-            DYLIB_INSTALL_NAME_BASE = "@rpath";
-            ENABLE_NS_ASSERTIONS = "YES";
-            GCC_OPTIMIZATION_LEVEL = "0";
-            MACOSX_DEPLOYMENT_TARGET = "10.10";
-            ONLY_ACTIVE_ARCH = "YES";
-            OTHER_SWIFT_FLAGS = (
-               "-DXcode",
-            );
-            PRODUCT_NAME = "$(TARGET_NAME)";
-            SUPPORTED_PLATFORMS = (
-               "macosx",
-               "iphoneos",
-               "iphonesimulator",
-               "appletvos",
-               "appletvsimulator",
-               "watchos",
-               "watchsimulator",
-            );
-            SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-            USE_HEADERMAP = "NO";
-         };
-         name = "Debug";
-      };
-      OBJ_30 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_10;
-      };
-      OBJ_31 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_11;
-      };
-      OBJ_32 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_12;
-      };
-      OBJ_33 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_13;
-      };
-      OBJ_34 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_14;
-      };
-      OBJ_35 = {
-         isa = "PBXBuildFile";
-         fileRef = OBJ_15;
-      };
-      OBJ_36 = {
-         isa = "PBXFrameworksBuildPhase";
-         files = (
-         );
-      };
-      OBJ_4 = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-            COMBINE_HIDPI_IMAGES = "YES";
-            COPY_PHASE_STRIP = "YES";
-            DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-            DYLIB_INSTALL_NAME_BASE = "@rpath";
-            GCC_OPTIMIZATION_LEVEL = "s";
-            MACOSX_DEPLOYMENT_TARGET = "10.10";
-            OTHER_SWIFT_FLAGS = (
-               "-DXcode",
-            );
-            PRODUCT_NAME = "$(TARGET_NAME)";
-            SUPPORTED_PLATFORMS = (
-               "macosx",
-               "iphoneos",
-               "iphonesimulator",
-               "appletvos",
-               "appletvsimulator",
-               "watchos",
-               "watchsimulator",
-            );
-            SWIFT_OPTIMIZATION_LEVEL = "-O";
-            USE_HEADERMAP = "NO";
-         };
-         name = "Release";
-      };
-      OBJ_5 = {
-         isa = "PBXGroup";
-         children = (
-            OBJ_6,
-            OBJ_7,
-            OBJ_16,
-            OBJ_17,
-            OBJ_18,
-            OBJ_19,
-            OBJ_20,
-            OBJ_21,
-            OBJ_22,
-         );
-         path = "";
-         sourceTree = "<group>";
-      };
-      OBJ_6 = {
-         isa = "PBXFileReference";
-         explicitFileType = "sourcecode.swift";
-         path = "Package.swift";
-         sourceTree = "<group>";
-      };
-      OBJ_7 = {
-         isa = "PBXGroup";
-         children = (
-            OBJ_8,
-         );
-         path = "Sources";
-         sourceTree = "<group>";
-      };
-      OBJ_8 = {
-         isa = "PBXGroup";
-         children = (
-            OBJ_9,
-            OBJ_10,
-            OBJ_11,
-            OBJ_12,
-            OBJ_13,
-            OBJ_14,
-            OBJ_15,
-         );
-         name = "classgenerator";
-         path = "Sources";
-         sourceTree = "SOURCE_ROOT";
-      };
-      OBJ_9 = {
-         isa = "PBXFileReference";
-         path = "ClassData.swift";
-         sourceTree = "<group>";
-      };
-   };
-   rootObject = OBJ_1;
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		OBJ_29 /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* ClassData.swift */; };
+		OBJ_30 /* fileio.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* fileio.swift */; };
+		OBJ_31 /* GNUlicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* GNUlicense.swift */; };
+		OBJ_32 /* InputData.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* InputData.swift */; };
+		OBJ_33 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* main.swift */; };
+		OBJ_34 /* stringmanipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* stringmanipulation.swift */; };
+		OBJ_35 /* VariablesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* VariablesData.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		OBJ_10 /* fileio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fileio.swift; sourceTree = "<group>"; };
+		OBJ_11 /* GNUlicense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNUlicense.swift; sourceTree = "<group>"; };
+		OBJ_12 /* InputData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputData.swift; sourceTree = "<group>"; };
+		OBJ_13 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		OBJ_14 /* stringmanipulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stringmanipulation.swift; sourceTree = "<group>"; };
+		OBJ_15 /* VariablesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariablesData.swift; sourceTree = "<group>"; };
+		OBJ_17 /* ClassgeneratorCPPTests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ClassgeneratorCPPTests; sourceTree = SOURCE_ROOT; };
+		OBJ_18 /* ClassgeneratorCTests3 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ClassgeneratorCTests3; sourceTree = SOURCE_ROOT; };
+		OBJ_19 /* sampleinput */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sampleinput; sourceTree = SOURCE_ROOT; };
+		OBJ_20 /* testfiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = testfiles; sourceTree = SOURCE_ROOT; };
+		OBJ_21 /* usermanual */ = {isa = PBXFileReference; lastKnownFileType = folder; path = usermanual; sourceTree = SOURCE_ROOT; };
+		OBJ_23 /* classgenerator */ = {isa = PBXFileReference; lastKnownFileType = text; path = classgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		OBJ_9 /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		OBJ_36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		OBJ_16 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		OBJ_22 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_23 /* classgenerator */,
+			);
+			name = Products;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		OBJ_5 /*  */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_6 /* Package.swift */,
+				OBJ_7 /* Sources */,
+				OBJ_16 /* Tests */,
+				OBJ_17 /* ClassgeneratorCPPTests */,
+				OBJ_18 /* ClassgeneratorCTests3 */,
+				OBJ_19 /* sampleinput */,
+				OBJ_20 /* testfiles */,
+				OBJ_21 /* usermanual */,
+				OBJ_22 /* Products */,
+			);
+			name = "";
+			sourceTree = "<group>";
+		};
+		OBJ_7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_8 /* classgenerator */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		OBJ_8 /* classgenerator */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_9 /* ClassData.swift */,
+				OBJ_10 /* fileio.swift */,
+				OBJ_11 /* GNUlicense.swift */,
+				OBJ_12 /* InputData.swift */,
+				OBJ_13 /* main.swift */,
+				OBJ_14 /* stringmanipulation.swift */,
+				OBJ_15 /* VariablesData.swift */,
+			);
+			name = classgenerator;
+			path = Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		OBJ_24 /* classgenerator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_25 /* Build configuration list for PBXNativeTarget "classgenerator" */;
+			buildPhases = (
+				OBJ_28 /* Sources */,
+				F1AC09111F11C3CB003642E4 /* ShellScript */,
+				OBJ_36 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = classgenerator;
+			productName = classgenerator;
+			productReference = OBJ_23 /* classgenerator */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		OBJ_1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0900;
+			};
+			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "classgenerator" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = OBJ_5 /*  */;
+			productRefGroup = OBJ_22 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				OBJ_24 /* classgenerator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F1AC09111F11C3CB003642E4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    ( cd ${SRCROOT}/Sources && swiftlint | egrep -v '(Line Length)' ) || true\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		OBJ_28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_29 /* ClassData.swift in Sources */,
+				OBJ_30 /* fileio.swift in Sources */,
+				OBJ_31 /* GNUlicense.swift in Sources */,
+				OBJ_32 /* InputData.swift in Sources */,
+				OBJ_33 /* main.swift in Sources */,
+				OBJ_34 /* stringmanipulation.swift in Sources */,
+				OBJ_35 /* VariablesData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		OBJ_26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = classgenerator.xcodeproj/classgenerator_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
+				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
+				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
+				SWIFT_VERSION = 3.1;
+				TARGET_NAME = classgenerator;
+			};
+			name = Debug;
+		};
+		OBJ_27 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = classgenerator.xcodeproj/classgenerator_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
+				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
+				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
+				SWIFT_VERSION = 3.1;
+				TARGET_NAME = classgenerator;
+			};
+			name = Release;
+		};
+		OBJ_3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				USE_HEADERMAP = NO;
+			};
+			name = Debug;
+		};
+		OBJ_4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				USE_HEADERMAP = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		OBJ_2 /* Build configuration list for PBXProject "classgenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_3 /* Debug */,
+				OBJ_4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		OBJ_25 /* Build configuration list for PBXNativeTarget "classgenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_26 /* Debug */,
+				OBJ_27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = OBJ_1 /* Project object */;
 }
