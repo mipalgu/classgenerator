@@ -1,0 +1,91 @@
+author	Callum McColl
+string	str = "hello"	A string.
+bool	b = false	A boolean.
+char	c = 'c'	A char.
+signed char	sc = 'c'	A signed char.
+unsigned char	uc = 'c'	An unsigned char.
+int	i=1	An int.
+signed	si=1	A signed.
+signed int	sii=1	A signed int.
+unsigned	u=1	An unsigned.
+unsigned int	ui=1	An unsigned int.
+uint8_t	u8=1	// A uint8.
+uint16_t	u16=1	A uint16.
+uint32_t	u32=1	A uint32.
+uint64_t	u64=1	A uint64.
+int8	i8=1	An int8.
+int16	i16=1	An int16.
+int32	i32=1	An int32.
+int64	i64=1	An int64.
+short	s=1	A short
+short int	si=1	A short int.
+signed short	ss=1	A signed short.
+signed short int	ssi=1	A signed short int.
+unsigned short	us=1	An unsigned short.
+unsigned short int	usi=1	An unsigned short int.
+long	l=1	A long.
+long int	li = 1	A long int.
+signed long	sl = 1	A signed long.
+signed long int	sli = 1	A signed long int.
+unsigned long	ul = 1	An unsigned long.
+unsigned long int	uli=2	An unsigned long int.
+long long	ll=1	A long long.
+long long int	lli=1	A long long int.
+signed long long	sll=1	A signed long long.
+signed long long int	slli=1	A signed long long int.
+unsigned long long	ull=1	An unsigned long long.
+unsigned long long int	ulli=1	An unsigned long long int.
+long64_t	l64=1	A long64.
+float	f=1.0	A float.
+float_t	ft=1.0	A float_t.
+double	d=1.0	A double.
+double_t	dt=1.0	A double_t.
+long double	ld=1.0	A long double.
+double double	dd=1.0	A double double.
+string	str	A string.
+bool	b	A boolean.
+char	c	A char.
+signed char	sc	A signed char.
+unsigned char	uc	An unsigned char.
+int	i	An int.
+signed	si	A signed.
+signed int	sii	A signed int.
+unsigned	u	An unsigned.
+unsigned int	ui	An unsigned int.
+uint8_t	u8	// A uint8.
+uint16_t	u16	A uint16.
+uint32_t	u32	A uint32.
+uint64_t	u64	A uint64.
+int8	i8	An int8.
+int16	i16	An int16.
+int32	i32	An int32.
+int64	i64	An int64.
+short	s	A short
+short int	si	A short int.
+signed short	ss	A signed short.
+signed short int	ssi	A signed short int.
+unsigned short	us	An unsigned short.
+unsigned short int	usi	An unsigned short int.
+long	l	A long.
+long int	li	A long int.
+signed long	sl	A signed long.
+signed long int	sli	A signed long int.
+unsigned long	ul	An unsigned long.
+unsigned long int	uli	An unsigned long int.
+long long	ll	A long long.
+long long int	lli	A long long int.
+signed long long	sll	A signed long long.
+signed long long int	slli	A signed long long int.
+unsigned long long	ull	An unsigned long long.
+unsigned long long int	ulli	An unsigned long long int.
+long64_t	l64	A long64.
+float	f	A float.
+float_t	ft	A float_t.
+double	d	A double.
+double_t	dt	A double_t.
+long double	ld	A long double.
+double double	dd	A double double.
+int *	p=NULL	A pointer.
+int *	p	A pointer.
+
+This is a test of all of the supported types.
