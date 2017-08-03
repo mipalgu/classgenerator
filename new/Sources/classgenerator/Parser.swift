@@ -60,6 +60,8 @@ import Foundation
 
 public class Parser {
 
+    public init() {}
+
     func parse(file: URL) -> Class? {
         return nil
     }
