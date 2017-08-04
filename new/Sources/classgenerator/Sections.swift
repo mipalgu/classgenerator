@@ -1,6 +1,6 @@
 /*
- * Parser.swift 
- * Sources 
+ * Sections.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,20 @@
  *
  */
 
-import Foundation
+public struct Sections {
 
-public final class Parser {
+    let author: String?
 
-    fileprivate let helpers: FileHelpers
+    let preamble: String?
 
-    fileprivate let sectionsParser: SectionsParser
+    let variables: String
 
-    public init(helpers: FileHelpers = FileHelpers(), sectionsParser: SectionsParser = SectionsParser()) {
-        self.helpers = helpers
-        self.sectionsParser = sectionsParser
-    }
+    let comments: String?
 
-    public func parse(file: URL) -> Class? {
-        guard
-            let contents = try? String(contentsOf: file),
-            let sections = self.sectionsParser.parseSections(fromContents: contents)
-        else {
-            return nil
-        }
-        print(sections.author)
-        print("variables: \(sections.variables)")
-        return nil
-    }
+    let cExtras: String?
+
+    let cppExtras: String?
+
+    let swiftExtras: String?
 
 }
