@@ -119,7 +119,7 @@ public final class SectionsParser: ErrorContainer {
                 }
                 return group.dropFirst().reduce(first) { $0 + "\n" + $1}
             }
-            vars = varsCombined.first { _ in true }
+            vars = varsCombined.first { _ in true }?.trimmingCharacters(in: CharacterSet.newlines)
             comments = varsCombined.dropFirst().reduce("") { $0 + "\n" + $1 }
                 .trimmingCharacters(in: CharacterSet.newlines)
         }

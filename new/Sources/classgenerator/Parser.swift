@@ -66,28 +66,36 @@ public final class Parser: ErrorContainer {
         return self.errors.first
     }
 
-    fileprivate let helpers: FileHelpers
-
     fileprivate let sectionsParser: SectionsParser
+    fileprivate let variablesParser: VariablesParser
 
-    public init(helpers: FileHelpers = FileHelpers(), sectionsParser: SectionsParser = SectionsParser()) {
-        self.helpers = helpers
+    public init(
+        sectionsParser: SectionsParser = SectionsParser(),
+        variablesParser: VariablesParser = VariablesParser()
+    ) {
         self.sectionsParser = sectionsParser
+        self.variablesParser = variablesParser
     }
 
     public func parse(file: URL) -> Class? {
+        //swiftlint:disable opening_brace
         guard
             let contents = try? String(contentsOf: file),
             let sections = self.delegate(
                 { self.sectionsParser.parseSections(fromContents: contents) },
                 self.sectionsParser
+            ),
+            let variables = self.delegate(
+                { self.variablesParser.parseVariables(fromSection: sections.variables) },
+                self.variablesParser
             )
         else {
             self.errors.append("Unable to parse \(file.path)")
+            print(self.errors)
             return nil
         }
         print(sections.author)
-        print("variables: \(sections.variables)")
+        print(variables.map { $0.label })
         return nil
     }
 

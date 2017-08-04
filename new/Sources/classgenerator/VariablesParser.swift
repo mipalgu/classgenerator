@@ -56,6 +56,8 @@
  *
  */
 
+import Foundation
+
 public final class VariablesParser: ErrorContainer {
 
     public fileprivate(set) var errors: [String] = []
@@ -65,7 +67,62 @@ public final class VariablesParser: ErrorContainer {
     }
 
     public func parseVariables(fromSection section: String) -> [Variable]? {
-        return nil
+        let lines = section.components(separatedBy: CharacterSet.newlines)
+        return lines.failMap {
+            guard let v = self.createVariable(fromLine: $0) else {
+                return nil
+            }
+            return v
+        }
+    }
+
+    fileprivate func createVariable(fromLine line: String) -> Variable? {
+        let split = line.components(separatedBy: "//")
+        guard split.count <= 2 else {
+            self.errors.append("Found multiple comments for line: \(line)")
+            return nil
+        }
+        guard let first = split.first else {
+            self.errors.append("Line is empty")
+            return nil
+        }
+        var tabbed = first.components(separatedBy: "\t").lazy.map {
+            $0.trimmingCharacters(in: CharacterSet.whitespaces)
+        }
+        if 1 == split.count && tabbed.count < 3 {
+            self.errors.append("You must supply a comment for line: \(line)")
+            return nil
+        }
+        let comment: String
+        let remaining: [String]
+        if 2 == split.count {
+            comment = split[1].trimmingCharacters(in: CharacterSet.whitespaces)
+            remaining = Array(tabbed)
+        } else {
+            comment = tabbed[2]
+            remaining = Array(tabbed.dropLast())
+        }
+        guard let (type, label, defaultValue) = self.parseVar(fromSegment: remaining[0] + " " + remaining[1]) else {
+            return nil
+        }
+        return Variable(label: label, type: type, swiftType: type, defaultValue: "", comment: comment)
+    }
+
+    //swiftlint:disable large_tuple
+    fileprivate func parseVar(fromSegment segment: String) -> (String, String, String?)? {
+        let split = segment.components(separatedBy: "=")
+        let defaultValue: String?
+        if split.count > 1 {
+            defaultValue = split[1].trimmingCharacters(in: CharacterSet.whitespaces)
+        } else {
+            defaultValue = nil
+        }
+        let words = split[0].components(separatedBy: CharacterSet.whitespaces)
+        if words.count < 2 {
+            self.errors.append("You must specify a label for the after: \(words[0])")
+            return nil
+        }
+        return (words[0], words[1], defaultValue)
     }
 
 }
