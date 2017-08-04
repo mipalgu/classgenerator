@@ -108,3 +108,19 @@ extension Array where Element: Equatable {
     }
 
 }
+
+extension Array {
+
+    public func failMap<T>(_ transform: (Element) -> T?) -> [T]? {
+        var arr: [T] = []
+        arr.reserveCapacity(self.count)
+        for e in self {
+            guard let r = transform(e) else {
+                return nil
+            }
+            arr.append(r)
+        }
+        return arr
+    }
+
+}
