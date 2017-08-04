@@ -56,6 +56,8 @@
  *
  */
 
+import Foundation
+
 public final class TypeConverter {
 
     fileprivate let values: [String: String] = [
@@ -105,7 +107,15 @@ public final class TypeConverter {
     ]
 
     func convert(type: String) -> String? {
-        return self.values[type]
+        if type.characters.last != "*" {
+            return self.values[type]
+        }
+        let words = String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces)
+            .components(separatedBy: CharacterSet.whitespaces)
+        guard let last = words.last, let newType = self.convert(type: last) else {
+            return nil
+        }
+        return "UnsafeMutablePointer<\(newType)>"
     }
 
 }
