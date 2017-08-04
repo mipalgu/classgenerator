@@ -85,6 +85,7 @@ public class ParserTests: ClassGeneratorTestCase {
     public func test_isBackwardsCompatible() {
         let expected = Class(
             name: "old",
+            author: "Callum McColl",
             preamble: nil,
             variables: [
                 Variable(
