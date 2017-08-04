@@ -61,9 +61,9 @@ public final class DefaultValuesCalculator {
     fileprivate let values: [String: (String, String)] = [
         "string": ("\"\"", "\"\""),
         "bool": ("true", "true"),
-        "char": ("\"\"", "String(Character(UnicodeScalar(UInt8.min)))"),
-        "signed char": ("\"\"", "String(Character(UnicodeScalar(UInt8.min)))"),
-        "unsigned char": ("\"\"", "String(Character(UnicodeScalar(UInt8.min)))"),
+        "char": ("0", "String(Character(UnicodeScalar(UInt8.min)))"),
+        "signed char": ("0", "String(Character(UnicodeScalar(UInt8.min)))"),
+        "unsigned char": ("0", "String(Character(UnicodeScalar(UInt8.min)))"),
         "signed": ("0", "0"),
         "signed int": ("0", "0"),
         "unsigned": ("0", "0"),
