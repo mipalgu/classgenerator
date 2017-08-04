@@ -115,7 +115,7 @@ public final class TypeConverter {
         guard let last = words.last, let newType = self.convert(type: last) else {
             return nil
         }
-        return "UnsafeMutablePointer<\(newType)>"
+        return "UnsafeMutablePointer<\(newType)>?"
     }
 
 }

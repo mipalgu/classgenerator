@@ -779,9 +779,9 @@ public class ParserTests: ClassGeneratorTestCase {
                 Variable(
                     label: "p",
                     type: "int *",
-                    swiftType: "UnsafeMutablePointer<Int>",
+                    swiftType: "UnsafeMutablePointer<Int>?",
                     defaultValue: "NULL",
-                    swiftDefaultValue: "NULL",
+                    swiftDefaultValue: "nil",
                     comment: "A pointer."
                 ),
                 Variable(
@@ -801,13 +801,7 @@ public class ParserTests: ClassGeneratorTestCase {
             XCTFail("Unable to parse old.txt")
             return
         }
-        let zipped = zip(expected.variables, result.variables)
-        zipped.forEach {
-            if $0 != $1 {
-                print("\($0.label), \($1.label)")
-                XCTAssertEqual($0, $1)
-            }
-        }
+        XCTAssertEqual(expected, result)
     }
 
 }

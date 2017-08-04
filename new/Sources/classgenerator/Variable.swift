@@ -76,8 +76,9 @@ extension Variable: Equatable {}
 
 public func == (lhs: Variable, rhs: Variable) -> Bool {
     return lhs.label == rhs.label
-        &&  lhs.type == rhs.type
-        &&  lhs.swiftType == rhs.swiftType
+        && lhs.type == rhs.type
+        && lhs.swiftType == rhs.swiftType
         && lhs.defaultValue == rhs.defaultValue
+        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
         && lhs.comment == rhs.comment
 }

@@ -65,6 +65,9 @@ public final class Sanitiser {
             case "float", "float_t":
                 return self.sanitiseFloat(value: value)
             default:
+                if type.characters.last == "*" && value == "NULL" {
+                    return "nil"
+                }
                 return nil
         }
     }
