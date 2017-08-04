@@ -58,9 +58,16 @@
 
 import Foundation
 
-public final class SectionsParser {
+public final class SectionsParser: ErrorContainer {
+
+    public fileprivate(set) var errors: [String] = []
+
+    public var lastError: String? {
+        return errors.first
+    }
 
     public func parseSections(fromContents contents: String) -> Sections? {
+        self.errors = []
         let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             .components(separatedBy: CharacterSet.newlines)
         let grouped = lines.lazy.grouped(by: { (first, _) in
@@ -117,6 +124,7 @@ public final class SectionsParser {
                 .trimmingCharacters(in: CharacterSet.newlines)
         }
         guard let variables = vars else {
+            self.errors.append("Unable to parse properties.")
             return nil
         }
         return Sections(

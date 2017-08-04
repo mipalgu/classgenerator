@@ -1,6 +1,6 @@
 /*
- * Parser.swift 
- * Sources 
+ * ErrorContainer.swift 
+ * classgenerator
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,47 +56,10 @@
  *
  */
 
-import Foundation
+public protocol ErrorContainer {
 
-public final class Parser: ErrorContainer {
+    var errors: [String] { get }
 
-    public fileprivate(set) var errors: [String] = []
-
-    public var lastError: String? {
-        return self.errors.first
-    }
-
-    fileprivate let helpers: FileHelpers
-
-    fileprivate let sectionsParser: SectionsParser
-
-    public init(helpers: FileHelpers = FileHelpers(), sectionsParser: SectionsParser = SectionsParser()) {
-        self.helpers = helpers
-        self.sectionsParser = sectionsParser
-    }
-
-    public func parse(file: URL) -> Class? {
-        guard
-            let contents = try? String(contentsOf: file),
-            let sections = self.delegate(
-                { self.sectionsParser.parseSections(fromContents: contents) },
-                self.sectionsParser
-            )
-        else {
-            self.errors.append("Unable to parse \(file.path)")
-            return nil
-        }
-        print(sections.author)
-        print("variables: \(sections.variables)")
-        return nil
-    }
-
-    fileprivate func delegate<T, EC: ErrorContainer>(_ parse: () -> T?, _ errorContainer: EC) -> T? {
-        guard let result = parse() else {
-            self.errors.append(contentsOf: errorContainer.errors)
-            return nil
-        }
-        return result
-    }
+    var lastError: String? { get }
 
 }
