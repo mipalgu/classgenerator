@@ -62,6 +62,8 @@ public struct Variable {
 
     public let type: String
 
+    public let swiftType: String
+
     public let defaultValue: String
 
     public let comment: String?
