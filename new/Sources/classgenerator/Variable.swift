@@ -60,8 +60,10 @@ public struct Variable {
 
     public let label: String
 
-    public let type: VariableType
+    public let type: String
 
-    public let defaultValue: String?
+    public let defaultValue: String
+
+    public let comment: String?
 
 }
