@@ -60,14 +60,134 @@ import Foundation
 
 public class Parser {
 
+    fileprivate struct Sections {
+
+        let author: String?
+
+        let preamble: String?
+
+        let variables: String
+
+        let comments: String?
+
+        let cExtras: String?
+
+        let cppExtras: String?
+
+        let swiftExtras: String?
+
+    }
+
     fileprivate let helpers: FileHelpers
 
     public init(helpers: FileHelpers = FileHelpers()) {
         self.helpers = helpers
     }
 
-    func parse(file: URL) -> Class? {
+    public func parse(file: URL) -> Class? {
+        guard
+            let contents = try? String(contentsOf: file),
+            let sections = self.parseSections(fromContents: contents)
+        else {
+            return nil
+        }
+        print(sections.author)
+        print("variables: \(sections.variables)")
         return nil
+    }
+
+    fileprivate func parseSections(fromContents contents: String) -> Sections? {
+        let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            .components(separatedBy: CharacterSet.newlines)
+        let grouped = lines.lazy.grouped(by: { (first, _) in
+            let trimmed = first.trimmingCharacters(in: CharacterSet.whitespaces)
+            return false == (
+                self.isAuthorLine(trimmed) ||
+                self.isPreambleMarker(trimmed) ||
+                self.isPropertiesMarker(trimmed) ||
+                self.isCMarker(trimmed) ||
+                self.isCppMarker(trimmed) ||
+                self.isSwiftMarker(trimmed)
+            )
+        })
+        return self.createSections(fromGroups: grouped)
+    }
+
+    fileprivate func createSections<S: Sequence>(fromGroups seq: S) -> Sections? where S.Iterator.Element == [String] {
+        var author: String?
+        var preamble: String?
+        var vars: String?
+        var comments: String?
+        var cExtras: String?
+        var cppExtras: String?
+        var swiftExtras: String?
+        let assignIfValid: (inout String?, String, Bool) -> Bool = {
+            if true == $2 { $0 = $1 }; return $2
+        }
+        seq.forEach {
+            guard let first = $0.first else {
+                return
+            }
+            let combined = $0.dropFirst().reduce("") { $0 + "\n" + $1 }.trimmingCharacters(in: CharacterSet.newlines)
+            //swiftlint:disable opening_brace
+            if true == (assignIfValid(&author, first, self.isAuthorLine(first))
+                || assignIfValid(&preamble, combined, self.isPreambleMarker(first))
+                || assignIfValid(&cExtras, combined, self.isCMarker(first))
+                || assignIfValid(&cppExtras, combined, self.isCppMarker(first))
+                || assignIfValid(&swiftExtras, combined, self.isSwiftMarker(first)))
+            {
+                return
+            }
+            let remaining = self.isPropertiesMarker(first) ? Array($0.dropFirst()) : $0
+            let varsGrouped = remaining.lazy.grouped { (first, _) in
+                return first != ""
+            }
+            let varsCombined = varsGrouped.map { (group: [String]) -> String in
+                guard let first = group.first else {
+                    return ""
+                }
+                return group.dropFirst().reduce(first) { $0 + "\n" + $1}
+            }
+            vars = varsCombined.first { _ in true }
+            comments = varsCombined.dropFirst().reduce("") { $0 + "\n" + $1 }
+                .trimmingCharacters(in: CharacterSet.newlines)
+        }
+        guard let variables = vars else {
+            return nil
+        }
+        return Sections(
+            author: author,
+            preamble: preamble,
+            variables: variables,
+            comments: comments,
+            cExtras: cExtras,
+            cppExtras: cppExtras,
+            swiftExtras: swiftExtras
+        )
+    }
+
+    fileprivate func isAuthorLine(_ str: String) -> Bool {
+        return String(str.characters.prefix(6)) == "author"
+    }
+
+    fileprivate func isPreambleMarker(_ str: String) -> Bool {
+        return str == "-preamble"
+    }
+
+    fileprivate func isPropertiesMarker(_ str: String) -> Bool {
+        return str == "-properties"
+    }
+
+    fileprivate func isCMarker(_ str: String) -> Bool {
+        return str == "-c"
+    }
+
+    fileprivate func isCppMarker(_ str: String) -> Bool {
+        return str == "-c++"
+    }
+
+    fileprivate func isSwiftMarker(_ str: String) -> Bool {
+        return str == "-swift"
     }
 
 }
