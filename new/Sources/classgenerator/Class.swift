@@ -60,14 +60,14 @@ public struct Class {
 
     public let name: String
 
-    public let preamble: String
+    public let preamble: String?
 
     public let variables: [Variable]
 
-    public let cExtras: String
+    public let cExtras: String?
 
-    public let cppExtras: String
+    public let cppExtras: String?
 
-    public let swiftExtras: String
+    public let swiftExtras: String?
 
 }
