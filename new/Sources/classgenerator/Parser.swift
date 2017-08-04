@@ -80,6 +80,7 @@ public final class Parser: ErrorContainer {
     public func parse(file: URL) -> Class? {
         //swiftlint:disable opening_brace
         guard
+            let name = self.parseClassName(from: file),
             let contents = try? String(contentsOf: file),
             let sections = self.delegate(
                 { self.sectionsParser.parseSections(fromContents: contents) },
@@ -91,7 +92,6 @@ public final class Parser: ErrorContainer {
             )
         else {
             self.errors.append("Unable to parse \(file.path)")
-            print(self.errors)
             return nil
         }
         let author: String?
@@ -103,9 +103,36 @@ public final class Parser: ErrorContainer {
         } else {
             author = nil
         }
-        print(author)
-        print(variables.map { ($0.label, $0.defaultValue) })
-        return nil
+        return Class(
+            name: name,
+            author: author,
+            preamble: sections.preamble,
+            variables: variables,
+            cExtras: sections.cExtras,
+            cppExtras: sections.cppExtras,
+            swiftExtras: sections.swiftExtras
+        )
+    }
+
+    fileprivate func parseClassName(from path: URL) -> String? {
+        let components = path.lastPathComponent.components(separatedBy: ".")
+        guard components.count <= 2 else {
+            self.errors.append("You cannot have dots in your class.")
+            return nil
+        }
+        guard let name = components.first, false == name.isEmpty else {
+            self.errors.append("The class name is empty.")
+            return nil
+        }
+        guard nil == name.characters.lazy.filter({ self.isLetter($0) && $0 != "_" }).first else {
+            self.errors.append("The filename can only contain alphabetic characters.")
+            return nil
+        }
+        return name
+    }
+
+    fileprivate func isLetter(_ char: Character) -> Bool {
+        return (char < "A" || char > "Z") && (char < "a" || char > "z")
     }
 
     fileprivate func parseAuthor(fromSection section: String) -> String?? {
