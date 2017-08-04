@@ -85,7 +85,6 @@ public final class Parser: ErrorContainer {
                 { self.sectionsParser.parseSections(fromContents: contents) },
                 self.sectionsParser
             ),
-            let author = sections.author.map({ self.parseAuthor(fromSection: $0) }),
             let variables = self.delegate(
                 { self.variablesParser.parseVariables(fromSection: sections.variables) },
                 self.variablesParser
@@ -95,18 +94,32 @@ public final class Parser: ErrorContainer {
             print(self.errors)
             return nil
         }
+        let author: String?
+        if let authorSection = sections.author {
+            guard let a = self.parseAuthor(fromSection: authorSection) else {
+                return nil
+            }
+            author = a
+        } else {
+            author = nil
+        }
         print(author)
         print(variables.map { ($0.label, $0.defaultValue) })
         return nil
     }
 
-    fileprivate func parseAuthor(fromSection section: String) -> String? {
+    fileprivate func parseAuthor(fromSection section: String) -> String?? {
         let words = section.components(separatedBy: CharacterSet.whitespaces)
         guard "author" == words.first else {
             self.errors.append("Unable to parse authors name.")
             return nil
         }
-        return words.dropFirst().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: CharacterSet.whitespaces)
+        let name = words.dropFirst().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: CharacterSet.whitespaces)
+        guard false == name.isEmpty else {
+            self.errors.append("Unable to find authors name.")
+            return nil
+        }
+        return .some(name)
     }
 
     fileprivate func delegate<T, EC: ErrorContainer>(_ parse: () -> T?, _ errorContainer: EC) -> T? {
