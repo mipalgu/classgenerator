@@ -121,21 +121,34 @@ public final class VariablesParser: ErrorContainer {
     //swiftlint:disable large_tuple
     fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String)?)? {
         let split = segment.components(separatedBy: "=")
-        let defaultValue: String?
+        let defaultValues: (String, String)?
         if split.count > 1 {
-            defaultValue = split[1].trimmingCharacters(in: CharacterSet.whitespaces)
+            defaultValues = self.parseDefaultValues(fromSegment: split[1])
         } else {
-            defaultValue = nil
+            defaultValues = nil
         }
         let words = split[0].components(separatedBy: CharacterSet.whitespaces)
         if words.count < 2 {
             self.errors.append("You must specify a label for the variable after: \(words[0])")
             return nil
         }
-        guard let dv = defaultValue else {
-            return (words[0], words[1], nil)
+        return (words[0], words[1], defaultValues)
+    }
+
+    fileprivate func parseDefaultValues(fromSegment segment: String) -> (String, String) {
+        let split = segment.components(separatedBy: ",")
+        if 1 == split.count {
+            let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
+            return (trimmed, trimmed)
         }
-        return (words[0], words[1], (dv, dv))
+        return (
+            self.trimParentheses(split[0]).trimmingCharacters(in: CharacterSet.whitespaces),
+            self.trimParentheses(split[1]).trimmingCharacters(in: CharacterSet.whitespaces)
+        )
+    }
+
+    fileprivate func trimParentheses(_ str: String) -> String {
+        return str.trimmingCharacters(in: CharacterSet(charactersIn: "()"))
     }
 
 }
