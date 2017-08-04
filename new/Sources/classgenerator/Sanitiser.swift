@@ -62,6 +62,8 @@ public final class Sanitiser {
         switch type {
             case "char", "signed char", "unsigned char":
                 return self.sanitiseChar(value: value)
+            case "float", "float_t":
+                return self.sanitiseFloat(value: value)
             default:
                 return nil
         }
@@ -70,6 +72,13 @@ public final class Sanitiser {
     fileprivate func sanitiseChar(value: String) -> String? {
         if value.characters.first == "'" && value.characters.last == "'" {
             return "\"\(String(value.characters.dropFirst().dropLast()))\""
+        }
+        return nil
+    }
+
+    fileprivate func sanitiseFloat(value: String) -> String? {
+        if value.characters.last == "f" {
+            return String(value.characters.dropLast())
         }
         return nil
     }
