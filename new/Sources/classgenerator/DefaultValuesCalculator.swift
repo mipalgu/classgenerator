@@ -64,7 +64,6 @@ public final class DefaultValuesCalculator {
         "char": ("\"\"", "String(Character(UnicodeScalar(UInt8.min)))"),
         "signed char": ("\"\"", "String(Character(UnicodeScalar(UInt8.min)))"),
         "unsigned char": ("\"\"", "String(Character(UnicodeScalar(UInt8.min)))"),
-        "int": ("0", "0"),
         "signed": ("0", "0"),
         "signed int": ("0", "0"),
         "unsigned": ("0", "0"),

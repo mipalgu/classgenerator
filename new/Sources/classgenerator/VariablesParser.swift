@@ -66,6 +66,12 @@ public final class VariablesParser: ErrorContainer {
         return self.errors.first
     }
 
+    fileprivate let defaultValuesCalculator: DefaultValuesCalculator
+
+    public init(defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator()) {
+        self.defaultValuesCalculator = defaultValuesCalculator
+    }
+
     public func parseVariables(fromSection section: String) -> [Variable]? {
         let lines = section.components(separatedBy: CharacterSet.newlines)
         return lines.failMap {
@@ -105,11 +111,15 @@ public final class VariablesParser: ErrorContainer {
         guard let (type, label, defaultValue) = self.parseVar(fromSegment: remaining[0] + " " + remaining[1]) else {
             return nil
         }
-        return Variable(label: label, type: type, swiftType: type, defaultValue: "", comment: comment)
+        guard let d = defaultValue ?? self.defaultValuesCalculator.calculateDefaultValues(forTypeSignature: type) else {
+            self.errors.append("Please specify a default value for variable: \(label)")
+            return nil
+        }
+        return Variable(label: label, type: type, swiftType: type, defaultValue: d.0, comment: comment)
     }
 
     //swiftlint:disable large_tuple
-    fileprivate func parseVar(fromSegment segment: String) -> (String, String, String?)? {
+    fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String)?)? {
         let split = segment.components(separatedBy: "=")
         let defaultValue: String?
         if split.count > 1 {
@@ -119,10 +129,13 @@ public final class VariablesParser: ErrorContainer {
         }
         let words = split[0].components(separatedBy: CharacterSet.whitespaces)
         if words.count < 2 {
-            self.errors.append("You must specify a label for the after: \(words[0])")
+            self.errors.append("You must specify a label for the variable after: \(words[0])")
             return nil
         }
-        return (words[0], words[1], defaultValue)
+        guard let dv = defaultValue else {
+            return (words[0], words[1], nil)
+        }
+        return (words[0], words[1], (dv, dv))
     }
 
 }
