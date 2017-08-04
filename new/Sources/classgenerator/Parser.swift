@@ -95,7 +95,7 @@ public final class Parser: ErrorContainer {
             return nil
         }
         print(sections.author)
-        print(variables.map { $0.label })
+        print(variables.map { ($0.label, $0.defaultValue) })
         return nil
     }
 

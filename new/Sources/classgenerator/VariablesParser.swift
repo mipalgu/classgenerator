@@ -115,7 +115,14 @@ public final class VariablesParser: ErrorContainer {
             self.errors.append("Please specify a default value for variable: \(label)")
             return nil
         }
-        return Variable(label: label, type: type, swiftType: type, defaultValue: d.0, comment: comment)
+        return Variable(
+            label: label,
+            type: type,
+            swiftType: type,
+            defaultValue: d.0,
+            swiftDefaultValue: d.1,
+            comment: comment
+        )
     }
 
     //swiftlint:disable large_tuple
