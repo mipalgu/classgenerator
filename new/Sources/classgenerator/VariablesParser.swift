@@ -68,13 +68,17 @@ public final class VariablesParser: ErrorContainer {
 
     fileprivate let defaultValuesCalculator: DefaultValuesCalculator
 
+    fileprivate let sanitiser: Sanitiser
+
     fileprivate let typeConverter: TypeConverter
 
     public init(
         defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator(),
+        sanitiser: Sanitiser = Sanitiser(),
         typeConverter: TypeConverter = TypeConverter()
     ) {
         self.defaultValuesCalculator = defaultValuesCalculator
+        self.sanitiser = sanitiser
         self.typeConverter = typeConverter
     }
 
@@ -134,33 +138,34 @@ public final class VariablesParser: ErrorContainer {
     //swiftlint:disable large_tuple
     fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String)?)? {
         let split = segment.components(separatedBy: "=")
-        let defaultValues: (String, String)?
         guard split.count <= 2 else {
             self.errors.append("You can only specify one default value.")
             return nil
-        }
-        if split.count > 1 {
-            defaultValues = self.parseDefaultValues(fromSegment: split[1])
-        } else {
-            defaultValues = nil
         }
         let words = split[0].trimmingCharacters(in: .whitespaces).components(separatedBy: CharacterSet.whitespaces)
         guard let label = words.last else {
             self.errors.append("You must specify a label for the variable")
             return nil
         }
+        let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
+        let defaultValues: (String, String)?
+        if split.count > 1 {
+            defaultValues = self.parseDefaultValues(fromSegment: split[1], forType: type)
+        } else {
+            defaultValues = nil
+        }
         return (
-            words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces),
+            type,
             label.trimmingCharacters(in: .whitespaces),
             defaultValues
         )
     }
 
-    fileprivate func parseDefaultValues(fromSegment segment: String) -> (String, String) {
+    fileprivate func parseDefaultValues(fromSegment segment: String, forType type: String) -> (String, String) {
         let split = segment.components(separatedBy: ",")
         if 1 == split.count {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
-            return (trimmed, trimmed)
+            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type) ?? trimmed)
         }
         return (
             self.trimParentheses(split[0]).trimmingCharacters(in: CharacterSet.whitespaces),
