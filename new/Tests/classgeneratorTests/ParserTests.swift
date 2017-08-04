@@ -166,10 +166,10 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "UInt",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "An unsigned int"
+                    comment: "An unsigned int."
                 ),
                 Variable(
-                    label: "ui8",
+                    label: "u8",
                     type: "uint8_t",
                     swiftType: "UInt8",
                     defaultValue: "1",
@@ -177,15 +177,15 @@ public class ParserTests: ClassGeneratorTestCase {
                     comment: "A uint8."
                 ),
                 Variable(
-                    label: "ui16",
+                    label: "u16",
                     type: "uint16_t",
                     swiftType: "UInt16",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "A uint16"
+                    comment: "A uint16."
                 ),
                 Variable(
-                    label: "ui32",
+                    label: "u32",
                     type: "uint32_t",
                     swiftType: "UInt32",
                     defaultValue: "1",
@@ -193,7 +193,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     comment: "A uint32."
                 ),
                 Variable(
-                    label: "ui64",
+                    label: "u64",
                     type: "uint64_t",
                     swiftType: "UInt64",
                     defaultValue: "1",
@@ -214,7 +214,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int16",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "A int16."
+                    comment: "An int16."
                 ),
                 Variable(
                     label: "i32",
@@ -222,7 +222,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "A int32."
+                    comment: "An int32."
                 ),
                 Variable(
                     label: "i64",
@@ -230,7 +230,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int64",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "A int64."
+                    comment: "An int64."
                 ),
                 Variable(
                     label: "s",
@@ -326,7 +326,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "UInt32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "An unsigned long int"
+                    comment: "An unsigned long int."
                 ),
                 Variable(
                     label: "ll",
@@ -334,7 +334,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int64",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
-                    comment: "An unsigned long long."
+                    comment: "A long long."
                 ),
                 Variable(
                     label: "lli",
@@ -462,7 +462,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "String",
                     defaultValue: "0",
                     swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
-                    comment: "A signed char"
+                    comment: "A signed char."
                 ),
                 Variable(
                     label: "uc",
@@ -510,10 +510,10 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "UInt",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "An unsigned int"
+                    comment: "An unsigned int."
                 ),
                 Variable(
-                    label: "ui8",
+                    label: "u8",
                     type: "uint8_t",
                     swiftType: "UInt8",
                     defaultValue: "0",
@@ -521,15 +521,15 @@ public class ParserTests: ClassGeneratorTestCase {
                     comment: "A uint8."
                 ),
                 Variable(
-                    label: "ui16",
+                    label: "u16",
                     type: "uint16_t",
                     swiftType: "UInt16",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "A uint16"
+                    comment: "A uint16."
                 ),
                 Variable(
-                    label: "ui32",
+                    label: "u32",
                     type: "uint32_t",
                     swiftType: "UInt32",
                     defaultValue: "0",
@@ -537,7 +537,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     comment: "A uint32."
                 ),
                 Variable(
-                    label: "ui64",
+                    label: "u64",
                     type: "uint64_t",
                     swiftType: "UInt64",
                     defaultValue: "0",
@@ -558,7 +558,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int16",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "A int16."
+                    comment: "An int16."
                 ),
                 Variable(
                     label: "i32",
@@ -566,7 +566,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "A int32."
+                    comment: "An int32."
                 ),
                 Variable(
                     label: "i64",
@@ -574,7 +574,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int64",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "A int64."
+                    comment: "An int64."
                 ),
                 Variable(
                     label: "s",
@@ -670,7 +670,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "UInt32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "An unsigned long int"
+                    comment: "An unsigned long int."
                 ),
                 Variable(
                     label: "ll",
@@ -678,7 +678,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     swiftType: "Int64",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
-                    comment: "An unsigned long long."
+                    comment: "A long long."
                 ),
                 Variable(
                     label: "lli",
@@ -797,7 +797,17 @@ public class ParserTests: ClassGeneratorTestCase {
             cppExtras: nil,
             swiftExtras: nil
         )
-        XCTAssertEqual(expected, self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt")))
+        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt")) else {
+            XCTFail("Unable to parse old.txt")
+            return
+        }
+        let zipped = zip(expected.variables, result.variables)
+        zipped.forEach {
+            if $0 != $1 {
+                print("\($0.label), \($1.label)")
+                XCTAssertEqual($0, $1)
+            }
+        }
     }
 
 }

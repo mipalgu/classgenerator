@@ -17,7 +17,7 @@ int8_t	i8=1	An int8.
 int16_t	i16=1	An int16.
 int32_t	i32=1	An int32.
 int64_t	i64=1	An int64.
-short	s=1	A short
+short	s=1	A short.
 short int	si=1	A short int.
 signed short	ss=1	A signed short.
 signed short int	ssi=1	A signed short int.
@@ -28,7 +28,7 @@ long int	li = 1	A long int.
 signed long	sl = 1	A signed long.
 signed long int	sli = 1	A signed long int.
 unsigned long	ul = 1	An unsigned long.
-unsigned long int	uli=2	An unsigned long int.
+unsigned long int	uli=1	An unsigned long int.
 long long	ll=1	A long long.
 long long int	lli=1	A long long int.
 signed long long	sll=1	A signed long long.
@@ -36,8 +36,8 @@ signed long long int	slli=1	A signed long long int.
 unsigned long long	ull=1	An unsigned long long.
 unsigned long long int	ulli=1	An unsigned long long int.
 long64_t	l64=1	A long64.
-float	f=1.0	A float.
-float_t	ft=1.0	A float_t.
+float	f=1.0f	A float.
+float_t	ft=1.0f	A float_t.
 double	d=1.0	A double.
 double_t	dt=1.0	A double_t.
 long double	ld=1.0	A long double.
@@ -60,7 +60,7 @@ int8_t	i8	An int8.
 int16_t	i16	An int16.
 int32_t	i32	An int32.
 int64_t	i64	An int64.
-short	s	A short
+short	s	A short.
 short int	si	A short int.
 signed short	ss	A signed short.
 signed short int	ssi	A signed short int.
