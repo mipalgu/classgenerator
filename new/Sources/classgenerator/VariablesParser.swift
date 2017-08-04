@@ -135,17 +135,25 @@ public final class VariablesParser: ErrorContainer {
     fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String)?)? {
         let split = segment.components(separatedBy: "=")
         let defaultValues: (String, String)?
+        guard split.count <= 2 else {
+            self.errors.append("You can only specify one default value.")
+            return nil
+        }
         if split.count > 1 {
             defaultValues = self.parseDefaultValues(fromSegment: split[1])
         } else {
             defaultValues = nil
         }
-        let words = split[0].components(separatedBy: CharacterSet.whitespaces)
-        if words.count < 2 {
-            self.errors.append("You must specify a label for the variable after: \(words[0])")
+        let words = split[0].trimmingCharacters(in: .whitespaces).components(separatedBy: CharacterSet.whitespaces)
+        guard let label = words.last else {
+            self.errors.append("You must specify a label for the variable")
             return nil
         }
-        return (words[0], words[1], defaultValues)
+        return (
+            words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces),
+            label.trimmingCharacters(in: .whitespaces),
+            defaultValues
+        )
     }
 
     fileprivate func parseDefaultValues(fromSegment segment: String) -> (String, String) {
