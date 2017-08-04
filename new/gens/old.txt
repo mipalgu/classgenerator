@@ -86,6 +86,5 @@ double_t	dt	A double_t.
 long double	ld	A long double.
 double double	dd	A double double.
 int *	p=NULL	A pointer.
-int *	p	A pointer.
 
 This is a test of all of the supported types.
