@@ -87,5 +87,7 @@ long double	ld	A long double.
 double double	dd	A double double.
 int *	p=NULL	A pointer.
 somestruct	strct=somestruct()	A struct.
+int16_t	array16[4]={1,2,3,4}	// a comment about array16
+bool	bools[3]	// a comment about bools
 
 This is a test of all of the supported types.
