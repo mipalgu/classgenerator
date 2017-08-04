@@ -68,8 +68,14 @@ public final class VariablesParser: ErrorContainer {
 
     fileprivate let defaultValuesCalculator: DefaultValuesCalculator
 
-    public init(defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator()) {
+    fileprivate let typeConverter: TypeConverter
+
+    public init(
+        defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator(),
+        typeConverter: TypeConverter = TypeConverter()
+    ) {
         self.defaultValuesCalculator = defaultValuesCalculator
+        self.typeConverter = typeConverter
     }
 
     public func parseVariables(fromSection section: String) -> [Variable]? {
@@ -92,7 +98,7 @@ public final class VariablesParser: ErrorContainer {
             self.errors.append("Line is empty")
             return nil
         }
-        var tabbed = first.components(separatedBy: "\t").lazy.map {
+        let tabbed = first.components(separatedBy: "\t").lazy.map {
             $0.trimmingCharacters(in: CharacterSet.whitespaces)
         }
         if 1 == split.count && tabbed.count < 3 {
@@ -118,7 +124,7 @@ public final class VariablesParser: ErrorContainer {
         return Variable(
             label: label,
             type: type,
-            swiftType: type,
+            swiftType: self.typeConverter.convert(type: type) ?? type,
             defaultValue: d.0,
             swiftDefaultValue: d.1,
             comment: comment
