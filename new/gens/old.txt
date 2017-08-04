@@ -13,10 +13,10 @@ uint8_t	u8=1	// A uint8.
 uint16_t	u16=1	A uint16.
 uint32_t	u32=1	A uint32.
 uint64_t	u64=1	A uint64.
-int8	i8=1	An int8.
-int16	i16=1	An int16.
-int32	i32=1	An int32.
-int64	i64=1	An int64.
+int8_t	i8=1	An int8.
+int16_t	i16=1	An int16.
+int32_t	i32=1	An int32.
+int64_t	i64=1	An int64.
 short	s=1	A short
 short int	si=1	A short int.
 signed short	ss=1	A signed short.
@@ -56,10 +56,10 @@ uint8_t	u8	// A uint8.
 uint16_t	u16	A uint16.
 uint32_t	u32	A uint32.
 uint64_t	u64	A uint64.
-int8	i8	An int8.
-int16	i16	An int16.
-int32	i32	An int32.
-int64	i64	An int64.
+int8_t	i8	An int8.
+int16_t	i16	An int16.
+int32_t	i32	An int32.
+int64_t	i64	An int64.
 short	s	A short
 short int	si	A short int.
 signed short	ss	A signed short.
