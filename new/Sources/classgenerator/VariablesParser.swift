@@ -148,6 +148,10 @@ public final class VariablesParser: ErrorContainer {
             return nil
         }
         let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
+        let trimmedLabel = label.trimmingCharacters(in: .whitespaces)
+        guard let arrCount = self.parseArrayCount(fromLabel: trimmedLabel) else {
+            return nil
+        }
         let defaultValues: (String, String)?
         if split.count > 1 {
             defaultValues = self.parseDefaultValues(fromSegment: split[1], forType: type)
@@ -156,9 +160,21 @@ public final class VariablesParser: ErrorContainer {
         }
         return (
             type,
-            label.trimmingCharacters(in: .whitespaces),
+            trimmedLabel,
             defaultValues
         )
+    }
+
+    fileprivate func parseArrayCount(fromLabel label: String) -> [String]? {
+        let split = label.components(separatedBy: "[")
+        return split.failMap {
+            let trimmed = $0.trimmingCharacters(in: .whitespaces)
+            guard "]" == trimmed.characters.last else {
+                self.errors.append("Unable to parse array count for: \(trimmed)")
+                return nil
+            }
+            return String(trimmed.characters.dropLast())
+        }
     }
 
     fileprivate func parseDefaultValues(fromSegment segment: String, forType type: String) -> (String, String) {
