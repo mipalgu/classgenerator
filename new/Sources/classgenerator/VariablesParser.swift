@@ -152,18 +152,23 @@ public final class VariablesParser: ErrorContainer {
             return nil
         }
         let trimmedLabel = label.trimmingCharacters(in: .whitespaces)
-        guard let arrCount = self.parseArrayCount(fromLabel: trimmedLabel) else {
+        guard let arrCounts = self.parseArrayCount(fromLabel: trimmedLabel) else {
             return nil
         }
         let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
         let defaultValues: (String, String)?
         if split.count > 1 {
-            defaultValues = self.parseDefaultValues(fromSegment: split[1], forType: type)
+            guard let temp = self.parseDefaultValues(fromSegment: split[1], forType: type) else {
+                return nil
+            }
+            defaultValues = temp
         } else {
             defaultValues = nil
         }
         guard
-            let d = defaultValues ?? self.defaultValuesCalculator.calculateDefaultValues(forTypeSignature: type)
+            let d = defaultValues ?? self.defaultValuesCalculator.calculateDefaultValues(
+                forTypeSignature: type, withArrayCounts: arrCounts
+            )
         else {
             self.errors.append("Please specify a default value for variable: \(label)")
             return nil
@@ -187,20 +192,29 @@ public final class VariablesParser: ErrorContainer {
         }
     }
 
-    fileprivate func parseDefaultValues(fromSegment segment: String, forType type: String) -> (String, String) {
-        let split = segment.components(separatedBy: ",")
+    fileprivate func parseDefaultValues(fromSegment segment: String, forType type: String) -> (String, String)? {
+        let split = segment.components(separatedBy: "|")
+        guard split.count <= 2 else {
+            self.errors.append("Unable to parse default values of: \(segment)")
+            return nil
+        }
         if 1 == split.count {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
             return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type) ?? trimmed)
         }
+        let values = split[1].components(separatedBy: ",")
+        guard 2 == values.count else {
+            self.errors.append("Malformed default value list: \(split[1])")
+            return nil
+        }
         return (
-            self.trimParentheses(split[0]).trimmingCharacters(in: CharacterSet.whitespaces),
-            self.trimParentheses(split[1]).trimmingCharacters(in: CharacterSet.whitespaces)
+            values[0].trimmingCharacters(in: CharacterSet.whitespaces),
+            self.trimDefaultValueListSeparators(values[1]).trimmingCharacters(in: CharacterSet.whitespaces)
         )
     }
 
-    fileprivate func trimParentheses(_ str: String) -> String {
-        return str.trimmingCharacters(in: CharacterSet(charactersIn: "()"))
+    fileprivate func trimDefaultValueListSeparators(_ str: String) -> String {
+        return str.trimmingCharacters(in: CharacterSet(charactersIn: "|"))
     }
 
 }

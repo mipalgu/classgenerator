@@ -105,8 +105,37 @@ public final class DefaultValuesCalculator {
         "double double": ("0.0", "0.0")
     ]
 
-    func calculateDefaultValues(forTypeSignature type: String) -> (String, String)? {
+    func calculateDefaultValues(forTypeSignature type: String, withArrayCounts counts: [String]) -> (String, String)? {
+        if nil != counts.first(where: { _ in true }) {
+            return self.calculateArrayDefaultValues(forType: type, withCounts: counts)
+        }
         return self.values[type]
+    }
+
+    fileprivate func calculateArrayDefaultValues(
+        forType type: String,
+        withCounts counts: [String]
+    ) -> (String, String)? {
+        guard
+            let c = counts.first(where: { _ in true }),
+            let num = Int(c),
+            num >= 1
+        else {
+            return ("{}", "[]")
+        }
+        guard
+            let values = self.calculateDefaultValues(forTypeSignature: type, withArrayCounts: Array(counts.dropFirst()))
+        else {
+            return nil
+        }
+        let arr = Array(repeating: values, count: num)
+        guard let first = arr.first else {
+            return ("{}", "[]")
+        }
+        return (
+            "{" + arr.dropFirst().reduce(first.0) { $0 + ", " + $1.0 } + "}",
+            "[" + arr.dropFirst().reduce(first.1) { $0 + ", " + $1.1 } + "]"
+        )
     }
 
 }
