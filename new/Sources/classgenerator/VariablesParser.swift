@@ -156,24 +156,10 @@ public final class VariablesParser: ErrorContainer {
             return nil
         }
         let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
-        let defaultValues: (String, String)?
-        if split.count > 1 {
-            guard
-                let temp = self.parseDefaultValues(
-                    fromSegment: split[1],
-                    forType: type,
-                    isArray: false == arrCounts.isEmpty
-                )
-            else {
-                return nil
-            }
-            defaultValues = temp
-        } else {
-            defaultValues = nil
-        }
-        guard
-            let d = defaultValues ?? self.defaultValuesCalculator.calculateDefaultValues(
-                forTypeSignature: type, withArrayCounts: arrCounts
+        guard let defaultValues = self.parseDefaultValues(
+                fromSplit: split,
+                forType: type,
+                withArrayCounts: arrCounts
             )
         else {
             self.errors.append("Please specify a default value for variable: \(label)")
@@ -182,7 +168,7 @@ public final class VariablesParser: ErrorContainer {
         return (
             type,
             trimmedLabel,
-            d
+            defaultValues
         )
     }
 
@@ -196,6 +182,17 @@ public final class VariablesParser: ErrorContainer {
             }
             return String(trimmed.characters.dropLast())
         }
+    }
+
+    fileprivate func parseDefaultValues(
+        fromSplit split: [String],
+        forType type: String,
+        withArrayCounts arrCounts: [String]
+    ) -> (String, String)? {
+        if split.count > 1 {
+            return self.parseDefaultValues(fromSegment: split[1], forType: type, isArray: false == arrCounts.isEmpty)
+        }
+        return self.defaultValuesCalculator.calculateDefaultValues(forTypeSignature: type, withArrayCounts: arrCounts)
     }
 
     fileprivate func parseDefaultValues(
