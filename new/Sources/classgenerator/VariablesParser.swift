@@ -93,6 +93,24 @@ public final class VariablesParser: ErrorContainer {
     }
 
     fileprivate func createVariable(fromLine line: String) -> Variable? {
+        guard
+            let (remaining, comment) = self.parseComment(fromLine: line),
+            let (type, label, defaultValues) = self.parseVar(fromSegment: remaining)
+        else {
+            print(self.errors)
+            return nil
+        }
+        return Variable(
+            label: label,
+            type: type,
+            swiftType: self.typeConverter.convert(type: type) ?? type,
+            defaultValue: defaultValues.0,
+            swiftDefaultValue: defaultValues.1,
+            comment: comment
+        )
+    }
+
+    fileprivate func parseComment(fromLine line: String) -> (String, String)? {
         let split = line.components(separatedBy: "//")
         guard split.count <= 2 else {
             self.errors.append("Found multiple comments for line: \(line)")
@@ -109,34 +127,20 @@ public final class VariablesParser: ErrorContainer {
             self.errors.append("You must supply a comment for line: \(line)")
             return nil
         }
-        let comment: String
-        let remaining: [String]
         if 2 == split.count {
-            comment = split[1].trimmingCharacters(in: CharacterSet.whitespaces)
-            remaining = Array(tabbed)
-        } else {
-            comment = tabbed[2]
-            remaining = Array(tabbed.dropLast())
+            return (
+                tabbed.reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces),
+                split[1].trimmingCharacters(in: CharacterSet.whitespaces)
+            )
         }
-        guard let (type, label, defaultValue) = self.parseVar(fromSegment: remaining[0] + " " + remaining[1]) else {
-            return nil
-        }
-        guard let d = defaultValue ?? self.defaultValuesCalculator.calculateDefaultValues(forTypeSignature: type) else {
-            self.errors.append("Please specify a default value for variable: \(label)")
-            return nil
-        }
-        return Variable(
-            label: label,
-            type: type,
-            swiftType: self.typeConverter.convert(type: type) ?? type,
-            defaultValue: d.0,
-            swiftDefaultValue: d.1,
-            comment: comment
+        return (
+            tabbed[0] + " " + tabbed[1],
+            tabbed.dropFirst(2).reduce("") { $0 + "\t" + $1 }.trimmingCharacters(in: .whitespaces)
         )
     }
 
     //swiftlint:disable large_tuple
-    fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String)?)? {
+    fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String))? {
         let split = segment.components(separatedBy: "=")
         guard split.count <= 2 else {
             self.errors.append("You can only specify one default value.")
@@ -147,27 +151,33 @@ public final class VariablesParser: ErrorContainer {
             self.errors.append("You must specify a label for the variable")
             return nil
         }
-        let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
         let trimmedLabel = label.trimmingCharacters(in: .whitespaces)
         guard let arrCount = self.parseArrayCount(fromLabel: trimmedLabel) else {
             return nil
         }
+        let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
         let defaultValues: (String, String)?
         if split.count > 1 {
             defaultValues = self.parseDefaultValues(fromSegment: split[1], forType: type)
         } else {
             defaultValues = nil
         }
+        guard
+            let d = defaultValues ?? self.defaultValuesCalculator.calculateDefaultValues(forTypeSignature: type)
+        else {
+            self.errors.append("Please specify a default value for variable: \(label)")
+            return nil
+        }
         return (
             type,
             trimmedLabel,
-            defaultValues
+            d
         )
     }
 
     fileprivate func parseArrayCount(fromLabel label: String) -> [String]? {
         let split = label.components(separatedBy: "[")
-        return split.failMap {
+        return split.dropFirst().failMap {
             let trimmed = $0.trimmingCharacters(in: .whitespaces)
             guard "]" == trimmed.characters.last else {
                 self.errors.append("Unable to parse array count for: \(trimmed)")
