@@ -791,6 +791,22 @@ public class ParserTests: ClassGeneratorTestCase {
                     defaultValue: "somestruct()",
                     swiftDefaultValue: "somestruct()",
                     comment: "A struct."
+                ),
+                Variable(
+                    label: "array16",
+                    type: "int16_t[4]",
+                    swiftType: "ContiguousArray<Int16>",
+                    defaultValue: "{1,2,3,4}",
+                    swiftDefaultValue: "[1, 2, 3, 4]",
+                    comment: "a comment about array16"
+                ),
+                Variable(
+                    label: "bools",
+                    type: "bool[3]",
+                    swiftType: "ContiguousArray<Bool>",
+                    defaultValue: "{true, true, true}",
+                    swiftDefaultValue: "[true, true, true]",
+                    comment: "a comment about bools"
                 )
             ],
             cExtras: nil,
