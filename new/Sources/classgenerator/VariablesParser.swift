@@ -158,7 +158,13 @@ public final class VariablesParser: ErrorContainer {
         let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
         let defaultValues: (String, String)?
         if split.count > 1 {
-            guard let temp = self.parseDefaultValues(fromSegment: split[1], forType: type) else {
+            guard
+                let temp = self.parseDefaultValues(
+                    fromSegment: split[1],
+                    forType: type,
+                    isArray: false == arrCounts.isEmpty
+                )
+            else {
                 return nil
             }
             defaultValues = temp
@@ -192,7 +198,11 @@ public final class VariablesParser: ErrorContainer {
         }
     }
 
-    fileprivate func parseDefaultValues(fromSegment segment: String, forType type: String) -> (String, String)? {
+    fileprivate func parseDefaultValues(
+        fromSegment segment: String,
+        forType type: String,
+        isArray: Bool
+    ) -> (String, String)? {
         let split = segment.components(separatedBy: "|")
         guard split.count <= 2 else {
             self.errors.append("Unable to parse default values of: \(segment)")
@@ -200,7 +210,7 @@ public final class VariablesParser: ErrorContainer {
         }
         if 1 == split.count {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
-            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type) ?? trimmed)
+            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type, isArray: isArray) ?? trimmed)
         }
         let values = split[1].components(separatedBy: ",")
         guard 2 == values.count else {

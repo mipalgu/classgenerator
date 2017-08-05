@@ -58,7 +58,10 @@
 
 public final class Sanitiser {
 
-    public func sanitise(value: String, forType type: String) -> String? {
+    public func sanitise(value: String, forType type: String, isArray: Bool) -> String? {
+        if true == isArray {
+            return self.sanitiseArray(value: value, forType: type)
+        }
         switch type {
             case "char", "signed char", "unsigned char":
                 return self.sanitiseChar(value: value)
@@ -68,8 +71,34 @@ public final class Sanitiser {
                 if type.characters.last == "*" && value == "NULL" {
                     return "nil"
                 }
-                return nil
+                return value
         }
+    }
+
+    fileprivate func sanitiseArray(value: String, forType type: String) -> String? {
+        guard
+            let first = value.characters.first,
+            let last = value.characters.last,
+            first == "{",
+            last == "}"
+        else {
+            return nil
+        }
+        let values = String(value.characters.dropFirst().dropLast())
+        guard let firstChar = values.characters.first else {
+            return "[]"
+        }
+        let isArray = firstChar == "{"
+        guard let list = values.components(separatedBy: ",").failMap({
+                self.sanitise(value: $0.trimmingCharacters(in: .whitespaces), forType: type, isArray: isArray)
+            })
+        else {
+            return nil
+        }
+        guard let firstValue = list.first else {
+            return "[]"
+        }
+        return "[" + list.dropFirst().reduce(firstValue) { $0 + ", " + $1 } + "]"
     }
 
     fileprivate func sanitiseChar(value: String) -> String? {
