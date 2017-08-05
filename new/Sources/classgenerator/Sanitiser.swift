@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * Sanitiser.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,62 @@
  *
  */
 
-public struct Variable {
+public final class Sanitiser {
 
-    public let label: String
+    public func sanitise(value: String, forType type: String, isArray: Bool) -> String? {
+        if true == isArray {
+            return self.sanitiseArray(value: value, forType: type)
+        }
+        switch type {
+            case "char", "signed char", "unsigned char":
+                return self.sanitiseChar(value: value)
+            case "float", "float_t":
+                return self.sanitiseFloat(value: value)
+            default:
+                if type.characters.last == "*" && value == "NULL" {
+                    return "nil"
+                }
+                return value
+        }
+    }
 
-    public let type: String
+    fileprivate func sanitiseArray(value: String, forType type: String) -> String? {
+        guard
+            let first = value.characters.first,
+            let last = value.characters.last,
+            first == "{",
+            last == "}"
+        else {
+            return nil
+        }
+        let values = String(value.characters.dropFirst().dropLast())
+        guard let firstChar = values.characters.first else {
+            return "[]"
+        }
+        let isArray = firstChar == "{"
+        guard let list = values.components(separatedBy: ",").failMap({
+                self.sanitise(value: $0.trimmingCharacters(in: .whitespaces), forType: type, isArray: isArray)
+            })
+        else {
+            return nil
+        }
+        guard let firstValue = list.first else {
+            return "[]"
+        }
+        return "[" + list.dropFirst().reduce(firstValue) { $0 + ", " + $1 } + "]"
+    }
 
-    public let swiftType: String
+    fileprivate func sanitiseChar(value: String) -> String? {
+        if value.characters.first == "'" && value.characters.last == "'" {
+            return "\"\(String(value.characters.dropFirst().dropLast()))\""
+        }
+        return nil
+    }
 
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
-
-}
-
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
+    fileprivate func sanitiseFloat(value: String) -> String? {
+        if value.characters.last == "f" {
+            return String(value.characters.dropLast())
+        }
+        return nil
+    }
 }

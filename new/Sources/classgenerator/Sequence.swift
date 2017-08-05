@@ -1,8 +1,8 @@
 /*
- * Variable.swift 
- * Sources 
+ * Sequence.swift 
+ * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 05/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,29 +56,75 @@
  *
  */
 
-public struct Variable {
+extension Sequence where Self.SubSequence: Sequence, Self.SubSequence.Iterator.Element == Self.Iterator.Element {
 
-    public let label: String
-
-    public let type: String
-
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
+    /**
+     *  Split a sequence int sub-arrays where each sub-array contains elements
+     *  that conform to `shouldGroup`.
+     *
+     *  In this example, `grouped(by:)` is used to group an `Array` of `Int`s:
+     *  ````
+     *      let numbers = [1, 1, 2, 2, 3, 4, 1, 1, 5]
+     *      let grouped = numbers.grouped { $0 == $1 }
+     *          // [[1, 1], [2, 2], [3], [4], [1, 1], [5]]
+     *  ````
+     *
+     *  - Parameter shouldGroup: A function that returns true when two
+     *    elements should be grouped together into a sub-array.
+     */
+    func grouped(by shouldGroup: (Self.Iterator.Element, Self.Iterator.Element) -> Bool) -> [[Self.Iterator.Element]] {
+        guard let first = self.first(where: { _ in true }) else {
+            return []
+        }
+        var groups: [[Self.Iterator.Element]] = [[first]]
+        let _: Self.Iterator.Element = self.dropFirst().reduce(first) {
+            if false == shouldGroup($0, $1) {
+                groups.append([$1])
+                return $1
+            }
+            groups[groups.endIndex - 1].append($1)
+            return $1
+        }
+        return groups
+    }
 
 }
 
-extension Variable: Equatable {}
+//swiftlint:disable opening_brace
+extension Sequence where
+    Self.SubSequence: Sequence,
+    Self.SubSequence.Iterator.Element == Self.Iterator.Element,
+    Self.Iterator.Element: Equatable
+{
 
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
+    /**
+     *  Split a sequence into sub-arrays where each sub-array contains elements
+     *  that are equal.
+     *
+     *  In this example, `grouped()` is used to group an `Array` of `Int`s:
+     *  ````
+     *      let numbers = [1, 1, 2, 2, 3, 4, 1, 1, 5]
+     *      let grouped = numbers.grouped()
+     *          // [[1, 1], [2, 2], [3], [4], [1, 1], [5]]
+     *  ````
+     */
+    func grouped() -> [[Self.Iterator.Element]] {
+        return self.grouped(by: ==)
+    }
+
+}
+
+extension Sequence {
+
+    public func failMap<T>(_ transform: (Self.Iterator.Element) -> T?) -> [T]? {
+        var arr: [T] = []
+        for e in self {
+            guard let r = transform(e) else {
+                return nil
+            }
+            arr.append(r)
+        }
+        return arr
+    }
+
 }

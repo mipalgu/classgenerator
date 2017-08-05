@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * ErrorContainer.swift 
+ * classgenerator
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,10 @@
  *
  */
 
-public struct Variable {
+public protocol ErrorContainer {
 
-    public let label: String
+    var errors: [String] { get }
 
-    public let type: String
+    var lastError: String? { get }
 
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
-
-}
-
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
 }

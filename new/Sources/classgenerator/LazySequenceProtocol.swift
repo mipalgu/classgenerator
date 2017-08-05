@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * LazySequenceProtocol.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,20 @@
  *
  */
 
-public struct Variable {
+extension LazySequenceProtocol {
 
-    public let label: String
-
-    public let type: String
-
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
+    func grouped(
+        by shouldGroup: @escaping (Self.Iterator.Element, Self.Iterator.Element) -> Bool
+    ) -> GroupedSequence<Self> {
+        return GroupedSequence(self, shouldGroup)
+    }
 
 }
 
-extension Variable: Equatable {}
+extension LazySequenceProtocol where Self.Iterator.Element: Equatable {
 
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
+    func grouped() -> GroupedSequence<Self> {
+        return GroupedSequence(self, ==)
+    }
+
 }

@@ -60,14 +60,27 @@ public struct Class {
 
     public let name: String
 
-    public let preamble: String
+    public let author: String?
+
+    public let preamble: String?
 
     public let variables: [Variable]
 
-    public let cExtras: String
+    public let cExtras: String?
 
-    public let cppExtras: String
+    public let cppExtras: String?
 
-    public let swiftExtras: String
+    public let swiftExtras: String?
 
+}
+
+extension Class: Equatable {}
+
+public func == (lhs: Class, rhs: Class) -> Bool {
+    return lhs.name == rhs.name
+        && lhs.preamble == rhs.preamble
+        && lhs.variables == rhs.variables
+        && lhs.cExtras == rhs.cExtras
+        && lhs.cppExtras == rhs.cppExtras
+        && lhs.swiftExtras == rhs.swiftExtras
 }

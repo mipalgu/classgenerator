@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * Array.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,18 @@
  *
  */
 
-public struct Variable {
+extension Array {
 
-    public let label: String
+    public func failMap<T>(_ transform: (Element) -> T?) -> [T]? {
+        var arr: [T] = []
+        arr.reserveCapacity(self.count)
+        for e in self {
+            guard let r = transform(e) else {
+                return nil
+            }
+            arr.append(r)
+        }
+        return arr
+    }
 
-    public let type: String
-
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
-
-}
-
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
 }

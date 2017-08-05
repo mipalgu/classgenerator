@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * TypeConverter.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,66 @@
  *
  */
 
-public struct Variable {
+import Foundation
 
-    public let label: String
+public final class TypeConverter {
 
-    public let type: String
+    fileprivate let values: [String: String] = [
+        "string": "String",
+        "bool": "Bool",
+        "char": "String",
+        "signed char": "String",
+        "unsigned char": "String",
+        "int": "Int",
+        "signed": "Int",
+        "signed int": "Int",
+        "unsigned": "UInt",
+        "unsigned int": "UInt",
+        "uint8_t": "UInt8",
+        "uint16_t": "UInt16",
+        "uint32_t": "UInt32",
+        "uint64_t": "UInt64",
+        "int8_t": "Int8",
+        "int16_t": "Int16",
+        "int32_t": "Int32",
+        "int64_t": "Int64",
+        "short": "Int16",
+        "short int": "Int16",
+        "signed short": "Int16",
+        "signed short int": "Int16",
+        "unsigned short": "UInt16",
+        "unsigned short int": "UInt16",
+        "long": "Int32",
+        "long int": "Int32",
+        "signed long": "Int32",
+        "signed long int": "Int32",
+        "unsigned long": "UInt32",
+        "unsigned long int": "UInt32",
+        "long long": "Int64",
+        "long long int": "Int64",
+        "signed long long": "Int64",
+        "signed long long int": "Int64",
+        "unsigned long long": "UInt64",
+        "unsigned long long int": "UInt64",
+        "long64_t": "Int64",
+        "float": "Float",
+        "float_t": "Float",
+        "double": "Double",
+        "double_t": "Double",
+        "long double": "Float80",
+        "double double": "Float80"
+    ]
 
-    public let swiftType: String
+    func convert(type: String) -> String? {
+        if type.characters.last != "*" {
+            return self.values[type]
+        }
+        let words = String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces)
+            .components(separatedBy: CharacterSet.whitespaces)
+        guard let last = words.last, let newType = self.convert(type: last) else {
+            return nil
+        }
+        return "UnsafeMutablePointer<\(newType)>?"
+    }
 
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
-
-}
-
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
 }

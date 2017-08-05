@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * GroupedSequenceIterator.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,37 @@
  *
  */
 
-public struct Variable {
+struct GroupedSequenceIterator<Base: IteratorProtocol>: IteratorProtocol {
 
-    public let label: String
+    var base: Base
+    let shouldGroup: (Base.Element, Base.Element) -> Bool
 
-    public let type: String
+    fileprivate var lastElement: Base.Element?
 
-    public let swiftType: String
+    init(_ base: Base, _ shouldGroup: @escaping (Base.Element, Base.Element) -> Bool) {
+        self.base = base
+        self.shouldGroup = shouldGroup
+    }
 
-    public let defaultValue: String
+    mutating func next() -> [Base.Element]? {
+        var arr: [Base.Element] = []
+        if let last = self.lastElement {
+            arr = [last]
+        }
+        while let element = self.base.next() {
+            guard
+                let last = self.lastElement,
+                false == shouldGroup(last, element)
+            else {
+                self.lastElement = element
+                arr.append(element)
+                continue
+            }
+            self.lastElement = element
+            return arr
+        }
+        self.lastElement = nil
+        return arr.isEmpty ? nil : arr
+    }
 
-    public let swiftDefaultValue: String
-
-    public let comment: String?
-
-}
-
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
 }

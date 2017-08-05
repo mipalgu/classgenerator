@@ -58,12 +58,103 @@
 
 import Foundation
 
-public class Parser {
+public final class Parser: ErrorContainer {
 
-    public init() {}
+    public fileprivate(set) var errors: [String] = []
 
-    func parse(file: URL) -> Class? {
-        return nil
+    public var lastError: String? {
+        return self.errors.first
+    }
+
+    fileprivate let sectionsParser: SectionsParser
+    fileprivate let variablesParser: VariablesParser
+
+    public init(
+        sectionsParser: SectionsParser = SectionsParser(),
+        variablesParser: VariablesParser = VariablesParser()
+    ) {
+        self.sectionsParser = sectionsParser
+        self.variablesParser = variablesParser
+    }
+
+    public func parse(file: URL) -> Class? {
+        //swiftlint:disable opening_brace
+        guard
+            let name = self.parseClassName(from: file),
+            let contents = try? String(contentsOf: file),
+            let sections = self.delegate(
+                { self.sectionsParser.parseSections(fromContents: contents) },
+                self.sectionsParser
+            ),
+            let variables = self.delegate(
+                { self.variablesParser.parseVariables(fromSection: sections.variables) },
+                self.variablesParser
+            )
+        else {
+            self.errors.append("Unable to parse \(file.path)")
+            return nil
+        }
+        let author: String?
+        if let authorSection = sections.author {
+            guard let a = self.parseAuthor(fromSection: authorSection) else {
+                return nil
+            }
+            author = a
+        } else {
+            author = nil
+        }
+        return Class(
+            name: name,
+            author: author,
+            preamble: sections.preamble,
+            variables: variables,
+            cExtras: sections.cExtras,
+            cppExtras: sections.cppExtras,
+            swiftExtras: sections.swiftExtras
+        )
+    }
+
+    fileprivate func parseClassName(from path: URL) -> String? {
+        let components = path.lastPathComponent.components(separatedBy: ".")
+        guard components.count <= 2 else {
+            self.errors.append("You cannot have dots in your class.")
+            return nil
+        }
+        guard let name = components.first, false == name.isEmpty else {
+            self.errors.append("The class name is empty.")
+            return nil
+        }
+        guard nil == name.characters.lazy.filter({ self.isLetter($0) && $0 != "_" }).first else {
+            self.errors.append("The filename can only contain alphabetic characters.")
+            return nil
+        }
+        return name
+    }
+
+    fileprivate func isLetter(_ char: Character) -> Bool {
+        return (char < "A" || char > "Z") && (char < "a" || char > "z")
+    }
+
+    fileprivate func parseAuthor(fromSection section: String) -> String?? {
+        let words = section.components(separatedBy: CharacterSet.whitespaces)
+        guard "author" == words.first else {
+            self.errors.append("Unable to parse authors name.")
+            return nil
+        }
+        let name = words.dropFirst().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: CharacterSet.whitespaces)
+        guard false == name.isEmpty else {
+            self.errors.append("Unable to find authors name.")
+            return nil
+        }
+        return .some(name)
+    }
+
+    fileprivate func delegate<T, EC: ErrorContainer>(_ parse: () -> T?, _ errorContainer: EC) -> T? {
+        guard let result = parse() else {
+            self.errors.append(contentsOf: errorContainer.errors)
+            return nil
+        }
+        return result
     }
 
 }

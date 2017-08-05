@@ -1,6 +1,6 @@
 /*
- * Variable.swift 
- * Sources 
+ * Sections.swift 
+ * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,29 +56,20 @@
  *
  */
 
-public struct Variable {
+public struct Sections {
 
-    public let label: String
+    let author: String?
 
-    public let type: String
+    let preamble: String?
 
-    public let swiftType: String
+    let variables: String
 
-    public let defaultValue: String
+    let comments: String?
 
-    public let swiftDefaultValue: String
+    let cExtras: String?
 
-    public let comment: String?
+    let cppExtras: String?
 
-}
+    let swiftExtras: String?
 
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
 }

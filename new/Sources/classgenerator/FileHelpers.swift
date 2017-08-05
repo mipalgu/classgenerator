@@ -1,6 +1,6 @@
 /*
- * VariableType.swift 
- * Sources 
+ * FileHelpers.swift 
+ * classgenerator
  *
  * Created by Callum McColl on 04/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,14 +56,86 @@
  *
  */
 
-public enum VariableType {
+import Foundation
 
-    case bool
-    case int, int8, int16, int32, int64
-    case uint, uint8, uint16, uint32, uint64
-    case float, float80, double
-    case string
-    indirect case array(VariableType, String)
-    case unknown
+public final class FileHelpers {
+
+    //swiftlint:disable identifier_name
+    fileprivate let fm: FileManager
+
+    public var cwd: URL? {
+        return URL(string: self.fm.currentDirectoryPath)
+    }
+
+    //swiftlint:disable identifier_name
+    public init(fm: FileManager = FileManager.default) {
+        self.fm = fm
+    }
+
+    public func changeCWD(toPath path: URL) -> Bool {
+        return self.fm.changeCurrentDirectoryPath(path.path)
+    }
+
+    public func createDirectory(atPath path: URL) -> Bool {
+        //swiftlint:disable unused_optional_binding
+        guard
+            let _  = try? self.fm.createDirectory(
+                at: path,
+                withIntermediateDirectories: false
+            )
+        else {
+            return false
+        }
+        return true
+    }
+
+    public func createFile(atPath path: URL, withContents str: String) -> Bool {
+        guard let encoded = str.data(using: String.Encoding.utf8) else {
+            return false
+        }
+        return self.fm.createFile(atPath: path.path, contents: encoded)
+    }
+
+    public func createFile(_ name: String, inDirectory dir: URL, withContents str: String) -> URL? {
+        let path = dir.appendingPathComponent(name, isDirectory: false)
+        guard true == self.createFile(atPath: path, withContents: str) else {
+            return nil
+        }
+        return path
+    }
+
+    public func deleteItem(atPath path: URL) -> Bool {
+        if false == self.fm.fileExists(atPath: path.path) {
+            return true
+        }
+        //swiftlint:disable unused_optional_binding
+        guard let _ = try? self.fm.removeItem(at: path) else {
+            return false
+        }
+        return true
+    }
+
+    public func makeSubDirectory(_ subdir: String, inDirectory dir: URL) -> URL? {
+        let fullPath = dir.appendingPathComponent(subdir, isDirectory: true)
+        guard true == self.createDirectory(atPath: fullPath) else {
+            return nil
+        }
+        return fullPath
+    }
+
+    public func overwriteDirectory(_ dir: URL) -> URL? {
+        guard
+            true == self.deleteItem(atPath: dir),
+            true == self.createDirectory(atPath: dir)
+        else {
+            return nil
+        }
+        return dir
+    }
+
+    public func overwriteSubDirectory(_ subdir: String, inDirectory dir: URL) -> URL? {
+        let fullPath = dir.appendingPathComponent(subdir, isDirectory: true)
+        return self.overwriteDirectory(fullPath)
+    }
 
 }
