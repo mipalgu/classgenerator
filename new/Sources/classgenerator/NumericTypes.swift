@@ -1,5 +1,5 @@
 /*
- * VariableTypes.swift 
+ * NumericTypes.swift 
  * classgenerator 
  *
  * Created by Callum McColl on 06/08/2017.
@@ -56,26 +56,23 @@
  *
  */
 
-public enum VariableTypes {
+public enum NumericTypes {
 
-    indirect case array(VariableTypes, String)
-    case bool
-    case char
-    case numeric(NumericTypes)
-    case string
-    case unknown
+    case double
+    case float
+    indirect case long(NumericTypes)
+    case signed
+    case unsigned
 
 }
 
-extension VariableTypes: Equatable {}
+extension NumericTypes: Equatable {}
 
-public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
+public func == (lhs: NumericTypes, rhs: NumericTypes) -> Bool {
     switch (lhs, rhs) {
-        case (.bool, .bool), (.char, .char), (.string, .string), (.unknown, .unknown):
+        case (.double, .double), (.float, .float), (.signed, .signed), (.unsigned, .unsigned):
             return true
-        case (.array(let ltype, let llength), .array(let rtype, let rlength)):
-            return ltype == rtype && llength == rlength
-        case (.numeric(let ltype), .numeric(let rtype)):
+        case (.long(let ltype), .long(let rtype)):
             return ltype == rtype
         default:
             return false
