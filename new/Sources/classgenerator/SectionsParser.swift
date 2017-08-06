@@ -118,17 +118,18 @@ public final class SectionsParser: ErrorContainer {
                 return
             }
             vars = true == tempVars.isEmpty ? vars : tempVars
-            guard let tempComments2 = tempComments else {
-                return
-            }
-            comments = tempComments2
+            comments = tempComments ?? comments
         }
         guard let variables = vars else {
             self.errors.append("Please specify a property list section (-properties).")
             return nil
         }
+        guard let a = author else {
+            self.errors.append("Please specify the author of the class.")
+            return nil
+        }
         return Sections(
-            author: author,
+            author: a,
             preamble: preamble,
             variables: variables,
             comments: comments,

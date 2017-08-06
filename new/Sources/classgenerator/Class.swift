@@ -60,7 +60,7 @@ public struct Class {
 
     public let name: String
 
-    public let author: String?
+    public let author: String
 
     public let preamble: String?
 

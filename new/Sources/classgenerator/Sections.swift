@@ -58,7 +58,7 @@
 
 public struct Sections {
 
-    let author: String?
+    let author: String
 
     let preamble: String?
 

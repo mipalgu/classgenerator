@@ -105,7 +105,8 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
         else {
             return nil
         }
-        guard let author: String? = sections.author.failMap({ self.parseAuthor(fromSection: $0) }) else {
+        guard let author: String = self.parseAuthor(fromSection: sections.author) else {
+            self.errors.append("You must specify the author of the class.")
             return nil
         }
         return Class(
