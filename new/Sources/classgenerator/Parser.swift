@@ -1,8 +1,8 @@
 /*
  * Parser.swift 
- * Sources 
+ * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 06/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,118 +65,33 @@ public final class Parser: ErrorContainer, WarningsContainer {
     public fileprivate(set) var warnings: [String] = []
 
     public var lastError: String? {
-        return self.errors.first
+        return self.parser.lastError
     }
 
     public var lastWarning: String? {
-        return self.warnings.first
+        return self.parser.lastWarning
     }
 
-    fileprivate let sectionsParser: SectionsParser
-    fileprivate let variablesParser: VariablesParser
+    fileprivate let parser: ClassParser
 
-    public init(
-        sectionsParser: SectionsParser = SectionsParser(),
-        variablesParser: VariablesParser = VariablesParser()
-    ) {
-        self.sectionsParser = sectionsParser
-        self.variablesParser = variablesParser
+    public init(parser: ClassParser = ClassParser()) {
+        self.parser = parser
     }
 
     public func parse(file: URL) -> Class? {
         self.errors = []
         self.warnings = []
-        //swiftlint:disable opening_brace
-        guard let name = self.parseClassName(from: file) else {
-            return nil
-        }
         guard let contents = try? String(contentsOf: file) else {
-            self.errors.append("Unable to read contents of file: \(file.path).")
+            self.errors.append("Unable to read contents of file: \(file.path)")
             return nil
         }
-        guard
-            let sections = self.delegate(
-                { self.sectionsParser.parseSections(fromContents: contents) },
-                self.sectionsParser
-            ),
-            let variables = self.delegate(
-                { self.variablesParser.parseVariables(fromSection: sections.variables) },
-                self.variablesParser
-            )
-        else {
-            self.errors.append("Unable to parse \(file.path)")
+        guard let c = self.parser.parse(contents, withName: file.lastPathComponent) else {
+            self.errors.append(contentsOf: self.parser.errors)
+            self.warnings.append(contentsOf: self.parser.warnings)
             return nil
         }
-        guard let author: String? = sections.author.failMap({ self.parseAuthor(fromSection: $0) }) else {
-            return nil
-        }
-        return Class(
-            name: name,
-            author: author,
-            preamble: sections.preamble,
-            variables: variables,
-            cExtras: sections.cExtras,
-            cppExtras: sections.cppExtras,
-            swiftExtras: sections.swiftExtras
-        )
-    }
-
-    fileprivate func parseClassName(from path: URL) -> String? {
-        let components = path.lastPathComponent.components(separatedBy: ".")
-        guard components.count <= 2 else {
-            self.errors.append("You cannot have dots in your class.")
-            return nil
-        }
-        guard let name = components.first, false == name.isEmpty else {
-            self.errors.append("The class name is empty.")
-            return nil
-        }
-        guard let first = name.characters.first, true == self.isLetter(first) else {
-            self.errors.append("The class name should start with a letter.")
-            return nil
-        }
-        if nil != name.characters.lazy.filter({ $0 == "_" }).first {
-            self.warnings.append("Underscores are not recommended in the class name.")
-        }
-        guard nil == name.characters.lazy.filter({ false == self.isAlphaNumeric($0) && $0 != "_" }).first else {
-            self.errors.append("The filename can only contain alphanumeric characters and underscores.")
-            return nil
-        }
-        return name
-    }
-
-    fileprivate func isAlphaNumeric(_ char: Character) -> Bool {
-        return isNumeric(char) || isLetter(char)
-    }
-
-    fileprivate func isNumeric(_ char: Character) -> Bool {
-        return char >= "0" && char <= "9"
-    }
-
-    fileprivate func isLetter(_ char: Character) -> Bool {
-        return (char >= "A" && char <= "Z") || (char >= "a" && char <= "z")
-    }
-
-    fileprivate func parseAuthor(fromSection section: String) -> String? {
-        let words = section.components(separatedBy: CharacterSet.whitespaces)
-        guard "author" == words.first || "-author" == words.first else {
-            self.errors.append("Unable to parse authors name.")
-            return nil
-        }
-        let name = words.dropFirst().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: CharacterSet.whitespaces)
-        guard false == name.isEmpty else {
-            self.errors.append("Unable to find authors name.")
-            return nil
-        }
-        return name
-    }
-
-    fileprivate func delegate<T, EC: ErrorContainer>(_ parse: () -> T?, _ errorContainer: EC) -> T? {
-        guard let result = parse() else {
-            self.errors.append(contentsOf: errorContainer.errors)
-            return nil
-        }
-        return result
+        self.warnings.append(contentsOf: self.parser.warnings)
+        return c
     }
 
 }
