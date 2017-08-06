@@ -917,31 +917,42 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_parsesSections() {
-        let expected = Class(
-            name: "sections",
-            author: "Callum McColl",
-            preamble: "#include <stdint.h>",
-            variables: [
-                Variable(
-                    label: "c",
-                    type: .numeric(.signed),
-                    cType: "int",
-                    swiftType: "Int",
-                    defaultValue: "2",
-                    swiftDefaultValue: "2",
-                    comment: "A counter."
-                )
-            ],
-            cExtras: nil,
-            cppExtras: "int f() {\n    return c + 2;\n}",
-            swiftExtras: "extension wb_sections: ExternalVariables {}"
-        )
-        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
-            print(self.parser.errors)
-            XCTFail("Unable to parse sections.gen: \(self.parser.lastError ?? "")")
+        func createClass(_ name: String) -> Class {
+            return Class(
+                name: name,
+                author: "Callum McColl",
+                preamble: "#include <stdint.h>",
+                variables: [
+                    Variable(
+                        label: "c",
+                        type: .numeric(.signed),
+                        cType: "int",
+                        swiftType: "Int",
+                        defaultValue: "2",
+                        swiftDefaultValue: "2",
+                        comment: "A counter."
+                    )
+                ],
+                cExtras: nil,
+                cppExtras: "int f() {\n    return c + 2;\n}",
+                swiftExtras: "extension wb_sections: ExternalVariables {}"
+            )
+        }
+        guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
+            XCTFail(self.parser.lastError ?? "Unable to parse sections.gen")
             return
         }
-        XCTAssertEqual(expected, result)
+        guard let result2 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections2.gen")) else {
+            XCTFail(self.parser.lastError ?? "Unable to parse sections2.gen")
+            return
+        }
+        guard let result3 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections3.gen")) else {
+            XCTFail(self.parser.lastError ?? "Unable to parse sections3.gen")
+            return
+        }
+        XCTAssertEqual(createClass("sections"), result1)
+        XCTAssertEqual(createClass("sections2"), result2)
+        XCTAssertEqual(createClass("sections3"), result3)
     }
 
 }
