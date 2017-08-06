@@ -107,14 +107,8 @@ public final class Parser: ErrorContainer, WarningsContainer {
             self.errors.append("Unable to parse \(file.path)")
             return nil
         }
-        let author: String?
-        if let authorSection = sections.author {
-            guard let a = self.parseAuthor(fromSection: authorSection) else {
-                return nil
-            }
-            author = a
-        } else {
-            author = nil
+        guard let author: String? = sections.author.failMap({ self.parseAuthor(fromSection: $0) }) else {
+            return nil
         }
         return Class(
             name: name,
@@ -163,7 +157,7 @@ public final class Parser: ErrorContainer, WarningsContainer {
         return (char >= "A" && char <= "Z") || (char >= "a" && char <= "z")
     }
 
-    fileprivate func parseAuthor(fromSection section: String) -> String?? {
+    fileprivate func parseAuthor(fromSection section: String) -> String? {
         let words = section.components(separatedBy: CharacterSet.whitespaces)
         guard "author" == words.first || "-author" == words.first else {
             self.errors.append("Unable to parse authors name.")
@@ -174,7 +168,7 @@ public final class Parser: ErrorContainer, WarningsContainer {
             self.errors.append("Unable to find authors name.")
             return nil
         }
-        return .some(name)
+        return name
     }
 
     fileprivate func delegate<T, EC: ErrorContainer>(_ parse: () -> T?, _ errorContainer: EC) -> T? {
