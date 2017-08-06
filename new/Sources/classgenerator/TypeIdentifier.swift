@@ -58,8 +58,76 @@
 
 public final class TypeIdentifier {
 
-    public func identify(fromTypeSignature type: String) -> VariableTypes {
-        return .unknown
+    fileprivate let values: [String: VariableTypes] = [
+        "string": .string,
+        "bool": .bool,
+        "char": .char,
+        "signed char": .char,
+        "unsigned char": .char,
+        "int": .numeric(.signed),
+        "signed": .numeric(.signed),
+        "signed int": .numeric(.signed),
+        "unsigned": .numeric(.unsigned),
+        "unsigned int": .numeric(.unsigned),
+        "uint8_t": .numeric(.unsigned),
+        "uint16_t": .numeric(.unsigned),
+        "uint32_t": .numeric(.unsigned),
+        "uint64_t": .numeric(.unsigned),
+        "int8_t": .numeric(.signed),
+        "int16_t": .numeric(.signed),
+        "int32_t": .numeric(.signed),
+        "int64_t": .numeric(.signed),
+        "short": .numeric(.signed),
+        "short int": .numeric(.signed),
+        "signed short": .numeric(.signed),
+        "signed short int": .numeric(.signed),
+        "unsigned short": .numeric(.unsigned),
+        "unsigned short int": .numeric(.unsigned),
+        "long": .numeric(.long(.signed)),
+        "long int": .numeric(.long(.signed)),
+        "signed long": .numeric(.long(.signed)),
+        "signed long int": .numeric(.long(.signed)),
+        "unsigned long": .numeric(.long(.unsigned)),
+        "unsigned long int": .numeric(.long(.unsigned)),
+        "long long": .numeric(.long(.long(.signed))),
+        "long long int": .numeric(.long(.long(.signed))),
+        "signed long long": .numeric(.long(.long(.signed))),
+        "signed long long int": .numeric(.long(.long(.signed))),
+        "unsigned long long": .numeric(.long(.long(.unsigned))),
+        "unsigned long long int": .numeric(.long(.long(.unsigned))),
+        "long64_t": .numeric(.long(.long(.unsigned))),
+        "float": .numeric(.float),
+        "float_t": .numeric(.float),
+        "double": .numeric(.double),
+        "double_t": .numeric(.double),
+        "long double": .numeric(.long(.double)),
+        "double double": .numeric(.long(.double))
+    ]
+
+    public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String]) -> VariableTypes {
+        if nil != arrCounts.first {
+            return self.identifyArray(fromType: type, andCounts: arrCounts)
+        }
+        if type.characters.last == "*" {
+            return self.identifyPointer(fromType: type)
+        }
+        return self.values[type] ?? .unknown
+    }
+
+    fileprivate func identifyPointer(fromType type: String) -> VariableTypes {
+        return .pointer(
+            self.identify(
+                fromTypeSignature: String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces),
+                andArrayCounts: []
+            )
+        )
+    }
+
+    fileprivate func identifyArray(fromType type: String, andCounts arrCounts: [String]) -> VariableTypes {
+        return .array(
+            self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst())),
+            arrCounts[0]
+        )
     }
 
 }
