@@ -67,7 +67,8 @@ public class ParserTests: ClassGeneratorTestCase {
     public static var allTests: [(String, (ParserTests) -> () throws -> Void)] {
         return [
             ("test_doesntParseNonExistingFile", test_doesntParseNonExistingFile),
-            ("test_isBackwardsCompatible", test_isBackwardsCompatible)
+            ("test_isBackwardsCompatible", test_isBackwardsCompatible),
+            ("test_parsesSections", test_parsesSections)
         ]
     }
 
@@ -904,7 +905,7 @@ public class ParserTests: ClassGeneratorTestCase {
             swiftExtras: nil
         )
         guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt")) else {
-            XCTFail("Unable to parse old.txt")
+            XCTFail("Unable to parse old.txt: \(self.parser.lastError ?? "")")
             return
         }
         let zipped = zip(expected.variables, result.variables)
@@ -913,6 +914,14 @@ public class ParserTests: ClassGeneratorTestCase {
             return
         }
         XCTAssertEqual(expected, result)
+    }
+
+    public func test_parsesSections() {
+        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
+            print(self.parser.errors)
+            XCTFail("Unable to parse sections.gen: \(self.parser.lastError ?? "")")
+            return
+        }
     }
 
 }
