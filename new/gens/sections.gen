@@ -1,0 +1,20 @@
+-author Callum McColl
+
+-preamble
+#include <stdint.h>
+
+-properties
+int c = 2 // A counter.
+
+-comment
+This is a global comment.
+
+-c++
+
+int f() {
+    return c + 2;
+}
+
+-swift
+
+extension wb_sections: ExternalVariables {}

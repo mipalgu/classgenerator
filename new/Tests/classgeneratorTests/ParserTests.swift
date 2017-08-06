@@ -67,7 +67,9 @@ public class ParserTests: ClassGeneratorTestCase {
     public static var allTests: [(String, (ParserTests) -> () throws -> Void)] {
         return [
             ("test_doesntParseNonExistingFile", test_doesntParseNonExistingFile),
-            ("test_isBackwardsCompatible", test_isBackwardsCompatible)
+            ("test_isBackwardsCompatible", test_isBackwardsCompatible),
+            ("test_parsesSections", test_parsesSections),
+            ("test_warnsAboutUnderscores", test_warnsAboutUnderscores)
         ]
     }
 
@@ -884,7 +886,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     label: "array16",
                     type: .array(.numeric(.signed), "4"),
                     cType: "int16_t",
-                    swiftType: "ContiguousArray<Int16>",
+                    swiftType: "Int16",
                     defaultValue: "{1,2,3,4}",
                     swiftDefaultValue: "[1, 2, 3, 4]",
                     comment: "a comment about array16"
@@ -893,7 +895,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     label: "bools",
                     type: .array(.bool, "3"),
                     cType: "bool",
-                    swiftType: "ContiguousArray<Bool>",
+                    swiftType: "Bool",
                     defaultValue: "{true, true, true}",
                     swiftDefaultValue: "[true, true, true]",
                     comment: "a comment about bools"
@@ -904,10 +906,59 @@ public class ParserTests: ClassGeneratorTestCase {
             swiftExtras: nil
         )
         guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt")) else {
-            XCTFail("Unable to parse old.txt")
+            XCTFail("Unable to parse old.txt: \(self.parser.lastError ?? "")")
+            return
+        }
+        let zipped = zip(expected.variables, result.variables)
+        for (l, r) in zipped where l != r {
+            XCTAssertEqual(l, r)
             return
         }
         XCTAssertEqual(expected, result)
+    }
+
+    public func test_parsesSections() {
+        func createClass(_ name: String) -> Class {
+            return Class(
+                name: name,
+                author: "Callum McColl",
+                preamble: "#include <stdint.h>",
+                variables: [
+                    Variable(
+                        label: "c",
+                        type: .numeric(.signed),
+                        cType: "int",
+                        swiftType: "Int",
+                        defaultValue: "2",
+                        swiftDefaultValue: "2",
+                        comment: "A counter."
+                    )
+                ],
+                cExtras: nil,
+                cppExtras: "int f() {\n    return c + 2;\n}",
+                swiftExtras: "extension wb_sections: ExternalVariables {}"
+            )
+        }
+        guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
+            XCTFail(self.parser.lastError ?? "Unable to parse sections.gen")
+            return
+        }
+        guard let result2 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections2.gen")) else {
+            XCTFail(self.parser.lastError ?? "Unable to parse sections2.gen")
+            return
+        }
+        guard let result3 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections3.gen")) else {
+            XCTFail(self.parser.lastError ?? "Unable to parse sections3.gen")
+            return
+        }
+        XCTAssertEqual(createClass("sections"), result1)
+        XCTAssertEqual(createClass("sections2"), result2)
+        XCTAssertEqual(createClass("sections3"), result3)
+    }
+
+    public func test_warnsAboutUnderscores() {
+        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_s.gen"))
+        XCTAssertTrue(self.parser.warnings.count > 0)
     }
 
 }

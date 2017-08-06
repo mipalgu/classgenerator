@@ -1,8 +1,8 @@
 /*
- * TypeConverter.swift 
+ * StringHelpers.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 06/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,66 +56,18 @@
  *
  */
 
-import Foundation
+public final class StringHelpers {
 
-public final class TypeConverter {
+    public func isAlphaNumeric(_ char: Character) -> Bool {
+        return isNumeric(char) || isLetter(char)
+    }
 
-    fileprivate let values: [String: String] = [
-        "string": "String",
-        "bool": "Bool",
-        "char": "String",
-        "signed char": "String",
-        "unsigned char": "String",
-        "int": "Int",
-        "signed": "Int",
-        "signed int": "Int",
-        "unsigned": "UInt",
-        "unsigned int": "UInt",
-        "uint8_t": "UInt8",
-        "uint16_t": "UInt16",
-        "uint32_t": "UInt32",
-        "uint64_t": "UInt64",
-        "int8_t": "Int8",
-        "int16_t": "Int16",
-        "int32_t": "Int32",
-        "int64_t": "Int64",
-        "short": "Int16",
-        "short int": "Int16",
-        "signed short": "Int16",
-        "signed short int": "Int16",
-        "unsigned short": "UInt16",
-        "unsigned short int": "UInt16",
-        "long": "Int32",
-        "long int": "Int32",
-        "signed long": "Int32",
-        "signed long int": "Int32",
-        "unsigned long": "UInt32",
-        "unsigned long int": "UInt32",
-        "long long": "Int64",
-        "long long int": "Int64",
-        "signed long long": "Int64",
-        "signed long long int": "Int64",
-        "unsigned long long": "UInt64",
-        "unsigned long long int": "UInt64",
-        "long64_t": "Int64",
-        "float": "Float",
-        "float_t": "Float",
-        "double": "Double",
-        "double_t": "Double",
-        "long double": "Float80",
-        "double double": "Float80"
-    ]
+    public func isNumeric(_ char: Character) -> Bool {
+        return char >= "0" && char <= "9"
+    }
 
-    func convert(type: String) -> String? {
-        if type.characters.last != "*" {
-            return self.values[type] ?? type
-        }
-        let words = String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces)
-            .components(separatedBy: CharacterSet.whitespaces)
-        guard let last = words.last, let newType = self.convert(type: last) else {
-            return nil
-        }
-        return "UnsafeMutablePointer<\(newType)>?"
+    public func isLetter(_ char: Character) -> Bool {
+        return (char >= "A" && char <= "Z") || (char >= "a" && char <= "z")
     }
 
 }
