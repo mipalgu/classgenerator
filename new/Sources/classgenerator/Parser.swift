@@ -58,12 +58,18 @@
 
 import Foundation
 
-public final class Parser: ErrorContainer {
+public final class Parser: ErrorContainer, WarningsContainer {
 
     public fileprivate(set) var errors: [String] = []
 
+    public fileprivate(set) var warnings: [String] = []
+
     public var lastError: String? {
         return self.errors.first
+    }
+
+    public var lastWarning: String? {
+        return self.warnings.first
     }
 
     fileprivate let sectionsParser: SectionsParser
@@ -79,6 +85,7 @@ public final class Parser: ErrorContainer {
 
     public func parse(file: URL) -> Class? {
         self.errors = []
+        self.warnings = []
         //swiftlint:disable opening_brace
         guard let name = self.parseClassName(from: file) else {
             return nil
@@ -133,6 +140,9 @@ public final class Parser: ErrorContainer {
         guard let first = name.characters.first, true == self.isLetter(first) else {
             self.errors.append("The class name should start with a letter.")
             return nil
+        }
+        if nil != name.characters.lazy.filter({ $0 == "_" }).first {
+            self.warnings.append("Underscores are not recommended in the class name.")
         }
         guard nil == name.characters.lazy.filter({ false == self.isAlphaNumeric($0) && $0 != "_" }).first else {
             self.errors.append("The filename can only contain alphanumeric characters and underscores.")

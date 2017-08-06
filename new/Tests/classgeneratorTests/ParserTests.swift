@@ -68,7 +68,8 @@ public class ParserTests: ClassGeneratorTestCase {
         return [
             ("test_doesntParseNonExistingFile", test_doesntParseNonExistingFile),
             ("test_isBackwardsCompatible", test_isBackwardsCompatible),
-            ("test_parsesSections", test_parsesSections)
+            ("test_parsesSections", test_parsesSections),
+            ("test_warnsAboutUnderscores", test_warnsAboutUnderscores)
         ]
     }
 
@@ -953,6 +954,13 @@ public class ParserTests: ClassGeneratorTestCase {
         XCTAssertEqual(createClass("sections"), result1)
         XCTAssertEqual(createClass("sections2"), result2)
         XCTAssertEqual(createClass("sections3"), result3)
+    }
+
+    public func test_warnsAboutUnderscores() {
+        guard nil != self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_s.gen")) else {
+            return
+        }
+        XCTAssertTrue(self.parser.warnings.count > 0)
     }
 
 }
