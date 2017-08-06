@@ -102,7 +102,8 @@ public final class VariablesParser: ErrorContainer {
         }
         return Variable(
             label: label,
-            type: type,
+            type: .unknown,
+            cType: type,
             swiftType: self.typeConverter.convert(type: type) ?? type,
             defaultValue: defaultValues.0,
             swiftDefaultValue: defaultValues.1,

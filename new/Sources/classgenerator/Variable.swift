@@ -60,7 +60,9 @@ public struct Variable {
 
     public let label: String
 
-    public let type: String
+    public let type: VariableTypes
+
+    public let cType: String
 
     public let swiftType: String
 
