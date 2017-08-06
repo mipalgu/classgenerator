@@ -1,5 +1,5 @@
 /*
- * VariablesParser.swift 
+ * VariableParser.swift 
  * classgenerator 
  *
  * Created by Callum McColl on 04/08/2017.
@@ -58,7 +58,7 @@
 
 import Foundation
 
-public final class VariablesParser: ErrorContainer {
+public final class VariableParser: ErrorContainer {
 
     public fileprivate(set) var errors: [String] = []
 
@@ -86,17 +86,7 @@ public final class VariablesParser: ErrorContainer {
         self.typeConverter = typeConverter
     }
 
-    public func parseVariables(fromSection section: String) -> [Variable]? {
-        let lines = section.components(separatedBy: CharacterSet.newlines)
-        return lines.failMap {
-            guard let v = self.createVariable(fromLine: $0) else {
-                return nil
-            }
-            return v
-        }
-    }
-
-    fileprivate func createVariable(fromLine line: String) -> Variable? {
+    public func parseVariable(fromLine line: String) -> Variable? {
         guard
             let (remaining, comment) = self.parseComment(fromLine: line)
         else {

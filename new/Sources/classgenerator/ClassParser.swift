@@ -76,12 +76,12 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
 
     fileprivate let sectionsParser: SectionsParser
 
-    fileprivate let variablesParser: VariablesParser
+    fileprivate let variablesParser: VariablesTableParser
 
     public init(
         helpers: StringHelpers = StringHelpers(),
         sectionsParser: SectionsParser = SectionsParser(),
-        variablesParser: VariablesParser = VariablesParser()
+        variablesParser: VariablesTableParser = VariablesTableParser()
     ) {
         self.helpers = helpers
         self.sectionsParser = sectionsParser
