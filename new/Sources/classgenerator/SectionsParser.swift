@@ -87,7 +87,6 @@ public final class SectionsParser: ErrorContainer {
         return self.createSections(fromGroups: grouped)
     }
 
-    //swiftlint:disable function_body_length
     fileprivate func createSections<S: Sequence>(fromGroups seq: S) -> Sections? where S.Iterator.Element == [String] {
         var author: String?
         var preamble: String?
@@ -111,8 +110,8 @@ public final class SectionsParser: ErrorContainer {
                 || assignIfValid(&cExtras, combined, self.isCMarker(first))
                 || assignIfValid(&comments, combined, self.isCommentMarker(first))
                 || assignIfValid(&cppExtras, combined, self.isCppMarker(first))
-                || assignIfValid(&swiftExtras, combined, self.isSwiftMarker(first)))
-            {
+                || assignIfValid(&swiftExtras, combined, self.isSwiftMarker(first))
+            ) {
                 return
             }
             guard let (tempVars, tempComments) = self.parseWithoutMarkers(section: $0) else {
@@ -125,7 +124,7 @@ public final class SectionsParser: ErrorContainer {
             comments = tempComments2
         }
         guard let variables = vars else {
-            self.errors.append("Unable to parse properties.")
+            self.errors.append("Please specify a property list section (-properties).")
             return nil
         }
         return Sections(
