@@ -98,22 +98,11 @@ public final class VariablesParser: ErrorContainer {
 
     fileprivate func createVariable(fromLine line: String) -> Variable? {
         guard
-            let (remaining, comment) = self.parseComment(fromLine: line),
-            let (type, cType, label, defaultValues) = self.parseVar(fromSegment: remaining),
-            let swiftType = self.typeConverter.convert(type: cType)
+            let (remaining, comment) = self.parseComment(fromLine: line)
         else {
-            print(self.errors)
             return nil
         }
-        return Variable(
-            label: label,
-            type: type,
-            cType: cType,
-            swiftType: swiftType,
-            defaultValue: defaultValues.0,
-            swiftDefaultValue: defaultValues.1,
-            comment: comment
-        )
+        return self.parseVar(fromSegment: remaining, withComment: comment)
     }
 
     fileprivate func parseComment(fromLine line: String) -> (String, String)? {
@@ -146,7 +135,7 @@ public final class VariablesParser: ErrorContainer {
     }
 
     //swiftlint:disable large_tuple
-    fileprivate func parseVar(fromSegment segment: String) -> (VariableTypes, String, String, (String, String))? {
+    fileprivate func parseVar(fromSegment segment: String, withComment comment: String?) -> Variable? {
         let split = segment.components(separatedBy: "=")
         guard split.count <= 2 else {
             self.errors.append("You can only specify one default value.")
@@ -171,11 +160,18 @@ public final class VariablesParser: ErrorContainer {
             self.errors.append("Please specify a default value for variable: \(label)")
             return nil
         }
-        return (
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: arrCounts),
-            type,
-            trimmedLabel.components(separatedBy: "[")[0].trimmingCharacters(in: .whitespaces),
-            defaultValues
+        guard let swiftType = self.typeConverter.convert(type: type) else {
+            self.errors.append("Malformed type signature.  Unable to convert to swift equivalent: \(type)")
+            return nil
+        }
+        return Variable(
+            label: trimmedLabel.components(separatedBy: "[")[0].trimmingCharacters(in: .whitespaces),
+            type: self.identifier.identify(fromTypeSignature: type, andArrayCounts: arrCounts),
+            cType: type.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces),
+            swiftType: swiftType,
+            defaultValue: defaultValues.0,
+            swiftDefaultValue: defaultValues.1,
+            comment: comment
         )
     }
 
