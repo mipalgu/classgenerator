@@ -99,16 +99,17 @@ public final class VariablesParser: ErrorContainer {
     fileprivate func createVariable(fromLine line: String) -> Variable? {
         guard
             let (remaining, comment) = self.parseComment(fromLine: line),
-            let (type, label, defaultValues) = self.parseVar(fromSegment: remaining)
+            let (type, cType, label, defaultValues) = self.parseVar(fromSegment: remaining),
+            let swiftType = self.typeConverter.convert(type: cType)
         else {
             print(self.errors)
             return nil
         }
         return Variable(
             label: label,
-            type: self.identifier.identify(fromTypeSignature: type),
-            cType: type,
-            swiftType: self.typeConverter.convert(type: type) ?? type,
+            type: type,
+            cType: cType,
+            swiftType: swiftType,
             defaultValue: defaultValues.0,
             swiftDefaultValue: defaultValues.1,
             comment: comment
@@ -145,7 +146,7 @@ public final class VariablesParser: ErrorContainer {
     }
 
     //swiftlint:disable large_tuple
-    fileprivate func parseVar(fromSegment segment: String) -> (String, String, (String, String))? {
+    fileprivate func parseVar(fromSegment segment: String) -> (VariableTypes, String, String, (String, String))? {
         let split = segment.components(separatedBy: "=")
         guard split.count <= 2 else {
             self.errors.append("You can only specify one default value.")
@@ -171,6 +172,7 @@ public final class VariablesParser: ErrorContainer {
             return nil
         }
         return (
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: arrCounts),
             type,
             trimmedLabel,
             defaultValues
