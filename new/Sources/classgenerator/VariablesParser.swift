@@ -68,16 +68,20 @@ public final class VariablesParser: ErrorContainer {
 
     fileprivate let defaultValuesCalculator: DefaultValuesCalculator
 
+    fileprivate let identifier: TypeIdentifier
+
     fileprivate let sanitiser: Sanitiser
 
     fileprivate let typeConverter: TypeConverter
 
     public init(
         defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator(),
+        identifier: TypeIdentifier = TypeIdentifier(),
         sanitiser: Sanitiser = Sanitiser(),
         typeConverter: TypeConverter = TypeConverter()
     ) {
         self.defaultValuesCalculator = defaultValuesCalculator
+        self.identifier = identifier
         self.sanitiser = sanitiser
         self.typeConverter = typeConverter
     }
@@ -102,7 +106,7 @@ public final class VariablesParser: ErrorContainer {
         }
         return Variable(
             label: label,
-            type: .unknown,
+            type: self.identifier.identify(fromTypeSignature: type),
             cType: type,
             swiftType: self.typeConverter.convert(type: type) ?? type,
             defaultValue: defaultValues.0,
