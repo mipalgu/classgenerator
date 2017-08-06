@@ -72,14 +72,18 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
         return self.warnings.first
     }
 
+    fileprivate let helpers: StringHelpers
+
     fileprivate let sectionsParser: SectionsParser
 
     fileprivate let variablesParser: VariablesParser
 
     public init(
+        helpers: StringHelpers = StringHelpers(),
         sectionsParser: SectionsParser = SectionsParser(),
         variablesParser: VariablesParser = VariablesParser()
     ) {
+        self.helpers = helpers
         self.sectionsParser = sectionsParser
         self.variablesParser = variablesParser
     }
@@ -125,30 +129,18 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             self.errors.append("The class name is empty.")
             return nil
         }
-        guard let first = name.characters.first, true == self.isLetter(first) else {
+        guard let first = name.characters.first, true == self.helpers.isLetter(first) else {
             self.errors.append("The class name should start with a letter.")
             return nil
         }
         if nil != name.characters.lazy.filter({ $0 == "_" }).first {
             self.warnings.append("Underscores are not recommended in the class name.")
         }
-        guard nil == name.characters.lazy.filter({ false == self.isAlphaNumeric($0) && $0 != "_" }).first else {
+        guard nil == name.characters.lazy.filter({ false == self.helpers.isAlphaNumeric($0) && $0 != "_" }).first else {
             self.errors.append("The filename can only contain alphanumeric characters and underscores.")
             return nil
         }
         return name
-    }
-
-    fileprivate func isAlphaNumeric(_ char: Character) -> Bool {
-        return isNumeric(char) || isLetter(char)
-    }
-
-    fileprivate func isNumeric(_ char: Character) -> Bool {
-        return char >= "0" && char <= "9"
-    }
-
-    fileprivate func isLetter(_ char: Character) -> Bool {
-        return (char >= "A" && char <= "Z") || (char >= "a" && char <= "z")
     }
 
     fileprivate func parseAuthor(fromSection section: String) -> String? {
