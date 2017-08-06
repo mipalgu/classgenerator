@@ -108,7 +108,7 @@ public final class TypeConverter {
 
     func convert(type: String) -> String? {
         if type.characters.last != "*" {
-            return self.values[type]
+            return self.values[type] ?? type
         }
         let words = String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces)
             .components(separatedBy: CharacterSet.whitespaces)
