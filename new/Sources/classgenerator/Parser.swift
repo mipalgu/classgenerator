@@ -78,10 +78,16 @@ public final class Parser: ErrorContainer {
     }
 
     public func parse(file: URL) -> Class? {
+        self.errors = []
         //swiftlint:disable opening_brace
+        guard let name = self.parseClassName(from: file) else {
+            return nil
+        }
+        guard let contents = try? String(contentsOf: file) else {
+            self.errors.append("Unable to read contents of file: \(file.path).")
+            return nil
+        }
         guard
-            let name = self.parseClassName(from: file),
-            let contents = try? String(contentsOf: file),
             let sections = self.delegate(
                 { self.sectionsParser.parseSections(fromContents: contents) },
                 self.sectionsParser
@@ -137,7 +143,7 @@ public final class Parser: ErrorContainer {
 
     fileprivate func parseAuthor(fromSection section: String) -> String?? {
         let words = section.components(separatedBy: CharacterSet.whitespaces)
-        guard "author" == words.first else {
+        guard "author" == words.first || "-author" == words.first else {
             self.errors.append("Unable to parse authors name.")
             return nil
         }

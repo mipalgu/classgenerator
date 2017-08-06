@@ -70,20 +70,24 @@ public final class SectionsParser: ErrorContainer {
         self.errors = []
         let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             .components(separatedBy: CharacterSet.newlines)
-        let grouped = lines.lazy.grouped(by: { (first, _) in
-            let trimmed = first.trimmingCharacters(in: CharacterSet.whitespaces)
-            return false == (
-                self.isAuthorLine(trimmed) ||
-                self.isPreambleMarker(trimmed) ||
-                self.isPropertiesMarker(trimmed) ||
-                self.isCMarker(trimmed) ||
-                self.isCppMarker(trimmed) ||
-                self.isSwiftMarker(trimmed)
-            )
+        guard let sanitisedLines = lines.failMap({ (line: String) -> String? in
+                let trimmed = line.trimmingCharacters(in: .whitespaces)
+                if "-" == trimmed.characters.first && false == self.isMarker(trimmed) {
+                    self.errors.append("Malformed marker detected: \(trimmed)")
+                    return nil
+                }
+                return line
+            })
+        else {
+            return nil
+        }
+        let grouped = sanitisedLines.grouped(by: { (last, str) in
+            false == (self.isAuthorLine(last) || self.isMarker(str.trimmingCharacters(in: CharacterSet.whitespaces)))
         })
         return self.createSections(fromGroups: grouped)
     }
 
+    //swiftlint:disable function_body_length
     fileprivate func createSections<S: Sequence>(fromGroups seq: S) -> Sections? where S.Iterator.Element == [String] {
         var author: String?
         var preamble: String?
@@ -96,32 +100,29 @@ public final class SectionsParser: ErrorContainer {
             if true == $2 { $0 = $1 }; return $2
         }
         seq.forEach {
-            guard let first = $0.first else {
+            guard let first = $0.first?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
                 return
             }
             let combined = $0.dropFirst().reduce("") { $0 + "\n" + $1 }.trimmingCharacters(in: CharacterSet.newlines)
             //swiftlint:disable opening_brace
             if true == (assignIfValid(&author, first, self.isAuthorLine(first))
+                || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
                 || assignIfValid(&preamble, combined, self.isPreambleMarker(first))
                 || assignIfValid(&cExtras, combined, self.isCMarker(first))
+                || assignIfValid(&comments, combined, self.isCommentMarker(first))
                 || assignIfValid(&cppExtras, combined, self.isCppMarker(first))
                 || assignIfValid(&swiftExtras, combined, self.isSwiftMarker(first)))
             {
                 return
             }
-            let remaining = self.isPropertiesMarker(first) ? Array($0.dropFirst()) : $0
-            let varsGrouped = remaining.lazy.grouped { (first, _) in
-                return first != ""
+            guard let (tempVars, tempComments) = self.parseWithoutMarkers(section: $0) else {
+                return
             }
-            let varsCombined = varsGrouped.map { (group: [String]) -> String in
-                guard let first = group.first else {
-                    return ""
-                }
-                return group.dropFirst().reduce(first) { $0 + "\n" + $1}
+            vars = true == tempVars.isEmpty ? vars : tempVars
+            guard let tempComments2 = tempComments else {
+                return
             }
-            vars = varsCombined.first { _ in true }?.trimmingCharacters(in: CharacterSet.newlines)
-            comments = varsCombined.dropFirst().reduce("") { $0 + "\n" + $1 }
-                .trimmingCharacters(in: CharacterSet.newlines)
+            comments = tempComments2
         }
         guard let variables = vars else {
             self.errors.append("Unable to parse properties.")
@@ -138,8 +139,43 @@ public final class SectionsParser: ErrorContainer {
         )
     }
 
+    fileprivate func parseWithoutMarkers(section: [String]) -> (String, String?)? {
+        let varsGrouped = section.lazy.grouped { (first, _) in
+            return first != ""
+        }
+        let varsCombined = varsGrouped.map { (group: [String]) -> String in
+            guard let first = group.first else {
+                return ""
+            }
+            return group.dropFirst().reduce(first) { $0 + "\n" + $1}
+        }
+        guard let vars = varsCombined.first(where: { _ in true })?.trimmingCharacters(in: CharacterSet.newlines) else {
+            return nil
+        }
+        if true == vars.isEmpty {
+            return nil
+        }
+        let comments = varsCombined.dropFirst().reduce("") { $0 + "\n" + $1 }
+            .trimmingCharacters(in: CharacterSet.newlines)
+        if true == comments.isEmpty {
+            return (vars, nil)
+        }
+        return (vars, comments)
+    }
+
+    fileprivate func isMarker(_ str: String) -> Bool {
+        return self.isAuthorLine(str)
+            || self.isPreambleMarker(str)
+            || self.isPropertiesMarker(str)
+            || self.isCMarker(str)
+            || self.isCommentMarker(str)
+            || self.isCppMarker(str)
+            || self.isSwiftMarker(str)
+    }
+
     fileprivate func isAuthorLine(_ str: String) -> Bool {
         return String(str.characters.prefix(6)) == "author"
+            || String(str.characters.prefix(7)) == "-author"
     }
 
     fileprivate func isPreambleMarker(_ str: String) -> Bool {
@@ -148,6 +184,10 @@ public final class SectionsParser: ErrorContainer {
 
     fileprivate func isPropertiesMarker(_ str: String) -> Bool {
         return str == "-properties"
+    }
+
+    fileprivate func isCommentMarker(_ str: String) -> Bool {
+        return str == "-comment"
     }
 
     fileprivate func isCMarker(_ str: String) -> Bool {
