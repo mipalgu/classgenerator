@@ -62,6 +62,7 @@ public enum VariableTypes {
     case bool
     case char
     case numeric(NumericTypes)
+    indirect case pointer(VariableTypes)
     case string
     case unknown
 
@@ -76,6 +77,8 @@ public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
         case (.array(let ltype, let llength), .array(let rtype, let rlength)):
             return ltype == rtype && llength == rlength
         case (.numeric(let ltype), .numeric(let rtype)):
+            return ltype == rtype
+        case (.pointer(let ltype), .pointer(let rtype)):
             return ltype == rtype
         default:
             return false
