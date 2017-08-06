@@ -174,7 +174,7 @@ public final class VariablesParser: ErrorContainer {
         return (
             self.identifier.identify(fromTypeSignature: type, andArrayCounts: arrCounts),
             type,
-            trimmedLabel,
+            trimmedLabel.components(separatedBy: "[")[0].trimmingCharacters(in: .whitespaces),
             defaultValues
         )
     }

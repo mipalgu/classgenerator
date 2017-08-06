@@ -95,7 +95,7 @@ public final class TypeIdentifier {
         "signed long long int": .numeric(.long(.long(.signed))),
         "unsigned long long": .numeric(.long(.long(.unsigned))),
         "unsigned long long int": .numeric(.long(.long(.unsigned))),
-        "long64_t": .numeric(.long(.long(.unsigned))),
+        "long64_t": .numeric(.long(.long(.signed))),
         "float": .numeric(.float),
         "float_t": .numeric(.float),
         "double": .numeric(.double),

@@ -884,7 +884,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     label: "array16",
                     type: .array(.numeric(.signed), "4"),
                     cType: "int16_t",
-                    swiftType: "ContiguousArray<Int16>",
+                    swiftType: "Int16",
                     defaultValue: "{1,2,3,4}",
                     swiftDefaultValue: "[1, 2, 3, 4]",
                     comment: "a comment about array16"
@@ -893,7 +893,7 @@ public class ParserTests: ClassGeneratorTestCase {
                     label: "bools",
                     type: .array(.bool, "3"),
                     cType: "bool",
-                    swiftType: "ContiguousArray<Bool>",
+                    swiftType: "Bool",
                     defaultValue: "{true, true, true}",
                     swiftDefaultValue: "[true, true, true]",
                     comment: "a comment about bools"
@@ -905,6 +905,11 @@ public class ParserTests: ClassGeneratorTestCase {
         )
         guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt")) else {
             XCTFail("Unable to parse old.txt")
+            return
+        }
+        let zipped = zip(expected.variables, result.variables)
+        for (l, r) in zipped where l != r {
+            XCTAssertEqual(l, r)
             return
         }
         XCTAssertEqual(expected, result)
