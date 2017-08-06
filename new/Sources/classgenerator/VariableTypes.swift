@@ -1,8 +1,8 @@
 /*
- * Variable.swift 
- * Sources 
+ * VariableTypes.swift 
+ * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 06/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,31 +56,31 @@
  *
  */
 
-public struct Variable {
+public enum VariableTypes {
 
-    public let label: String
-
-    public let type: VariableTypes
-
-    public let cType: String
-
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
+    indirect case array(VariableTypes, String)
+    case bool
+    case char
+    case numeric(NumericTypes)
+    indirect case pointer(VariableTypes)
+    case string
+    case unknown
 
 }
 
-extension Variable: Equatable {}
+extension VariableTypes: Equatable {}
 
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
+public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
+    switch (lhs, rhs) {
+        case (.bool, .bool), (.char, .char), (.string, .string), (.unknown, .unknown):
+            return true
+        case (.array(let ltype, let llength), .array(let rtype, let rlength)):
+            return ltype == rtype && llength == rlength
+        case (.numeric(let ltype), .numeric(let rtype)):
+            return ltype == rtype
+        case (.pointer(let ltype), .pointer(let rtype)):
+            return ltype == rtype
+        default:
+            return false
+    }
 }

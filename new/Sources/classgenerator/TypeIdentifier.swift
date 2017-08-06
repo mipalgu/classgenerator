@@ -1,8 +1,8 @@
 /*
- * Variable.swift 
- * Sources 
+ * TypeIdentifier.swift 
+ * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 06/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,31 +56,10 @@
  *
  */
 
-public struct Variable {
+public final class TypeIdentifier {
 
-    public let label: String
+    public func identify(fromTypeSignature type: String) -> VariableTypes {
+        return .unknown
+    }
 
-    public let type: VariableTypes
-
-    public let cType: String
-
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
-
-}
-
-extension Variable: Equatable {}
-
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
 }

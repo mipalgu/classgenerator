@@ -1,8 +1,8 @@
 /*
- * Variable.swift 
- * Sources 
+ * NumericTypes.swift 
+ * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 06/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,31 +56,25 @@
  *
  */
 
-public struct Variable {
+public enum NumericTypes {
 
-    public let label: String
-
-    public let type: VariableTypes
-
-    public let cType: String
-
-    public let swiftType: String
-
-    public let defaultValue: String
-
-    public let swiftDefaultValue: String
-
-    public let comment: String?
+    case double
+    case float
+    indirect case long(NumericTypes)
+    case signed
+    case unsigned
 
 }
 
-extension Variable: Equatable {}
+extension NumericTypes: Equatable {}
 
-public func == (lhs: Variable, rhs: Variable) -> Bool {
-    return lhs.label == rhs.label
-        && lhs.type == rhs.type
-        && lhs.swiftType == rhs.swiftType
-        && lhs.defaultValue == rhs.defaultValue
-        && lhs.swiftDefaultValue == rhs.swiftDefaultValue
-        && lhs.comment == rhs.comment
+public func == (lhs: NumericTypes, rhs: NumericTypes) -> Bool {
+    switch (lhs, rhs) {
+        case (.double, .double), (.float, .float), (.signed, .signed), (.unsigned, .unsigned):
+            return true
+        case (.long(let ltype), .long(let rtype)):
+            return ltype == rtype
+        default:
+            return false
+    }
 }
