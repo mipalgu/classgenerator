@@ -917,11 +917,31 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_parsesSections() {
+        let expected = Class(
+            name: "sections",
+            author: "Callum McColl",
+            preamble: "#include <stdint.h>",
+            variables: [
+                Variable(
+                    label: "c",
+                    type: .numeric(.signed),
+                    cType: "int",
+                    swiftType: "Int",
+                    defaultValue: "2",
+                    swiftDefaultValue: "2",
+                    comment: "A counter."
+                )
+            ],
+            cExtras: nil,
+            cppExtras: "int f() {\n    return c + 2;\n}",
+            swiftExtras: "extension wb_sections: ExternalVariables {}"
+        )
         guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
             print(self.parser.errors)
             XCTFail("Unable to parse sections.gen: \(self.parser.lastError ?? "")")
             return
         }
+        XCTAssertEqual(expected, result)
     }
 
 }

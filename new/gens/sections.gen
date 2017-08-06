@@ -12,7 +12,7 @@ This is a global comment.
 -c++
 
 int f() {
-    c += 2;
+    return c + 2;
 }
 
 -swift
