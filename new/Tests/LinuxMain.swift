@@ -3,6 +3,7 @@ import XCTest
 
 XCTMain([
     testCase(ClassGeneratorTests.allTests),
-    testCase(Parser.allTests),
-    testCase(SectionsParser.allTests)
+    testCase(ParserTests.allTests),
+    testCase(SectionsParserTests.allTests)
+    testCase(StringHelpersTests.allTests)
 ])
