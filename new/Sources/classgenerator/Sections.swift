@@ -73,3 +73,15 @@ public struct Sections {
     let swiftExtras: String?
 
 }
+
+extension Sections: Equatable {}
+
+public func == (lhs: Sections, rhs: Sections) -> Bool {
+    return lhs.author == rhs.author
+        && lhs.preamble == rhs.preamble
+        && lhs.variables == rhs.variables
+        && lhs.comments == rhs.comments
+        && lhs.cExtras == rhs.cExtras
+        && lhs.cppExtras == rhs.cppExtras
+        && lhs.swiftExtras == rhs.swiftExtras
+}
