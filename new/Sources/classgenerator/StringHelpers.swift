@@ -67,7 +67,57 @@ public final class StringHelpers {
     }
 
     public func isLetter(_ char: Character) -> Bool {
-        return (char >= "A" && char <= "Z") || (char >= "a" && char <= "z")
+        return self.isUpperCase(char) || self.isLowerCase(char)
+    }
+
+    public func isLowerCase(_ char: Character) -> Bool {
+        return char >= "a" && char <= "z"
+    }
+
+    public func isUpperCase(_ char: Character) -> Bool {
+        return char >= "A" && char <= "Z"
+    }
+
+    public func toCamelCase(_ str: String) -> String {
+        if true == str.isEmpty {
+            return str
+        }
+        var chars = String.CharacterView("_")
+        chars.reserveCapacity(str.characters.count)
+        var index = chars.startIndex
+        let _: Character = str.characters.reduce("_") {
+            if $0 != "_" {
+                index = chars.index(after: index)
+                return $1
+            }
+            chars.insert(self.toUpper($1), at: chars.index(before: chars.endIndex))
+            _ = chars.removeLast()
+            return $1
+        }
+        return String(chars)
+    }
+
+    public func toSnakeCase(_ str: String) -> String {
+        var chars = String.CharacterView()
+        chars.reserveCapacity(str.characters.count)
+        let _: Character = str.characters.reduce("a") {
+            guard true == self.isUpperCase($0) else {
+                chars.append($1)
+                return $1
+            }
+            chars.append("_")
+            chars.append(self.toLower($1))
+            return $1
+        }
+        return String(chars)
+    }
+
+    public func toLower(_ char: Character) -> Character {
+        return String(char).lowercased().characters.first!
+    }
+
+    public func toUpper(_ char: Character) -> Character {
+        return String(char).uppercased().characters.first!
     }
 
 }
