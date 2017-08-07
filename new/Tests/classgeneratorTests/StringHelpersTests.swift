@@ -69,7 +69,11 @@ public class StringHelpersTests: ClassGeneratorTestCase {
             ("test_isUpperCaseSucceeds", test_isUpperCaseSucceeds),
             ("test_isUpperCaseFailsWithLowerCaseLetter", test_isUpperCaseFailsWithLowerCaseLetter),
             ("test_isLetterSucceeds", test_isLetterSucceeds),
-            ("test_isLetterFailsWithNumber", test_isLetterFailsWithNumber)
+            ("test_isLetterFailsWithNumber", test_isLetterFailsWithNumber),
+            ("test_toLowerSucceeds", test_toLowerSucceeds),
+            ("test_toLowerDoesNothingWithNumbersOrLowerLetters", test_toLowerDoesNothingWithNumbersOrLowerLetters),
+            ("test_toUpperSucceeds", test_toUpperSucceeds),
+            ("test_toUpperDoesNothingWithNumbersOrUpperLetters", test_toUpperDoesNothingWithNumbersOrUpperLetters)
         ]
     }
 
@@ -109,6 +113,30 @@ public class StringHelpersTests: ClassGeneratorTestCase {
     public func test_isLetterFailsWithNumber() {
         let num: Character = "2"
         XCTAssertFalse(self.helpers.isLetter(num))
+    }
+
+    public func test_toLowerSucceeds() {
+        let a: Character = "A"
+        XCTAssertEqual("a", self.helpers.toLower(a))
+    }
+
+    public func test_toLowerDoesNothingWithNumbersOrLowerLetters() {
+        let a: Character = "a"
+        let num: Character = "2"
+        XCTAssertEqual("a", self.helpers.toLower(a))
+        XCTAssertEqual("2", self.helpers.toLower(num))
+    }
+
+    public func test_toUpperSucceeds() {
+        let a: Character = "a"
+        XCTAssertEqual("A", self.helpers.toUpper(a))
+    }
+
+    public func test_toUpperDoesNothingWithNumbersOrUpperLetters() {
+        let a: Character = "A"
+        let num: Character = "2"
+        XCTAssertEqual("A", self.helpers.toUpper(a))
+        XCTAssertEqual("2", self.helpers.toUpper(num))
     }
 
 }
