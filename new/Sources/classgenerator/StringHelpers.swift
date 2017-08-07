@@ -56,6 +56,8 @@
  *
  */
 
+import Foundation
+
 public final class StringHelpers {
 
     public func isAlphaNumeric(_ char: Character) -> Bool {
@@ -78,20 +80,22 @@ public final class StringHelpers {
         return char >= "A" && char <= "Z"
     }
 
+    public func isWhitespace(_ char: Character) -> Bool {
+        return CharacterSet.whitespacesAndNewlines.isSuperset(of: CharacterSet(charactersIn: String(char)))
+    }
+
     public func toCamelCase(_ str: String) -> String {
         if true == str.isEmpty {
             return str
         }
-        var chars = String.CharacterView("_")
+        var chars: [Character] = ["_"]
         chars.reserveCapacity(str.characters.count)
-        var index = chars.startIndex
         let _: Character = str.characters.reduce("_") {
-            if $0 != "_" {
-                index = chars.index(after: index)
+            if $0 != "_" && false == self.isWhitespace($0) {
+                chars.append($1)
                 return $1
             }
-            chars.insert(self.toUpper($1), at: chars.index(before: chars.endIndex))
-            _ = chars.removeLast()
+            chars[chars.count - 1] = self.toUpper($1)
             return $1
         }
         return String(chars)
@@ -100,13 +104,18 @@ public final class StringHelpers {
     public func toSnakeCase(_ str: String) -> String {
         var chars = String.CharacterView()
         chars.reserveCapacity(str.characters.count)
-        let _: Character = str.characters.reduce("a") {
-            guard true == self.isUpperCase($0) else {
+        let _: Character = str.characters.reduce("_") {
+            let isWhitespace = true == self.isWhitespace($1)
+            guard true == self.isUpperCase($1) || true == self.isNumeric($1) || true == isWhitespace else {
                 chars.append($1)
                 return $1
             }
-            chars.append("_")
-            chars.append(self.toLower($1))
+            if $0 != "_" && false == self.isWhitespace($0) {
+                chars.append("_")
+            }
+            if false == isWhitespace {
+                chars.append(self.toLower($1))
+            }
             return $1
         }
         return String(chars)
