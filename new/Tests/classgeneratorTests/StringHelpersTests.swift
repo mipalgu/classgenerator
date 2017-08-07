@@ -162,12 +162,12 @@ public class StringHelpersTests: ClassGeneratorTestCase {
 
     public func test_toSnakeCaseWorksWithASentence() {
         let sentence = "This is 1a sentence"
-        XCTAssertEqual("this_is_1_a_sentence", self.helpers.toSnakeCase(sentence))
+        XCTAssertEqual("this_is_1a_sentence", self.helpers.toSnakeCase(sentence))
     }
 
     public func test_toSnakeCaseDoesNotModifySnakeCase() {
-        let camelCase = "this_is_1_a_test"
-        XCTAssertEqual("this_is_1_a_test", self.helpers.toSnakeCase(camelCase))
+        let camelCase = "this_is_1a_test"
+        XCTAssertEqual("this_is_1a_test", self.helpers.toSnakeCase(camelCase))
     }
 
     public func test_toSnakeCaseWorksWithCamelCase() {
