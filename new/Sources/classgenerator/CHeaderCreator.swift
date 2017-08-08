@@ -58,7 +58,15 @@
 
 public final class CHeaderCreator {
 
+    fileprivate let helpers: StringHelpers
+
+    public init(helpers: StringHelpers = StringHelpers()) {
+        self.helpers = helpers
+    }
+
     public func createCHeader(forClass cls: Class) -> String {
+        let camelCase = self.helpers.toCamelCase(cls.name)
+        print(camelCase)
         return ""
     }
 
