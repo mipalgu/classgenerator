@@ -65,14 +65,13 @@ public final class CHeaderCreator {
     }
 
     public func createCHeader(forClass cls: Class) -> String {
-        let fileName = self.helpers.toSnake("wb_" + cls.name) + ".h"
-        print(camelCase)
+        let fileName = self.helpers.toSnakeCase("wb_" + cls.name) + ".h"
+        print(fileName)
         return ""
     }
 
     fileprivate func createHead(forClass cls: Class) -> String {
-        var str = ""
-        return str
+        return ""
     }
 
     fileprivate func createFileComment(forFile file: String, withAuthor author: String) -> String {
