@@ -60,6 +60,829 @@ import Foundation
 @testable import classgenerator
 import XCTest
 
+//swiftlint:disable file_length
+//swiftlint:disable:next type_body_length
 public class ClassGeneratorTestCase: XCTestCase {
+
+    public let oldClass = Class(
+            name: "old",
+            author: "Callum McColl",
+            preamble: nil,
+            variables: [
+                Variable(
+                    label: "str",
+                    type: .string,
+                    cType: "string",
+                    swiftType: "String",
+                    defaultValue: "\"hello\"",
+                    swiftDefaultValue: "\"hello\"",
+                    comment: "A string."
+                ),
+                Variable(
+                    label: "b",
+                    type: .bool,
+                    cType: "bool",
+                    swiftType: "Bool",
+                    defaultValue: "false",
+                    swiftDefaultValue: "false",
+                    comment: "A boolean."
+                ),
+                Variable(
+                    label: "c",
+                    type: .char,
+                    cType: "char",
+                    swiftType: "String",
+                    defaultValue: "'c'",
+                    swiftDefaultValue: "\"c\"",
+                    comment: "A char."
+                ),
+                Variable(
+                    label: "sc",
+                    type: .char,
+                    cType: "signed char",
+                    swiftType: "String",
+                    defaultValue: "'c'",
+                    swiftDefaultValue: "\"c\"",
+                    comment: "A signed char."
+                ),
+                Variable(
+                    label: "uc",
+                    type: .char,
+                    cType: "unsigned char",
+                    swiftType: "String",
+                    defaultValue: "'c'",
+                    swiftDefaultValue: "\"c\"",
+                    comment: "An unsigned char."
+                ),
+                Variable(
+                    label: "i",
+                    type: .numeric(.signed),
+                    cType: "int",
+                    swiftType: "Int",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An int."
+                ),
+                Variable(
+                    label: "si",
+                    type: .numeric(.signed),
+                    cType: "signed",
+                    swiftType: "Int",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed."
+                ),
+                Variable(
+                    label: "sii",
+                    type: .numeric(.signed),
+                    cType: "signed int",
+                    swiftType: "Int",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed int."
+                ),
+                Variable(
+                    label: "u",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned",
+                    swiftType: "UInt",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned."
+                ),
+                Variable(
+                    label: "ui",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned int",
+                    swiftType: "UInt",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned int."
+                ),
+                Variable(
+                    label: "u8",
+                    type: .numeric(.unsigned),
+                    cType: "uint8_t",
+                    swiftType: "UInt8",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A uint8."
+                ),
+                Variable(
+                    label: "u16",
+                    type: .numeric(.unsigned),
+                    cType: "uint16_t",
+                    swiftType: "UInt16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A uint16."
+                ),
+                Variable(
+                    label: "u32",
+                    type: .numeric(.unsigned),
+                    cType: "uint32_t",
+                    swiftType: "UInt32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A uint32."
+                ),
+                Variable(
+                    label: "u64",
+                    type: .numeric(.unsigned),
+                    cType: "uint64_t",
+                    swiftType: "UInt64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A uint64."
+                ),
+                Variable(
+                    label: "i8",
+                    type: .numeric(.signed),
+                    cType: "int8_t",
+                    swiftType: "Int8",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An int8."
+                ),
+                Variable(
+                    label: "i16",
+                    type: .numeric(.signed),
+                    cType: "int16_t",
+                    swiftType: "Int16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An int16."
+                ),
+                Variable(
+                    label: "i32",
+                    type: .numeric(.signed),
+                    cType: "int32_t",
+                    swiftType: "Int32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An int32."
+                ),
+                Variable(
+                    label: "i64",
+                    type: .numeric(.signed),
+                    cType: "int64_t",
+                    swiftType: "Int64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An int64."
+                ),
+                Variable(
+                    label: "s",
+                    type: .numeric(.signed),
+                    cType: "short",
+                    swiftType: "Int16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A short."
+                ),
+                Variable(
+                    label: "si",
+                    type: .numeric(.signed),
+                    cType: "short int",
+                    swiftType: "Int16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A short int."
+                ),
+                Variable(
+                    label: "ss",
+                    type: .numeric(.signed),
+                    cType: "signed short",
+                    swiftType: "Int16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed short."
+                ),
+                Variable(
+                    label: "ssi",
+                    type: .numeric(.signed),
+                    cType: "signed short int",
+                    swiftType: "Int16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed short int."
+                ),
+                Variable(
+                    label: "us",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned short",
+                    swiftType: "UInt16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned short."
+                ),
+                Variable(
+                    label: "usi",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned short int",
+                    swiftType: "UInt16",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned short int."
+                ),
+                Variable(
+                    label: "l",
+                    type: .numeric(.long(.signed)),
+                    cType: "long",
+                    swiftType: "Int32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A long."
+                ),
+                Variable(
+                    label: "li",
+                    type: .numeric(.long(.signed)),
+                    cType: "long int",
+                    swiftType: "Int32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A long int."
+                ),
+                Variable(
+                    label: "sl",
+                    type: .numeric(.long(.signed)),
+                    cType: "signed long",
+                    swiftType: "Int32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed long."
+                ),
+                Variable(
+                    label: "sli",
+                    type: .numeric(.long(.signed)),
+                    cType: "signed long int",
+                    swiftType: "Int32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed long int."
+                ),
+                Variable(
+                    label: "ul",
+                    type: .numeric(.long(.unsigned)),
+                    cType: "unsigned long",
+                    swiftType: "UInt32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned long."
+                ),
+                Variable(
+                    label: "uli",
+                    type: .numeric(.long(.unsigned)),
+                    cType: "unsigned long int",
+                    swiftType: "UInt32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned long int."
+                ),
+                Variable(
+                    label: "ll",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "long long",
+                    swiftType: "Int64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A long long."
+                ),
+                Variable(
+                    label: "lli",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "long long int",
+                    swiftType: "Int64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A long long int."
+                ),
+                Variable(
+                    label: "sll",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "signed long long",
+                    swiftType: "Int64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed long long."
+                ),
+                Variable(
+                    label: "slli",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "signed long long int",
+                    swiftType: "Int64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A signed long long int."
+                ),
+                Variable(
+                    label: "ull",
+                    type: .numeric(.long(.long(.unsigned))),
+                    cType: "unsigned long long",
+                    swiftType: "UInt64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned long long."
+                ),
+                Variable(
+                    label: "ulli",
+                    type: .numeric(.long(.long(.unsigned))),
+                    cType: "unsigned long long int",
+                    swiftType: "UInt64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An unsigned long long int."
+                ),
+                Variable(
+                    label: "l64",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "long64_t",
+                    swiftType: "Int64",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A long64."
+                ),
+                Variable(
+                    label: "f",
+                    type: .numeric(.float),
+                    cType: "float",
+                    swiftType: "Float",
+                    defaultValue: "1.0f",
+                    swiftDefaultValue: "1.0",
+                    comment: "A float."
+                ),
+                Variable(
+                    label: "ft",
+                    type: .numeric(.float),
+                    cType: "float_t",
+                    swiftType: "Float",
+                    defaultValue: "1.0f",
+                    swiftDefaultValue: "1.0",
+                    comment: "A float_t."
+                ),
+                Variable(
+                    label: "d",
+                    type: .numeric(.double),
+                    cType: "double",
+                    swiftType: "Double",
+                    defaultValue: "1.0",
+                    swiftDefaultValue: "1.0",
+                    comment: "A double."
+                ),
+                Variable(
+                    label: "dt",
+                    type: .numeric(.double),
+                    cType: "double_t",
+                    swiftType: "Double",
+                    defaultValue: "1.0",
+                    swiftDefaultValue: "1.0",
+                    comment: "A double_t."
+                ),
+                Variable(
+                    label: "ld",
+                    type: .numeric(.long(.double)),
+                    cType: "long double",
+                    swiftType: "Float80",
+                    defaultValue: "1.0",
+                    swiftDefaultValue: "1.0",
+                    comment: "A long double."
+                ),
+                Variable(
+                    label: "dd",
+                    type: .numeric(.long(.double)),
+                    cType: "double double",
+                    swiftType: "Float80",
+                    defaultValue: "1.0",
+                    swiftDefaultValue: "1.0",
+                    comment: "A double double."
+                ),
+                Variable(
+                    label: "str",
+                    type: .string,
+                    cType: "string",
+                    swiftType: "String",
+                    defaultValue: "\"\"",
+                    swiftDefaultValue: "\"\"",
+                    comment: "A string."
+                ),
+                Variable(
+                    label: "b",
+                    type: .bool,
+                    cType: "bool",
+                    swiftType: "Bool",
+                    defaultValue: "true",
+                    swiftDefaultValue: "true",
+                    comment: "A boolean."
+                ),
+                Variable(
+                    label: "c",
+                    type: .char,
+                    cType: "char",
+                    swiftType: "String",
+                    defaultValue: "0",
+                    swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
+                    comment: "A char."
+                ),
+                Variable(
+                    label: "sc",
+                    type: .char,
+                    cType: "signed char",
+                    swiftType: "String",
+                    defaultValue: "0",
+                    swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
+                    comment: "A signed char."
+                ),
+                Variable(
+                    label: "uc",
+                    type: .char,
+                    cType: "unsigned char",
+                    swiftType: "String",
+                    defaultValue: "0",
+                    swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
+                    comment: "An unsigned char."
+                ),
+                Variable(
+                    label: "i",
+                    type: .numeric(.signed),
+                    cType: "int",
+                    swiftType: "Int",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An int."
+                ),
+                Variable(
+                    label: "si",
+                    type: .numeric(.signed),
+                    cType: "signed",
+                    swiftType: "Int",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed."
+                ),
+                Variable(
+                    label: "sii",
+                    type: .numeric(.signed),
+                    cType: "signed int",
+                    swiftType: "Int",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed int."
+                ),
+                Variable(
+                    label: "u",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned",
+                    swiftType: "UInt",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned."
+                ),
+                Variable(
+                    label: "ui",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned int",
+                    swiftType: "UInt",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned int."
+                ),
+                Variable(
+                    label: "u8",
+                    type: .numeric(.unsigned),
+                    cType: "uint8_t",
+                    swiftType: "UInt8",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A uint8."
+                ),
+                Variable(
+                    label: "u16",
+                    type: .numeric(.unsigned),
+                    cType: "uint16_t",
+                    swiftType: "UInt16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A uint16."
+                ),
+                Variable(
+                    label: "u32",
+                    type: .numeric(.unsigned),
+                    cType: "uint32_t",
+                    swiftType: "UInt32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A uint32."
+                ),
+                Variable(
+                    label: "u64",
+                    type: .numeric(.unsigned),
+                    cType: "uint64_t",
+                    swiftType: "UInt64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A uint64."
+                ),
+                Variable(
+                    label: "i8",
+                    type: .numeric(.signed),
+                    cType: "int8_t",
+                    swiftType: "Int8",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An int8."
+                ),
+                Variable(
+                    label: "i16",
+                    type: .numeric(.signed),
+                    cType: "int16_t",
+                    swiftType: "Int16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An int16."
+                ),
+                Variable(
+                    label: "i32",
+                    type: .numeric(.signed),
+                    cType: "int32_t",
+                    swiftType: "Int32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An int32."
+                ),
+                Variable(
+                    label: "i64",
+                    type: .numeric(.signed),
+                    cType: "int64_t",
+                    swiftType: "Int64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An int64."
+                ),
+                Variable(
+                    label: "s",
+                    type: .numeric(.signed),
+                    cType: "short",
+                    swiftType: "Int16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A short."
+                ),
+                Variable(
+                    label: "si",
+                    type: .numeric(.signed),
+                    cType: "short int",
+                    swiftType: "Int16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A short int."
+                ),
+                Variable(
+                    label: "ss",
+                    type: .numeric(.signed),
+                    cType: "signed short",
+                    swiftType: "Int16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed short."
+                ),
+                Variable(
+                    label: "ssi",
+                    type: .numeric(.signed),
+                    cType: "signed short int",
+                    swiftType: "Int16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed short int."
+                ),
+                Variable(
+                    label: "us",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned short",
+                    swiftType: "UInt16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned short."
+                ),
+                Variable(
+                    label: "usi",
+                    type: .numeric(.unsigned),
+                    cType: "unsigned short int",
+                    swiftType: "UInt16",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned short int."
+                ),
+                Variable(
+                    label: "l",
+                    type: .numeric(.long(.signed)),
+                    cType: "long",
+                    swiftType: "Int32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A long."
+                ),
+                Variable(
+                    label: "li",
+                    type: .numeric(.long(.signed)),
+                    cType: "long int",
+                    swiftType: "Int32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A long int."
+                ),
+                Variable(
+                    label: "sl",
+                    type: .numeric(.long(.signed)),
+                    cType: "signed long",
+                    swiftType: "Int32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed long."
+                ),
+                Variable(
+                    label: "sli",
+                    type: .numeric(.long(.signed)),
+                    cType: "signed long int",
+                    swiftType: "Int32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed long int."
+                ),
+                Variable(
+                    label: "ul",
+                    type: .numeric(.long(.unsigned)),
+                    cType: "unsigned long",
+                    swiftType: "UInt32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned long."
+                ),
+                Variable(
+                    label: "uli",
+                    type: .numeric(.long(.unsigned)),
+                    cType: "unsigned long int",
+                    swiftType: "UInt32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned long int."
+                ),
+                Variable(
+                    label: "ll",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "long long",
+                    swiftType: "Int64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A long long."
+                ),
+                Variable(
+                    label: "lli",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "long long int",
+                    swiftType: "Int64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A long long int."
+                ),
+                Variable(
+                    label: "sll",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "signed long long",
+                    swiftType: "Int64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed long long."
+                ),
+                Variable(
+                    label: "slli",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "signed long long int",
+                    swiftType: "Int64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A signed long long int."
+                ),
+                Variable(
+                    label: "ull",
+                    type: .numeric(.long(.long(.unsigned))),
+                    cType: "unsigned long long",
+                    swiftType: "UInt64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned long long."
+                ),
+                Variable(
+                    label: "ulli",
+                    type: .numeric(.long(.long(.unsigned))),
+                    cType: "unsigned long long int",
+                    swiftType: "UInt64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An unsigned long long int."
+                ),
+                Variable(
+                    label: "l64",
+                    type: .numeric(.long(.long(.signed))),
+                    cType: "long64_t",
+                    swiftType: "Int64",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A long64."
+                ),
+                Variable(
+                    label: "f",
+                    type: .numeric(.float),
+                    cType: "float",
+                    swiftType: "Float",
+                    defaultValue: "0.0f",
+                    swiftDefaultValue: "0.0",
+                    comment: "A float."
+                ),
+                Variable(
+                    label: "ft",
+                    type: .numeric(.float),
+                    cType: "float_t",
+                    swiftType: "Float",
+                    defaultValue: "0.0f",
+                    swiftDefaultValue: "0.0",
+                    comment: "A float_t."
+                ),
+                Variable(
+                    label: "d",
+                    type: .numeric(.double),
+                    cType: "double",
+                    swiftType: "Double",
+                    defaultValue: "0.0",
+                    swiftDefaultValue: "0.0",
+                    comment: "A double."
+                ),
+                Variable(
+                    label: "dt",
+                    type: .numeric(.double),
+                    cType: "double_t",
+                    swiftType: "Double",
+                    defaultValue: "0.0",
+                    swiftDefaultValue: "0.0",
+                    comment: "A double_t."
+                ),
+                Variable(
+                    label: "ld",
+                    type: .numeric(.long(.double)),
+                    cType: "long double",
+                    swiftType: "Float80",
+                    defaultValue: "0.0",
+                    swiftDefaultValue: "0.0",
+                    comment: "A long double."
+                ),
+                Variable(
+                    label: "dd",
+                    type: .numeric(.long(.double)),
+                    cType: "double double",
+                    swiftType: "Float80",
+                    defaultValue: "0.0",
+                    swiftDefaultValue: "0.0",
+                    comment: "A double double."
+                ),
+                Variable(
+                    label: "p",
+                    type: .pointer(.numeric(.signed)),
+                    cType: "int",
+                    swiftType: "UnsafeMutablePointer<Int>?",
+                    defaultValue: "NULL",
+                    swiftDefaultValue: "nil",
+                    comment: "A pointer."
+                ),
+                Variable(
+                    label: "strct",
+                    type: .unknown,
+                    cType: "somestruct",
+                    swiftType: "somestruct",
+                    defaultValue: "somestruct()",
+                    swiftDefaultValue: "somestruct()",
+                    comment: "A struct."
+                ),
+                Variable(
+                    label: "array16",
+                    type: .array(.numeric(.signed), "4"),
+                    cType: "int16_t",
+                    swiftType: "Int16",
+                    defaultValue: "{1,2,3,4}",
+                    swiftDefaultValue: "[1, 2, 3, 4]",
+                    comment: "a comment about array16"
+                ),
+                Variable(
+                    label: "bools",
+                    type: .array(.bool, "3"),
+                    cType: "bool",
+                    swiftType: "Bool",
+                    defaultValue: "{true, true, true}",
+                    swiftDefaultValue: "[true, true, true]",
+                    comment: "a comment about bools"
+                )
+            ],
+            cExtras: nil,
+            cppExtras: nil,
+            swiftExtras: nil
+        )
 
 }
