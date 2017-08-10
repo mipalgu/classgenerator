@@ -66,7 +66,9 @@ public final class CHeaderCreator {
 
     public func createCHeader(forClass cls: Class) -> String {
         let fileName = self.helpers.toSnakeCase("wb_" + cls.name) + ".h"
-        return self.createHead(forFileNamed: fileName, withClass: cls)
+        let head = self.createHead(forFileNamed: fileName, withClass: cls)
+        let strct = self.createStruct(forClass: cls)
+        return head + "\n\n" + strct
     }
 
     fileprivate func createHead(forFileNamed fileName: String, withClass cls: Class) -> String {
@@ -142,6 +144,45 @@ public final class CHeaderCreator {
              * Fifth Floor, Boston, MA  02110-1301, USA.
              */
             """
+    }
+
+    fileprivate func createStruct(forClass cls: Class) -> String {
+        let start = "struct \(cls.name)\n{\n"
+        var properties: String = ""
+        for v in cls.variables {
+            properties += "\n    " + self.createProperty(
+                withLabel: v.label,
+                forClassNamed: cls.name,
+                fromType: v.type,
+                andCType: v.cType
+            ) + "\n"
+        }
+        return start + properties + "}"
+    }
+
+    fileprivate func createProperty(
+        withLabel label: String,
+        forClassNamed className: String,
+        fromType type: VariableTypes,
+        andCType cType: String,
+        withLevel level: Int = 0
+    ) -> String {
+        switch type {
+            case .array(let subtype, _):
+                return "ARRAY_PROPERTY("
+                    + self.createProperty(
+                            withLabel: label,
+                            forClassNamed: className,
+                            fromType: subtype,
+                            andCType: cType,
+                            withLevel: level + 1
+                        )
+                    + ", \(label)"
+                    + ", \(className.uppercased())_\(label.uppercased())_"
+                    + "\(0 == level ? "" : "\(level)_")ARRAY_SIZE)"
+            default:
+                return "PROPERTY(" + cType + ", " + label + ")"
+        }
     }
 
 }
