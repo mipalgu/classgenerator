@@ -64,6 +64,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (CHeaderCreatorTests) -> () throws -> Void)] {
         return [
+            ("test_isBackwardsCompatible", test_isBackwardsCompatible)
         ]
     }
 
@@ -71,6 +72,14 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
 
     public override func setUp() {
         self.creator = CHeaderCreator()
+    }
+
+    public func test_isBackwardsCompatible() {
+        guard let contents = try? String(contentsOfFile: "gens/wb_old.h") else {
+            XCTFail("Unable to open wb_old.h")
+            return
+        }
+        XCTAssertEqual(contents, self.creator.createCHeader(forClass: self.oldClass))
     }
 
 }
