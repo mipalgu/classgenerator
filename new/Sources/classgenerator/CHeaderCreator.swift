@@ -66,12 +66,19 @@ public final class CHeaderCreator {
 
     public func createCHeader(forClass cls: Class) -> String {
         let fileName = self.helpers.toSnakeCase("wb_" + cls.name) + ".h"
-        print(fileName)
-        return ""
+        return self.createHead(forFileNamed: fileName, withClass: cls)
     }
 
-    fileprivate func createHead(forClass cls: Class) -> String {
-        return ""
+    fileprivate func createHead(forFileNamed fileName: String, withClass cls: Class) -> String {
+        let comment = self.createFileComment(forFile: fileName, withAuthor: cls.author)
+        let sanitisedName = String(fileName.characters.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
+        let head = """
+            #ifndef \(sanitisedName)
+            #define \(sanitisedName)
+
+            #include "gu_util.h"
+            """
+        return comment + "\n\n\n" + head
     }
 
     //swiftlint:disable:next function_body_length
