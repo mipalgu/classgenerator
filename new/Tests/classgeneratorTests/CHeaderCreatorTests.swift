@@ -84,7 +84,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to create a header from \(self.oldClass.name)")
             return
         }
-        XCTAssertEqual(contents, result)
+        XCTAssertEqual(super.replaceTokens(contents), result)
     }
 
     public func test_createSectionsHeader() {
