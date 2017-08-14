@@ -64,7 +64,8 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (CHeaderCreatorTests) -> () throws -> Void)] {
         return [
-            ("test_isBackwardsCompatible", test_isBackwardsCompatible)
+            ("test_isBackwardsCompatible", test_isBackwardsCompatible),
+            ("test_createSectionsHeader", test_createSectionsHeader)
         ]
     }
 
@@ -84,6 +85,19 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             return
         }
         XCTAssertEqual(contents, result)
+    }
+
+    public func test_createSectionsHeader() {
+        guard let expected = try? String(contentsOfFile: "gens/wb_sections.h") else {
+            XCTFail("Unable to read contents of gens/wb_sections.h")
+            return
+        }
+        let cls = super.createSectionsClass("sections")
+        guard let result = self.creator.createCHeader(forClass: cls) else {
+            XCTFail("Unable to create a header from \(cls.name)")
+            return
+        }
+        XCTAssertEqual(expected, result)
     }
 
 }

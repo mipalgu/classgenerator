@@ -886,4 +886,27 @@ public class ClassGeneratorTestCase: XCTestCase {
             swiftExtras: nil
         )
 
+        func createSectionsClass(_ name: String) -> Class {
+            return Class(
+                name: name,
+                author: "Callum McColl",
+                comment: "this is a global comment.",
+                preamble: "#include <stdint.h>",
+                variables: [
+                    Variable(
+                        label: "c",
+                        type: .numeric(.signed),
+                        cType: "int",
+                        swiftType: "Int",
+                        defaultValue: "2",
+                        swiftDefaultValue: "2",
+                        comment: "A counter."
+                    )
+                ],
+                cExtras: nil,
+                cppExtras: "int f() {\n    return c + 2;\n}",
+                swiftExtras: "extension wb_sections: ExternalVariables {}"
+            )
+        }
+
 }

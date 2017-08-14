@@ -98,28 +98,6 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_parsesSections() {
-        func createClass(_ name: String) -> Class {
-            return Class(
-                name: name,
-                author: "Callum McColl",
-                comment: "this is a global comment.",
-                preamble: "#include <stdint.h>",
-                variables: [
-                    Variable(
-                        label: "c",
-                        type: .numeric(.signed),
-                        cType: "int",
-                        swiftType: "Int",
-                        defaultValue: "2",
-                        swiftDefaultValue: "2",
-                        comment: "A counter."
-                    )
-                ],
-                cExtras: nil,
-                cppExtras: "int f() {\n    return c + 2;\n}",
-                swiftExtras: "extension wb_sections: ExternalVariables {}"
-            )
-        }
         guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections.gen")
             return
@@ -132,9 +110,9 @@ public class ParserTests: ClassGeneratorTestCase {
             XCTFail(self.parser.lastError ?? "Unable to parse sections3.gen")
             return
         }
-        XCTAssertEqual(createClass("sections"), result1)
-        XCTAssertEqual(createClass("sections2"), result2)
-        XCTAssertEqual(createClass("sections3"), result3)
+        XCTAssertEqual(super.createSectionsClass("sections"), result1)
+        XCTAssertEqual(super.createSectionsClass("sections2"), result2)
+        XCTAssertEqual(super.createSectionsClass("sections3"), result3)
     }
 
     public func test_warnsAboutUnderscores() {
