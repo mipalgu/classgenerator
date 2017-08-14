@@ -73,20 +73,22 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     public func createCHeader(forClass cls: Class) -> String? {
-        let fileName = self.helpers.toSnakeCase("wb_" + cls.name) + ".h"
-        let head = self.createHead(forFileNamed: fileName, withClass: cls)
-        guard let strct = self.createStruct(forClass: cls) else {
+        let sanitisedClassName = "wb_" + self.helpers.toSnakeCase(String(cls.name.characters.lazy.map {
+            self.helpers.isAlphaNumeric($0) ? $0 : "_"
+        }))
+        guard let strct = self.createStruct(forClass: cls, withSanitisedClassName: sanitisedClassName) else {
             return nil
         }
-        return head + "\n" + strct
+        let head = self.createHead(forFileNamed: sanitisedClassName + ".h", withClass: cls)
+        let tail = self.createTail(withClassNamed: sanitisedClassName)
+        return head + "\n" + strct + "\n" + tail
     }
 
     fileprivate func createHead(forFileNamed fileName: String, withClass cls: Class) -> String {
         let comment = self.createFileComment(forFile: fileName, withAuthor: cls.author)
-        let sanitisedName = String(fileName.characters.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         let head = """
-            #ifndef \(sanitisedName)
-            #define \(sanitisedName)
+            #ifndef \(fileName)
+            #define \(fileName)
 
             #include "gu_util.h"
             """
@@ -169,8 +171,8 @@ public final class CHeaderCreator: ErrorContainer {
             """
     }
 
-    fileprivate func createStruct(forClass cls: Class) -> String? {
-        let start = self.createComment(from: cls.comment) + "\n" + "struct \(cls.name)\n{\n"
+    fileprivate func createStruct(forClass cls: Class, withSanitisedClassName name: String) -> String? {
+        let start = self.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n"
         var properties: String = ""
         for v in cls.variables {
             guard let p = self.createProperty(
@@ -218,6 +220,30 @@ public final class CHeaderCreator: ErrorContainer {
         let end = prepend + " */"
         let temp = lines.reduce(start) { $0 + prepend + " *  " + $1 + "\n" }
         return temp + end
+    }
+
+    fileprivate func createTail(withClassNamed name: String) -> String {
+        let name = String(name.characters.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
+        return """
+            #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
+            /**
+             * Convert to a description string.
+             */
+            const char* \(name)_description(const struct \(name)* self, char* descString, size_t bufferSize);
+
+            /**
+             * Convert to a string.
+             */
+            const char* \(name)_to_string(const struct \(name)* self, char* toString, size_t bufferSize);
+
+            /**
+             * Convert from a string.
+             */
+            struct \(name)* \(name)_from_string(struct \(name)* self, const char* str);
+            #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
+
+            #endif /// \(name)_h
+            """
     }
 
 }
