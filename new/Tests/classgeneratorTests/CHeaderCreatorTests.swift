@@ -69,10 +69,13 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
         ]
     }
 
+    public var date: Date!
+
     public var creator: CHeaderCreator!
 
     public override func setUp() {
-        self.creator = CHeaderCreator()
+        self.date = Date()
+        self.creator = CHeaderCreator(creatorHelpers: CreatorHelpers(date: self.date))
     }
 
     public func test_isBackwardsCompatible() {
@@ -84,7 +87,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to create a header from \(self.oldClass.name)")
             return
         }
-        XCTAssertEqual(super.replaceTokens(contents), result)
+        XCTAssertEqual(super.replaceTokens(contents, withDate: self.date), result)
     }
 
     public func test_createSectionsHeader() {
@@ -97,7 +100,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to create a header from \(cls.name)")
             return
         }
-        XCTAssertEqual(super.replaceTokens(expected), result)
+        XCTAssertEqual(super.replaceTokens(expected, withDate: self.date), result)
     }
 
 }
