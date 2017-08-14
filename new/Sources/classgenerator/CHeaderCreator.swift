@@ -56,7 +56,13 @@
  *
  */
 
-public final class CHeaderCreator {
+public final class CHeaderCreator: ErrorContainer {
+
+    public fileprivate(set) var errors: [String] = []
+
+    public var lastError: String? {
+        return self.errors.last
+    }
 
     fileprivate let helpers: StringHelpers
 
@@ -64,10 +70,12 @@ public final class CHeaderCreator {
         self.helpers = helpers
     }
 
-    public func createCHeader(forClass cls: Class) -> String {
+    public func createCHeader(forClass cls: Class) -> String? {
         let fileName = self.helpers.toSnakeCase("wb_" + cls.name) + ".h"
         let head = self.createHead(forFileNamed: fileName, withClass: cls)
-        let strct = self.createStruct(forClass: cls)
+        guard let strct = self.createStruct(forClass: cls) else {
+            return nil
+        }
         return head + "\n\n" + strct
     }
 
@@ -146,16 +154,19 @@ public final class CHeaderCreator {
             """
     }
 
-    fileprivate func createStruct(forClass cls: Class) -> String {
+    fileprivate func createStruct(forClass cls: Class) -> String? {
         let start = "struct \(cls.name)\n{\n"
         var properties: String = ""
         for v in cls.variables {
-            properties += "\n    " + self.createProperty(
+            guard let p = self.createProperty(
                 withLabel: v.label,
                 forClassNamed: cls.name,
                 fromType: v.type,
                 andCType: v.cType
-            ) + "\n"
+            ) else {
+                return nil
+            }
+            properties += "\n     " + p + "\n"
         }
         return start + properties + "}"
     }
@@ -166,18 +177,18 @@ public final class CHeaderCreator {
         fromType type: VariableTypes,
         andCType cType: String,
         withLevel level: Int = 0
-    ) -> String {
+    ) -> String? {
         switch type {
             case .array(let subtype, _):
+                switch subtype {
+                    case .array:
+                        self.errors.append("Multi-Dimensional arrays (\(label)) are not currently supported.")
+                        return nil
+                    default:
+                        break
+                }
                 return "ARRAY_PROPERTY("
-                    + self.createProperty(
-                            withLabel: label,
-                            forClassNamed: className,
-                            fromType: subtype,
-                            andCType: cType,
-                            withLevel: level + 1
-                        )
-                    + ", \(label)"
+                    + cType
                     + ", \(className.uppercased())_\(label.uppercased())_"
                     + "\(0 == level ? "" : "\(level)_")ARRAY_SIZE)"
             default:
