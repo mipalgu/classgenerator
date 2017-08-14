@@ -67,6 +67,7 @@ public class ClassGeneratorTestCase: XCTestCase {
     public let oldClass = Class(
             name: "old",
             author: "Callum McColl",
+            comment: "This is a test of all of the supported types.",
             preamble: nil,
             variables: [
                 Variable(

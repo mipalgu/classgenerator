@@ -62,6 +62,8 @@ public struct Class {
 
     public let author: String
 
+    public let comment: String
+
     public let preamble: String?
 
     public let variables: [Variable]

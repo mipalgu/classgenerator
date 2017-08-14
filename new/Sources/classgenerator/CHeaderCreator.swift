@@ -56,6 +56,8 @@
  *
  */
 
+import Foundation
+
 public final class CHeaderCreator: ErrorContainer {
 
     public fileprivate(set) var errors: [String] = []
@@ -168,7 +170,7 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createStruct(forClass cls: Class) -> String? {
-        let start = "struct \(cls.name)\n{\n"
+        let start = self.createComment(from: cls.comment) + "struct \(cls.name)\n{\n"
         var properties: String = ""
         for v in cls.variables {
             guard let p = self.createProperty(
@@ -207,6 +209,13 @@ public final class CHeaderCreator: ErrorContainer {
             default:
                 return "PROPERTY(" + cType + ", " + label + ")"
         }
+    }
+
+    fileprivate func createComment(from str: String) -> String {
+        let lines = str.components(separatedBy: CharacterSet.newlines)
+        return lines.reduce("/**\n") {
+            $0 + " *  " + $1 + "\n"
+        } + " **/\n"
     }
 
 }

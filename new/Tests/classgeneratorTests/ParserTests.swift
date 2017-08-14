@@ -102,6 +102,7 @@ public class ParserTests: ClassGeneratorTestCase {
             return Class(
                 name: name,
                 author: "Callum McColl",
+                comment: "this is a global comment.",
                 preamble: "#include <stdint.h>",
                 variables: [
                     Variable(
