@@ -79,7 +79,11 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to open wb_old.h")
             return
         }
-        XCTAssertEqual(contents, self.creator.createCHeader(forClass: self.oldClass))
+        guard let result = self.creator.createCHeader(forClass: self.oldClass) else {
+            XCTFail("Unable to create a header from \(self.oldClass.name)")
+            return
+        }
+        XCTAssertEqual(contents, result)
     }
 
 }
