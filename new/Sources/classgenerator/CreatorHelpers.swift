@@ -60,9 +60,11 @@ import Foundation
 
 public final class CreatorHelpers {
 
-    fileprivate lazy var date: Date = {
-        return Date()
-    }()
+    fileprivate let date: Date
+
+    public init(date: Date = Date()) {
+        self.date = date
+    }
 
     public lazy var currentDate: String = {
         let formatter = DateFormatter()
