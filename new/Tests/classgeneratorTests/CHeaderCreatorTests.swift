@@ -97,7 +97,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to create a header from \(cls.name)")
             return
         }
-        XCTAssertEqual(expected, result)
+        XCTAssertEqual(super.replaceTokens(expected), result)
     }
 
 }

@@ -909,4 +909,16 @@ public class ClassGeneratorTestCase: XCTestCase {
             )
         }
 
+        func replaceTokens(_ str: String) -> String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy"
+            let now = Date()
+            let temp = str.replacingOccurrences(of: "%date%", with: formatter.string(from: now))
+            formatter.dateFormat = "HH:mm"
+            let temp2 = temp.replacingOccurrences(of: "%time%", with: formatter.string(from: now))
+            formatter.dateFormat = "yyyy"
+            let replaced = temp2.replacingOccurrences(of: "%year%", with: formatter.string(from: now))
+            return replaced
+        }
+
 }
