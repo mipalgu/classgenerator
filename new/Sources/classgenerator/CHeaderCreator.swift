@@ -76,7 +76,7 @@ public final class CHeaderCreator: ErrorContainer {
         guard let strct = self.createStruct(forClass: cls) else {
             return nil
         }
-        return head + "\n\n" + strct
+        return head + "\n" + strct
     }
 
     fileprivate func createHead(forFileNamed fileName: String, withClass cls: Class) -> String {
@@ -88,7 +88,20 @@ public final class CHeaderCreator: ErrorContainer {
 
             #include "gu_util.h"
             """
-        return comment + "\n\n\n" + head
+        var defs = "#define \(cls.name.uppercased())_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
+        defs += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION\n"
+        defs += "#define \(cls.name.uppercased())_DESC_BUFFER_SIZE 13046\n"
+        defs += "#define \(cls.name.uppercased())_TO_STRING_BUFFER_SIZE 12742\n"
+        defs += "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION\n\n"
+        for v in cls.variables {
+            switch v.type {
+                case .array(_, let count):
+                    defs += "#define \(cls.name.uppercased())_\(v.label.uppercased())_ARRAY_SIZE \(count)\n"
+                default:
+                    continue
+            }
+        }
+        return comment + "\n\n\n" + head + "\n\n" + defs
     }
 
     //swiftlint:disable:next function_body_length
