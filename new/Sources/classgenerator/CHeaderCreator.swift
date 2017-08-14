@@ -168,7 +168,7 @@ public final class CHeaderCreator: ErrorContainer {
             }
             properties += "\n     " + p + "\n"
         }
-        return start + properties + "}"
+        return start + properties + "};"
     }
 
     fileprivate func createProperty(
