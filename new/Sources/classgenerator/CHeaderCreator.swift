@@ -170,7 +170,7 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createStruct(forClass cls: Class) -> String? {
-        let start = self.createComment(from: cls.comment) + "struct \(cls.name)\n{\n"
+        let start = self.createComment(from: cls.comment) + "\n" + "struct \(cls.name)\n{\n"
         var properties: String = ""
         for v in cls.variables {
             guard let p = self.createProperty(
@@ -211,11 +211,12 @@ public final class CHeaderCreator: ErrorContainer {
         }
     }
 
-    fileprivate func createComment(from str: String) -> String {
+    fileprivate func createComment(from str: String, prepend: String = "") -> String {
         let lines = str.components(separatedBy: CharacterSet.newlines)
-        return lines.reduce("/**\n") {
-            $0 + " *  " + $1 + "\n"
-        } + " **/\n"
+        let start = prepend + "/**\n"
+        let end = prepend + " */"
+        let temp = lines.reduce(start) { $0 + prepend + " *  " + $1 + "\n" }
+        return temp + end
     }
 
 }
