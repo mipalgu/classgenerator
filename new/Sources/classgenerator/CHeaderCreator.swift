@@ -181,7 +181,8 @@ public final class CHeaderCreator: ErrorContainer {
             ) else {
                 return nil
             }
-            properties += "\n     " + p + "\n"
+            let comment = self.createComment(from: v.comment ?? "", prepend: "    ")
+            properties += comment + "\n    " + p + "\n\n"
         }
         return start + properties + "};"
     }
