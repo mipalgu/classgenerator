@@ -83,7 +83,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to open wb_old.h")
             return
         }
-        guard let result = self.creator.createCHeader(forClass: self.oldClass) else {
+        guard let result = self.creator.createCHeader(forClass: self.oldClass, generatedFrom: "old.txt") else {
             XCTFail("Unable to create a header from \(self.oldClass.name)")
             return
         }
@@ -96,7 +96,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             return
         }
         let cls = super.createSectionsClass("sections")
-        guard let result = self.creator.createCHeader(forClass: cls) else {
+        guard let result = self.creator.createCHeader(forClass: cls, generatedFrom: "sections.gen") else {
             XCTFail("Unable to create a header from \(cls.name)")
             return
         }
