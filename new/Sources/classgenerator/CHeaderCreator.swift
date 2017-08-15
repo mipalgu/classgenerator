@@ -87,6 +87,7 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createHead(forFileNamed fileName: String, withClass cls: Class) -> String {
+        let fileName = String(fileName.characters.lazy.map { $0 == "." ? "_" : $0 })
         let comment = self.createFileComment(forFile: fileName, withAuthor: cls.author)
         let head = """
             #ifndef \(fileName)
