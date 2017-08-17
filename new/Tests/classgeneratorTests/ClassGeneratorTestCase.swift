@@ -890,7 +890,7 @@ public class ClassGeneratorTestCase: XCTestCase {
             return Class(
                 name: name,
                 author: "Callum McColl",
-                comment: "this is a global comment.",
+                comment: "This is a global comment.",
                 preamble: "#include <stdint.h>",
                 variables: [
                     Variable(
