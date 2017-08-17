@@ -87,7 +87,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to create a header from \(self.oldClass.name)")
             return
         }
-        //XCTAssertEqual(super.replaceTokens(contents, withDate: self.date), result)
+        super.compareStrings(super.replaceTokens(contents, withDate: self.date), result)
     }
 
     public func test_createSectionsHeader() {
@@ -101,15 +101,7 @@ public class CHeaderCreatorTests: ClassGeneratorTestCase {
             return
         }
         let expectedReplaced = super.replaceTokens(expected, withDate: self.date)
-        if expectedReplaced != result {
-            let elines = expectedReplaced.components(separatedBy: CharacterSet.newlines)
-            let rlines = result.components(separatedBy: CharacterSet.newlines)
-            guard let badLine = zip(elines, rlines).lazy.filter({ $0 != $1 }).first else {
-                fatalError("Cannot get errorneous line.")
-            }
-            print("|" + badLine.0 + "| vs\n" + "|" + badLine.1 + "|")
-        }
-        XCTAssertEqual(expectedReplaced, result)
+        super.compareStrings(expectedReplaced, result)
     }
 
 }
