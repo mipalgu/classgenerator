@@ -63,8 +63,6 @@
 
 #include "gu_util.h"
 
-#include <stdint.h>
-
 #define OLD_NUMBER_OF_VARIABLES 90
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
