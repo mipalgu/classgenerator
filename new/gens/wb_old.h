@@ -63,6 +63,8 @@
 
 #include "gu_util.h"
 
+#include <stdint.h>
+
 #define OLD_NUMBER_OF_VARIABLES 90
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
@@ -533,17 +535,17 @@ struct wb_old
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 /**
- * convert to a description string
+ * Convert to a description string.
  */
 const char* wb_old_description(const struct wb_old* self, char* descString, size_t bufferSize);
 
 /**
- * convert to a string
+ * Convert to a string.
  */
 const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t bufferSize);
 
 /**
- * convert from a string
+ * Convert from a string.
  */
 struct wb_old* wb_old_from_string(struct wb_old* self, const char* str);
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
