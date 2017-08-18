@@ -903,8 +903,8 @@ public class ClassGeneratorTestCase: XCTestCase {
                         comment: "A counter."
                     )
                 ],
-                cExtras: nil,
-                cppExtras: "int f() {\n    return c + 2;\n}",
+                cExtras: "int f() {\n    return c + 1;\n}",
+                cppExtras: "int g() {\n    return c + 2;\n}",
                 swiftExtras: "extension wb_sections: ExternalVariables {}"
             )
         }

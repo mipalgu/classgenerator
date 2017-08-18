@@ -9,9 +9,15 @@ int c = 2 // A counter.
 -comment
 This is a global comment.
 
--c++
+-c
 
 int f() {
+    return c + 1;
+}
+
+-c++
+
+int g() {
     return c + 2;
 }
 
