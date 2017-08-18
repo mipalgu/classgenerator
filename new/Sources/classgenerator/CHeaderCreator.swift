@@ -221,10 +221,22 @@ public final class CHeaderCreator: ErrorContainer {
                 }
                 return "ARRAY_PROPERTY("
                     + cType
+                    + ", \(label)"
                     + ", \(className.uppercased())_\(label.uppercased())_"
                     + "\(0 == level ? "" : "\(level)_")ARRAY_SIZE)"
+            case .pointer:
+                return "PROPERTY(" + cType + self.createPointers(forType: type) + ", " + label + ")"
             default:
                 return "PROPERTY(" + cType + ", " + label + ")"
+        }
+    }
+
+    fileprivate func createPointers(forType type: VariableTypes) -> String {
+        switch type {
+            case .pointer(let subtype):
+                return self.createPointers(forType: subtype) + "*"
+            default:
+                return ""
         }
     }
 
