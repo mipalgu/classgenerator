@@ -81,6 +81,7 @@ extension Class: Equatable {}
 public func == (lhs: Class, rhs: Class) -> Bool {
     return lhs.name == rhs.name
         && lhs.author == rhs.author
+        && lhs.comment == rhs.comment
         && lhs.preamble == rhs.preamble
         && lhs.variables == rhs.variables
         && lhs.cExtras == rhs.cExtras

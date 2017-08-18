@@ -890,7 +890,7 @@ public class ClassGeneratorTestCase: XCTestCase {
             return Class(
                 name: name,
                 author: "Callum McColl",
-                comment: "this is a global comment.",
+                comment: "This is a global comment.",
                 preamble: "#include <stdint.h>",
                 variables: [
                     Variable(
@@ -918,6 +918,18 @@ public class ClassGeneratorTestCase: XCTestCase {
             formatter.dateFormat = "yyyy"
             let replaced = temp2.replacingOccurrences(of: "%year%", with: formatter.string(from: date))
             return replaced
+        }
+
+        func compareStrings(_ lhs: String, _ rhs: String) {
+            if lhs != rhs {
+                let llines = lhs.components(separatedBy: CharacterSet.newlines)
+                let rlines = rhs.components(separatedBy: CharacterSet.newlines)
+                guard let badLine = zip(llines, rlines).lazy.filter({ $0 != $1 }).first else {
+                    fatalError("Cannot get errorneous line.")
+                }
+                print("|" + badLine.0 + "| vs\n" + "|" + badLine.1 + "|")
+            }
+            XCTAssertEqual(lhs, rhs)
         }
 
 }
