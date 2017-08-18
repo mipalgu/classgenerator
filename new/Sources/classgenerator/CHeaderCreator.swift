@@ -103,17 +103,17 @@ public final class CHeaderCreator: ErrorContainer {
         defs += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION\n"
         defs += "#define \(cls.name.uppercased())_DESC_BUFFER_SIZE 13046\n"
         defs += "#define \(cls.name.uppercased())_TO_STRING_BUFFER_SIZE 12742\n"
-        defs += "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION"
+        defs += "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION\n"
         for v in cls.variables {
             switch v.type {
                 case .array(_, let count):
-                    defs += "#define \(cls.name.uppercased())_\(v.label.uppercased())_ARRAY_SIZE \(count)\n"
+                    defs += "\n#define \(cls.name.uppercased())_\(v.label.uppercased())_ARRAY_SIZE \(count)"
                 default:
                     continue
             }
         }
         let preamble = nil == cls.preamble ? "" : cls.preamble! + "\n\n"
-        return comment + "\n\n" + head + "\n\n" + preamble + defs
+        return comment + "\n\n" + head + "\n\n" + preamble + defs.trimmingCharacters(in: .newlines)
     }
 
     //swiftlint:disable:next function_body_length
