@@ -1,3 +1,9 @@
+-c
+
+int f() {
+    return c + 1;
+}
+
 -comment
 This is a global comment.
 
@@ -9,7 +15,7 @@ int c = 2 // A counter.
 
 -c++
 
-int f() {
+int g() {
     return c + 2;
 }
 

@@ -903,8 +903,8 @@ public class ClassGeneratorTestCase: XCTestCase {
                         comment: "A counter."
                     )
                 ],
-                cExtras: nil,
-                cppExtras: "int f() {\n    return c + 2;\n}",
+                cExtras: "int f() {\n    return c + 1;\n}",
+                cppExtras: "int g() {\n    return c + 2;\n}",
                 swiftExtras: "extension wb_sections: ExternalVariables {}"
             )
         }
@@ -924,10 +924,10 @@ public class ClassGeneratorTestCase: XCTestCase {
             if lhs != rhs {
                 let llines = lhs.components(separatedBy: CharacterSet.newlines)
                 let rlines = rhs.components(separatedBy: CharacterSet.newlines)
-                guard let badLine = zip(llines, rlines).lazy.filter({ $0 != $1 }).first else {
+                guard let badLine = zip(llines, rlines).lazy.enumerated().filter({ $0.1.0 != $0.1.1 }).first else {
                     fatalError("Cannot get errorneous line.")
                 }
-                print("|" + badLine.0 + "| vs\n" + "|" + badLine.1 + "|")
+                print("\nline: \(badLine.0)|" + badLine.1.0 + "| vs\n" + "|" + badLine.1.1 + "|")
             }
             XCTAssertEqual(lhs, rhs)
         }

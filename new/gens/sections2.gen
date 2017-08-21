@@ -10,9 +10,15 @@ This is a global comment.
 
 extension wb_sections: ExternalVariables {}
 
--c++
+-c
 
 int f() {
+    return c + 1;
+}
+
+-c++
+
+int g() {
     return c + 2;
 }
 
