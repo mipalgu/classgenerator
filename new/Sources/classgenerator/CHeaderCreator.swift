@@ -66,10 +66,16 @@ public final class CHeaderCreator: ErrorContainer {
         return self.errors.last
     }
 
+    fileprivate let calculator: BufferSizeCalculator
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let helpers: StringHelpers
 
-    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), helpers: StringHelpers = StringHelpers()) {
+    public init(
+        calculator: BufferSizeCalculator = BufferSizeCalculator(),
+        creatorHelpers: CreatorHelpers = CreatorHelpers(),
+        helpers: StringHelpers = StringHelpers()
+    ) {
+        self.calculator = calculator
         self.creatorHelpers = creatorHelpers
         self.helpers = helpers
     }
@@ -99,8 +105,8 @@ public final class CHeaderCreator: ErrorContainer {
 
             #include "gu_util.h"
             """
-        let toStringSize = self.creatorHelpers.getToStringBufferSize(fromVariables: cls.variables)
-        let descBufferSize = self.creatorHelpers.getDescriptionBufferSize(
+        let toStringSize = self.calculator.getToStringBufferSize(fromVariables: cls.variables)
+        let descBufferSize = self.calculator.getDescriptionBufferSize(
             fromVariables: cls.variables,
             withToStringBufferSize: toStringSize
         )

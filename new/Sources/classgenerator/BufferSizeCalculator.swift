@@ -132,8 +132,13 @@ public final class BufferSizeCalculator {
         if true == vars.isEmpty {
             return 0
         }
-        return (vars.count - 1) * 2 + vars.reduce(0) {
-            $0 + (self.lengths[$1.cType] ?? 255)
+        return (vars.count - 1) * 2 + 1 + vars.reduce(0) {
+            switch $1.type {
+                case .array, .pointer, .unknown:
+                    return $0 + 255
+                default:
+                    return $0 + (self.lengths[$1.cType] ?? 255)
+            }
         }
     }
 }
