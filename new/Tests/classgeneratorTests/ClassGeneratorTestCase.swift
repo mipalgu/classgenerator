@@ -927,7 +927,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 guard let badLine = zip(llines, rlines).lazy.enumerated().filter({ $0.1.0 != $0.1.1 }).first else {
                     fatalError("Cannot get errorneous line.")
                 }
-                print("\nline: \(badLine.0)|" + badLine.1.0 + "| vs\n" + "|" + badLine.1.1 + "|")
+                print("\nline \(badLine.0):\n|" + badLine.1.0 + "| vs\n" + "|" + badLine.1.1 + "|")
             }
             XCTAssertEqual(lhs, rhs)
         }
