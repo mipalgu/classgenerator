@@ -84,4 +84,43 @@ public final class CreatorHelpers {
         return formatter.string(from: self.date)
     }()
 
+/*
+    /**
+     * This determines the description string buffer size
+     * which will be declared as a constant in the generated files
+     * @param toStringbufferSize the size of the toString buffer
+     * @return the size of the buffer
+     */
+    func getDescriptionBufferSize(_ toStringbufferSize: size_t) -> size_t {
+        // total the number of characters in the descrption string
+        var size: size_t = toStringbufferSize
+        size += (inputData.count)      // equals signs
+        //for name in inputData.varName {
+        for i in 0...inputData.count-1 {
+            size += Int(strlen(inputData[i].varName)) // length of the variable names
+        }
+        //print ("maximum number of characters in the description string is : \(size)")
+        return size
+    }
+
+    /**
+     * This determines the tostring buffer size
+     * which will be declared as a constant in the generated files.
+     * It uses information about the variables as stored in the dictionary.
+     * @return the size of the buffer
+     */
+    func getToStringBufferSize() -> size_t {
+        var size: size_t = 0
+        size += (inputData.count-1) * 2 // commas and spaces
+        for i in 0...inputData.count-1 {
+            if let typeLength = variables["\(inputData[i].varType)"]?.length {
+                size += typeLength
+            } else {
+                size += 255
+            }
+        }
+        return size + 1
+    }
+*/
+
 }
