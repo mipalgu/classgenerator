@@ -84,43 +84,34 @@ public final class CreatorHelpers {
         return formatter.string(from: self.date)
     }()
 
-/*
     /**
-     * This determines the description string buffer size
-     * which will be declared as a constant in the generated files
-     * @param toStringbufferSize the size of the toString buffer
-     * @return the size of the buffer
+     * This determines the description string buffer size which will be declared
+     * as a constant in the generated files.
+     *
+     * - Paramter vars: The array of variables that the `Class` contains.
+     *
+     * - Parameter buffer: The size of the toString buffer.
+     *
+     * - Returns: The size of the buffer.
      */
-    func getDescriptionBufferSize(_ toStringbufferSize: size_t) -> size_t {
-        // total the number of characters in the descrption string
-        var size: size_t = toStringbufferSize
-        size += (inputData.count)      // equals signs
-        //for name in inputData.varName {
-        for i in 0...inputData.count-1 {
-            size += Int(strlen(inputData[i].varName)) // length of the variable names
-        }
-        //print ("maximum number of characters in the description string is : \(size)")
-        return size
+    func getDescriptionBufferSize(fromVariables vars: [Variable], withToStringBufferSize buffer: Int) -> Int {
+        return vars.count + vars.reduce(buffer) { $0 + $1.label.characters.count }
     }
 
     /**
-     * This determines the tostring buffer size
-     * which will be declared as a constant in the generated files.
-     * It uses information about the variables as stored in the dictionary.
-     * @return the size of the buffer
+     * This determines the tostring buffer size which will be declared as a
+     * constant in the generated files. It uses information about the variables
+     * as stored in the dictionary.
+     *
+     * - Paramter vars: The array of variables that the `Class` contains.
+     *
+     * - Returns: The size of the buffer.
      */
-    func getToStringBufferSize() -> size_t {
-        var size: size_t = 0
-        size += (inputData.count-1) * 2 // commas and spaces
-        for i in 0...inputData.count-1 {
-            if let typeLength = variables["\(inputData[i].varType)"]?.length {
-                size += typeLength
-            } else {
-                size += 255
-            }
+    func getToStringBufferSize(fromVariables vars: [Variable]) -> Int {
+        if true == vars.isEmpty {
+            return 0
         }
-        return size + 1
+        return (vars.count - 1) * 2 + vars.reduce(0) { $0 + $1.cType.characters.count }
     }
-*/
 
 }

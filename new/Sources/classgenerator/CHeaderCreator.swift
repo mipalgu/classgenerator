@@ -99,10 +99,15 @@ public final class CHeaderCreator: ErrorContainer {
 
             #include "gu_util.h"
             """
+        let toStringSize = self.creatorHelpers.getToStringBufferSize(fromVariables: cls.variables)
+        let descBufferSize = self.creatorHelpers.getDescriptionBufferSize(
+            fromVariables: cls.variables,
+            withToStringBufferSize: toStringSize
+        )
         var defs = "#define \(cls.name.uppercased())_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
         defs += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION\n"
-        defs += "#define \(cls.name.uppercased())_DESC_BUFFER_SIZE 13046\n"
-        defs += "#define \(cls.name.uppercased())_TO_STRING_BUFFER_SIZE 12742\n"
+        defs += "#define \(cls.name.uppercased())_DESC_BUFFER_SIZE \(descBufferSize)\n"
+        defs += "#define \(cls.name.uppercased())_TO_STRING_BUFFER_SIZE \(toStringSize)\n"
         defs += "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION\n"
         for v in cls.variables {
             switch v.type {
