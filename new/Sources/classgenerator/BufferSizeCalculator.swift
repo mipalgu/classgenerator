@@ -132,7 +132,7 @@ public final class BufferSizeCalculator {
         if true == vars.isEmpty {
             return 0
         }
-        return (vars.count - 1) * 2 + 1 + vars.reduce(0) {
+        return (vars.count - 1) * 2 + vars.reduce(1) {
             switch $1.type {
                 case .array, .pointer, .unknown:
                     return $0 + 255
