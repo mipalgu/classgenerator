@@ -64,6 +64,7 @@ public class CFileCreatorTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (CFileCreatorTests) -> () throws -> Void)] {
         return [
+            ("test_isBackwardsCompatible", test_isBackwardsCompatible)
         ]
     }
 
@@ -74,6 +75,18 @@ public class CFileCreatorTests: ClassGeneratorTestCase {
     public override func setUp() {
         self.date = Date()
         self.creator = CFileCreator(creatorHelpers: CreatorHelpers(date: self.date))
+    }
+
+    public func test_isBackwardsCompatible() {
+        guard let contents = try? String(contentsOfFile: "gens/wb_old.c") else {
+            XCTFail("Unable to read contents of wb_old.c")
+            return
+        }
+        guard let result = self.creator.createCFile(forClass: self.oldClass, generatedFrom: "old.txt") else {
+            XCTFail("Unable to create a header grom \(self.oldClass.name)")
+            return
+        }
+        super.compareStrings(super.replaceTokens(contents, withDate: self.date), result)
     }
 
 }
