@@ -61,9 +61,11 @@ import Foundation
 public final class CreatorHelpers {
 
     fileprivate let date: Date
+    fileprivate let helpers: StringHelpers
 
-    public init(date: Date = Date()) {
+    public init(date: Date = Date(), helpers: StringHelpers = StringHelpers()) {
         self.date = date
+        self.helpers = helpers
     }
 
     public lazy var currentDate: String = {
@@ -151,6 +153,12 @@ public final class CreatorHelpers {
              *
              */
             """
+    }
+
+    public func createStructName(forClassNamed className: String) -> String {
+        return "wb_" + self.helpers.toSnakeCase(String(className.characters.lazy.map {
+            self.helpers.isAlphaNumeric($0) ? $0 : "_"
+        }))
     }
 
 }

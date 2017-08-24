@@ -81,14 +81,12 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     public func createCHeader(forClass cls: Class, generatedFrom genfile: String) -> String? {
-        let sanitisedClassName = "wb_" + self.helpers.toSnakeCase(String(cls.name.characters.lazy.map {
-            self.helpers.isAlphaNumeric($0) ? $0 : "_"
-        }))
-        guard let strct = self.createStruct(forClass: cls, withSanitisedClassName: sanitisedClassName) else {
+        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+        guard let strct = self.createStruct(forClass: cls, withStructName: structName) else {
             return nil
         }
-        let head = self.createHead(forFileNamed: sanitisedClassName + ".h", withClass: cls, andGenFile: genfile)
-        let tail = self.createTail(withClassNamed: sanitisedClassName)
+        let head = self.createHead(forFileNamed: structName + ".h", withClass: cls, andGenFile: genfile)
+        let tail = self.createTail(withClassNamed: structName)
         return head + "\n\n" + strct + "\n\n" + tail + "\n"
     }
 
@@ -131,7 +129,7 @@ public final class CHeaderCreator: ErrorContainer {
         return comment + "\n\n" + head + "\n\n" + preamble + defs.trimmingCharacters(in: .newlines)
     }
 
-    fileprivate func createStruct(forClass cls: Class, withSanitisedClassName name: String) -> String? {
+    fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
         let start = self.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
         var properties: String = ""
         for v in cls.variables {
