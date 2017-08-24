@@ -59,13 +59,13 @@
  */
 
 #define WHITEBOARD_POSTER_STRING_CONVERSION
-#include "wb_old.h" 
-#include <stdio.h> 
-#include <string.h> 
-#include <stdlib.h> 
+#include "wb_old.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-/** convert to a description string */  
-const char* wb_old_description(const struct wb_old* self, char* descString, size_t bufferSize) 
+/** convert to a description string */
+const char* wb_old_description(const struct wb_old* self, char* descString, size_t bufferSize)
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
