@@ -64,23 +64,25 @@
 #include <string.h>
 #include <stdlib.h>
 
-/** convert to a description string */
+/**
+ * Convert to a description string.
+ */
 const char* wb_old_description(const struct wb_old* self, char* descString, size_t bufferSize)
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
-    size_t len = 0; 
+    size_t len = 0;
 
-    snprintf(descString, bufferSize, "str=%s", self->str); 
-    len = gu_strlcat(descString, ", ", bufferSize); 
+    snprintf(descString, bufferSize, "str=%s", self->str);
+    len = gu_strlcat(descString, ", ", bufferSize);
 
-    if (len < bufferSize) 
-    { 
-        gu_strlcat(descString, "b=", bufferSize); 
-        gu_strlcat(descString, self->b ? "true" : "false", bufferSize); 
-    } 
+    if (len < bufferSize)
+    {
+        gu_strlcat(descString, "b=", bufferSize);
+        gu_strlcat(descString, self->b ? "true" : "false", bufferSize);
+    }
 
-    len = gu_strlcat(descString, ", ", bufferSize); 
+    len = gu_strlcat(descString, ", ", bufferSize);
 
     if (len < bufferSize) 
     { 
