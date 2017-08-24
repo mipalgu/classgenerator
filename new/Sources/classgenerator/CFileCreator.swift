@@ -65,7 +65,13 @@ public final class CFileCreator {
     }
 
     public func createCFile(forClass cls: Class, generatedFrom genFile: String) -> String? {
-        return nil
+        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+        let comment = self.creatorHelpers.createFileComment(
+            forFile: structName + ".c",
+            withAuthor: cls.author,
+            andGenFile: genFile
+        )
+        return comment
     }
 
 }
