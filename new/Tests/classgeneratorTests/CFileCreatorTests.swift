@@ -1,6 +1,6 @@
 /*
- * CFileCreator.swift 
- * classgenerator 
+ * CFileCreatorTests.swift 
+ * classgeneratorTests 
  *
  * Created by Callum McColl on 24/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
@@ -56,16 +56,24 @@
  *
  */
 
-public final class CFileCreator {
+import Foundation
+@testable import classgenerator
+import XCTest
 
-    fileprivate let creatorHelpers: CreatorHelpers
+public class CFileCreatorTests: ClassGeneratorTestCase {
 
-    public init(creatorHelpers: CreatorHelpers = CreatorHelpers()) {
-        self.creatorHelpers = creatorHelpers
+    public static var allTests: [(String, (CFileCreatorTests) -> () throws -> Void)] {
+        return [
+        ]
     }
 
-    public func createCFile(forClass cls: Class, generatedFrom genFile: String) -> String? {
-        return nil
+    public var date: Date!
+
+    public var creator: CFileCreator!
+
+    public override func setUp() {
+        self.date = Date()
+        self.creator = CFileCreator(creatorHelpers: CreatorHelpers(date: self.date))
     }
 
 }
