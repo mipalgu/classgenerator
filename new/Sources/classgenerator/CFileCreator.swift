@@ -72,7 +72,8 @@ public final class CFileCreator {
             andGenFile: genFile
         )
         let head = self.createHead(forStructNamed: structName)
-        return comment + "\n\n" + head
+        let descriptionFunc = self.createDescriptionFunction(forClass: cls, withStructNamed: structName)
+        return comment + "\n\n" + head + "\n\n" + descriptionFunc
     }
 
     fileprivate func createHead(forStructNamed structName: String) -> String {
@@ -83,6 +84,39 @@ public final class CFileCreator {
             #include <string.h>
             #include <stdlib.h>
             """
+    }
+
+    fileprivate func createDescriptionFunction(forClass cls: Class, withStructNamed structName: String) -> String {
+        let comment = """
+            /**
+             * Convert to a description string.
+             */
+            """
+        //swiftlint:disable:next line_length
+        let definition = "const char* \(structName)_description(const struct \(structName)* self, char* descString, size_t bufferSize)\n{"
+        let head = """
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wunused-variable"
+                size_t len = 0;
+            """
+        let vars = cls.variables.reduce("") {
+            switch $1.type {
+                case .array:
+                    return $0
+                default:
+                    guard let format: String = nil else {
+                        return $0
+                    }
+                    return $0 + "\n" + """
+                        if (len < bufferSize)
+                        {
+                            \(format)
+                        }
+                        """
+            }
+        }
+        let endDefinition = "}"
+        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition
     }
 
 }
