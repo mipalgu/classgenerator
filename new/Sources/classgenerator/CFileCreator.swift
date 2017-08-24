@@ -71,7 +71,18 @@ public final class CFileCreator {
             withAuthor: cls.author,
             andGenFile: genFile
         )
-        return comment
+        let head = self.createHead(forStructNamed: structName)
+        return comment + "\n\n" + head
+    }
+
+    fileprivate func createHead(forStructNamed structName: String) -> String {
+        return """
+            #define WHITEBOARD_POSTER_STRING_CONVERSION
+            #include "\(structName).h"
+            #include <stdio.h>
+            #include <string.h>
+            #include <stdlib.h>
+            """
     }
 
 }
