@@ -104,7 +104,7 @@ public final class CFileCreator {
             self.createGuard() + "\n" + $0
         }
         let vars = "    " + guardedDescriptions.combine("") {
-            $0 + "\n" + $1
+            $0 + "\n" + self.createComma() + "\n" + $1
         }.replacingOccurrences(of: "\n", with: "\n    ")
         let endDefinition = "}"
         let returnStatement = "return descString;"
@@ -117,6 +117,10 @@ public final class CFileCreator {
                 return descString;
             }
             """
+    }
+
+    fileprivate func createComma() -> String {
+        return "len = gu_strlcat(descString, \", \", bufferSize);"
     }
 
     fileprivate func createDescription(forVariable variable: Variable) -> String? {
@@ -149,7 +153,7 @@ public final class CFileCreator {
                     int \(arrLabel)_first = 0;
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < OLD_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
                         if (1 == \(arrLabel)_first) {
-                            len = gu_strlcat(descString, ",", bufferSize);
+                            \(self.createComma())
                         }
                         \(value)
                         \(arrLabel)_first = 1;
