@@ -128,3 +128,25 @@ extension Sequence {
     }
 
 }
+
+extension Sequence where
+    Self.SubSequence: Sequence,
+    Self.SubSequence.Iterator.Element == Self.Iterator.Element,
+    Self.SubSequence.SubSequence: Sequence,
+    Self.SubSequence.SubSequence.Iterator.Element == Self.Iterator.Element
+{
+
+    public func combine(
+        _ failSafe: Self.Iterator.Element,
+        _ transform: (Self.Iterator.Element, Self.Iterator.Element) -> Self.Iterator.Element
+    ) -> Self.Iterator.Element {
+        guard
+            let first = self.first(where: { _ in true }),
+            let second = self.dropFirst().first(where: { _ in true })
+        else {
+            return failSafe
+        }
+        return self.dropFirst().dropFirst().reduce(transform(first, second), transform)
+    }
+
+}

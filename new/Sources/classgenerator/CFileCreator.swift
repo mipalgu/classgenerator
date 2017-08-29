@@ -103,14 +103,9 @@ public final class CFileCreator {
         let guardedDescriptions = descriptions.map {
             self.createGuard() + "\n" + $0
         }
-        let vars: String
-        if let first = guardedDescriptions.first {
-            vars = guardedDescriptions.dropFirst().reduce("    " + first) {
-                $0 + "\n" + $1
-            }.replacingOccurrences(of: "\n", with: "\n    ")
-        } else {
-            vars = ""
-        }
+        let vars = "    " + guardedDescriptions.combine("") {
+            $0 + "\n" + $1
+        }.replacingOccurrences(of: "\n", with: "\n    ")
         let endDefinition = "}"
         let returnStatement = "return descString;"
         return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition + "\n" + returnStatement
