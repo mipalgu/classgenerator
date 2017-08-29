@@ -99,24 +99,113 @@ public final class CFileCreator {
             #pragma clang diagnostic ignored "-Wunused-variable"
                 size_t len = 0;
             """
-        let vars = cls.variables.reduce("") {
-            switch $1.type {
-                case .array:
-                    return $0
-                default:
-                    guard let format: String = nil else {
-                        return $0
-                    }
-                    return $0 + "\n" + """
-                        if (len < bufferSize)
-                        {
-                            \(format)
-                        }
-                        """
-            }
+        let descriptions = cls.variables.flatMap { self.createDescription(forVariable: $0) }
+        let guardedDescriptions = descriptions.map {
+            self.createGuard() + "\n" + $0
+        }
+        let vars: String
+        if let first = guardedDescriptions.first {
+            vars = guardedDescriptions.dropFirst().reduce("    " + first) {
+                $0 + "\n" + $1
+            }.replacingOccurrences(of: "\n", with: "\n    ")
+        } else {
+            vars = ""
         }
         let endDefinition = "}"
-        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition
+        let returnStatement = "return descString;"
+        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition + "\n" + returnStatement
+    }
+
+    fileprivate func createGuard() -> String {
+        return """
+            if (len >= bufferSize) {
+                return descString;
+            }
+            """
+    }
+
+    fileprivate func createDescription(forVariable variable: Variable) -> String? {
+        return self.createDescription(forType: variable.type, withLabel: variable.label)
+    }
+
+    fileprivate func createArrayDescription(
+        forType type: VariableTypes,
+        withLabel label: String,
+        _ level: Int = 0
+    ) -> String? {
+        switch type {
+            case .array(let subtype, _):
+                let arrLabel = 0 == level ? label : label + "_\(level)"
+                let temp: String?
+                switch subtype {
+                    case .array:
+                        temp = self.createArrayDescription(forType: subtype, withLabel: label, level + 1)
+                    default:
+                        temp = self.createDescription(
+                            forType: subtype,
+                            withLabel: self.createIndexes(forLabel: label, level)
+                        )
+                }
+                guard let value = temp else {
+                    return nil
+                }
+                //swiftlint:disable line_length
+                return """
+                    int \(arrLabel)_first = 0;
+                    for (int \(arrLabel)_index = 0; \(arrLabel)_index < OLD_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
+                        if (1 == \(arrLabel)_first) {
+                            len = gu_strlcat(descString, ",", bufferSize);
+                        }
+                        \(value)
+                        \(arrLabel)_first = 1;
+                    }
+                    len = gu_strlcat(descString, "}", bufferSize);
+                    """
+            default:
+                return self.createDescription(forType: type, withLabel: label)
+        }
+    }
+
+    fileprivate func createIndexes(forLabel label: String, _ level: Int) -> String {
+        return Array(0...level).map { "[\($0)]" }.reduce("self->\(label)", +)
+    }
+
+    fileprivate func createDescription(forType type: VariableTypes, withLabel label: String) -> String? {
+        switch type {
+            case .array:
+                return self.createArrayDescription(forType: type, withLabel: label)
+            case .bool:
+                return """
+                    gu_strlcat(descString, self->\(label) ? "true" : "false", bufferSize);
+                    """
+            case .char:
+                return self.createSNPrintf(forLabel: label, withFormat: "c")
+            case .numeric(let numericType):
+                return self.createSNPrintf(forLabel: label, withFormat: self.createFormat(forNumericType: numericType))
+            case .string:
+                return self.createSNPrintf(forLabel: label, withFormat: "s")
+            default:
+                return nil
+        }
+    }
+
+    fileprivate func createSNPrintf(forLabel label: String, withFormat format: String) -> String {
+        return "len += snprintf(descString + len, bufferSize - len, \"\(label)=%\(format)\", self->\(label))"
+    }
+
+    fileprivate func createFormat(forNumericType type: NumericTypes) -> String {
+        switch type {
+            case .double:
+                return "lf"
+            case .float:
+                return "f"
+            case .long(let subtype):
+                return "l" + self.createFormat(forNumericType: subtype)
+            case .signed:
+                return "d"
+            case .unsigned:
+                return "u"
+        }
     }
 
 }
