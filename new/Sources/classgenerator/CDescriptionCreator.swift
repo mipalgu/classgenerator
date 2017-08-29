@@ -142,7 +142,7 @@ public final class CDescriptionCreator {
                         if (1 == \(arrLabel)_first) {
                             \(self.createComma())
                         }
-                        \(value)
+                    \(self.stringHelpers.indent(value))
                         \(arrLabel)_first = 1;
                     }
                     len = gu_strlcat(descString, "}", bufferSize);
