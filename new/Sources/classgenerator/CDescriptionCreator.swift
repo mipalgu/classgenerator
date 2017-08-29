@@ -83,9 +83,9 @@ public final class CDescriptionCreator {
         let guardedDescriptions = descriptions.map {
             self.createGuard() + "\n" + $0
         }
-        let vars = "    " + guardedDescriptions.combine("") {
-            $0 + "\n" + self.createComma() + "\n" + $1
-        }.replacingOccurrences(of: "\n", with: "\n    ")
+        let vars = self.stringHelpers.indent(guardedDescriptions.combine("") {
+            $0 + "\n" + self.createGuard() + "\n" + self.createComma() + "\n" + $1
+        })
         let endDefinition = "}"
         let returnStatement = "return descString;"
         return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition + "\n" + returnStatement
@@ -139,12 +139,14 @@ public final class CDescriptionCreator {
                 return """
                     int \(arrLabel)_first = 0;
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
+                    \(self.stringHelpers.indent(self.createGuard()))
                         if (1 == \(arrLabel)_first) {
                             \(self.createComma())
                         }
                     \(self.stringHelpers.indent(value))
                         \(arrLabel)_first = 1;
                     }
+                    \(self.createGuard())
                     len = gu_strlcat(descString, "}", bufferSize);
                     """
             default:
@@ -162,8 +164,9 @@ public final class CDescriptionCreator {
                 return self.createArrayDescription(forType: type, withLabel: label, andClassName: className)
             case .bool:
                 return """
-                    gu_strlcat(descString, "\(label)=", bufferSize);
-                    gu_strlcat(descString, self->\(label) ? "true" : "false", bufferSize);
+                    len = gu_strlcat(descString, "\(label)=", bufferSize);
+                    \(self.createGuard())
+                    len = gu_strlcat(descString, self->\(label) ? "true" : "false", bufferSize);
                     """
             case .char:
                 return self.createSNPrintf("\(label)=%c", "self->\(label)")
@@ -184,7 +187,7 @@ public final class CDescriptionCreator {
             case .array:
                 return self.createArrayDescription(forType: type, withLabel: label, andClassName: className)
             case .bool:
-                return "gu_strlcat(descString, self->\(label) ? \"true\" : \"false\", bufferSize);"
+                return "len = gu_strlcat(descString, self->\(label) ? \"true\" : \"false\", bufferSize);"
             case .char:
                 return self.createSNPrintf("%c", "self->\(label)")
             case .numeric(let numericType):
