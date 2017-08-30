@@ -59,9 +59,14 @@
 public final class CFileCreator {
 
     fileprivate let creatorHelpers: CreatorHelpers
+    fileprivate let descriptionCreator: CDescriptionCreator
 
-    public init(creatorHelpers: CreatorHelpers = CreatorHelpers()) {
+    public init(
+        creatorHelpers: CreatorHelpers = CreatorHelpers(),
+        descriptionCreator: CDescriptionCreator = CDescriptionCreator()
+    ) {
         self.creatorHelpers = creatorHelpers
+        self.descriptionCreator = descriptionCreator
     }
 
     public func createCFile(forClass cls: Class, generatedFrom genFile: String) -> String? {
@@ -72,7 +77,10 @@ public final class CFileCreator {
             andGenFile: genFile
         )
         let head = self.createHead(forStructNamed: structName)
-        let descriptionFunc = self.createDescriptionFunction(forClass: cls, withStructNamed: structName)
+        let descriptionFunc = self.descriptionCreator.createDescriptionFunction(
+            forClass: cls,
+            withStructNamed: structName
+        )
         return comment + "\n\n" + head + "\n\n" + descriptionFunc
     }
 
@@ -84,39 +92,6 @@ public final class CFileCreator {
             #include <string.h>
             #include <stdlib.h>
             """
-    }
-
-    fileprivate func createDescriptionFunction(forClass cls: Class, withStructNamed structName: String) -> String {
-        let comment = """
-            /**
-             * Convert to a description string.
-             */
-            """
-        //swiftlint:disable:next line_length
-        let definition = "const char* \(structName)_description(const struct \(structName)* self, char* descString, size_t bufferSize)\n{"
-        let head = """
-            #pragma clang diagnostic push
-            #pragma clang diagnostic ignored "-Wunused-variable"
-                size_t len = 0;
-            """
-        let vars = cls.variables.reduce("") {
-            switch $1.type {
-                case .array:
-                    return $0
-                default:
-                    guard let format: String = nil else {
-                        return $0
-                    }
-                    return $0 + "\n" + """
-                        if (len < bufferSize)
-                        {
-                            \(format)
-                        }
-                        """
-            }
-        }
-        let endDefinition = "}"
-        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition
     }
 
 }

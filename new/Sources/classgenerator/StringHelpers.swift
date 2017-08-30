@@ -60,6 +60,11 @@ import Foundation
 
 public final class StringHelpers {
 
+    public func indent(_ str: String, _ level: Int = 1) -> String {
+        let indent = String([Character](repeating: " ", count: 4 * level))
+        return indent + str.replacingOccurrences(of: "\n", with: "\n" + indent)
+    }
+
     public func isAlphaNumeric(_ char: Character) -> Bool {
         return isNumeric(char) || isLetter(char)
     }
