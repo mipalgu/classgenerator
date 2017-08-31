@@ -62,7 +62,13 @@ public final class StringHelpers {
 
     public func indent(_ str: String, _ level: Int = 1) -> String {
         let indent = String([Character](repeating: " ", count: 4 * level))
-        return indent + str.replacingOccurrences(of: "\n", with: "\n" + indent)
+        let lines = str.components(separatedBy: CharacterSet.newlines)
+        return lines.lazy.map {
+            if $0.trimmingCharacters(in: .whitespaces).isEmpty {
+                return ""
+            }
+            return indent + $0
+        }.combine("") { $0 + "\n" + $1 }
     }
 
     public func isAlphaNumeric(_ char: Character) -> Bool {
