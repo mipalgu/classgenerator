@@ -127,13 +127,29 @@ public final class CPPHeaderCreator {
         withVariables variables: [Variable]
     ) -> String {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
-        return def
+        let content = "public:\n\n" + self.createConstructor(forClassNamed: name, forVariables: variables)
+        return def + "\n\n" + self.stringHelpers.indent(content) + "\n\n}"
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
         let comment = self.creatorHelpers.createComment(from: "Provides a C++ wrapper around `\(extendName)`.")
         let def = "class \(name): public \(extendName) {"
         return comment + "\n" + def
+    }
+
+    fileprivate func createConstructor(forClassNamed name: String, forVariables variables: [Variable]) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
+        let startdef = "\(name)("
+        let list = variables.map {
+            "\($0.cType) \($0.label) = \($0.defaultValue)"
+        }.combine("") { $0 + ", " + $1 }
+        let def = startdef + list + ") {"
+        let setters = variables.map {
+            "set_\($0.label)(\($0.label));"
+        }.combine("") {
+            $0 + "\n" + $1
+        }
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
 
 }
