@@ -114,13 +114,24 @@ public final class CPPHeaderCreator {
         withVariables variables: [Variable]
     ) -> String {
         let namespace = "namespace guWhiteboard {"
-        let classDef = self.createClassDefinition(forClassNamed: className, extending: structName)
+        let content = self.stringHelpers.indent(
+            self.createClassContent(forClassNamed: className, extending: structName, withVariables: variables)
+        )
         let endNamespace = "}"
-        return namespace + "\n\n" + classDef + "\n\n" + endNamespace
+        return namespace + "\n\n" + content + "\n\n" + endNamespace
+    }
+
+    fileprivate func createClassContent(
+        forClassNamed name: String,
+        extending extendName: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
+        return def
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
-        let comment = self.creatorHelpers.createComment(from: "This is a test.")
+        let comment = self.creatorHelpers.createComment(from: "Provides a C++ wrapper around `\(extendName)`.")
         let def = "class \(name): public \(extendName) {"
         return comment + "\n" + def
     }
