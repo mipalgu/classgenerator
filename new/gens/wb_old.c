@@ -72,345 +72,746 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
     size_t len = 0;
-
-    snprintf(descString, bufferSize, "str=%s", self->str);
-    len = gu_strlcat(descString, ", ", bufferSize);
-
-    if (len < bufferSize)
-    {
-        gu_strlcat(descString, "b=", bufferSize);
-        gu_strlcat(descString, self->b ? "true" : "false", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
     }
-
+    len += snprintf(descString + len, bufferSize - len, "str=%s", self->str);
+    if (len >= bufferSize) {
+        return descString;
+    }
     len = gu_strlcat(descString, ", ", bufferSize);
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "c=%c", self->c); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i=%d", self->i); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "si=%d", self->si); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u=%u", self->u); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u8=%u", self->u8); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u16=%u", self->u16); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u32=%u", self->u32); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u64=%u", self->u64); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i8=%d", self->i8); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i16=%d", self->i16); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i32=%d", self->i32); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i64=%d", self->i64); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "s=%i", self->s); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "l=%ld", self->l); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "l64=%lld", self->l64); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "f=%f", self->f); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "ft=%f", self->ft); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "d=%lf", self->d); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "dt=%lf", self->dt); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "str=%s", self->str); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        gu_strlcat(descString, "b=", bufferSize); 
-        gu_strlcat(descString, self->b ? "true" : "false", bufferSize); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "c=%c", self->c); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i=%d", self->i); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "si=%d", self->si); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u=%u", self->u); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u8=%u", self->u8); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u16=%u", self->u16); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u32=%u", self->u32); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "u64=%u", self->u64); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i8=%d", self->i8); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i16=%d", self->i16); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i32=%d", self->i32); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "i64=%d", self->i64); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "s=%i", self->s); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "l=%ld", self->l); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "l64=%lld", self->l64); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "f=%f", self->f); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "ft=%f", self->ft); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "d=%lf", self->d); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        snprintf(descString+len, bufferSize-len, "dt=%lf", self->dt); 
-    } 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        len = gu_strlcat(descString, "array16={", bufferSize); 
-    } 
-
-    int array16_first = 0; 
-
-    for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) 
-    { 
-        if (len < bufferSize) 
-        { 
-            if (array16_first == 1) 
-            { 
-                len = gu_strlcat(descString, ",", bufferSize); 
-            } 
-            snprintf(descString+len, bufferSize-len, "%d", self->array16[i]); 
-        } 
-        array16_first = 1; 
-    } 
-    gu_strlcat(descString, "}", bufferSize); 
-
-    len = gu_strlcat(descString, ", ", bufferSize); 
-
-    if (len < bufferSize) 
-    { 
-        len = gu_strlcat(descString, "bools={", bufferSize); 
-    } 
-
-    int bools_first = 0; 
-
-    for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) 
-    { 
-        if (len < bufferSize) 
-        { 
-            if (bools_first == 1) 
-            { 
-                len = gu_strlcat(descString, ",", bufferSize); 
-            } 
-            gu_strlcat(descString, self->bools[i] ? "true" : "false", bufferSize); 
-        } 
-        bools_first = 1; 
-    } 
-    gu_strlcat(descString, "}", bufferSize); 
-
-	return descString; 
-} 
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "b=", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, self->b ? "true" : "false", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "c=%c", self->c);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sc=%c", self->sc);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "uc=%c", self->uc);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i=%d", self->i);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "si=%d", self->si);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sii=%d", self->sii);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u=%u", self->u);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ui=%u", self->ui);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u8=%u", self->u8);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u16=%u", self->u16);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u32=%u", self->u32);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u64=%u", self->u64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i8=%d", self->i8);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i16=%d", self->i16);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i32=%d", self->i32);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i64=%d", self->i64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "s=%d", self->s);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "si=%d", self->si);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ss=%d", self->ss);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ssi=%d", self->ssi);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "us=%u", self->us);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "usi=%u", self->usi);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "l=%ld", self->l);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "li=%ld", self->li);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sl=%ld", self->sl);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sli=%ld", self->sli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ul=%lu", self->ul);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "uli=%lu", self->uli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ll=%lld", self->ll);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "lli=%lld", self->lli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sll=%lld", self->sll);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "slli=%lld", self->slli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ull=%llu", self->ull);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ulli=%llu", self->ulli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "l64=%lld", self->l64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "f=%f", self->f);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ft=%f", self->ft);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "d=%lf", self->d);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "dt=%lf", self->dt);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ld=%llf", self->ld);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "dd=%llf", self->dd);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "str=%s", self->str);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "b=", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, self->b ? "true" : "false", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "c=%c", self->c);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sc=%c", self->sc);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "uc=%c", self->uc);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i=%d", self->i);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "si=%d", self->si);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sii=%d", self->sii);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u=%u", self->u);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ui=%u", self->ui);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u8=%u", self->u8);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u16=%u", self->u16);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u32=%u", self->u32);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "u64=%u", self->u64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i8=%d", self->i8);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i16=%d", self->i16);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i32=%d", self->i32);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i64=%d", self->i64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "s=%d", self->s);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "si=%d", self->si);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ss=%d", self->ss);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ssi=%d", self->ssi);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "us=%u", self->us);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "usi=%u", self->usi);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "l=%ld", self->l);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "li=%ld", self->li);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sl=%ld", self->sl);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sli=%ld", self->sli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ul=%lu", self->ul);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "uli=%lu", self->uli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ll=%lld", self->ll);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "lli=%lld", self->lli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "sll=%lld", self->sll);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "slli=%lld", self->slli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ull=%llu", self->ull);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ulli=%llu", self->ulli);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "l64=%lld", self->l64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "f=%f", self->f);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ft=%f", self->ft);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "d=%lf", self->d);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "dt=%lf", self->dt);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "ld=%llf", self->ld);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "dd=%llf", self->dd);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "array16={", bufferSize);
+    int array16_first = 0;
+    for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+        if (len >= bufferSize) {
+            return descString;
+        }
+        if (1 == array16_first) {
+            len = gu_strlcat(descString, ", ", bufferSize);
+        }
+        len += snprintf(descString + len, bufferSize - len, "%d", self->array16[array16_index]);
+        array16_first = 1;
+    }
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "}", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "bools={", bufferSize);
+    int bools_first = 0;
+    for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+        if (len >= bufferSize) {
+            return descString;
+        }
+        if (1 == bools_first) {
+            len = gu_strlcat(descString, ", ", bufferSize);
+        }
+        len = gu_strlcat(descString, self->bools[bools_index] ? "true" : "false", bufferSize);
+        bools_first = 1;
+    }
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "}", bufferSize);
+    return descString;
+}
 
 /** convert to a string */  
 const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t bufferSize) 
@@ -419,7 +820,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
 #pragma clang diagnostic ignored "-Wunused-variable"
     size_t len = 0; 
 
-    snprintf(toString, bufferSize, "str=%s", self->str); 
+    len += snprintf(toString, bufferSize, "str=%s", self->str); 
     gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
@@ -432,140 +833,140 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "c=%c", self->c); 
+        len += snprintf(toString + len, bufferSize - len, "c=%c", self->c); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i=%d", self->i); 
+        len += snprintf(toString + len, bufferSize - len, "i=%d", self->i); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "si=%d", self->si); 
+        len += snprintf(toString + len, bufferSize - len, "si=%d", self->si); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u=%u", self->u); 
+        len += snprintf(toString + len, bufferSize - len, "u=%u", self->u); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u8=%u", self->u8); 
+        len += snprintf(toString + len, bufferSize - len, "u8=%u", self->u8); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u16=%u", self->u16); 
+        len += snprintf(toString + len, bufferSize - len, "u16=%u", self->u16); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u32=%u", self->u32); 
+        len += snprintf(toString + len, bufferSize - len, "u32=%u", self->u32); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u64=%u", self->u64); 
+        len += snprintf(toString + len, bufferSize - len, "u64=%u", self->u64); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i8=%d", self->i8); 
+        len += snprintf(toString + len, bufferSize - len, "i8=%d", self->i8); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i16=%d", self->i16); 
+        len += snprintf(toString + len, bufferSize - len, "i16=%d", self->i16); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i32=%d", self->i32); 
+        len += snprintf(toString + len, bufferSize - len, "i32=%d", self->i32); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i64=%d", self->i64); 
+        len += snprintf(toString + len, bufferSize - len, "i64=%d", self->i64); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "s=%i", self->s); 
+        len += snprintf(toString + len, bufferSize - len, "s=%i", self->s); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "l=%ld", self->l); 
+        len += snprintf(toString + len, bufferSize - len, "l=%ld", self->l); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "l64=%lld", self->l64); 
+        len += snprintf(toString + len, bufferSize - len, "l64=%lld", self->l64); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "f=%f", self->f); 
+        len += snprintf(toString + len, bufferSize - len, "f=%f", self->f); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "ft=%f", self->ft); 
+        len += snprintf(toString + len, bufferSize - len, "ft=%f", self->ft); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "d=%lf", self->d); 
+        len += snprintf(toString + len, bufferSize - len, "d=%lf", self->d); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "dt=%lf", self->dt); 
+        len += snprintf(toString + len, bufferSize - len, "dt=%lf", self->dt); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "str=%s", self->str); 
+        len += snprintf(toString + len, bufferSize - len, "str=%s", self->str); 
     } 
 
     gu_strlcat(toString, ", ", bufferSize); 
@@ -580,133 +981,133 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "c=%c", self->c); 
+        len += snprintf(toString + len, bufferSize - len, "c=%c", self->c); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i=%d", self->i); 
+        len += snprintf(toString + len, bufferSize - len, "i=%d", self->i); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "si=%d", self->si); 
+        len += snprintf(toString + len, bufferSize - len, "si=%d", self->si); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u=%u", self->u); 
+        len += snprintf(toString + len, bufferSize - len, "u=%u", self->u); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u8=%u", self->u8); 
+        len += snprintf(toString + len, bufferSize - len, "u8=%u", self->u8); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u16=%u", self->u16); 
+        len += snprintf(toString + len, bufferSize - len, "u16=%u", self->u16); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u32=%u", self->u32); 
+        len += snprintf(toString + len, bufferSize - len, "u32=%u", self->u32); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "u64=%u", self->u64); 
+        len += snprintf(toString + len, bufferSize - len, "u64=%u", self->u64); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i8=%d", self->i8); 
+        len += snprintf(toString + len, bufferSize - len, "i8=%d", self->i8); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i16=%d", self->i16); 
+        len += snprintf(toString + len, bufferSize - len, "i16=%d", self->i16); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i32=%d", self->i32); 
+        len += snprintf(toString + len, bufferSize - len, "i32=%d", self->i32); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "i64=%d", self->i64); 
+        len += snprintf(toString + len, bufferSize - len, "i64=%d", self->i64); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "s=%i", self->s); 
+        len += snprintf(toString + len, bufferSize - len, "s=%i", self->s); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "l=%ld", self->l); 
+        len += snprintf(toString + len, bufferSize - len, "l=%ld", self->l); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "l64=%lld", self->l64); 
+        len += snprintf(toString + len, bufferSize - len, "l64=%lld", self->l64); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "f=%f", self->f); 
+        len += snprintf(toString + len, bufferSize - len, "f=%f", self->f); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "ft=%f", self->ft); 
+        len += snprintf(toString + len, bufferSize - len, "ft=%f", self->ft); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "d=%lf", self->d); 
+        len += snprintf(toString + len, bufferSize - len, "d=%lf", self->d); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
 
     if (len < bufferSize) 
     { 
-        snprintf(toString+len, bufferSize-len, "dt=%lf", self->dt); 
+        len += snprintf(toString + len, bufferSize - len, "dt=%lf", self->dt); 
     } 
 
     len = gu_strlcat(toString, ", ", bufferSize); 
@@ -726,7 +1127,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
             { 
                 len = gu_strlcat(toString, ",", bufferSize); 
             } 
-            snprintf(toString+len, bufferSize-len, "%d", self->array16[i]); 
+            len += snprintf(toString + len, bufferSize - len, "%d", self->array16[i]); 
         } 
         array16_first = 1; 
     } 

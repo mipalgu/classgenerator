@@ -86,6 +86,12 @@ public final class CreatorHelpers {
         return formatter.string(from: self.date)
     }()
 
+    public func createClassName(forClassNamed className: String) -> String {
+        return self.helpers.toCamelCase(String(className.characters.lazy.map {
+            self.helpers.isAlphaNumeric($0) ? $0 : "_"
+        })).capitalized
+    }
+
     //swiftlint:disable:next function_body_length
     public func createFileComment(
         forFile file: String,
