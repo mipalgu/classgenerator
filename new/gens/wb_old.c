@@ -771,44 +771,47 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len = gu_strlcat(descString, "array16={", bufferSize); 
+    len = gu_strlcat(descString, "array16={", bufferSize);
     int array16_first = 0;
-    for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) { 
+    for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
         if (len >= bufferSize) {
             return descString;
         }
-        if (array16_first == 1) { 
-            len = gu_strlcat(descString, ",", bufferSize); 
-        } 
+        if (1 == array16_first) {
+            len = gu_strlcat(descString, ", ", bufferSize);
+        }
         len += snprintf(descString + len, bufferSize - len, "%d", self->array16[array16_index]);
-        array16_first = 1; 
-    } 
-    len = gu_strlcat(descString, "}", bufferSize); 
-    if (len >= bufferSize) {
-        return descString;
-    }
-    len = gu_strlcat(descString, ", ", bufferSize); 
-    if (len >= bufferSize) {
-        return descString;
-    }
-    len = gu_strlcat(descString, "bools={", bufferSize); 
-    int bools_first = 0; 
-    for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-        if (len >= bufferSize) {
-            return descString;
-        }
-        if (bools_first == 1) { 
-            len = gu_strlcat(descString, ",", bufferSize); 
-        } 
-        len = gu_strlcat(descString, self->bools[i] ? "true" : "false", bufferSize); 
-        bools_first = 1; 
+        array16_first = 1;
     }
     if (len >= bufferSize) {
         return descString;
     }
     len = gu_strlcat(descString, "}", bufferSize);
-	return descString; 
-} 
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "bools={", bufferSize);
+    int bools_first = 0;
+    for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+        if (len >= bufferSize) {
+            return descString;
+        }
+        if (1 == bools_first) {
+            len = gu_strlcat(descString, ", ", bufferSize);
+        }
+        len = gu_strlcat(descString, self->bools[bools_index] ? "true" : "false", bufferSize);
+        bools_first = 1;
+    }
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, "}", bufferSize);
+    return descString;
+}
 
 /** convert to a string */  
 const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t bufferSize) 
