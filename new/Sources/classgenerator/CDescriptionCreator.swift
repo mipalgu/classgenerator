@@ -86,9 +86,9 @@ public final class CDescriptionCreator {
         let vars = self.stringHelpers.indent(guardedDescriptions.combine("") {
             $0 + "\n" + self.createGuard() + "\n" + self.createComma() + "\n" + $1
         })
+        let returnStatement = "    return descString;"
         let endDefinition = "}"
-        let returnStatement = "return descString;"
-        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + endDefinition + "\n" + returnStatement
+        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + returnStatement + "\n" + endDefinition
     }
 
     fileprivate func createGuard() -> String {
@@ -137,6 +137,7 @@ public final class CDescriptionCreator {
                 }
                 //swiftlint:disable line_length
                 return """
+                    len = gu_strlcat(descString, "\(arrLabel)={", bufferSize);
                     int \(arrLabel)_first = 0;
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
                     \(self.stringHelpers.indent(self.createGuard()))
