@@ -114,11 +114,9 @@ public final class CPPHeaderCreator {
         withVariables variables: [Variable]
     ) -> String {
         let namespace = "namespace guWhiteboard {"
-        let content = self.stringHelpers.indent(
-            self.createClassContent(forClassNamed: className, extending: structName, withVariables: variables)
-        )
+        let content = self.createClassContent(forClassNamed: className, extending: structName, withVariables: variables)
         let endNamespace = "}"
-        return namespace + "\n\n" + content + "\n\n" + endNamespace
+        return namespace + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + endNamespace
     }
 
     fileprivate func createClassContent(
@@ -127,8 +125,11 @@ public final class CPPHeaderCreator {
         withVariables variables: [Variable]
     ) -> String {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
-        let content = "public:\n\n" + self.createConstructor(forClassNamed: name, forVariables: variables)
-        return def + "\n\n" + self.stringHelpers.indent(content) + "\n\n}"
+        let publicLabel = "public:"
+        let constructor = self.createConstructor(forClassNamed: name, forVariables: variables)
+        let publicContent = constructor
+        let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
+        return def + "\n\n" + publicSection + "\n\n}"
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
