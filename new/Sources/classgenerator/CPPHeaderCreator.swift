@@ -78,7 +78,8 @@ public final class CPPHeaderCreator {
             withAuthor: cls.author,
             generatedFrom: genfile
         )
-        return head
+        let content = self.createClass(named: className, extendingStruct: structName, withVariables: cls.variables)
+        return head + "\n\n" + content
     }
 
     fileprivate func createHead(
@@ -105,6 +106,23 @@ public final class CPPHeaderCreator {
             #include "\(structName).h"
             """
         return comment + "\n\n" + define
+    }
+
+    fileprivate func createClass(
+        named className: String,
+        extendingStruct structName: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let namespace = "namespace guWhiteboard {"
+        let classDef = self.createClassDefinition(forClassNamed: className, extending: structName)
+        let endNamespace = "}"
+        return namespace + "\n\n" + classDef + "\n\n" + endNamespace
+    }
+
+    fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
+        let comment = self.creatorHelpers.createComment(from: "This is a test.")
+        let def = "class \(name): public \(extendName) {"
+        return comment + "\n" + def
     }
 
 }
