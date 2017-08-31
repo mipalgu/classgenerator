@@ -69,15 +69,18 @@
 
 #include "wb_old.h"
 
-namespace guWhiteboard
-{
-    /** 
-     * This is a test of all of the supported types. 
-     */ 
-    class Old: public wb_old 
-    { 
+namespace guWhiteboard {
+
+    /**
+     * Provides a C++ wrapper around `wb_old`.
+     */
+    class Old: public wb_old {
+
     public:
-        /** Constructor */ 
+
+        /**
+         * Create a new `Old`.
+         */
         Old(string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', int i = 1, signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, short s = 1, short int si = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, string str = , bool b = false, char c = 0, signed char sc = 0, unsigned char uc = 0, int i = 0, signed si = 0, signed int sii = 0, unsigned u = 0, unsigned int ui = 0, uint8_t u8 = 0, uint16_t u16 = 0, uint32_t u32 = 0, uint64_t u64 = 0, int8_t i8 = 0, int16_t i16 = 0, int32_t i32 = 0, int64_t i64 = 0, short s = 0, short int si = 0, signed short ss = 0, signed short int ssi = 0, unsigned short us = 0, unsigned short int usi = 0, long l = 0, long int li = 0, signed long sl = 0, signed long int sli = 0, unsigned long ul = 0, unsigned long int uli = 0, long long ll = 0, long long int lli = 0, signed long long sll = 0, signed long long int slli = 0, unsigned long long ull = 0, unsigned long long int ulli = 0, long64_t l64 = 0, float f = 0.0f, float_t ft = 0.0f, double d = 0.0, double_t dt = 0.0, long double ld = 0.0, double double dd = 0.0, int * p = NULL, somestruct strct = somestruct())
         { 
             set_str(str); 
@@ -177,7 +180,9 @@ namespace guWhiteboard
             set_bools(false, 2); 
         } 
 
-        /** Copy Constructor */ 
+        /**
+         * Copy Constructor.
+         */ 
         Old(const Old &other) : wb_old() 
         { 
             set_str(other.str()); 
@@ -277,7 +282,9 @@ namespace guWhiteboard
             set_bools(other.bools(2), 2); 
         } 
 
-        /** Copy Assignment Operator */ 
+        /**
+         * Copy Assignment Operator
+         */
         Old &operator = (const Old &other) 
         { 
             set_str(other.str()); 
@@ -379,7 +386,9 @@ namespace guWhiteboard
         } 
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
-        /** String Constructor */ 
+        /**
+         * String Constructor.
+         */ 
         Old(const std::string &str) { from_string(str.c_str()); }  
 
         std::string description() 
@@ -1800,5 +1809,6 @@ namespace guWhiteboard
         } 
 #endif ///   WHITEBOARD_POSTER_STRING_CONVERSION
     }; 
+
 } /// namespace guWhiteboard 
 #endif /// Old_DEFINED 
