@@ -140,11 +140,11 @@ extension Sequence where
         _ failSafe: Self.Iterator.Element,
         _ transform: (Self.Iterator.Element, Self.Iterator.Element) -> Self.Iterator.Element
     ) -> Self.Iterator.Element {
-        guard
-            let first = self.first(where: { _ in true }),
-            let second = self.dropFirst().first(where: { _ in true })
-        else {
+        guard let first = self.first(where: { _ in true }) else {
             return failSafe
+        }
+        guard let second = self.dropFirst().first(where: { _ in true }) else {
+            return first
         }
         return self.dropFirst().dropFirst().reduce(transform(first, second), transform)
     }

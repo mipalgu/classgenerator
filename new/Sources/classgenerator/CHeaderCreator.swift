@@ -130,7 +130,7 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
-        let start = self.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
+        let start = self.creatorHelpers.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
         var properties: String = ""
         for v in cls.variables {
             guard let p = self.createProperty(
@@ -141,7 +141,7 @@ public final class CHeaderCreator: ErrorContainer {
             ) else {
                 return nil
             }
-            let comment = self.createComment(from: v.comment ?? "", prepend: "    ")
+            let comment = self.creatorHelpers.createComment(from: v.comment ?? "", prepend: "    ")
             properties += comment + "\n    " + p + "\n\n"
         }
         return start + properties + "};"
@@ -182,14 +182,6 @@ public final class CHeaderCreator: ErrorContainer {
             default:
                 return ""
         }
-    }
-
-    fileprivate func createComment(from str: String, prepend: String = "") -> String {
-        let lines = str.components(separatedBy: CharacterSet.newlines)
-        let start = prepend + "/**\n"
-        let end = prepend + " */"
-        let temp = lines.reduce(start) { $0 + prepend + " * " + $1 + "\n" }
-        return temp + end
     }
 
     fileprivate func createTail(withClassNamed name: String) -> String {

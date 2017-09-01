@@ -78,7 +78,8 @@ public final class CPPHeaderCreator {
             withAuthor: cls.author,
             generatedFrom: genfile
         )
-        return head
+        let content = self.createClass(named: className, extendingStruct: structName, withVariables: cls.variables)
+        return head + "\n\n" + content
     }
 
     fileprivate func createHead(
@@ -105,6 +106,51 @@ public final class CPPHeaderCreator {
             #include "\(structName).h"
             """
         return comment + "\n\n" + define
+    }
+
+    fileprivate func createClass(
+        named className: String,
+        extendingStruct structName: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let namespace = "namespace guWhiteboard {"
+        let content = self.createClassContent(forClassNamed: className, extending: structName, withVariables: variables)
+        let endNamespace = "}"
+        return namespace + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + endNamespace
+    }
+
+    fileprivate func createClassContent(
+        forClassNamed name: String,
+        extending extendName: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
+        let publicLabel = "public:"
+        let constructor = self.createConstructor(forClassNamed: name, forVariables: variables)
+        let publicContent = constructor
+        let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
+        return def + "\n\n" + publicSection + "\n\n}"
+    }
+
+    fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Provides a C++ wrapper around `\(extendName)`.")
+        let def = "class \(name): public \(extendName) {"
+        return comment + "\n" + def
+    }
+
+    fileprivate func createConstructor(forClassNamed name: String, forVariables variables: [Variable]) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
+        let startdef = "\(name)("
+        let list = variables.map {
+            "\($0.cType) \($0.label) = \($0.defaultValue)"
+        }.combine("") { $0 + ", " + $1 }
+        let def = startdef + list + ") {"
+        let setters = variables.map {
+            "set_\($0.label)(\($0.label));"
+        }.combine("") {
+            $0 + "\n" + $1
+        }
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
 
 }

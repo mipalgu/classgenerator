@@ -1,8 +1,8 @@
 /*
- * StringHelpers.swift 
- * classgenerator 
+ * CPPHeaderCreatorTests.swift 
+ * classgeneratorTests 
  *
- * Created by Callum McColl on 06/08/2017.
+ * Created by Callum McColl on 31/08/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,87 +57,51 @@
  */
 
 import Foundation
+@testable import classgenerator
+import XCTest
 
-public final class StringHelpers {
+public class CPPHeaderCreatorTests: ClassGeneratorTestCase {
 
-    public func indent(_ str: String, _ level: Int = 1) -> String {
-        let indent = String([Character](repeating: " ", count: 4 * level))
-        let lines = str.components(separatedBy: CharacterSet.newlines)
-        return lines.lazy.map {
-            if $0.trimmingCharacters(in: .whitespaces).isEmpty {
-                return ""
-            }
-            return indent + $0
-        }.combine("") { $0 + "\n" + $1 }
+    public static var allTests: [(String, (CPPHeaderCreatorTests) -> () throws -> Void)] {
+        return [
+            ("test_isBackwardsCompatible", test_isBackwardsCompatible),
+            ("test_createSectionsHeader", test_createSectionsHeader)
+        ]
     }
 
-    public func isAlphaNumeric(_ char: Character) -> Bool {
-        return isNumeric(char) || isLetter(char)
+    public var date: Date!
+
+    public var creator: CPPHeaderCreator!
+
+    public override func setUp() {
+        self.date = Date()
+        self.creator = CPPHeaderCreator(creatorHelpers: CreatorHelpers(date: self.date))
     }
 
-    public func isNumeric(_ char: Character) -> Bool {
-        return char >= "0" && char <= "9"
-    }
-
-    public func isLetter(_ char: Character) -> Bool {
-        return self.isUpperCase(char) || self.isLowerCase(char)
-    }
-
-    public func isLowerCase(_ char: Character) -> Bool {
-        return char >= "a" && char <= "z"
-    }
-
-    public func isUpperCase(_ char: Character) -> Bool {
-        return char >= "A" && char <= "Z"
-    }
-
-    public func isWhitespace(_ char: Character) -> Bool {
-        return CharacterSet.whitespacesAndNewlines.isSuperset(of: CharacterSet(charactersIn: String(char)))
-    }
-
-    public func toCamelCase(_ str: String) -> String {
-        if true == str.isEmpty {
-            return str
+    public func test_isBackwardsCompatible() {
+        guard let contents = try? String(contentsOfFile: "gens/Old.h") else {
+            XCTFail("Unable to open wb_old.h")
+            return
         }
-        var chars: [Character] = ["_"]
-        chars.reserveCapacity(str.characters.count)
-        let _: Character = str.characters.reduce("_") {
-            if $0 != "_" && false == self.isWhitespace($0) {
-                chars.append($1)
-                return $1
-            }
-            chars[chars.count - 1] = self.toUpper($1)
-            return $1
+        guard let result = self.creator.createCPPHeader(forClass: self.oldClass, generatedFrom: "old.txt") else {
+            XCTFail("Unable to create a header from \(self.oldClass.name)")
+            return
         }
-        return String(chars)
+        super.compareStrings(super.replaceTokens(contents, withDate: self.date), result)
     }
 
-    public func toSnakeCase(_ str: String) -> String {
-        var chars = String.CharacterView()
-        chars.reserveCapacity(str.characters.count)
-        let _: Character = str.characters.reduce("_") {
-            let isWhitespace = true == self.isWhitespace($1)
-            guard true == self.isUpperCase($1) || true == self.isNumeric($1) || true == isWhitespace else {
-                chars.append($1)
-                return $1
-            }
-            if $0 != "_" && false == self.isWhitespace($0) {
-                chars.append("_")
-            }
-            if false == isWhitespace {
-                chars.append(self.toLower($1))
-            }
-            return $1
+    public func test_createSectionsHeader() {
+        guard let expected = try? String(contentsOfFile: "gens/Sections.h") else {
+            XCTFail("Unable to read contents of gens/wb_sections.h")
+            return
         }
-        return String(chars)
-    }
-
-    public func toLower(_ char: Character) -> Character {
-        return String(char).lowercased().characters.first!
-    }
-
-    public func toUpper(_ char: Character) -> Character {
-        return String(char).uppercased().characters.first!
+        let cls = super.createSectionsClass("sections")
+        guard let result = self.creator.createCPPHeader(forClass: cls, generatedFrom: "sections.gen") else {
+            XCTFail("Unable to create a header from \(cls.name)")
+            return
+        }
+        let expectedReplaced = super.replaceTokens(expected, withDate: self.date)
+        super.compareStrings(expectedReplaced, result)
     }
 
 }

@@ -92,6 +92,14 @@ public final class CreatorHelpers {
         })).capitalized
     }
 
+    public func createComment(from str: String, prepend: String = "") -> String {
+        let lines = str.components(separatedBy: CharacterSet.newlines)
+        let start = prepend + "/**\n"
+        let end = prepend + " */"
+        let temp = lines.reduce(start) { $0 + prepend + " * " + $1 + "\n" }
+        return temp + end
+    }
+
     //swiftlint:disable:next function_body_length
     public func createFileComment(
         forFile file: String,
