@@ -127,7 +127,12 @@ public final class CPPHeaderCreator {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
         let publicLabel = "public:"
         let constructor = self.createConstructor(forClassNamed: name, forVariables: variables)
-        let publicContent = constructor
+        let copyConstructor = self.createCopyConstructor(
+            forClassNamed: name,
+            withStructNamed: extendName,
+            forVariables: variables
+        )
+        let publicContent = constructor + "\n\n" + copyConstructor
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         return def + "\n\n" + publicSection + "\n\n}"
     }
@@ -145,12 +150,37 @@ public final class CPPHeaderCreator {
             "\($0.cType) \($0.label) = \($0.defaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let def = startdef + list + ") {"
-        let setters = variables.map {
-            "set_\($0.label)(\($0.label));"
+        let setters = self.createSetters(forVariables: variables)
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+
+    fileprivate func createCopyConstructor(
+        forClassNamed className: String,
+        withStructNamed structName: String,
+        forVariables variables: [Variable]
+    ) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Copy Constructor.")
+        let def = "\(className)(const \(className) &other): \(structName)() {"
+        let setters = self.createSetters(forVariables: variables) { "other.\($0.label)()" }
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+
+    fileprivate func createSetters(
+        forVariables variables: [Variable],
+        _ transformGetter: (Variable) -> String = { "\($0.label)"}
+    ) -> String {
+        return variables.map {
+            self.createSetter(forVariable: $0, transformGetter)
         }.combine("") {
             $0 + "\n" + $1
         }
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+
+    fileprivate func createSetter(
+        forVariable variable: Variable,
+        _ transformGetter: (Variable) -> String = { "\($0.label)" }
+    ) -> String {
+        return "set_\(variable.label)(\(transformGetter(variable)));"
     }
 
 }
