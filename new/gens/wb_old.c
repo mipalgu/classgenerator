@@ -1576,6 +1576,14 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
 
     int isArray = 0;
 
+    const char s[2] = ","; // delimeter
+    const char e = '=';    // delimeter
+    const char b1 = '{';   // delimeter
+    const char b2 = '}';   // delimeter
+    char* tokenS, *tokenE, *tokenB1, *tokenB2;
+
+    tokenS = strtok_r(str_copy, s, &saveptr);
+
     char* array16_values[OLD_ARRAY16_ARRAY_SIZE];
     int array16_count = 0;
     int is_array16 = 1;
@@ -1583,14 +1591,6 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     char* bools_values[OLD_BOOLS_ARRAY_SIZE];
     int bools_count = 0;
     int is_bools = 1;
-
-    const char s[2] = ",";   /// delimeter
-    const char e = '=';      /// delimeter
-    const char b1 = '{';    /// delimeter
-    const char b2 = '}';    /// delimeter
-    char* tokenS, *tokenE, *tokenB1, *tokenB2;
-
-    tokenS = strtok_r(str_copy, s, &saveptr);
 
     while (tokenS != NULL)
     {

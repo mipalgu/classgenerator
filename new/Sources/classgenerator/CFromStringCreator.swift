@@ -76,20 +76,29 @@ public final class CFromStringCreator {
         //swiftlint:disable:next line_length
         let definition = "struct \(structName)* \(structName)_\(fLabel)(struct \(structName)* self, const char* \(strLabel))\n{"
         let head = self.createHead(forClassNamed: cls.name, forStrVariable: strLabel)
+        let contents = head
         let endDefinition = "\n}"
-        return comment + "\n" + definition + "\n" + endDefinition
+        return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
     }
 
     fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
         return """
             char* strings[\(className.uppercased())_NUMBER_OF_VARIABLES];
             memset(strings, 0, sizeof(strings));
-            char * saveptr;
+            char* saveptr;
             int count = 0;
 
             char* \(strLabel)_copy = gu_strdup(str);
 
-            int isArray = 0
+            int isArray = 0;
+
+            const char s[2] = ","; // delimeter
+            const char e = '=';    // delimeter
+            const char b1 = '{';   // delimeter
+            const char b2 = '}';   // delimeter
+            char* tokenS, *tokenE, *tokenB1, *tokenB2;
+
+            tokenS = strtok_r(str_copy, s, &saveptr);
             """
     }
 }
