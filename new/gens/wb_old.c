@@ -1567,237 +1567,237 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
  */
 struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
 {
-    char* strings[OLD_NUMBER_OF_VARIABLES]; 
-    memset(strings, 0, sizeof(strings)); 
-    char* saveptr; 
-    int count = 0; 
+    char* strings[OLD_NUMBER_OF_VARIABLES];
+    memset(strings, 0, sizeof(strings));
+    char* saveptr;
+    int count = 0;
 
-    char* str_copy = gu_strdup(str); 
+    char* str_copy = gu_strdup(str);
 
-    int isArray = 0; 
+    int isArray = 0;
 
-    char* array16_values[OLD_ARRAY16_ARRAY_SIZE]; 
-    int array16_count = 0; 
-    int is_array16 = 1; 
+    char* array16_values[OLD_ARRAY16_ARRAY_SIZE];
+    int array16_count = 0;
+    int is_array16 = 1;
 
-    char* bools_values[OLD_BOOLS_ARRAY_SIZE]; 
-    int bools_count = 0; 
-    int is_bools = 1; 
+    char* bools_values[OLD_BOOLS_ARRAY_SIZE];
+    int bools_count = 0;
+    int is_bools = 1;
 
-    const char s[2] = ",";   /// delimeter 
-    const char e = '=';      /// delimeter 
-    const char b1 = '{';    /// delimeter 
-    const char b2 = '}';    /// delimeter 
-    char* tokenS, *tokenE, *tokenB1, *tokenB2; 
+    const char s[2] = ",";   /// delimeter
+    const char e = '=';      /// delimeter
+    const char b1 = '{';    /// delimeter
+    const char b2 = '}';    /// delimeter
+    char* tokenS, *tokenE, *tokenB1, *tokenB2;
 
-    tokenS = strtok_r(str_copy, s, &saveptr); 
+    tokenS = strtok_r(str_copy, s, &saveptr);
 
-    while (tokenS != NULL) 
-    { 
-        tokenE = strchr(tokenS, e); 
+    while (tokenS != NULL)
+    {
+        tokenE = strchr(tokenS, e);
 
-        if (tokenE == NULL) 
-        { 
-             tokenE = tokenS; 
-        } 
-        else 
-        { 
-             tokenE++; 
-        } 
+        if (tokenE == NULL)
+        {
+             tokenE = tokenS;
+        }
+        else
+        {
+             tokenE++;
+        }
 
-        tokenB1 = strchr(gu_strtrim(tokenE), b1); 
+        tokenB1 = strchr(gu_strtrim(tokenE), b1);
 
-        if (tokenB1 == NULL) 
-        { 
-            tokenB1 = tokenE; 
-        } 
-        else 
-        { 
-            // start of an array 
-            tokenB1++; 
-            isArray = 1; 
-        } 
+        if (tokenB1 == NULL)
+        {
+            tokenB1 = tokenE;
+        }
+        else
+        {
+            // start of an array
+            tokenB1++;
+            isArray = 1;
+        }
 
-        if (isArray) 
-        { 
-            tokenB2 = strchr(gu_strtrim(tokenB1), b2); 
-            if (is_array16 == 1) 
-            { 
-                if (tokenB2 != NULL) 
-                { 
-                    tokenB1[strlen(tokenB1)-1] = 0; 
-                    is_array16 = 0; 
-                    isArray = 0; 
-                    count++; 
-                } 
+        if (isArray)
+        {
+            tokenB2 = strchr(gu_strtrim(tokenB1), b2);
+            if (is_array16 == 1)
+            {
+                if (tokenB2 != NULL)
+                {
+                    tokenB1[strlen(tokenB1)-1] = 0;
+                    is_array16 = 0;
+                    isArray = 0;
+                    count++;
+                }
 
-                array16_values[array16_count] = gu_strtrim(tokenB1); 
-                array16_count++; 
-            } 
-            else if (is_bools == 1) 
-            { 
-                if (tokenB2 != NULL) 
-                { 
-                    tokenB1[strlen(tokenB1)-1] = 0; 
-                    is_bools = 0; 
-                    isArray = 0; 
-                    count++; 
-                } 
+                array16_values[array16_count] = gu_strtrim(tokenB1);
+                array16_count++;
+            }
+            else if (is_bools == 1)
+            {
+                if (tokenB2 != NULL)
+                {
+                    tokenB1[strlen(tokenB1)-1] = 0;
+                    is_bools = 0;
+                    isArray = 0;
+                    count++;
+                }
 
-                bools_values[bools_count] = gu_strtrim(tokenB1); 
-                bools_count++; 
-            } 
-        } 
-        else 
-        { 
-            strings[count] = gu_strtrim(tokenE); 
-            count++; 
-        } 
+                bools_values[bools_count] = gu_strtrim(tokenB1);
+                bools_count++;
+            }
+        }
+        else
+        {
+            strings[count] = gu_strtrim(tokenE);
+            count++;
+        }
 
-        tokenS = strtok_r(NULL, s, &saveptr); 
-    } 
+        tokenS = strtok_r(NULL, s, &saveptr);
+    }
 
-    if (strings[0] != NULL) 
-       self->str = (string)(strings[0]); 
+    if (strings[0] != NULL)
+       self->str = (string)(strings[0]);
 
-    if (strings[1] != NULL) 
-       self->b = strcmp(strings[1], "true") == 0  || strcmp(strings[1], "1") == 0 ? true : false; 
+    if (strings[1] != NULL)
+       self->b = strcmp(strings[1], "true") == 0  || strcmp(strings[1], "1") == 0 ? true : false;
 
-    if (strings[2] != NULL) 
-       self->c = (char)atoi(strings[2]); 
+    if (strings[2] != NULL)
+       self->c = (char)atoi(strings[2]);
 
-    if (strings[5] != NULL) 
-       self->i = (int)atoi(strings[5]); 
+    if (strings[5] != NULL)
+       self->i = (int)atoi(strings[5]);
 
-    if (strings[6] != NULL) 
-       self->si = (signed)atoi(strings[6]); 
+    if (strings[6] != NULL)
+       self->si = (signed)atoi(strings[6]);
 
-    if (strings[8] != NULL) 
-       self->u = (unsigned)atoi(strings[8]); 
+    if (strings[8] != NULL)
+       self->u = (unsigned)atoi(strings[8]);
 
-    if (strings[10] != NULL) 
-       self->u8 = (uint8_t)atoi(strings[10]); 
+    if (strings[10] != NULL)
+       self->u8 = (uint8_t)atoi(strings[10]);
 
-    if (strings[11] != NULL) 
-       self->u16 = (uint16_t)atoi(strings[11]); 
+    if (strings[11] != NULL)
+       self->u16 = (uint16_t)atoi(strings[11]);
 
-    if (strings[12] != NULL) 
-       self->u32 = (uint32_t)atoi(strings[12]); 
+    if (strings[12] != NULL)
+       self->u32 = (uint32_t)atoi(strings[12]);
 
-    if (strings[13] != NULL) 
-       self->u64 = (uint64_t)atoi(strings[13]); 
+    if (strings[13] != NULL)
+       self->u64 = (uint64_t)atoi(strings[13]);
 
-    if (strings[14] != NULL) 
-       self->i8 = (int8_t)atoi(strings[14]); 
+    if (strings[14] != NULL)
+       self->i8 = (int8_t)atoi(strings[14]);
 
-    if (strings[15] != NULL) 
-       self->i16 = (int16_t)atoi(strings[15]); 
+    if (strings[15] != NULL)
+       self->i16 = (int16_t)atoi(strings[15]);
 
-    if (strings[16] != NULL) 
-       self->i32 = (int32_t)atoi(strings[16]); 
+    if (strings[16] != NULL)
+       self->i32 = (int32_t)atoi(strings[16]);
 
-    if (strings[17] != NULL) 
-       self->i64 = (int64_t)atoi(strings[17]); 
+    if (strings[17] != NULL)
+       self->i64 = (int64_t)atoi(strings[17]);
 
-    if (strings[18] != NULL) 
-       self->s = (short)atoi(strings[18]); 
+    if (strings[18] != NULL)
+       self->s = (short)atoi(strings[18]);
 
-    if (strings[24] != NULL) 
-       self->l = (long)atol(strings[24]); 
+    if (strings[24] != NULL)
+       self->l = (long)atol(strings[24]);
 
-    if (strings[36] != NULL) 
-       self->l64 = (long64_t)atoll(strings[36]); 
+    if (strings[36] != NULL)
+       self->l64 = (long64_t)atoll(strings[36]);
 
-    if (strings[37] != NULL) 
-       self->f = (float)atof(strings[37]); 
+    if (strings[37] != NULL)
+       self->f = (float)atof(strings[37]);
 
-    if (strings[38] != NULL) 
-       self->ft = (float_t)atof(strings[38]); 
+    if (strings[38] != NULL)
+       self->ft = (float_t)atof(strings[38]);
 
-    if (strings[39] != NULL) 
-       self->d = (double)atof(strings[39]); 
+    if (strings[39] != NULL)
+       self->d = (double)atof(strings[39]);
 
-    if (strings[40] != NULL) 
-       self->dt = (double_t)atof(strings[40]); 
+    if (strings[40] != NULL)
+       self->dt = (double_t)atof(strings[40]);
 
-    if (strings[43] != NULL) 
-       self->str = (string)(strings[43]); 
+    if (strings[43] != NULL)
+       self->str = (string)(strings[43]);
 
-    if (strings[44] != NULL) 
-       self->b = strcmp(strings[44], "true") == 0  || strcmp(strings[44], "1") == 0 ? true : false; 
+    if (strings[44] != NULL)
+       self->b = strcmp(strings[44], "true") == 0  || strcmp(strings[44], "1") == 0 ? true : false;
 
-    if (strings[45] != NULL) 
-       self->c = (char)atoi(strings[45]); 
+    if (strings[45] != NULL)
+       self->c = (char)atoi(strings[45]);
 
-    if (strings[48] != NULL) 
-       self->i = (int)atoi(strings[48]); 
+    if (strings[48] != NULL)
+       self->i = (int)atoi(strings[48]);
 
-    if (strings[49] != NULL) 
-       self->si = (signed)atoi(strings[49]); 
+    if (strings[49] != NULL)
+       self->si = (signed)atoi(strings[49]);
 
-    if (strings[51] != NULL) 
-       self->u = (unsigned)atoi(strings[51]); 
+    if (strings[51] != NULL)
+       self->u = (unsigned)atoi(strings[51]);
 
-    if (strings[53] != NULL) 
-       self->u8 = (uint8_t)atoi(strings[53]); 
+    if (strings[53] != NULL)
+       self->u8 = (uint8_t)atoi(strings[53]);
 
-    if (strings[54] != NULL) 
-       self->u16 = (uint16_t)atoi(strings[54]); 
+    if (strings[54] != NULL)
+       self->u16 = (uint16_t)atoi(strings[54]);
 
-    if (strings[55] != NULL) 
-       self->u32 = (uint32_t)atoi(strings[55]); 
+    if (strings[55] != NULL)
+       self->u32 = (uint32_t)atoi(strings[55]);
 
-    if (strings[56] != NULL) 
-       self->u64 = (uint64_t)atoi(strings[56]); 
+    if (strings[56] != NULL)
+       self->u64 = (uint64_t)atoi(strings[56]);
 
-    if (strings[57] != NULL) 
-       self->i8 = (int8_t)atoi(strings[57]); 
+    if (strings[57] != NULL)
+       self->i8 = (int8_t)atoi(strings[57]);
 
-    if (strings[58] != NULL) 
-       self->i16 = (int16_t)atoi(strings[58]); 
+    if (strings[58] != NULL)
+       self->i16 = (int16_t)atoi(strings[58]);
 
-    if (strings[59] != NULL) 
-       self->i32 = (int32_t)atoi(strings[59]); 
+    if (strings[59] != NULL)
+       self->i32 = (int32_t)atoi(strings[59]);
 
-    if (strings[60] != NULL) 
-       self->i64 = (int64_t)atoi(strings[60]); 
+    if (strings[60] != NULL)
+       self->i64 = (int64_t)atoi(strings[60]);
 
-    if (strings[61] != NULL) 
-       self->s = (short)atoi(strings[61]); 
+    if (strings[61] != NULL)
+       self->s = (short)atoi(strings[61]);
 
-    if (strings[67] != NULL) 
-       self->l = (long)atol(strings[67]); 
+    if (strings[67] != NULL)
+       self->l = (long)atol(strings[67]);
 
-    if (strings[79] != NULL) 
-       self->l64 = (long64_t)atoll(strings[79]); 
+    if (strings[79] != NULL)
+       self->l64 = (long64_t)atoll(strings[79]);
 
-    if (strings[80] != NULL) 
-       self->f = (float)atof(strings[80]); 
+    if (strings[80] != NULL)
+       self->f = (float)atof(strings[80]);
 
-    if (strings[81] != NULL) 
-       self->ft = (float_t)atof(strings[81]); 
+    if (strings[81] != NULL)
+       self->ft = (float_t)atof(strings[81]);
 
-    if (strings[82] != NULL) 
-       self->d = (double)atof(strings[82]); 
+    if (strings[82] != NULL)
+       self->d = (double)atof(strings[82]);
 
-    if (strings[83] != NULL) 
-       self->dt = (double_t)atof(strings[83]); 
+    if (strings[83] != NULL)
+       self->dt = (double_t)atof(strings[83]);
 
-    size_t array16_smallest = array16_count < OLD_ARRAY16_ARRAY_SIZE ? array16_count : OLD_ARRAY16_ARRAY_SIZE; 
+    size_t array16_smallest = array16_count < OLD_ARRAY16_ARRAY_SIZE ? array16_count : OLD_ARRAY16_ARRAY_SIZE;
 
-    for (int i = 0; i < array16_smallest; i++) 
-    { 
-       self->array16[i] = (int16_t)atoi(array16_values[i]); 
-    } 
+    for (int i = 0; i < array16_smallest; i++)
+    {
+       self->array16[i] = (int16_t)atoi(array16_values[i]);
+    }
 
-    size_t bools_smallest = bools_count < OLD_BOOLS_ARRAY_SIZE ? bools_count : OLD_BOOLS_ARRAY_SIZE; 
+    size_t bools_smallest = bools_count < OLD_BOOLS_ARRAY_SIZE ? bools_count : OLD_BOOLS_ARRAY_SIZE;
 
-    for (int i = 0; i < bools_smallest; i++) 
-    { 
-            self->bools[i] = strcmp(bools_values[i], "true") == 0  || strcmp(bools_values[i], "1") == 0 ? true : false; 
-    } 
+    for (int i = 0; i < bools_smallest; i++)
+    {
+            self->bools[i] = strcmp(bools_values[i], "true") == 0  || strcmp(bools_values[i], "1") == 0 ? true : false;
+    }
 
-    free(str_copy); 
+    free(str_copy);
 
-    return self; 
-}; 
+    return self;
+};
