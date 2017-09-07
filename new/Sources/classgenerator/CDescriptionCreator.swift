@@ -66,51 +66,72 @@ public final class CDescriptionCreator {
         self.stringHelpers = stringHelpers
     }
 
-    public func createDescriptionFunction(forClass cls: Class, withStructNamed structName: String) -> String {
+    public func createFunction(
+        creating fLabel: String,
+        forClass cls: Class,
+        withStructNamed structName: String,
+        forStrVariable strLabel: String
+    ) -> String {
         let comment = """
             /**
              * Convert to a description string.
              */
             """
         //swiftlint:disable:next line_length
-        let definition = "const char* \(structName)_description(const struct \(structName)* self, char* descString, size_t bufferSize)\n{"
+        let definition = "const char* \(structName)_\(fLabel)(const struct \(structName)* self, char* \(strLabel), size_t bufferSize)\n{"
         let head = """
             #pragma clang diagnostic push
             #pragma clang diagnostic ignored "-Wunused-variable"
                 size_t len = 0;
             """
-        let descriptions = cls.variables.flatMap { self.createDescription(forVariable: $0, forClassNamed: cls.name) }
+        let descriptions = cls.variables.flatMap {
+            self.createDescription(forVariable: $0, forClassNamed: cls.name, appendingTo: strLabel)
+        }
         let guardedDescriptions = descriptions.map {
-            self.createGuard() + "\n" + $0
+            self.createGuard(forStrVariable: strLabel) + "\n" + $0
         }
         let vars = self.stringHelpers.indent(guardedDescriptions.combine("") {
-            $0 + "\n" + self.createGuard() + "\n" + self.createComma() + "\n" + $1
+            $0 +
+            "\n" +
+            self.createGuard(forStrVariable: strLabel) + "\n" + self.createComma(appendingTo: strLabel) +
+            "\n" +
+            $1
         })
         let returnStatement = "    return descString;"
         let endDefinition = "}"
         return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + returnStatement + "\n" + endDefinition
     }
 
-    fileprivate func createGuard() -> String {
+    fileprivate func createGuard(forStrVariable strLabel: String) -> String {
         return """
             if (len >= bufferSize) {
-                return descString;
+                return \(strLabel);
             }
             """
     }
 
-    fileprivate func createComma() -> String {
-        return "len = gu_strlcat(descString, \", \", bufferSize);"
+    fileprivate func createComma(appendingTo strLabel: String) -> String {
+        return "len = gu_strlcat(\(strLabel), \", \", bufferSize);"
     }
 
-    fileprivate func createDescription(forVariable variable: Variable, forClassNamed className: String) -> String? {
-        return self.createDescription(forType: variable.type, withLabel: variable.label, andClassName: className)
+    fileprivate func createDescription(
+        forVariable variable: Variable,
+        forClassNamed className: String,
+        appendingTo strLabel: String
+    ) -> String? {
+        return self.createDescription(
+            forType: variable.type,
+            withLabel: variable.label,
+            andClassName: className,
+            appendingTo: strLabel
+        )
     }
 
     fileprivate func createArrayDescription(
         forType type: VariableTypes,
         withLabel label: String,
         andClassName className: String,
+        appendingTo strLabel: String,
         _ level: Int = 0
     ) -> String? {
         switch type {
@@ -123,13 +144,15 @@ public final class CDescriptionCreator {
                             forType: subtype,
                             withLabel: label,
                             andClassName: className,
+                            appendingTo: strLabel,
                             level + 1
                         )
                     default:
                         temp = self.createValue(
                             forType: subtype,
                             withLabel: self.createIndexes(forLabel: label, level),
-                            andClassName: className
+                            andClassName: className,
+                            appendingTo: strLabel
                         )
                 }
                 guard let value = temp else {
@@ -137,21 +160,26 @@ public final class CDescriptionCreator {
                 }
                 //swiftlint:disable line_length
                 return """
-                    len = gu_strlcat(descString, "\(arrLabel)={", bufferSize);
+                    len = gu_strlcat(\(strLabel), "\(arrLabel)={", bufferSize);
                     int \(arrLabel)_first = 0;
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
-                    \(self.stringHelpers.indent(self.createGuard()))
+                    \(self.stringHelpers.indent(self.createGuard(forStrVariable: strLabel)))
                         if (1 == \(arrLabel)_first) {
-                            \(self.createComma())
+                            \(self.createComma(appendingTo: strLabel))
                         }
                     \(self.stringHelpers.indent(value))
                         \(arrLabel)_first = 1;
                     }
-                    \(self.createGuard())
-                    len = gu_strlcat(descString, "}", bufferSize);
+                    \(self.createGuard(forStrVariable: strLabel))
+                    len = gu_strlcat(\(strLabel), "}", bufferSize);
                     """
             default:
-                return self.createDescription(forType: type, withLabel: label, andClassName: className)
+                return self.createDescription(
+                    forType: type,
+                    withLabel: label,
+                    andClassName: className,
+                    appendingTo: strLabel
+                )
         }
     }
 
@@ -159,55 +187,77 @@ public final class CDescriptionCreator {
         return Array(0...level).map { 0 == $0 ? "[\(label)_index]" : "[\(label)_\($0)_index]" }.reduce(label, +)
     }
 
-    fileprivate func createDescription(forType type: VariableTypes, withLabel label: String, andClassName className: String) -> String? {
+    fileprivate func createDescription(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andClassName className: String,
+        appendingTo strLabel: String
+    ) -> String? {
         switch type {
             case .array:
-                return self.createArrayDescription(forType: type, withLabel: label, andClassName: className)
+                return self.createArrayDescription(
+                    forType: type,
+                    withLabel: label,
+                    andClassName: className,
+                    appendingTo: strLabel
+                )
             case .bool:
                 return """
-                    len = gu_strlcat(descString, "\(label)=", bufferSize);
-                    \(self.createGuard())
-                    len = gu_strlcat(descString, self->\(label) ? "true" : "false", bufferSize);
+                    len = gu_strlcat(\(strLabel), "\(label)=", bufferSize);
+                    \(self.createGuard(forStrVariable: strLabel))
+                    len = gu_strlcat(\(strLabel), self->\(label) ? "true" : "false", bufferSize);
                     """
             case .char:
-                return self.createSNPrintf("\(label)=%c", "self->\(label)")
+                return self.createSNPrintf("\(label)=%c", "self->\(label)", appendingTo: strLabel)
             case .numeric(let numericType):
                 return self.createSNPrintf(
                     "\(label)=%\(self.createFormat(forNumericType: numericType))",
-                    "self->\(label)"
+                    "self->\(label)",
+                    appendingTo: strLabel
                 )
             case .string:
-                return self.createSNPrintf("\(label)=%s", "self->\(label)")
+                return self.createSNPrintf("\(label)=%s", "self->\(label)", appendingTo: strLabel)
             default:
                 return nil
         }
     }
 
-    fileprivate func createValue(forType type: VariableTypes, withLabel label: String, andClassName className: String) -> String? {
+    fileprivate func createValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andClassName className: String,
+        appendingTo strLabel: String
+    ) -> String? {
         switch type {
             case .array:
-                return self.createArrayDescription(forType: type, withLabel: label, andClassName: className)
+                return self.createArrayDescription(
+                    forType: type,
+                    withLabel: label,
+                    andClassName: className,
+                    appendingTo: strLabel
+                )
             case .bool:
-                return "len = gu_strlcat(descString, self->\(label) ? \"true\" : \"false\", bufferSize);"
+                return "len = gu_strlcat(\(strLabel), self->\(label) ? \"true\" : \"false\", bufferSize);"
             case .char:
-                return self.createSNPrintf("%c", "self->\(label)")
+                return self.createSNPrintf("%c", "self->\(label)", appendingTo: strLabel)
             case .numeric(let numericType):
                 return self.createSNPrintf(
                     "%\(self.createFormat(forNumericType: numericType))",
-                    "self->\(label)"
+                    "self->\(label)",
+                    appendingTo: strLabel
                 )
             case .string:
-                return self.createSNPrintf("%s", "self->\(label)")
+                return self.createSNPrintf("%s", "self->\(label)", appendingTo: strLabel)
             default:
                 return nil
         }
     }
 
-    fileprivate func createSNPrintf(_ str: String, _ args: String? = nil) -> String {
+    fileprivate func createSNPrintf(_ str: String, _ args: String? = nil, appendingTo strLabel: String) -> String {
         guard let args = args else {
-            return "len += snprintf(descString + len, bufferSize - len, \"\(str)\");"
+            return "len += snprintf(\(strLabel) + len, bufferSize - len, \"\(str)\");"
         }
-        return "len += snprintf(descString + len, bufferSize - len, \"\(str)\", \(args));"
+        return "len += snprintf(\(strLabel) + len, bufferSize - len, \"\(str)\", \(args));"
     }
 
     fileprivate func createFormat(forNumericType type: NumericTypes) -> String {

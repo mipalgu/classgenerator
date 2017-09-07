@@ -77,9 +77,11 @@ public final class CFileCreator {
             andGenFile: genFile
         )
         let head = self.createHead(forStructNamed: structName)
-        let descriptionFunc = self.descriptionCreator.createDescriptionFunction(
+        let descriptionFunc = self.descriptionCreator.createFunction(
+            creating: "description",
             forClass: cls,
-            withStructNamed: structName
+            withStructNamed: structName,
+            forStrVariable: "descString"
         )
         return comment + "\n\n" + head + "\n\n" + descriptionFunc
     }
