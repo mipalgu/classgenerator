@@ -79,11 +79,27 @@ public final class CFileCreator {
         let head = self.createHead(forStructNamed: structName)
         let descriptionFunc = self.descriptionCreator.createFunction(
             creating: "description",
+            withComment: """
+                /**
+                 * Convert to a description string.
+                 */
+                """,
             forClass: cls,
             withStructNamed: structName,
             forStrVariable: "descString"
         )
-        return comment + "\n\n" + head + "\n\n" + descriptionFunc
+        let toStringFunc = self.descriptionCreator.createFunction(
+            creating: "to_string",
+            withComment: """
+                /**
+                 * Convert to a string.
+                 */
+                """,
+            forClass: cls,
+            withStructNamed: structName,
+            forStrVariable: "toString"
+        )
+        return comment + "\n\n" + head + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
     }
 
     fileprivate func createHead(forStructNamed structName: String) -> String {

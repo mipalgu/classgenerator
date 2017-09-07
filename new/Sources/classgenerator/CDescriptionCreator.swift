@@ -68,15 +68,11 @@ public final class CDescriptionCreator {
 
     public func createFunction(
         creating fLabel: String,
+        withComment comment: String,
         forClass cls: Class,
         withStructNamed structName: String,
         forStrVariable strLabel: String
     ) -> String {
-        let comment = """
-            /**
-             * Convert to a description string.
-             */
-            """
         //swiftlint:disable:next line_length
         let definition = "const char* \(structName)_\(fLabel)(const struct \(structName)* self, char* \(strLabel), size_t bufferSize)\n{"
         let head = """
@@ -97,7 +93,7 @@ public final class CDescriptionCreator {
             "\n" +
             $1
         })
-        let returnStatement = "    return descString;"
+        let returnStatement = "    return \(strLabel);"
         let endDefinition = "}"
         return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + returnStatement + "\n" + endDefinition
     }
