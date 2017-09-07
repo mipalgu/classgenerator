@@ -76,7 +76,15 @@ public final class CFromStringCreator {
         //swiftlint:disable:next line_length
         let definition = "struct \(structName)* \(structName)_\(fLabel)(struct \(structName)* self, const char* \(strLabel))\n{"
         let head = self.createHead(forClassNamed: cls.name, forStrVariable: strLabel)
-        let contents = head
+        let fillTokens = self.createFillTokens(forClassNamed: cls.name, withArrayVariables: cls.variables.filter {
+            switch $0.type {
+                case .array:
+                    return true
+                default:
+                    return false
+            }
+        })
+        let contents = head + "\n\n" + fillTokens
         let endDefinition = "\n}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
     }
@@ -100,5 +108,90 @@ public final class CFromStringCreator {
 
             tokenS = strtok_r(str_copy, s, &saveptr);
             """
+    }
+
+    //swiftlint:disable:next function_body_length
+    fileprivate func createFillTokens(
+        forClassNamed className: String,
+        withArrayVariables arrayVars: [Variable]
+    ) -> String {
+        let upperClassName = className.uppercased()
+        let head = arrayVars.flatMap {
+            switch $0.type {
+                case .array:
+                    return """
+                        char* \($0.label)_values[\(upperClassName)_\($0.label.uppercased())_ARRAY_SIZE];
+                        int \($0.label)_count = 0;
+                        int is_\($0.label) = 1;
+                        """
+                default:
+                    return nil
+            }
+        }.combine("") { $0 + "\n\n" + $1 }
+        let tokens = """
+            while (tokenS != NULL)
+            {
+                tokenE = strchr(tokenS, e);
+
+                if (tokenE == NULL)
+                {
+                    tokenE = tokenS;
+                }
+                else
+                {
+                    tokenE++;
+                }
+
+                tokenB1 = strchr(gu_strtrim(tokenE), b1);
+
+                if (tokenB1 == NULL)
+                {
+                    tokenB1 = tokenE;
+                }
+                else
+                {
+                    // start of an array
+                    tokenB1++;
+                    isArray = 1;
+                }
+
+                if (isArray)
+                {
+                    tokenB2 = strchr(gu_strtrim(tokenB1), b2);
+            """
+            let arrs = arrayVars.flatMap {
+                switch $0.type {
+                    case .array:
+                        return """
+                            if (is_\($0.label) == 1)
+                            {
+                                if (tokenB2 != NULL)
+                                {
+                                    tokenB1[strlen(tokenB1)-1] = 0;
+                                    is_\($0.label) = 0;
+                                    isArray = 0;
+                                    count++;
+                                }
+
+                                \($0.label)_values[\($0.label)_count] = gu_strtrim(tokenB1);
+                                \($0.label)_count++;
+                            }
+                            """
+                    default:
+                        return nil
+                }
+            }.combine("") { $0 + "\nelse " + $1 }
+            let tail = """
+                    }
+                    else
+                    {
+                        strings[count] = gu_strtrim(tokenE);
+                        count++;
+                    }
+
+                    tokenS = strtok_r(NULL, s, &saveptr);
+                }
+                """
+            return head + "\n\n" + tokens + "\n" + self.stringHelpers.indent(arrs, 2) + "\n" + tail
     }
 }

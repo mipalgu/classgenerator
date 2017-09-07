@@ -1598,11 +1598,11 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
 
         if (tokenE == NULL)
         {
-             tokenE = tokenS;
+            tokenE = tokenS;
         }
         else
         {
-             tokenE++;
+            tokenE++;
         }
 
         tokenB1 = strchr(gu_strtrim(tokenE), b1);
