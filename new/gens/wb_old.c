@@ -1562,9 +1562,11 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     return toString;
 }
 
-/** convert from a string */  
-struct wb_old* wb_old_from_string(struct wb_old* self, const char* str) 
-{ 
+/**
+ * Convert from a string.
+ */
+struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
+{
     char* strings[OLD_NUMBER_OF_VARIABLES]; 
     memset(strings, 0, sizeof(strings)); 
     char* saveptr; 

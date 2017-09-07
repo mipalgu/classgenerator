@@ -1,8 +1,8 @@
 /*
- * CFileCreator.swift 
+ * CFromStringCreator.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 24/08/2017.
+ * Created by Callum McColl on 07/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,74 +56,40 @@
  *
  */
 
-public final class CFileCreator {
+import Foundation
 
-    fileprivate let creatorHelpers: CreatorHelpers
-    fileprivate let descriptionCreator: CDescriptionCreator
-    fileprivate let fromStringCreator: CFromStringCreator
+public final class CFromStringCreator {
 
-    public init(
-        creatorHelpers: CreatorHelpers = CreatorHelpers(),
-        descriptionCreator: CDescriptionCreator = CDescriptionCreator(),
-        fromStringCreator: CFromStringCreator = CFromStringCreator()
-    ) {
-        self.creatorHelpers = creatorHelpers
-        self.descriptionCreator = descriptionCreator
-        self.fromStringCreator = fromStringCreator
+    fileprivate let stringHelpers: StringHelpers
+
+    public init(stringHelpers: StringHelpers = StringHelpers()) {
+        self.stringHelpers = stringHelpers
     }
 
-    public func createCFile(forClass cls: Class, generatedFrom genFile: String) -> String? {
-        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
-        let comment = self.creatorHelpers.createFileComment(
-            forFile: structName + ".c",
-            withAuthor: cls.author,
-            andGenFile: genFile
-        )
-        let head = self.createHead(forStructNamed: structName)
-        let descriptionFunc = self.descriptionCreator.createFunction(
-            creating: "description",
-            withComment: """
-                /**
-                 * Convert to a description string.
-                 */
-                """,
-            forClass: cls,
-            withStructNamed: structName,
-            forStrVariable: "descString"
-        )
-        let toStringFunc = self.descriptionCreator.createFunction(
-            creating: "to_string",
-            withComment: """
-                /**
-                 * Convert to a string.
-                 */
-                """,
-            forClass: cls,
-            withStructNamed: structName,
-            forStrVariable: "toString"
-        )
-        let fromStringFunc = self.fromStringCreator.createFunction(
-            creating: "from_string",
-            withComment: """
-                /**
-                 * Convert from a string.
-                 */
-                """,
-            forClass: cls,
-            withStructNamed: structName,
-            forStrVariable: "str"
-        )
-        return comment + "\n\n" + head + "\n\n" + descriptionFunc + "\n\n" + toStringFunc + "\n\n" + fromStringFunc
+    public func createFunction(
+        creating fLabel: String,
+        withComment comment: String,
+        forClass cls: Class,
+        withStructNamed structName: String,
+        forStrVariable strLabel: String
+    ) -> String {
+        //swiftlint:disable:next line_length
+        let definition = "struct \(structName)* \(structName)_\(fLabel)(struct \(structName)* self, const char* \(strLabel))\n{"
+        let head = self.createHead(forClassNamed: cls.name, forStrVariable: strLabel)
+        let endDefinition = "\n}"
+        return comment + "\n" + definition + "\n" + endDefinition
     }
 
-    fileprivate func createHead(forStructNamed structName: String) -> String {
+    fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
         return """
-            #define WHITEBOARD_POSTER_STRING_CONVERSION
-            #include "\(structName).h"
-            #include <stdio.h>
-            #include <string.h>
-            #include <stdlib.h>
+            char* strings[\(className.uppercased())_NUMBER_OF_VARIABLES];
+            memset(strings, 0, sizeof(strings));
+            char * saveptr;
+            int count = 0;
+
+            char* \(strLabel)_copy = gu_strdup(str);
+
+            int isArray = 0
             """
     }
-
 }
