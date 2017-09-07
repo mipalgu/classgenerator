@@ -42,49 +42,49 @@ double	d=1.0	A double.
 double_t	dt=1.0	A double_t.
 long double	ld=1.0	A long double.
 double double	dd=1.0	A double double.
-string	str	A string.
-bool	b	A boolean.
-char	c	A char.
-signed char	sc	A signed char.
-unsigned char	uc	An unsigned char.
-int	i	An int.
-signed	si	A signed.
-signed int	sii	A signed int.
-unsigned	u	An unsigned.
-unsigned int	ui	An unsigned int.
-uint8_t	u8	// A uint8.
-uint16_t	u16	A uint16.
-uint32_t	u32	A uint32.
-uint64_t	u64	A uint64.
-int8_t	i8	An int8.
-int16_t	i16	An int16.
-int32_t	i32	An int32.
-int64_t	i64	An int64.
-short	s	A short.
-short int	si	A short int.
-signed short	ss	A signed short.
-signed short int	ssi	A signed short int.
-unsigned short	us	An unsigned short.
-unsigned short int	usi	An unsigned short int.
-long	l	A long.
-long int	li	A long int.
-signed long	sl	A signed long.
-signed long int	sli	A signed long int.
-unsigned long	ul	An unsigned long.
-unsigned long int	uli	An unsigned long int.
-long long	ll	A long long.
-long long int	lli	A long long int.
-signed long long	sll	A signed long long.
-signed long long int	slli	A signed long long int.
-unsigned long long	ull	An unsigned long long.
-unsigned long long int	ulli	An unsigned long long int.
-long64_t	l64	A long64.
-float	f	A float.
-float_t	ft	A float_t.
-double	d	A double.
-double_t	dt	A double_t.
-long double	ld	A long double.
-double double	dd	A double double.
+string	str2	A string.
+bool	b2	A boolean.
+char	c2	A char.
+signed char	sc2	A signed char.
+unsigned char	uc2	An unsigned char.
+int	i2	An int.
+signed	si2	A signed.
+signed int	sii2	A signed int.
+unsigned	u2	An unsigned.
+unsigned int	ui2	An unsigned int.
+uint8_t	u82	// A uint8.
+uint16_t	u162	A uint16.
+uint32_t	u322	A uint32.
+uint64_t	u642	A uint64.
+int8_t	i82	An int8.
+int16_t	i162	An int16.
+int32_t	i322	An int32.
+int64_t	i642	An int64.
+short	s2	A short.
+short int	si2	A short int.
+signed short	ss2	A signed short.
+signed short int	ssi2	A signed short int.
+unsigned short	us2	An unsigned short.
+unsigned short int	usi2	An unsigned short int.
+long	l2	A long.
+long int	li2	A long int.
+signed long	sl2	A signed long.
+signed long int	sli2	A signed long int.
+unsigned long	ul2	An unsigned long.
+unsigned long int	uli2	An unsigned long int.
+long long	ll2	A long long.
+long long int	lli2	A long long int.
+signed long long	sll2	A signed long long.
+signed long long int	slli2	A signed long long int.
+unsigned long long	ull2	An unsigned long long.
+unsigned long long int	ulli2	An unsigned long long int.
+long64_t	l642	A long64.
+float	f2	A float.
+float_t	ft2	A float_t.
+double	d2	A double.
+double_t	dt2	A double_t.
+long double	ld2	A long double.
+double double	dd2	A double double.
 int *	p=NULL	A pointer.
 somestruct	strct=somestruct()	A struct.
 int16_t	array16[4]={1,2,3,4}	// a comment about array16

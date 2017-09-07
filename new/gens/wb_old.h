@@ -297,217 +297,217 @@ struct wb_old
     /**
      * A string.
      */
-    PROPERTY(string, str)
+    PROPERTY(string, str2)
 
     /**
      * A boolean.
      */
-    PROPERTY(bool, b)
+    PROPERTY(bool, b2)
 
     /**
      * A char.
      */
-    PROPERTY(char, c)
+    PROPERTY(char, c2)
 
     /**
      * A signed char.
      */
-    PROPERTY(signed char, sc)
+    PROPERTY(signed char, sc2)
 
     /**
      * An unsigned char.
      */
-    PROPERTY(unsigned char, uc)
+    PROPERTY(unsigned char, uc2)
 
     /**
      * An int.
      */
-    PROPERTY(int, i)
+    PROPERTY(int, i2)
 
     /**
      * A signed.
      */
-    PROPERTY(signed, si)
+    PROPERTY(signed, si2)
 
     /**
      * A signed int.
      */
-    PROPERTY(signed int, sii)
+    PROPERTY(signed int, sii2)
 
     /**
      * An unsigned.
      */
-    PROPERTY(unsigned, u)
+    PROPERTY(unsigned, u2)
 
     /**
      * An unsigned int.
      */
-    PROPERTY(unsigned int, ui)
+    PROPERTY(unsigned int, ui2)
 
     /**
      * A uint8.
      */
-    PROPERTY(uint8_t, u8)
+    PROPERTY(uint8_t, u82)
 
     /**
      * A uint16.
      */
-    PROPERTY(uint16_t, u16)
+    PROPERTY(uint16_t, u162)
 
     /**
      * A uint32.
      */
-    PROPERTY(uint32_t, u32)
+    PROPERTY(uint32_t, u322)
 
     /**
      * A uint64.
      */
-    PROPERTY(uint64_t, u64)
+    PROPERTY(uint64_t, u642)
 
     /**
      * An int8.
      */
-    PROPERTY(int8_t, i8)
+    PROPERTY(int8_t, i82)
 
     /**
      * An int16.
      */
-    PROPERTY(int16_t, i16)
+    PROPERTY(int16_t, i162)
 
     /**
      * An int32.
      */
-    PROPERTY(int32_t, i32)
+    PROPERTY(int32_t, i322)
 
     /**
      * An int64.
      */
-    PROPERTY(int64_t, i64)
+    PROPERTY(int64_t, i642)
 
     /**
      * A short.
      */
-    PROPERTY(short, s)
+    PROPERTY(short, s2)
 
     /**
      * A short int.
      */
-    PROPERTY(short int, si)
+    PROPERTY(short int, si2)
 
     /**
      * A signed short.
      */
-    PROPERTY(signed short, ss)
+    PROPERTY(signed short, ss2)
 
     /**
      * A signed short int.
      */
-    PROPERTY(signed short int, ssi)
+    PROPERTY(signed short int, ssi2)
 
     /**
      * An unsigned short.
      */
-    PROPERTY(unsigned short, us)
+    PROPERTY(unsigned short, us2)
 
     /**
      * An unsigned short int.
      */
-    PROPERTY(unsigned short int, usi)
+    PROPERTY(unsigned short int, usi2)
 
     /**
      * A long.
      */
-    PROPERTY(long, l)
+    PROPERTY(long, l2)
 
     /**
      * A long int.
      */
-    PROPERTY(long int, li)
+    PROPERTY(long int, li2)
 
     /**
      * A signed long.
      */
-    PROPERTY(signed long, sl)
+    PROPERTY(signed long, sl2)
 
     /**
      * A signed long int.
      */
-    PROPERTY(signed long int, sli)
+    PROPERTY(signed long int, sli2)
 
     /**
      * An unsigned long.
      */
-    PROPERTY(unsigned long, ul)
+    PROPERTY(unsigned long, ul2)
 
     /**
      * An unsigned long int.
      */
-    PROPERTY(unsigned long int, uli)
+    PROPERTY(unsigned long int, uli2)
 
     /**
      * A long long.
      */
-    PROPERTY(long long, ll)
+    PROPERTY(long long, ll2)
 
     /**
      * A long long int.
      */
-    PROPERTY(long long int, lli)
+    PROPERTY(long long int, lli2)
 
     /**
      * A signed long long.
      */
-    PROPERTY(signed long long, sll)
+    PROPERTY(signed long long, sll2)
 
     /**
      * A signed long long int.
      */
-    PROPERTY(signed long long int, slli)
+    PROPERTY(signed long long int, slli2)
 
     /**
      * An unsigned long long.
      */
-    PROPERTY(unsigned long long, ull)
+    PROPERTY(unsigned long long, ull2)
 
     /**
      * An unsigned long long int.
      */
-    PROPERTY(unsigned long long int, ulli)
+    PROPERTY(unsigned long long int, ulli2)
 
     /**
      * A long64.
      */
-    PROPERTY(long64_t, l64)
+    PROPERTY(long64_t, l642)
 
     /**
      * A float.
      */
-    PROPERTY(float, f)
+    PROPERTY(float, f2)
 
     /**
      * A float_t.
      */
-    PROPERTY(float_t, ft)
+    PROPERTY(float_t, ft2)
 
     /**
      * A double.
      */
-    PROPERTY(double, d)
+    PROPERTY(double, d2)
 
     /**
      * A double_t.
      */
-    PROPERTY(double_t, dt)
+    PROPERTY(double_t, dt2)
 
     /**
      * A long double.
      */
-    PROPERTY(long double, ld)
+    PROPERTY(long double, ld2)
 
     /**
      * A double double.
      */
-    PROPERTY(double double, dd)
+    PROPERTY(double double, dd2)
 
     /**
      * A pointer.
