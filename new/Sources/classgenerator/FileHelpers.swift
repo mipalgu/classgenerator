@@ -1,8 +1,8 @@
 /*
  * FileHelpers.swift 
- * classgenerator
+ * Sources 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 02/04/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,14 +60,12 @@ import Foundation
 
 public final class FileHelpers {
 
-    //swiftlint:disable identifier_name
     fileprivate let fm: FileManager
 
     public var cwd: URL? {
         return URL(string: self.fm.currentDirectoryPath)
     }
 
-    //swiftlint:disable identifier_name
     public init(fm: FileManager = FileManager.default) {
         self.fm = fm
     }
@@ -77,9 +75,8 @@ public final class FileHelpers {
     }
 
     public func createDirectory(atPath path: URL) -> Bool {
-        //swiftlint:disable unused_optional_binding
         guard
-            let _  = try? self.fm.createDirectory(
+            let _ = try? self.fm.createDirectory(
                 at: path,
                 withIntermediateDirectories: false
             )
@@ -91,7 +88,7 @@ public final class FileHelpers {
 
     public func createFile(atPath path: URL, withContents str: String) -> Bool {
         guard let encoded = str.data(using: String.Encoding.utf8) else {
-            return false
+            return false 
         }
         return self.fm.createFile(atPath: path.path, contents: encoded)
     }
@@ -105,10 +102,9 @@ public final class FileHelpers {
     }
 
     public func deleteItem(atPath path: URL) -> Bool {
-        if false == self.fm.fileExists(atPath: path.path) {
+        if (false == self.fm.fileExists(atPath: path.path)) {
             return true
         }
-        //swiftlint:disable unused_optional_binding
         guard let _ = try? self.fm.removeItem(at: path) else {
             return false
         }
