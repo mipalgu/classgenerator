@@ -144,7 +144,18 @@ public final class ClassGenerator {
         ) else {
             fatalError("Unable to create C File")
         }
-        print(cFileContents)
+        if true == task.generateCppWrapper {
+            guard let cppHeaderContent = self.cppHeaderCreator.createCPPHeader(
+                forClass: cls,
+                forFileNamed: cppHeader,
+                withClassName: className,
+                withStructName: structName,
+                generatedFrom: genfile
+            ) else {
+                fatalError("Unable to create C++ header.")
+            }
+            print(cppHeaderContent)
+        }
     }
 
     fileprivate func cleanArgs(_ args: [String]) -> [String] {

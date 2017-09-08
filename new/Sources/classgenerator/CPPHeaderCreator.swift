@@ -69,10 +69,15 @@ public final class CPPHeaderCreator {
         self.stringHelpers = stringHelpers
     }
 
-    public func createCPPHeader(forClass cls: Class, generatedFrom genfile: String) -> String? {
-        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
-        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+    public func createCPPHeader(
+        forClass cls: Class,
+        forFileNamed fileName: String,
+        withClassName className: String,
+        withStructName structName: String,
+        generatedFrom genfile: String
+    ) -> String? {
         let head = self.createHead(
+            forFile: fileName,
             withStructNamed: structName,
             withClassNamed: className,
             withAuthor: cls.author,
@@ -83,13 +88,14 @@ public final class CPPHeaderCreator {
     }
 
     fileprivate func createHead(
+        forFile fileName: String,
         withStructNamed structName: String,
         withClassNamed className: String,
         withAuthor author: String,
         generatedFrom genfile: String
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(
-            forFile: "\(className).h",
+            forFile: fileName,
             withAuthor: author,
             andGenFile: genfile
         )
