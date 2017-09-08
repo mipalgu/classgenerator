@@ -136,7 +136,15 @@ public final class ClassGenerator {
         ) else {
             fatalError("Unable to create C Header.")
         }
-        print(cHeaderContents)
+        guard let cFileContents = self.cFileCreator.createCFile(
+            forClass: cls,
+            forFileNamed: cFile,
+            withStructName: structName,
+            generatedFrom: genfile
+        ) else {
+            fatalError("Unable to create C File")
+        }
+        print(cFileContents)
     }
 
     fileprivate func cleanArgs(_ args: [String]) -> [String] {
