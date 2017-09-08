@@ -132,7 +132,12 @@ public final class CPPHeaderCreator {
             withStructNamed: extendName,
             forVariables: variables
         )
-        let publicContent = constructor + "\n\n" + copyConstructor
+        let copyAssignmentOperator = self.createCopyAssignmentOperator(
+            forClassNamed: name,
+            withStructNamed: extendName,
+            forVariables: variables
+        )
+        let publicContent = constructor + "\n\n" + copyConstructor + "\n\n" + copyAssignmentOperator
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         return def + "\n\n" + publicSection + "\n\n}"
     }
@@ -163,6 +168,17 @@ public final class CPPHeaderCreator {
         let def = "\(className)(const \(className) &other): \(structName)() {"
         let setters = self.createSetters(forVariables: variables) { "other.\($0.label)()" }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+
+    fileprivate func createCopyAssignmentOperator(
+        forClassNamed className: String,
+        withStructNamed structName: String,
+        forVariables variables: [Variable]
+    ) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
+        let def = "\(className) &operator = (const \(className) &other) {"
+        let setters = self.createSetters(forVariables: variables) { "other.\($0.label)()" }
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters)
     }
 
     fileprivate func createSetters(
