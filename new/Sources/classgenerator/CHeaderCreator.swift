@@ -80,12 +80,16 @@ public final class CHeaderCreator: ErrorContainer {
         self.helpers = helpers
     }
 
-    public func createCHeader(forClass cls: Class, generatedFrom genfile: String) -> String? {
-        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+    public func createCHeader(
+        forClass cls: Class,
+        forFileNamed fileName: String,
+        withStructName structName: String,
+        generatedFrom genfile: String
+    ) -> String? {
         guard let strct = self.createStruct(forClass: cls, withStructName: structName) else {
             return nil
         }
-        let head = self.createHead(forFileNamed: structName + ".h", withClass: cls, andGenFile: genfile)
+        let head = self.createHead(forFileNamed: fileName, withClass: cls, andGenFile: genfile)
         let tail = self.createTail(withClassNamed: structName)
         return head + "\n\n" + strct + "\n\n" + tail + "\n"
     }

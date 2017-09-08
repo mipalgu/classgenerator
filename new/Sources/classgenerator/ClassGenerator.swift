@@ -56,20 +56,31 @@
  *
  */
 
+import Foundation
+
 public final class ClassGenerator {
 
-    fileprivate let parser: ClassGeneratorParser
+    fileprivate let argumentsParser: ClassGeneratorParser
+    fileprivate let parser: Parser
+    fileprivate let fileHelpers: FileHelpers
+    fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let cHeaderCreator: CHeaderCreator
     fileprivate let cFileCreator: CFileCreator
     fileprivate let cppHeaderCreator: CPPHeaderCreator
 
     public init(
-        parser: ClassGeneratorParser = ClassGeneratorParser(),
+        argumentsParser: ClassGeneratorParser = ClassGeneratorParser(),
+        parser: Parser = Parser(),
+        fileHelpers: FileHelpers = FileHelpers(),
+        creatorHelpers: CreatorHelpers = CreatorHelpers(),
         cHeaderCreator: CHeaderCreator = CHeaderCreator(),
         cFileCreator: CFileCreator = CFileCreator(),
         cppHeaderCreator: CPPHeaderCreator = CPPHeaderCreator()
     ) {
+        self.argumentsParser = argumentsParser
         self.parser = parser
+        self.fileHelpers = fileHelpers
+        self.creatorHelpers = creatorHelpers
         self.cHeaderCreator = cHeaderCreator
         self.cFileCreator = cFileCreator
         self.cppHeaderCreator = cppHeaderCreator
@@ -79,7 +90,7 @@ public final class ClassGenerator {
         let args = self.cleanArgs(args)
         let task: Task
         do {
-            task = try self.parser.parse(words: args)
+            task = try self.argumentsParser.parse(words: args)
         } catch (let e) {
             switch e {
                 case ClassGeneratorErrors.pathNotFound:
@@ -95,11 +106,37 @@ public final class ClassGenerator {
 
     fileprivate func handleTask(_ task: Task) {
         if task.printHelpText {
-            print(self.parser.helpText)
+            print(self.argumentsParser.helpText)
             if nil == task.path {
                 return
             }
         }
+        guard let path = task.path else {
+            fatalError("Path not found")
+        }
+        let url = URL(fileURLWithPath: path)
+        let genfile = url.lastPathComponent
+        if "" == genfile {
+            fatalError("Path not found")
+        }
+        guard let cls = self.parser.parse(file: url) else {
+            fatalError(self.parser.lastError ?? "Unable to parse class")
+        }
+        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
+        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+        let cHeader = structName + ".h"
+        let cFile = structName + ".c"
+        let cppHeader = className + ".h"
+        let swiftFile = className + ".swift"
+        guard let cHeaderContents = self.cHeaderCreator.createCHeader(
+            forClass: cls,
+            forFileNamed: cHeader,
+            withStructName: structName,
+            generatedFrom: genfile
+        ) else {
+            fatalError("Unable to create C Header.")
+        }
+        print(cHeaderContents)
     }
 
     fileprivate func cleanArgs(_ args: [String]) -> [String] {
