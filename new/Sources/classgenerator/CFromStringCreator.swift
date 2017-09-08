@@ -84,7 +84,8 @@ public final class CFromStringCreator {
                     return false
             }
         })
-        let contents = head + "\n\n" + fillTokens
+        let assignVarsSection = self.assignVars(cls.variables)
+        let contents = head + "\n" + fillTokens + "\n" + assignVarsSection
         let endDefinition = "\n}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
     }
@@ -95,17 +96,13 @@ public final class CFromStringCreator {
             memset(strings, 0, sizeof(strings));
             char* saveptr;
             int count = 0;
-
             char* \(strLabel)_copy = gu_strdup(str);
-
             int isArray = 0;
-
             const char s[2] = ","; // delimeter
             const char e = '=';    // delimeter
             const char b1 = '{';   // delimeter
             const char b2 = '}';   // delimeter
             char* tokenS, *tokenE, *tokenB1, *tokenB2;
-
             tokenS = strtok_r(str_copy, s, &saveptr);
             """
     }
@@ -127,52 +124,37 @@ public final class CFromStringCreator {
                 default:
                     return nil
             }
-        }.combine("") { $0 + "\n\n" + $1 }
+        }.combine("") { $0 + "\n" + $1 }
         let tokens = """
-            while (tokenS != NULL)
-            {
+            while (tokenS != NULL) {
                 tokenE = strchr(tokenS, e);
-
-                if (tokenE == NULL)
-                {
+                if (tokenE == NULL) {
                     tokenE = tokenS;
-                }
-                else
-                {
+                } else {
                     tokenE++;
                 }
-
                 tokenB1 = strchr(gu_strtrim(tokenE), b1);
-
-                if (tokenB1 == NULL)
-                {
+                if (tokenB1 == NULL) {
                     tokenB1 = tokenE;
-                }
-                else
-                {
+                } else {
                     // start of an array
                     tokenB1++;
                     isArray = 1;
                 }
-
-                if (isArray)
-                {
+                if (isArray) {
                     tokenB2 = strchr(gu_strtrim(tokenB1), b2);
             """
             let arrs = arrayVars.flatMap {
                 switch $0.type {
                     case .array:
                         return """
-                            if (is_\($0.label) == 1)
-                            {
-                                if (tokenB2 != NULL)
-                                {
+                            if (is_\($0.label) == 1) {
+                                if (tokenB2 != NULL) {
                                     tokenB1[strlen(tokenB1)-1] = 0;
                                     is_\($0.label) = 0;
                                     isArray = 0;
                                     count++;
                                 }
-
                                 \($0.label)_values[\($0.label)_count] = gu_strtrim(tokenB1);
                                 \($0.label)_count++;
                             }
@@ -180,18 +162,68 @@ public final class CFromStringCreator {
                     default:
                         return nil
                 }
-            }.combine("") { $0 + "\nelse " + $1 }
+            }.combine("") { $0 + " else " + $1 }
             let tail = """
-                    }
-                    else
-                    {
+                    } else {
                         strings[count] = gu_strtrim(tokenE);
                         count++;
                     }
-
                     tokenS = strtok_r(NULL, s, &saveptr);
                 }
                 """
-            return head + "\n\n" + tokens + "\n" + self.stringHelpers.indent(arrs, 2) + "\n" + tail
+            return head + "\n" + tokens + "\n" + self.stringHelpers.indent(arrs, 2) + "\n" + tail
     }
+
+    fileprivate func assignVars(_ variables: [Variable]) -> String {
+        return variables.enumerated().flatMap { (index: Int, variable: Variable) -> String? in
+            let label = "strings[\(index)]"
+            guard let value = self.createValue(forVariable: variable, accessedFrom: label) else {
+                return nil
+            }
+            let assignment = "self->\(variable.label) = \(value)"
+            return self.createGuard(accessing: label) + "\n" + self.stringHelpers.indent(assignment)
+        }.combine("") { $0 + "\n" + $1}
+    }
+
+    fileprivate func createGuard(accessing label: String) -> String {
+        return "if (\(label) != NULL)"
+    }
+
+    fileprivate func createValue(forVariable variable: Variable, accessedFrom label: String) -> String? {
+        switch variable.type {
+            case .array:
+                return ""
+            case .bool:
+                return "strcmp(\(label), \"true\") == 0 || strcmp(\(label), \"1\") == 0 ? true : false;"
+            case .char:
+                return "(\(variable.cType))atoi(\(label));"
+            case.numeric:
+                return self.createNumericValue(forVariable: variable, accessedFrom: label)
+            case.string:
+                return "(string)(\(label));"
+            default:
+                return nil
+        }
+    }
+
+    fileprivate func createNumericValue(forVariable variable: Variable, accessedFrom label: String) -> String? {
+        switch variable.type {
+            case .numeric(let numericType):
+                switch numericType {
+                    case .double, .float, .long(.double), .long(.float):
+                        return "(\(variable.cType))atof(\(label));"
+                    case .long(.long):
+                        return "(\(variable.cType))atoll(\(label));"
+                    case .long(.signed), .long(.unsigned):
+                        return "(\(variable.cType))atol(\(label));"
+                    case .signed, .unsigned:
+                        return "(\(variable.cType))atoi(\(label));"
+                    default:
+                        return nil
+                }
+            default:
+                return self.createValue(forVariable: variable, accessedFrom: label)
+        }
+    }
+
 }
