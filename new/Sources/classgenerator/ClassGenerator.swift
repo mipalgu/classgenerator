@@ -122,6 +122,10 @@ public final class ClassGenerator {
         guard let cls = self.parser.parse(file: url) else {
             fatalError(self.parser.lastError ?? "Unable to parse class")
         }
+        self.generateFiles(fromClass: cls, generatedFrom: genfile, generateCppWrapper: task.generateCppWrapper)
+    }
+
+    fileprivate func generateFiles(fromClass cls: Class, generatedFrom genfile: String, generateCppWrapper: Bool) {
         let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
         let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
         let cHeader = structName + ".h"
@@ -148,7 +152,7 @@ public final class ClassGenerator {
         }) else {
             fatalError("Unable to create C File")
         }
-        if true == task.generateCppWrapper {
+        if true == generateCppWrapper {
             guard true == self.generate(cppHeader, {
                 self.cppHeaderCreator.createCPPHeader(
                     forClass: cls,
