@@ -128,42 +128,46 @@ public final class ClassGenerator {
         let cFile = structName + ".c"
         let cppHeader = className + ".h"
         let swiftFile = className + ".swift"
-        guard let cHeaderContents = self.cHeaderCreator.createCHeader(
-            forClass: cls,
-            forFileNamed: cHeader,
-            withStructName: structName,
-            generatedFrom: genfile
-        ) else {
-            fatalError("Unable to create C Header.")
-        }
-        if false == self.fileHelpers.createFile(atPath: URL(fileURLWithPath: cHeader), withContents: cHeaderContents) {
-            fatalError("Unable to create C Header")
-        }
-        guard let cFileContents = self.cFileCreator.createCFile(
-            forClass: cls,
-            forFileNamed: cFile,
-            withStructName: structName,
-            generatedFrom: genfile
-        ) else {
-            fatalError("Unable to create C File")
-        }
-        if false == self.fileHelpers.createFile(atPath: URL(fileURLWithPath: cFile), withContents: cFileContents) {
-            fatalError("Unable to create C Header")
-        }
-        if true == task.generateCppWrapper {
-            guard let cppHeaderContent = self.cppHeaderCreator.createCPPHeader(
+        guard true == self.generate(cHeader, {
+            self.cHeaderCreator.createCHeader(
                 forClass: cls,
-                forFileNamed: cppHeader,
-                withClassName: className,
+                forFileNamed: cHeader,
                 withStructName: structName,
                 generatedFrom: genfile
-            ) else {
-                fatalError("Unable to create C++ header.")
-            }
-            if false == self.fileHelpers.createFile(atPath: URL(fileURLWithPath: cppHeader), withContents: cppHeaderContent) {
-                fatalError("Unable to create C Header")
+            )
+        }) else {
+            fatalError("Unable to create C Header")
+        }
+        guard true == self.generate(cFile, {
+            self.cFileCreator.createCFile(
+                forClass: cls,
+                forFileNamed: cFile,
+                withStructName: structName,
+                generatedFrom: genfile
+            )
+        }) else {
+            fatalError("Unable to create C File")
+        }
+        if true == task.generateCppWrapper {
+            guard true == self.generate(cppHeader, {
+                self.cppHeaderCreator.createCPPHeader(
+                    forClass: cls,
+                    forFileNamed: cppHeader,
+                    withClassName: className,
+                    withStructName: structName,
+                    generatedFrom: genfile
+                )
+            }) else {
+                fatalError("Unable to create C++ Header")
             }
         }
+    }
+
+    fileprivate func generate(_ file: String, _ generateContent: () -> String?) -> Bool {
+        guard let content = generateContent() else {
+            return false
+        }
+        return self.fileHelpers.createFile(atPath: URL(fileURLWithPath: file), withContents: content)
     }
 
     fileprivate func cleanArgs(_ args: [String]) -> [String] {
