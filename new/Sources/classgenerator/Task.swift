@@ -62,6 +62,8 @@ public struct Task {
 
     var generateSwiftWrapper: Bool = false
 
-    var path: String = ""
+    var path: String? = ""
+
+    var printHelpText: Bool = false
 
 }

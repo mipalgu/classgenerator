@@ -90,9 +90,19 @@ public final class ClassGenerator {
                     fatalError("Unknown Error")
             }
         }
+        self.handleTask(task)
     }
 
-    private func cleanArgs(_ args: [String]) -> [String] {
+    fileprivate func handleTask(_ task: Task) {
+        if task.printHelpText {
+            print(self.parser.helpText)
+            if nil == task.path {
+                return
+            }
+        }
+    }
+
+    fileprivate func cleanArgs(_ args: [String]) -> [String] {
         return args[1 ..< args.count].flatMap { (str: String) -> [String] in
             let cs = Array(str.characters)
             if cs.count < 2 || cs.first != "-" {

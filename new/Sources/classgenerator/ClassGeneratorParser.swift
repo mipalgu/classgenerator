@@ -82,9 +82,6 @@ public class ClassGeneratorParser {
             // Remove words that we are finished with
             wds.removeFirst()
         }
-        if "" == task.path {
-            throw ClassGeneratorErrors.pathNotFound
-        }
         return task
     }
 
@@ -94,6 +91,8 @@ public class ClassGeneratorParser {
             return self.handleCFlag(task, words: &words)
         case "-s":
             return self.handleSFlag(task, words: &words)
+        case "--help":
+            return self.handleHelpFlag(task, words: &words)
         default:
             return try self.handlePath(task, words: &words)
         }
@@ -108,6 +107,12 @@ public class ClassGeneratorParser {
     private func handleSFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.generateSwiftWrapper = true
+        return temp
+    }
+
+    private func handleHelpFlag(_ task: Task, words: inout [String]) -> Task {
+        var temp = task
+        temp.printHelpText = true
         return temp
     }
 
