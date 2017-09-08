@@ -83,7 +83,13 @@ public class CPPHeaderCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to open wb_old.h")
             return
         }
-        guard let result = self.creator.createCPPHeader(forClass: self.oldClass, generatedFrom: "old.txt") else {
+        guard let result = self.creator.createCPPHeader(
+            forClass: self.oldClass,
+            forFileNamed: "Old.h",
+            withClassName: "Old",
+            withStructName: "wb_old",
+            generatedFrom: "old.txt"
+        ) else {
             XCTFail("Unable to create a header from \(self.oldClass.name)")
             return
         }
@@ -96,7 +102,13 @@ public class CPPHeaderCreatorTests: ClassGeneratorTestCase {
             return
         }
         let cls = super.createSectionsClass("sections")
-        guard let result = self.creator.createCPPHeader(forClass: cls, generatedFrom: "sections.gen") else {
+        guard let result = self.creator.createCPPHeader(
+            forClass: cls,
+            forFileNamed: "Sections.h",
+            withClassName: "Sections",
+            withStructName: "wb_sections",
+            generatedFrom: "sections.gen"
+        ) else {
             XCTFail("Unable to create a header from \(cls.name)")
             return
         }

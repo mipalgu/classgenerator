@@ -82,7 +82,12 @@ public class CFileCreatorTests: ClassGeneratorTestCase {
             XCTFail("Unable to read contents of wb_old.c")
             return
         }
-        guard let result = self.creator.createCFile(forClass: self.oldClass, generatedFrom: "old.txt") else {
+        guard let result = self.creator.createCFile(
+            forClass: self.oldClass,
+            forFileNamed: "wb_old.c",
+            withStructName: "wb_old",
+            generatedFrom: "old.txt"
+        ) else {
             XCTFail("Unable to create a header grom \(self.oldClass.name)")
             return
         }
