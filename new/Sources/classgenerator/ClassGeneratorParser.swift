@@ -73,7 +73,7 @@ public class ClassGeneratorParser {
             """
     }
 
-    public func parse(words: [String]) throws -> Task? {
+    public func parse(words: [String]) throws -> Task {
         var wds: [String] = words
         var task = Task()
         // Keep looping while we still have input
@@ -82,7 +82,10 @@ public class ClassGeneratorParser {
             // Remove words that we are finished with
             wds.removeFirst()
         }
-        return "" == task.path ? nil : task
+        if "" == task.path {
+            throw ClassGeneratorErrors.pathNotFound
+        }
+        return task
     }
 
     private func handleNextFlag(_ task: Task, words: inout [String]) throws -> Task {

@@ -58,6 +58,51 @@
 
 public final class ClassGenerator {
 
+    fileprivate let parser: ClassGeneratorParser
+    fileprivate let cHeaderCreator: CHeaderCreator
+    fileprivate let cFileCreator: CFileCreator
+    fileprivate let cppHeaderCreator: CPPHeaderCreator
 
+    public init(
+        parser: ClassGeneratorParser = ClassGeneratorParser(),
+        cHeaderCreator: CHeaderCreator = CHeaderCreator(),
+        cFileCreator: CFileCreator = CFileCreator(),
+        cppHeaderCreator: CPPHeaderCreator = CPPHeaderCreator()
+    ) {
+        self.parser = parser
+        self.cHeaderCreator = cHeaderCreator
+        self.cFileCreator = cFileCreator
+        self.cppHeaderCreator = cppHeaderCreator
+    }
+
+    public func run(_ args: [String]) {
+        let args = self.cleanArgs(args)
+        let task: Task
+        do {
+            task = try self.parser.parse(words: args)
+        } catch (let e) {
+            switch e {
+                case ClassGeneratorErrors.pathNotFound:
+                    fatalError("Path not found")
+                case ClassGeneratorErrors.unknownFlag(let flag):
+                    fatalError("Unknown Flag: \(flag)")
+                default:
+                    fatalError("Unknown Error")
+            }
+        }
+    }
+
+    private func cleanArgs(_ args: [String]) -> [String] {
+        return args[1 ..< args.count].flatMap { (str: String) -> [String] in
+            let cs = Array(str.characters)
+            if cs.count < 2 || cs.first != "-" {
+                return [str]
+            }
+            if cs[1] == "-" {
+                return [str]
+            }
+            return cs.flatMap { $0 == "-" ? nil : "-\($0)" }
+        }
+    }
 
 }
