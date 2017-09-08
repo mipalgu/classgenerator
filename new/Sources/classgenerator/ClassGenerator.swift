@@ -136,6 +136,9 @@ public final class ClassGenerator {
         ) else {
             fatalError("Unable to create C Header.")
         }
+        if false == self.fileHelpers.createFile(atPath: URL(fileURLWithPath: cHeader), withContents: cHeaderContents) {
+            fatalError("Unable to create C Header")
+        }
         guard let cFileContents = self.cFileCreator.createCFile(
             forClass: cls,
             forFileNamed: cFile,
@@ -143,6 +146,9 @@ public final class ClassGenerator {
             generatedFrom: genfile
         ) else {
             fatalError("Unable to create C File")
+        }
+        if false == self.fileHelpers.createFile(atPath: URL(fileURLWithPath: cFile), withContents: cFileContents) {
+            fatalError("Unable to create C Header")
         }
         if true == task.generateCppWrapper {
             guard let cppHeaderContent = self.cppHeaderCreator.createCPPHeader(
@@ -154,7 +160,9 @@ public final class ClassGenerator {
             ) else {
                 fatalError("Unable to create C++ header.")
             }
-            print(cppHeaderContent)
+            if false == self.fileHelpers.createFile(atPath: URL(fileURLWithPath: cppHeader), withContents: cppHeaderContent) {
+                fatalError("Unable to create C Header")
+            }
         }
     }
 
