@@ -63,6 +63,7 @@ public class ClassGeneratorParser {
 
     public var helpText: String {
         return """
+
             OVERVIEW: Generates gusimplewhiteboard classes and wrappers for different languages.
 
             USAGE: classgenerator [options] <classname.gen>
@@ -70,6 +71,7 @@ public class ClassGeneratorParser {
             OPTIONS:
                 -c  Generate a C++ wrapper.
                 -s  Generate a Swift wrapper.
+
             """
     }
 
