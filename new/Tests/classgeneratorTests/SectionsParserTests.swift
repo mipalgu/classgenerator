@@ -108,10 +108,12 @@ public class SectionsParserTests: ClassGeneratorTestCase {
                 str += "\n\n" + sections[(j + i) % sections.count]
             }
             let contents = str.trimmingCharacters(in: .whitespacesAndNewlines)
+            print("parse")
             guard let result = self.parser.parseSections(fromContents: contents) else {
                 XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
                 return
             }
+            print("end parse")
             XCTAssertEqual(expected, result)
         }
     }

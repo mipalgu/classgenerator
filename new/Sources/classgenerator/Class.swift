@@ -64,15 +64,23 @@ public struct Class {
 
     public let comment: String
 
-    public let preamble: String?
-
     public let variables: [Variable]
 
-    public let cExtras: String?
+    public let preC: String?
 
-    public let cppExtras: String?
+    public let postC: String?
 
-    public let swiftExtras: String?
+    public let preCpp: String?
+
+    public let embeddedCpp: String?
+
+    public let postCpp: String?
+
+    public let preSwift: String?
+
+    public let embeddedSwift: String?
+
+    public let postSwift: String?
 
 }
 
@@ -82,9 +90,13 @@ public func == (lhs: Class, rhs: Class) -> Bool {
     return lhs.name == rhs.name
         && lhs.author == rhs.author
         && lhs.comment == rhs.comment
-        && lhs.preamble == rhs.preamble
         && lhs.variables == rhs.variables
-        && lhs.cExtras == rhs.cExtras
-        && lhs.cppExtras == rhs.cppExtras
-        && lhs.swiftExtras == rhs.swiftExtras
+        && lhs.preC == rhs.preC
+        && lhs.postC == rhs.postC
+        && lhs.preCpp == rhs.preCpp
+        && lhs.embeddedCpp == rhs.embeddedCpp
+        && lhs.postCpp == rhs.postCpp
+        && lhs.preSwift == rhs.preSwift
+        && lhs.embeddedSwift == rhs.embeddedSwift
+        && lhs.postSwift == rhs.postSwift
 }

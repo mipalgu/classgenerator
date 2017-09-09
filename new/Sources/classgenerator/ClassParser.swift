@@ -116,11 +116,15 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             name: name,
             author: author,
             comment: comment,
-            preamble: sections.preC,
             variables: variables,
-            cExtras: sections.postC,
-            cppExtras: sections.postCpp,
-            swiftExtras: sections.postSwift
+            preC: sections.preC,
+            postC: sections.postC,
+            preCpp: sections.preCpp,
+            embeddedCpp: sections.embeddedCpp,
+            postCpp: sections.postCpp,
+            preSwift: sections.preSwift,
+            embeddedSwift: sections.embeddedSwift,
+            postSwift: sections.postSwift
         )
     }
 

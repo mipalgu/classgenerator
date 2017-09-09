@@ -64,11 +64,14 @@ import XCTest
 //swiftlint:disable:next type_body_length
 public class ClassGeneratorTestCase: XCTestCase {
 
+    public override func setUp() {
+        print("set up class generator")
+    }
+
     public let oldClass = Class(
             name: "old",
             author: "Callum McColl",
             comment: "This is a test of all of the supported types.",
-            preamble: nil,
             variables: [
                 Variable(
                     label: "str",
@@ -881,9 +884,14 @@ public class ClassGeneratorTestCase: XCTestCase {
                     comment: "a comment about bools"
                 )
             ],
-            cExtras: nil,
-            cppExtras: nil,
-            swiftExtras: nil
+            preC: nil,
+            postC: nil,
+            preCpp: nil,
+            embeddedCpp: nil,
+            postCpp: nil,
+            preSwift: nil,
+            embeddedSwift: nil,
+            postSwift: nil
         )
 
         func createSectionsClass(_ name: String) -> Class {
@@ -891,7 +899,6 @@ public class ClassGeneratorTestCase: XCTestCase {
                 name: name,
                 author: "Callum McColl",
                 comment: "This is a global comment.",
-                preamble: "#include <stdint.h>",
                 variables: [
                     Variable(
                         label: "c",
@@ -903,9 +910,14 @@ public class ClassGeneratorTestCase: XCTestCase {
                         comment: "A counter."
                     )
                 ],
-                cExtras: "int f() {\n    return c + 1;\n}",
-                cppExtras: "int g() {\n    return c + 2;\n}",
-                swiftExtras: "extension wb_sections: ExternalVariables {}"
+                preC: "#include <stdint.h>",
+                postC: "int f() {\n    return 1;\n}",
+                preCpp: "int g() {\n    return 2;\n}",
+                embeddedCpp: "int h() {\n    return c + 3;\n}",
+                postCpp: "int i() {\n    return 4;\n}",
+                preSwift: "import FSM",
+                embeddedSwift: "func j() -> Int {\n    return 5\n}",
+                postSwift: "extension wb_sections: ExternalVariables {}"
             )
         }
 

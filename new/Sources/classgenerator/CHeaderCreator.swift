@@ -129,8 +129,9 @@ public final class CHeaderCreator: ErrorContainer {
                     continue
             }
         }
-        let preamble = nil == cls.preamble ? "" : cls.preamble! + "\n\n"
-        return comment + "\n\n" + head + "\n\n" + preamble + defs.trimmingCharacters(in: .newlines)
+        let preC = nil == cls.preC ? "" : cls.preC! + "\n\n"
+        let postC = nil == cls.postC ? "" : "\n\n" + cls.postC!
+        return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines) + postC
     }
 
     fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
