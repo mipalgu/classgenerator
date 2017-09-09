@@ -158,11 +158,20 @@ public final class CPPHeaderCreator {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
         let startdef = "\(name)("
         let list = variables.map {
-            "\($0.cType)\(self.calculateSignatureExtras(forType: $0.type)) \($0.label) = \($0.defaultValue)"
+            "\(self.calculateCppType(forVariable: $0)) \($0.label) = \($0.defaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let def = startdef + list + ") {"
         let setters = self.createSetters(forVariables: variables)
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+
+    fileprivate func calculateCppType(forVariable variable: Variable) -> String {
+        switch variable.type {
+            case .string:
+                return "std::string"
+            default:
+                return variable.cType + self.calculateSignatureExtras(forType: variable.type)
+        }
     }
 
     fileprivate func calculateSignatureExtras(forType type: VariableTypes) -> String {
