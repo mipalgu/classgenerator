@@ -82,740 +82,723 @@ namespace guWhiteboard {
          * Create a new `Old`.
          */
         Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', int i = 1, signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, short s = 1, short int si = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, int i2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, short s2 = 0, short int si2 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, somestruct strct = somestruct(), int16_t[4] array16 = {1,2,3,4}, bool[3] bools = {true, true, true}) {
-            set_str(str); 
-            set_b(b); 
-            set_c(c); 
-            set_sc(sc); 
-            set_uc(uc); 
-            set_i(i); 
-            set_si(si); 
-            set_sii(sii); 
-            set_u(u); 
-            set_ui(ui); 
-            set_u8(u8); 
-            set_u16(u16); 
-            set_u32(u32); 
-            set_u64(u64); 
-            set_i8(i8); 
-            set_i16(i16); 
-            set_i32(i32); 
-            set_i64(i64); 
-            set_s(s); 
-            set_si(si); 
-            set_ss(ss); 
-            set_ssi(ssi); 
-            set_us(us); 
-            set_usi(usi); 
-            set_l(l); 
-            set_li(li); 
-            set_sl(sl); 
-            set_sli(sli); 
-            set_ul(ul); 
-            set_uli(uli); 
-            set_ll(ll); 
-            set_lli(lli); 
-            set_sll(sll); 
-            set_slli(slli); 
-            set_ull(ull); 
-            set_ulli(ulli); 
-            set_l64(l64); 
-            set_f(f); 
-            set_ft(ft); 
-            set_d(d); 
-            set_dt(dt); 
-            set_ld(ld); 
-            set_dd(dd); 
-            set_str(str); 
-            set_b(b); 
-            set_c(c); 
-            set_sc(sc); 
-            set_uc(uc); 
-            set_i(i); 
-            set_si(si); 
-            set_sii(sii); 
-            set_u(u); 
-            set_ui(ui); 
-            set_u8(u8); 
-            set_u16(u16); 
-            set_u32(u32); 
-            set_u64(u64); 
-            set_i8(i8); 
-            set_i16(i16); 
-            set_i32(i32); 
-            set_i64(i64); 
-            set_s(s); 
-            set_si(si); 
-            set_ss(ss); 
-            set_ssi(ssi); 
-            set_us(us); 
-            set_usi(usi); 
-            set_l(l); 
-            set_li(li); 
-            set_sl(sl); 
-            set_sli(sli); 
-            set_ul(ul); 
-            set_uli(uli); 
-            set_ll(ll); 
-            set_lli(lli); 
-            set_sll(sll); 
-            set_slli(slli); 
-            set_ull(ull); 
-            set_ulli(ulli); 
-            set_l64(l64); 
-            set_f(f); 
-            set_ft(ft); 
-            set_d(d); 
-            set_dt(dt); 
-            set_ld(ld); 
-            set_dd(dd); 
-            set_p(p); 
-            set_strct(strct); 
-            set_array16(1, 0); 
-            set_array16(2, 1); 
-            set_array16(3, 2); 
-            set_array16(4, 3); 
-            set_bools(false, 0); 
-            set_bools(false, 1); 
-            set_bools(false, 2); 
-        } 
+            set_str(str);
+            set_b(b);
+            set_c(c);
+            set_sc(sc);
+            set_uc(uc);
+            set_i(i);
+            set_si(si);
+            set_sii(sii);
+            set_u(u);
+            set_ui(ui);
+            set_u8(u8);
+            set_u16(u16);
+            set_u32(u32);
+            set_u64(u64);
+            set_i8(i8);
+            set_i16(i16);
+            set_i32(i32);
+            set_i64(i64);
+            set_s(s);
+            set_si(si);
+            set_ss(ss);
+            set_ssi(ssi);
+            set_us(us);
+            set_usi(usi);
+            set_l(l);
+            set_li(li);
+            set_sl(sl);
+            set_sli(sli);
+            set_ul(ul);
+            set_uli(uli);
+            set_ll(ll);
+            set_lli(lli);
+            set_sll(sll);
+            set_slli(slli);
+            set_ull(ull);
+            set_ulli(ulli);
+            set_l64(l64);
+            set_f(f);
+            set_ft(ft);
+            set_d(d);
+            set_dt(dt);
+            set_ld(ld);
+            set_dd(dd);
+            set_str2(str2);
+            set_b2(b2);
+            set_c2(c2);
+            set_sc2(sc2);
+            set_uc2(uc2);
+            set_i2(i2);
+            set_si2(si2);
+            set_sii2(sii2);
+            set_u2(u2);
+            set_ui2(ui2);
+            set_u82(u82);
+            set_u162(u162);
+            set_u322(u322);
+            set_u642(u642);
+            set_i82(i82);
+            set_i162(i162);
+            set_i322(i322);
+            set_i642(i642);
+            set_s2(s2);
+            set_si2(si2);
+            set_ss2(ss2);
+            set_ssi2(ssi2);
+            set_us2(us2);
+            set_usi2(usi2);
+            set_l2(l2);
+            set_li2(li2);
+            set_sl2(sl2);
+            set_sli2(sli2);
+            set_ul2(ul2);
+            set_uli2(uli2);
+            set_ll2(ll2);
+            set_lli2(lli2);
+            set_sll2(sll2);
+            set_slli2(slli2);
+            set_ull2(ull2);
+            set_ulli2(ulli2);
+            set_l642(l642);
+            set_f2(f2);
+            set_ft2(ft2);
+            set_d2(d2);
+            set_dt2(dt2);
+            set_ld2(ld2);
+            set_dd2(dd2);
+            set_p(p);
+            set_strct(strct);
+            set_array16(array16);
+            set_bools(bools);
+        }
 
         /**
          * Copy Constructor.
-         */ 
-        Old(const Old &other) : wb_old() 
-        { 
-            set_str(other.str()); 
-            set_b(other.b()); 
-            set_c(other.c()); 
-            set_sc(other.sc()); 
-            set_uc(other.uc()); 
-            set_i(other.i()); 
-            set_si(other.si()); 
-            set_sii(other.sii()); 
-            set_u(other.u()); 
-            set_ui(other.ui()); 
-            set_u8(other.u8()); 
-            set_u16(other.u16()); 
-            set_u32(other.u32()); 
-            set_u64(other.u64()); 
-            set_i8(other.i8()); 
-            set_i16(other.i16()); 
-            set_i32(other.i32()); 
-            set_i64(other.i64()); 
-            set_s(other.s()); 
-            set_si(other.si()); 
-            set_ss(other.ss()); 
-            set_ssi(other.ssi()); 
-            set_us(other.us()); 
-            set_usi(other.usi()); 
-            set_l(other.l()); 
-            set_li(other.li()); 
-            set_sl(other.sl()); 
-            set_sli(other.sli()); 
-            set_ul(other.ul()); 
-            set_uli(other.uli()); 
-            set_ll(other.ll()); 
-            set_lli(other.lli()); 
-            set_sll(other.sll()); 
-            set_slli(other.slli()); 
-            set_ull(other.ull()); 
-            set_ulli(other.ulli()); 
-            set_l64(other.l64()); 
-            set_f(other.f()); 
-            set_ft(other.ft()); 
-            set_d(other.d()); 
-            set_dt(other.dt()); 
-            set_ld(other.ld()); 
-            set_dd(other.dd()); 
-            set_str(other.str()); 
-            set_b(other.b()); 
-            set_c(other.c()); 
-            set_sc(other.sc()); 
-            set_uc(other.uc()); 
-            set_i(other.i()); 
-            set_si(other.si()); 
-            set_sii(other.sii()); 
-            set_u(other.u()); 
-            set_ui(other.ui()); 
-            set_u8(other.u8()); 
-            set_u16(other.u16()); 
-            set_u32(other.u32()); 
-            set_u64(other.u64()); 
-            set_i8(other.i8()); 
-            set_i16(other.i16()); 
-            set_i32(other.i32()); 
-            set_i64(other.i64()); 
-            set_s(other.s()); 
-            set_si(other.si()); 
-            set_ss(other.ss()); 
-            set_ssi(other.ssi()); 
-            set_us(other.us()); 
-            set_usi(other.usi()); 
-            set_l(other.l()); 
-            set_li(other.li()); 
-            set_sl(other.sl()); 
-            set_sli(other.sli()); 
-            set_ul(other.ul()); 
-            set_uli(other.uli()); 
-            set_ll(other.ll()); 
-            set_lli(other.lli()); 
-            set_sll(other.sll()); 
-            set_slli(other.slli()); 
-            set_ull(other.ull()); 
-            set_ulli(other.ulli()); 
-            set_l64(other.l64()); 
-            set_f(other.f()); 
-            set_ft(other.ft()); 
-            set_d(other.d()); 
-            set_dt(other.dt()); 
-            set_ld(other.ld()); 
-            set_dd(other.dd()); 
-            set_p(other.p()); 
-            set_strct(other.strct()); 
-            set_array16(other.array16(0), 0); 
-            set_array16(other.array16(1), 1); 
-            set_array16(other.array16(2), 2); 
-            set_array16(other.array16(3), 3); 
-            set_bools(other.bools(0), 0); 
-            set_bools(other.bools(1), 1); 
-            set_bools(other.bools(2), 2); 
-        } 
+         */
+        Old(const Old &other): wb_old() {
+            set_str(other.str());
+            set_b(other.b());
+            set_c(other.c());
+            set_sc(other.sc());
+            set_uc(other.uc());
+            set_i(other.i());
+            set_si(other.si());
+            set_sii(other.sii());
+            set_u(other.u());
+            set_ui(other.ui());
+            set_u8(other.u8());
+            set_u16(other.u16());
+            set_u32(other.u32());
+            set_u64(other.u64());
+            set_i8(other.i8());
+            set_i16(other.i16());
+            set_i32(other.i32());
+            set_i64(other.i64());
+            set_s(other.s());
+            set_si(other.si());
+            set_ss(other.ss());
+            set_ssi(other.ssi());
+            set_us(other.us());
+            set_usi(other.usi());
+            set_l(other.l());
+            set_li(other.li());
+            set_sl(other.sl());
+            set_sli(other.sli());
+            set_ul(other.ul());
+            set_uli(other.uli());
+            set_ll(other.ll());
+            set_lli(other.lli());
+            set_sll(other.sll());
+            set_slli(other.slli());
+            set_ull(other.ull());
+            set_ulli(other.ulli());
+            set_l64(other.l64());
+            set_f(other.f());
+            set_ft(other.ft());
+            set_d(other.d());
+            set_dt(other.dt());
+            set_ld(other.ld());
+            set_dd(other.dd());
+            set_str2(other.str2());
+            set_b2(other.b2());
+            set_c2(other.c2());
+            set_sc2(other.sc2());
+            set_uc2(other.uc2());
+            set_i2(other.i2());
+            set_si2(other.si2());
+            set_sii2(other.sii2());
+            set_u2(other.u2());
+            set_ui2(other.ui2());
+            set_u82(other.u82());
+            set_u162(other.u162());
+            set_u322(other.u322());
+            set_u642(other.u642());
+            set_i82(other.i82());
+            set_i162(other.i162());
+            set_i322(other.i322());
+            set_i642(other.i642());
+            set_s2(other.s2());
+            set_si2(other.si2());
+            set_ss2(other.ss2());
+            set_ssi2(other.ssi2());
+            set_us2(other.us2());
+            set_usi2(other.usi2());
+            set_l2(other.l2());
+            set_li2(other.li2());
+            set_sl2(other.sl2());
+            set_sli2(other.sli2());
+            set_ul2(other.ul2());
+            set_uli2(other.uli2());
+            set_ll2(other.ll2());
+            set_lli2(other.lli2());
+            set_sll2(other.sll2());
+            set_slli2(other.slli2());
+            set_ull2(other.ull2());
+            set_ulli2(other.ulli2());
+            set_l642(other.l642());
+            set_f2(other.f2());
+            set_ft2(other.ft2());
+            set_d2(other.d2());
+            set_dt2(other.dt2());
+            set_ld2(other.ld2());
+            set_dd2(other.dd2());
+            set_p(other.p());
+            set_strct(other.strct());
+            set_array16(other.array16());
+            set_bools(other.bools());
+        }
 
         /**
-         * Copy Assignment Operator
+         * Copy Assignment Operator.
          */
-        Old &operator = (const Old &other) 
-        { 
-            set_str(other.str()); 
-            set_b(other.b()); 
-            set_c(other.c()); 
-            set_sc(other.sc()); 
-            set_uc(other.uc()); 
-            set_i(other.i()); 
-            set_si(other.si()); 
-            set_sii(other.sii()); 
-            set_u(other.u()); 
-            set_ui(other.ui()); 
-            set_u8(other.u8()); 
-            set_u16(other.u16()); 
-            set_u32(other.u32()); 
-            set_u64(other.u64()); 
-            set_i8(other.i8()); 
-            set_i16(other.i16()); 
-            set_i32(other.i32()); 
-            set_i64(other.i64()); 
-            set_s(other.s()); 
-            set_si(other.si()); 
-            set_ss(other.ss()); 
-            set_ssi(other.ssi()); 
-            set_us(other.us()); 
-            set_usi(other.usi()); 
-            set_l(other.l()); 
-            set_li(other.li()); 
-            set_sl(other.sl()); 
-            set_sli(other.sli()); 
-            set_ul(other.ul()); 
-            set_uli(other.uli()); 
-            set_ll(other.ll()); 
-            set_lli(other.lli()); 
-            set_sll(other.sll()); 
-            set_slli(other.slli()); 
-            set_ull(other.ull()); 
-            set_ulli(other.ulli()); 
-            set_l64(other.l64()); 
-            set_f(other.f()); 
-            set_ft(other.ft()); 
-            set_d(other.d()); 
-            set_dt(other.dt()); 
-            set_ld(other.ld()); 
-            set_dd(other.dd()); 
-            set_str(other.str()); 
-            set_b(other.b()); 
-            set_c(other.c()); 
-            set_sc(other.sc()); 
-            set_uc(other.uc()); 
-            set_i(other.i()); 
-            set_si(other.si()); 
-            set_sii(other.sii()); 
-            set_u(other.u()); 
-            set_ui(other.ui()); 
-            set_u8(other.u8()); 
-            set_u16(other.u16()); 
-            set_u32(other.u32()); 
-            set_u64(other.u64()); 
-            set_i8(other.i8()); 
-            set_i16(other.i16()); 
-            set_i32(other.i32()); 
-            set_i64(other.i64()); 
-            set_s(other.s()); 
-            set_si(other.si()); 
-            set_ss(other.ss()); 
-            set_ssi(other.ssi()); 
-            set_us(other.us()); 
-            set_usi(other.usi()); 
-            set_l(other.l()); 
-            set_li(other.li()); 
-            set_sl(other.sl()); 
-            set_sli(other.sli()); 
-            set_ul(other.ul()); 
-            set_uli(other.uli()); 
-            set_ll(other.ll()); 
-            set_lli(other.lli()); 
-            set_sll(other.sll()); 
-            set_slli(other.slli()); 
-            set_ull(other.ull()); 
-            set_ulli(other.ulli()); 
-            set_l64(other.l64()); 
-            set_f(other.f()); 
-            set_ft(other.ft()); 
-            set_d(other.d()); 
-            set_dt(other.dt()); 
-            set_ld(other.ld()); 
-            set_dd(other.dd()); 
-            set_p(other.p()); 
-            set_strct(other.strct()); 
-            set_array16(other.array16(0), 0); 
-            set_array16(other.array16(1), 1); 
-            set_array16(other.array16(2), 2); 
-            set_array16(other.array16(3), 3); 
-            set_bools(other.bools(0), 0); 
-            set_bools(other.bools(1), 1); 
-            set_bools(other.bools(2), 2); 
-            return *this; 
-        } 
+        Old &operator = (const Old &other) {
+            set_str(other.str());
+            set_b(other.b());
+            set_c(other.c());
+            set_sc(other.sc());
+            set_uc(other.uc());
+            set_i(other.i());
+            set_si(other.si());
+            set_sii(other.sii());
+            set_u(other.u());
+            set_ui(other.ui());
+            set_u8(other.u8());
+            set_u16(other.u16());
+            set_u32(other.u32());
+            set_u64(other.u64());
+            set_i8(other.i8());
+            set_i16(other.i16());
+            set_i32(other.i32());
+            set_i64(other.i64());
+            set_s(other.s());
+            set_si(other.si());
+            set_ss(other.ss());
+            set_ssi(other.ssi());
+            set_us(other.us());
+            set_usi(other.usi());
+            set_l(other.l());
+            set_li(other.li());
+            set_sl(other.sl());
+            set_sli(other.sli());
+            set_ul(other.ul());
+            set_uli(other.uli());
+            set_ll(other.ll());
+            set_lli(other.lli());
+            set_sll(other.sll());
+            set_slli(other.slli());
+            set_ull(other.ull());
+            set_ulli(other.ulli());
+            set_l64(other.l64());
+            set_f(other.f());
+            set_ft(other.ft());
+            set_d(other.d());
+            set_dt(other.dt());
+            set_ld(other.ld());
+            set_dd(other.dd());
+            set_str2(other.str2());
+            set_b2(other.b2());
+            set_c2(other.c2());
+            set_sc2(other.sc2());
+            set_uc2(other.uc2());
+            set_i2(other.i2());
+            set_si2(other.si2());
+            set_sii2(other.sii2());
+            set_u2(other.u2());
+            set_ui2(other.ui2());
+            set_u82(other.u82());
+            set_u162(other.u162());
+            set_u322(other.u322());
+            set_u642(other.u642());
+            set_i82(other.i82());
+            set_i162(other.i162());
+            set_i322(other.i322());
+            set_i642(other.i642());
+            set_s2(other.s2());
+            set_si2(other.si2());
+            set_ss2(other.ss2());
+            set_ssi2(other.ssi2());
+            set_us2(other.us2());
+            set_usi2(other.usi2());
+            set_l2(other.l2());
+            set_li2(other.li2());
+            set_sl2(other.sl2());
+            set_sli2(other.sli2());
+            set_ul2(other.ul2());
+            set_uli2(other.uli2());
+            set_ll2(other.ll2());
+            set_lli2(other.lli2());
+            set_sll2(other.sll2());
+            set_slli2(other.slli2());
+            set_ull2(other.ull2());
+            set_ulli2(other.ulli2());
+            set_l642(other.l642());
+            set_f2(other.f2());
+            set_ft2(other.ft2());
+            set_d2(other.d2());
+            set_dt2(other.dt2());
+            set_ld2(other.ld2());
+            set_dd2(other.dd2());
+            set_p(other.p());
+            set_strct(other.strct());
+            set_array16(other.array16());
+            set_bools(other.bools());
+            return *this;
+        }
 
-#ifdef WHITEBOARD_POSTER_STRING_CONVERSION 
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
         /**
          * String Constructor.
-         */ 
-        Old(const std::string &str) { from_string(str.c_str()); }  
+         */
+        Old(const std::string &str) { from_string(str.c_str()); } 
 
-        std::string description() 
-        { 
-#ifdef USE_WB_OLD_C_CONVERSION 
-            char buffer[OLD_DESC_BUFFER_SIZE]; 
-            wb_old_description(this, buffer, sizeof(buffer)); 
-            std::string descr = buffer; 
-            return descr; 
-#else 
-            std::ostringstream ss; 
-            ss << "str=" << str(); 
-            ss << ", "; 
-            ss << "b=" << b(); 
-            ss << ", "; 
-            ss << "c=" << c(); 
-            ss << ", "; 
-            ss << "sc=" << sc(); 
-            ss << ", "; 
-            ss << "uc=" << uc(); 
-            ss << ", "; 
-            ss << "i=" << i(); 
-            ss << ", "; 
-            ss << "si=" << si(); 
-            ss << ", "; 
-            ss << "sii=" << sii(); 
-            ss << ", "; 
-            ss << "u=" << u(); 
-            ss << ", "; 
-            ss << "ui=" << ui(); 
-            ss << ", "; 
-            ss << "u8=" << u8(); 
-            ss << ", "; 
-            ss << "u16=" << u16(); 
-            ss << ", "; 
-            ss << "u32=" << u32(); 
-            ss << ", "; 
-            ss << "u64=" << u64(); 
-            ss << ", "; 
-            ss << "i8=" << i8(); 
-            ss << ", "; 
-            ss << "i16=" << i16(); 
-            ss << ", "; 
-            ss << "i32=" << i32(); 
-            ss << ", "; 
-            ss << "i64=" << i64(); 
-            ss << ", "; 
-            ss << "s=" << s(); 
-            ss << ", "; 
-            ss << "si=" << si(); 
-            ss << ", "; 
-            ss << "ss=" << ss(); 
-            ss << ", "; 
-            ss << "ssi=" << ssi(); 
-            ss << ", "; 
-            ss << "us=" << us(); 
-            ss << ", "; 
-            ss << "usi=" << usi(); 
-            ss << ", "; 
-            ss << "l=" << l(); 
-            ss << ", "; 
-            ss << "li=" << li(); 
-            ss << ", "; 
-            ss << "sl=" << sl(); 
-            ss << ", "; 
-            ss << "sli=" << sli(); 
-            ss << ", "; 
-            ss << "ul=" << ul(); 
-            ss << ", "; 
-            ss << "uli=" << uli(); 
-            ss << ", "; 
-            ss << "ll=" << ll(); 
-            ss << ", "; 
-            ss << "lli=" << lli(); 
-            ss << ", "; 
-            ss << "sll=" << sll(); 
-            ss << ", "; 
-            ss << "slli=" << slli(); 
-            ss << ", "; 
-            ss << "ull=" << ull(); 
-            ss << ", "; 
-            ss << "ulli=" << ulli(); 
-            ss << ", "; 
-            ss << "l64=" << l64(); 
-            ss << ", "; 
-            ss << "f=" << f(); 
-            ss << ", "; 
-            ss << "ft=" << ft(); 
-            ss << ", "; 
-            ss << "d=" << d(); 
-            ss << ", "; 
-            ss << "dt=" << dt(); 
-            ss << ", "; 
-            ss << "ld=" << ld(); 
-            ss << ", "; 
-            ss << "dd=" << dd(); 
-            ss << ", "; 
-            ss << "str=" << str(); 
-            ss << ", "; 
-            ss << "b=" << b(); 
-            ss << ", "; 
-            ss << "c=" << c(); 
-            ss << ", "; 
-            ss << "sc=" << sc(); 
-            ss << ", "; 
-            ss << "uc=" << uc(); 
-            ss << ", "; 
-            ss << "i=" << i(); 
-            ss << ", "; 
-            ss << "si=" << si(); 
-            ss << ", "; 
-            ss << "sii=" << sii(); 
-            ss << ", "; 
-            ss << "u=" << u(); 
-            ss << ", "; 
-            ss << "ui=" << ui(); 
-            ss << ", "; 
-            ss << "u8=" << u8(); 
-            ss << ", "; 
-            ss << "u16=" << u16(); 
-            ss << ", "; 
-            ss << "u32=" << u32(); 
-            ss << ", "; 
-            ss << "u64=" << u64(); 
-            ss << ", "; 
-            ss << "i8=" << i8(); 
-            ss << ", "; 
-            ss << "i16=" << i16(); 
-            ss << ", "; 
-            ss << "i32=" << i32(); 
-            ss << ", "; 
-            ss << "i64=" << i64(); 
-            ss << ", "; 
-            ss << "s=" << s(); 
-            ss << ", "; 
-            ss << "si=" << si(); 
-            ss << ", "; 
-            ss << "ss=" << ss(); 
-            ss << ", "; 
-            ss << "ssi=" << ssi(); 
-            ss << ", "; 
-            ss << "us=" << us(); 
-            ss << ", "; 
-            ss << "usi=" << usi(); 
-            ss << ", "; 
-            ss << "l=" << l(); 
-            ss << ", "; 
-            ss << "li=" << li(); 
-            ss << ", "; 
-            ss << "sl=" << sl(); 
-            ss << ", "; 
-            ss << "sli=" << sli(); 
-            ss << ", "; 
-            ss << "ul=" << ul(); 
-            ss << ", "; 
-            ss << "uli=" << uli(); 
-            ss << ", "; 
-            ss << "ll=" << ll(); 
-            ss << ", "; 
-            ss << "lli=" << lli(); 
-            ss << ", "; 
-            ss << "sll=" << sll(); 
-            ss << ", "; 
-            ss << "slli=" << slli(); 
-            ss << ", "; 
-            ss << "ull=" << ull(); 
-            ss << ", "; 
-            ss << "ulli=" << ulli(); 
-            ss << ", "; 
-            ss << "l64=" << l64(); 
-            ss << ", "; 
-            ss << "f=" << f(); 
-            ss << ", "; 
-            ss << "ft=" << ft(); 
-            ss << ", "; 
-            ss << "d=" << d(); 
-            ss << ", "; 
-            ss << "dt=" << dt(); 
-            ss << ", "; 
-            ss << "ld=" << ld(); 
-            ss << ", "; 
-            ss << "dd=" << dd(); 
-            ss << ", "; 
-            ss << "p=" << p(); 
-            ss << ", "; 
-            ss << "strct=" << strct(); 
-            ss << ", "; 
+        std::string description()
+        {
+#ifdef USE_WB_OLD_C_CONVERSION
+            char buffer[OLD_DESC_BUFFER_SIZE];
+            wb_old_description(this, buffer, sizeof(buffer));
+            std::string descr = buffer;
+            return descr;
+#else
+            std::ostringstream ss;
+            ss << "str=" << str();
+            ss << ", ";
+            ss << "b=" << b();
+            ss << ", ";
+            ss << "c=" << c();
+            ss << ", ";
+            ss << "sc=" << sc();
+            ss << ", ";
+            ss << "uc=" << uc();
+            ss << ", ";
+            ss << "i=" << i();
+            ss << ", ";
+            ss << "si=" << si();
+            ss << ", ";
+            ss << "sii=" << sii();
+            ss << ", ";
+            ss << "u=" << u();
+            ss << ", ";
+            ss << "ui=" << ui();
+            ss << ", ";
+            ss << "u8=" << u8();
+            ss << ", ";
+            ss << "u16=" << u16();
+            ss << ", ";
+            ss << "u32=" << u32();
+            ss << ", ";
+            ss << "u64=" << u64();
+            ss << ", ";
+            ss << "i8=" << i8();
+            ss << ", ";
+            ss << "i16=" << i16();
+            ss << ", ";
+            ss << "i32=" << i32();
+            ss << ", ";
+            ss << "i64=" << i64();
+            ss << ", ";
+            ss << "s=" << s();
+            ss << ", ";
+            ss << "si=" << si();
+            ss << ", ";
+            ss << "ss=" << ss();
+            ss << ", ";
+            ss << "ssi=" << ssi();
+            ss << ", ";
+            ss << "us=" << us();
+            ss << ", ";
+            ss << "usi=" << usi();
+            ss << ", ";
+            ss << "l=" << l();
+            ss << ", ";
+            ss << "li=" << li();
+            ss << ", ";
+            ss << "sl=" << sl();
+            ss << ", ";
+            ss << "sli=" << sli();
+            ss << ", ";
+            ss << "ul=" << ul();
+            ss << ", ";
+            ss << "uli=" << uli();
+            ss << ", ";
+            ss << "ll=" << ll();
+            ss << ", ";
+            ss << "lli=" << lli();
+            ss << ", ";
+            ss << "sll=" << sll();
+            ss << ", ";
+            ss << "slli=" << slli();
+            ss << ", ";
+            ss << "ull=" << ull();
+            ss << ", ";
+            ss << "ulli=" << ulli();
+            ss << ", ";
+            ss << "l64=" << l64();
+            ss << ", ";
+            ss << "f=" << f();
+            ss << ", ";
+            ss << "ft=" << ft();
+            ss << ", ";
+            ss << "d=" << d();
+            ss << ", ";
+            ss << "dt=" << dt();
+            ss << ", ";
+            ss << "ld=" << ld();
+            ss << ", ";
+            ss << "dd=" << dd();
+            ss << ", ";
+            ss << "str=" << str();
+            ss << ", ";
+            ss << "b=" << b();
+            ss << ", ";
+            ss << "c=" << c();
+            ss << ", ";
+            ss << "sc=" << sc();
+            ss << ", ";
+            ss << "uc=" << uc();
+            ss << ", ";
+            ss << "i=" << i();
+            ss << ", ";
+            ss << "si=" << si();
+            ss << ", ";
+            ss << "sii=" << sii();
+            ss << ", ";
+            ss << "u=" << u();
+            ss << ", ";
+            ss << "ui=" << ui();
+            ss << ", ";
+            ss << "u8=" << u8();
+            ss << ", ";
+            ss << "u16=" << u16();
+            ss << ", ";
+            ss << "u32=" << u32();
+            ss << ", ";
+            ss << "u64=" << u64();
+            ss << ", ";
+            ss << "i8=" << i8();
+            ss << ", ";
+            ss << "i16=" << i16();
+            ss << ", ";
+            ss << "i32=" << i32();
+            ss << ", ";
+            ss << "i64=" << i64();
+            ss << ", ";
+            ss << "s=" << s();
+            ss << ", ";
+            ss << "si=" << si();
+            ss << ", ";
+            ss << "ss=" << ss();
+            ss << ", ";
+            ss << "ssi=" << ssi();
+            ss << ", ";
+            ss << "us=" << us();
+            ss << ", ";
+            ss << "usi=" << usi();
+            ss << ", ";
+            ss << "l=" << l();
+            ss << ", ";
+            ss << "li=" << li();
+            ss << ", ";
+            ss << "sl=" << sl();
+            ss << ", ";
+            ss << "sli=" << sli();
+            ss << ", ";
+            ss << "ul=" << ul();
+            ss << ", ";
+            ss << "uli=" << uli();
+            ss << ", ";
+            ss << "ll=" << ll();
+            ss << ", ";
+            ss << "lli=" << lli();
+            ss << ", ";
+            ss << "sll=" << sll();
+            ss << ", ";
+            ss << "slli=" << slli();
+            ss << ", ";
+            ss << "ull=" << ull();
+            ss << ", ";
+            ss << "ulli=" << ulli();
+            ss << ", ";
+            ss << "l64=" << l64();
+            ss << ", ";
+            ss << "f=" << f();
+            ss << ", ";
+            ss << "ft=" << ft();
+            ss << ", ";
+            ss << "d=" << d();
+            ss << ", ";
+            ss << "dt=" << dt();
+            ss << ", ";
+            ss << "ld=" << ld();
+            ss << ", ";
+            ss << "dd=" << dd();
+            ss << ", ";
+            ss << "p=" << p();
+            ss << ", ";
+            ss << "strct=" << strct();
+            ss << ", ";
 
-            bool array16_first = true; 
-            ss << "array16={"; 
-            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) 
-            { 
-                ss << (array16_first ? "" : ",") << array16(i); 
-                array16_first = false;  
-            } 
-            ss << "}"; 
-            ss << ", "; 
+            bool array16_first = true;
+            ss << "array16={";
+            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
+            {
+                ss << (array16_first ? "" : ",") << array16(i);
+                array16_first = false; 
+            }
+            ss << "}";
+            ss << ", ";
 
-            bool bools_first = true; 
-            ss << "bools={"; 
-            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) 
-            { 
-                ss << (bools_first ? "" : ",") << bools(i); 
-                bools_first = false;  
-            } 
-            ss << "}"; 
+            bool bools_first = true;
+            ss << "bools={";
+            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
+            {
+                ss << (bools_first ? "" : ",") << bools(i);
+                bools_first = false; 
+            }
+            ss << "}";
 
-            return ss.str(); 
-
-#endif /// USE_WB_OLD_C_CONVERSION
-        } 
-
-        std::string to_string() 
-        { 
-#ifdef USE_WB_OLD_C_CONVERSION 
-            char buffer[OLD_DESC_BUFFER_SIZE]; 
-            wb_old_to_string(this, buffer, sizeof(buffer)); 
-            std::string toString = buffer; 
-            return toString; 
-#else 
-            std::ostringstream ss; 
-            ss << str(); 
-            ss << ", "; 
-            ss << b(); 
-            ss << ", "; 
-            ss << c(); 
-            ss << ", "; 
-            ss << sc(); 
-            ss << ", "; 
-            ss << uc(); 
-            ss << ", "; 
-            ss << i(); 
-            ss << ", "; 
-            ss << si(); 
-            ss << ", "; 
-            ss << sii(); 
-            ss << ", "; 
-            ss << u(); 
-            ss << ", "; 
-            ss << ui(); 
-            ss << ", "; 
-            ss << u8(); 
-            ss << ", "; 
-            ss << u16(); 
-            ss << ", "; 
-            ss << u32(); 
-            ss << ", "; 
-            ss << u64(); 
-            ss << ", "; 
-            ss << i8(); 
-            ss << ", "; 
-            ss << i16(); 
-            ss << ", "; 
-            ss << i32(); 
-            ss << ", "; 
-            ss << i64(); 
-            ss << ", "; 
-            ss << s(); 
-            ss << ", "; 
-            ss << si(); 
-            ss << ", "; 
-            ss << ss(); 
-            ss << ", "; 
-            ss << ssi(); 
-            ss << ", "; 
-            ss << us(); 
-            ss << ", "; 
-            ss << usi(); 
-            ss << ", "; 
-            ss << l(); 
-            ss << ", "; 
-            ss << li(); 
-            ss << ", "; 
-            ss << sl(); 
-            ss << ", "; 
-            ss << sli(); 
-            ss << ", "; 
-            ss << ul(); 
-            ss << ", "; 
-            ss << uli(); 
-            ss << ", "; 
-            ss << ll(); 
-            ss << ", "; 
-            ss << lli(); 
-            ss << ", "; 
-            ss << sll(); 
-            ss << ", "; 
-            ss << slli(); 
-            ss << ", "; 
-            ss << ull(); 
-            ss << ", "; 
-            ss << ulli(); 
-            ss << ", "; 
-            ss << l64(); 
-            ss << ", "; 
-            ss << f(); 
-            ss << ", "; 
-            ss << ft(); 
-            ss << ", "; 
-            ss << d(); 
-            ss << ", "; 
-            ss << dt(); 
-            ss << ", "; 
-            ss << ld(); 
-            ss << ", "; 
-            ss << dd(); 
-            ss << ", "; 
-            ss << str(); 
-            ss << ", "; 
-            ss << b(); 
-            ss << ", "; 
-            ss << c(); 
-            ss << ", "; 
-            ss << sc(); 
-            ss << ", "; 
-            ss << uc(); 
-            ss << ", "; 
-            ss << i(); 
-            ss << ", "; 
-            ss << si(); 
-            ss << ", "; 
-            ss << sii(); 
-            ss << ", "; 
-            ss << u(); 
-            ss << ", "; 
-            ss << ui(); 
-            ss << ", "; 
-            ss << u8(); 
-            ss << ", "; 
-            ss << u16(); 
-            ss << ", "; 
-            ss << u32(); 
-            ss << ", "; 
-            ss << u64(); 
-            ss << ", "; 
-            ss << i8(); 
-            ss << ", "; 
-            ss << i16(); 
-            ss << ", "; 
-            ss << i32(); 
-            ss << ", "; 
-            ss << i64(); 
-            ss << ", "; 
-            ss << s(); 
-            ss << ", "; 
-            ss << si(); 
-            ss << ", "; 
-            ss << ss(); 
-            ss << ", "; 
-            ss << ssi(); 
-            ss << ", "; 
-            ss << us(); 
-            ss << ", "; 
-            ss << usi(); 
-            ss << ", "; 
-            ss << l(); 
-            ss << ", "; 
-            ss << li(); 
-            ss << ", "; 
-            ss << sl(); 
-            ss << ", "; 
-            ss << sli(); 
-            ss << ", "; 
-            ss << ul(); 
-            ss << ", "; 
-            ss << uli(); 
-            ss << ", "; 
-            ss << ll(); 
-            ss << ", "; 
-            ss << lli(); 
-            ss << ", "; 
-            ss << sll(); 
-            ss << ", "; 
-            ss << slli(); 
-            ss << ", "; 
-            ss << ull(); 
-            ss << ", "; 
-            ss << ulli(); 
-            ss << ", "; 
-            ss << l64(); 
-            ss << ", "; 
-            ss << f(); 
-            ss << ", "; 
-            ss << ft(); 
-            ss << ", "; 
-            ss << d(); 
-            ss << ", "; 
-            ss << dt(); 
-            ss << ", "; 
-            ss << ld(); 
-            ss << ", "; 
-            ss << dd(); 
-            ss << ", "; 
-            ss << p(); 
-            ss << ", "; 
-            ss << strct(); 
-            ss << ", "; 
-
-            bool array16_first = true; 
-            ss << "{"; 
-            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) 
-            { 
-                ss << (array16_first ? "" : ",") << array16(i); 
-                array16_first = false;  
-            } 
-            ss << "}"; 
-            ss << ", "; 
-
-            bool bools_first = true; 
-            ss << "{"; 
-            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) 
-            { 
-                ss << (bools_first ? "" : ",") << bools(i); 
-                bools_first = false;  
-            } 
-            ss << "}"; 
-
-            return ss.str(); 
+            return ss.str();
 
 #endif /// USE_WB_OLD_C_CONVERSION
-        } 
+        }
 
-        void from_string(const std::string &str) 
-        { 
-#ifdef USE_WB_OLD_C_CONVERSION 
-            wb_old_from_string(this, str); 
-#else 
-            char var[100]; 
+        std::string to_string()
+        {
+#ifdef USE_WB_OLD_C_CONVERSION
+            char buffer[OLD_DESC_BUFFER_SIZE];
+            wb_old_to_string(this, buffer, sizeof(buffer));
+            std::string toString = buffer;
+            return toString;
+#else
+            std::ostringstream ss;
+            ss << str();
+            ss << ", ";
+            ss << b();
+            ss << ", ";
+            ss << c();
+            ss << ", ";
+            ss << sc();
+            ss << ", ";
+            ss << uc();
+            ss << ", ";
+            ss << i();
+            ss << ", ";
+            ss << si();
+            ss << ", ";
+            ss << sii();
+            ss << ", ";
+            ss << u();
+            ss << ", ";
+            ss << ui();
+            ss << ", ";
+            ss << u8();
+            ss << ", ";
+            ss << u16();
+            ss << ", ";
+            ss << u32();
+            ss << ", ";
+            ss << u64();
+            ss << ", ";
+            ss << i8();
+            ss << ", ";
+            ss << i16();
+            ss << ", ";
+            ss << i32();
+            ss << ", ";
+            ss << i64();
+            ss << ", ";
+            ss << s();
+            ss << ", ";
+            ss << si();
+            ss << ", ";
+            ss << ss();
+            ss << ", ";
+            ss << ssi();
+            ss << ", ";
+            ss << us();
+            ss << ", ";
+            ss << usi();
+            ss << ", ";
+            ss << l();
+            ss << ", ";
+            ss << li();
+            ss << ", ";
+            ss << sl();
+            ss << ", ";
+            ss << sli();
+            ss << ", ";
+            ss << ul();
+            ss << ", ";
+            ss << uli();
+            ss << ", ";
+            ss << ll();
+            ss << ", ";
+            ss << lli();
+            ss << ", ";
+            ss << sll();
+            ss << ", ";
+            ss << slli();
+            ss << ", ";
+            ss << ull();
+            ss << ", ";
+            ss << ulli();
+            ss << ", ";
+            ss << l64();
+            ss << ", ";
+            ss << f();
+            ss << ", ";
+            ss << ft();
+            ss << ", ";
+            ss << d();
+            ss << ", ";
+            ss << dt();
+            ss << ", ";
+            ss << ld();
+            ss << ", ";
+            ss << dd();
+            ss << ", ";
+            ss << str();
+            ss << ", ";
+            ss << b();
+            ss << ", ";
+            ss << c();
+            ss << ", ";
+            ss << sc();
+            ss << ", ";
+            ss << uc();
+            ss << ", ";
+            ss << i();
+            ss << ", ";
+            ss << si();
+            ss << ", ";
+            ss << sii();
+            ss << ", ";
+            ss << u();
+            ss << ", ";
+            ss << ui();
+            ss << ", ";
+            ss << u8();
+            ss << ", ";
+            ss << u16();
+            ss << ", ";
+            ss << u32();
+            ss << ", ";
+            ss << u64();
+            ss << ", ";
+            ss << i8();
+            ss << ", ";
+            ss << i16();
+            ss << ", ";
+            ss << i32();
+            ss << ", ";
+            ss << i64();
+            ss << ", ";
+            ss << s();
+            ss << ", ";
+            ss << si();
+            ss << ", ";
+            ss << ss();
+            ss << ", ";
+            ss << ssi();
+            ss << ", ";
+            ss << us();
+            ss << ", ";
+            ss << usi();
+            ss << ", ";
+            ss << l();
+            ss << ", ";
+            ss << li();
+            ss << ", ";
+            ss << sl();
+            ss << ", ";
+            ss << sli();
+            ss << ", ";
+            ss << ul();
+            ss << ", ";
+            ss << uli();
+            ss << ", ";
+            ss << ll();
+            ss << ", ";
+            ss << lli();
+            ss << ", ";
+            ss << sll();
+            ss << ", ";
+            ss << slli();
+            ss << ", ";
+            ss << ull();
+            ss << ", ";
+            ss << ulli();
+            ss << ", ";
+            ss << l64();
+            ss << ", ";
+            ss << f();
+            ss << ", ";
+            ss << ft();
+            ss << ", ";
+            ss << d();
+            ss << ", ";
+            ss << dt();
+            ss << ", ";
+            ss << ld();
+            ss << ", ";
+            ss << dd();
+            ss << ", ";
+            ss << p();
+            ss << ", ";
+            ss << strct();
+            ss << ", ";
+
+            bool array16_first = true;
+            ss << "{";
+            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
+            {
+                ss << (array16_first ? "" : ",") << array16(i);
+                array16_first = false; 
+            }
+            ss << "}";
+            ss << ", ";
+
+            bool bools_first = true;
+            ss << "{";
+            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
+            {
+                ss << (bools_first ? "" : ",") << bools(i);
+                bools_first = false; 
+            }
+            ss << "}";
+
+            return ss.str();
+
+#endif /// USE_WB_OLD_C_CONVERSION
+        }
+
+        void from_string(const std::string &str)
+        {
+#ifdef USE_WB_OLD_C_CONVERSION
+            wb_old_from_string(this, str);
+#else
+            char var[100];
             unsigned long str_index = str.find("str");
             if(str_index != std::string::npos)
             {
@@ -823,9 +806,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(str_index, str.length()).c_str(), "str = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_str(string((value.c_str()))); 
-                } 
-            } 
+                    set_str(string((value.c_str())));
+                }
+            }
 
             unsigned long b_index = str.find("b");
             if(b_index != std::string::npos)
@@ -834,9 +817,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(b_index, str.length()).c_str(), "b = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_b(value.compare("true") == 0  || value.compare("1") == 0 ? true : false); 
-                } 
-            } 
+                    set_b(value.compare("true") == 0  || value.compare("1") == 0 ? true : false);
+                }
+            }
 
             unsigned long c_index = str.find("c");
             if(c_index != std::string::npos)
@@ -845,9 +828,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(c_index, str.length()).c_str(), "c = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_c(char(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_c(char(atoi(value.c_str())));
+                }
+            }
 
             unsigned long sc_index = str.find("sc");
             if(sc_index != std::string::npos)
@@ -856,9 +839,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sc_index, str.length()).c_str(), "sc = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sc(signed char(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_sc(signed char(atoi(value.c_str())));
+                }
+            }
 
             unsigned long uc_index = str.find("uc");
             if(uc_index != std::string::npos)
@@ -867,9 +850,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(uc_index, str.length()).c_str(), "uc = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_uc(unsigned char(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_uc(unsigned char(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i_index = str.find("i");
             if(i_index != std::string::npos)
@@ -878,9 +861,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i_index, str.length()).c_str(), "i = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i(int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i(int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long si_index = str.find("si");
             if(si_index != std::string::npos)
@@ -889,9 +872,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(si_index, str.length()).c_str(), "si = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_si(signed(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_si(signed(atoi(value.c_str())));
+                }
+            }
 
             unsigned long sii_index = str.find("sii");
             if(sii_index != std::string::npos)
@@ -900,9 +883,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sii_index, str.length()).c_str(), "sii = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sii(signed int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_sii(signed int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u_index = str.find("u");
             if(u_index != std::string::npos)
@@ -911,9 +894,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u_index, str.length()).c_str(), "u = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u(unsigned(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u(unsigned(atoi(value.c_str())));
+                }
+            }
 
             unsigned long ui_index = str.find("ui");
             if(ui_index != std::string::npos)
@@ -922,9 +905,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ui_index, str.length()).c_str(), "ui = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ui(unsigned int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_ui(unsigned int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u8_index = str.find("u8");
             if(u8_index != std::string::npos)
@@ -933,9 +916,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u8_index, str.length()).c_str(), "u8 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u8(uint8_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u8(uint8_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u16_index = str.find("u16");
             if(u16_index != std::string::npos)
@@ -944,9 +927,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u16_index, str.length()).c_str(), "u16 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u16(uint16_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u16(uint16_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u32_index = str.find("u32");
             if(u32_index != std::string::npos)
@@ -955,9 +938,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u32_index, str.length()).c_str(), "u32 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u32(uint32_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u32(uint32_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u64_index = str.find("u64");
             if(u64_index != std::string::npos)
@@ -966,9 +949,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u64_index, str.length()).c_str(), "u64 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u64(uint64_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u64(uint64_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i8_index = str.find("i8");
             if(i8_index != std::string::npos)
@@ -977,9 +960,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i8_index, str.length()).c_str(), "i8 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i8(int8_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i8(int8_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i16_index = str.find("i16");
             if(i16_index != std::string::npos)
@@ -988,9 +971,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i16_index, str.length()).c_str(), "i16 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i16(int16_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i16(int16_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i32_index = str.find("i32");
             if(i32_index != std::string::npos)
@@ -999,9 +982,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i32_index, str.length()).c_str(), "i32 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i32(int32_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i32(int32_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i64_index = str.find("i64");
             if(i64_index != std::string::npos)
@@ -1010,9 +993,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i64_index, str.length()).c_str(), "i64 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i64(int64_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i64(int64_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long s_index = str.find("s");
             if(s_index != std::string::npos)
@@ -1021,9 +1004,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(s_index, str.length()).c_str(), "s = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_s(short(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_s(short(atoi(value.c_str())));
+                }
+            }
 
             unsigned long si_index = str.find("si");
             if(si_index != std::string::npos)
@@ -1032,9 +1015,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(si_index, str.length()).c_str(), "si = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_si(short int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_si(short int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long ss_index = str.find("ss");
             if(ss_index != std::string::npos)
@@ -1043,9 +1026,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ss_index, str.length()).c_str(), "ss = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ss(signed short(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_ss(signed short(atoi(value.c_str())));
+                }
+            }
 
             unsigned long ssi_index = str.find("ssi");
             if(ssi_index != std::string::npos)
@@ -1054,9 +1037,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ssi_index, str.length()).c_str(), "ssi = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ssi(signed short int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_ssi(signed short int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long us_index = str.find("us");
             if(us_index != std::string::npos)
@@ -1065,9 +1048,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(us_index, str.length()).c_str(), "us = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_us(unsigned short(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_us(unsigned short(atoi(value.c_str())));
+                }
+            }
 
             unsigned long usi_index = str.find("usi");
             if(usi_index != std::string::npos)
@@ -1076,9 +1059,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(usi_index, str.length()).c_str(), "usi = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_usi(unsigned short int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_usi(unsigned short int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long l_index = str.find("l");
             if(l_index != std::string::npos)
@@ -1087,9 +1070,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(l_index, str.length()).c_str(), "l = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_l(long(atol(value.c_str()))); 
-                } 
-            } 
+                    set_l(long(atol(value.c_str())));
+                }
+            }
 
             unsigned long li_index = str.find("li");
             if(li_index != std::string::npos)
@@ -1098,9 +1081,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(li_index, str.length()).c_str(), "li = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_li(long int(atol(value.c_str()))); 
-                } 
-            } 
+                    set_li(long int(atol(value.c_str())));
+                }
+            }
 
             unsigned long sl_index = str.find("sl");
             if(sl_index != std::string::npos)
@@ -1109,9 +1092,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sl_index, str.length()).c_str(), "sl = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sl(signed long(atol(value.c_str()))); 
-                } 
-            } 
+                    set_sl(signed long(atol(value.c_str())));
+                }
+            }
 
             unsigned long sli_index = str.find("sli");
             if(sli_index != std::string::npos)
@@ -1120,9 +1103,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sli_index, str.length()).c_str(), "sli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sli(signed long int(atol(value.c_str()))); 
-                } 
-            } 
+                    set_sli(signed long int(atol(value.c_str())));
+                }
+            }
 
             unsigned long ul_index = str.find("ul");
             if(ul_index != std::string::npos)
@@ -1131,9 +1114,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ul_index, str.length()).c_str(), "ul = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ul(unsigned long(atol(value.c_str()))); 
-                } 
-            } 
+                    set_ul(unsigned long(atol(value.c_str())));
+                }
+            }
 
             unsigned long uli_index = str.find("uli");
             if(uli_index != std::string::npos)
@@ -1142,9 +1125,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(uli_index, str.length()).c_str(), "uli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_uli(unsigned long int(atol(value.c_str()))); 
-                } 
-            } 
+                    set_uli(unsigned long int(atol(value.c_str())));
+                }
+            }
 
             unsigned long ll_index = str.find("ll");
             if(ll_index != std::string::npos)
@@ -1153,9 +1136,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ll_index, str.length()).c_str(), "ll = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ll(long long(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_ll(long long(atoll(value.c_str())));
+                }
+            }
 
             unsigned long lli_index = str.find("lli");
             if(lli_index != std::string::npos)
@@ -1164,9 +1147,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(lli_index, str.length()).c_str(), "lli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_lli(long long int(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_lli(long long int(atoll(value.c_str())));
+                }
+            }
 
             unsigned long sll_index = str.find("sll");
             if(sll_index != std::string::npos)
@@ -1175,9 +1158,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sll_index, str.length()).c_str(), "sll = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sll(signed long long(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_sll(signed long long(atoll(value.c_str())));
+                }
+            }
 
             unsigned long slli_index = str.find("slli");
             if(slli_index != std::string::npos)
@@ -1186,9 +1169,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(slli_index, str.length()).c_str(), "slli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_slli(signed long long int(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_slli(signed long long int(atoll(value.c_str())));
+                }
+            }
 
             unsigned long ull_index = str.find("ull");
             if(ull_index != std::string::npos)
@@ -1197,9 +1180,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ull_index, str.length()).c_str(), "ull = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ull(unsigned long long(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_ull(unsigned long long(atoll(value.c_str())));
+                }
+            }
 
             unsigned long ulli_index = str.find("ulli");
             if(ulli_index != std::string::npos)
@@ -1208,9 +1191,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ulli_index, str.length()).c_str(), "ulli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ulli(unsigned long long int(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_ulli(unsigned long long int(atoll(value.c_str())));
+                }
+            }
 
             unsigned long l64_index = str.find("l64");
             if(l64_index != std::string::npos)
@@ -1219,9 +1202,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(l64_index, str.length()).c_str(), "l64 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_l64(long64_t(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_l64(long64_t(atoll(value.c_str())));
+                }
+            }
 
             unsigned long f_index = str.find("f");
             if(f_index != std::string::npos)
@@ -1230,9 +1213,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(f_index, str.length()).c_str(), "f = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_f(float(atof(value.c_str()))); 
-                } 
-            } 
+                    set_f(float(atof(value.c_str())));
+                }
+            }
 
             unsigned long ft_index = str.find("ft");
             if(ft_index != std::string::npos)
@@ -1241,9 +1224,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ft_index, str.length()).c_str(), "ft = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ft(float_t(atof(value.c_str()))); 
-                } 
-            } 
+                    set_ft(float_t(atof(value.c_str())));
+                }
+            }
 
             unsigned long d_index = str.find("d");
             if(d_index != std::string::npos)
@@ -1252,9 +1235,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(d_index, str.length()).c_str(), "d = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_d(double(atof(value.c_str()))); 
-                } 
-            } 
+                    set_d(double(atof(value.c_str())));
+                }
+            }
 
             unsigned long dt_index = str.find("dt");
             if(dt_index != std::string::npos)
@@ -1263,9 +1246,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(dt_index, str.length()).c_str(), "dt = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_dt(double_t(atof(value.c_str()))); 
-                } 
-            } 
+                    set_dt(double_t(atof(value.c_str())));
+                }
+            }
 
             unsigned long ld_index = str.find("ld");
             if(ld_index != std::string::npos)
@@ -1274,9 +1257,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ld_index, str.length()).c_str(), "ld = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ld(long double(atof(value.c_str()))); 
-                } 
-            } 
+                    set_ld(long double(atof(value.c_str())));
+                }
+            }
 
             unsigned long dd_index = str.find("dd");
             if(dd_index != std::string::npos)
@@ -1285,9 +1268,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(dd_index, str.length()).c_str(), "dd = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_dd(double double(atof(value.c_str()))); 
-                } 
-            } 
+                    set_dd(double double(atof(value.c_str())));
+                }
+            }
 
             unsigned long str_index = str.find("str");
             if(str_index != std::string::npos)
@@ -1296,9 +1279,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(str_index, str.length()).c_str(), "str = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_str(string((value.c_str()))); 
-                } 
-            } 
+                    set_str(string((value.c_str())));
+                }
+            }
 
             unsigned long b_index = str.find("b");
             if(b_index != std::string::npos)
@@ -1307,9 +1290,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(b_index, str.length()).c_str(), "b = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_b(value.compare("true") == 0  || value.compare("1") == 0 ? true : false); 
-                } 
-            } 
+                    set_b(value.compare("true") == 0  || value.compare("1") == 0 ? true : false);
+                }
+            }
 
             unsigned long c_index = str.find("c");
             if(c_index != std::string::npos)
@@ -1318,9 +1301,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(c_index, str.length()).c_str(), "c = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_c(char(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_c(char(atoi(value.c_str())));
+                }
+            }
 
             unsigned long sc_index = str.find("sc");
             if(sc_index != std::string::npos)
@@ -1329,9 +1312,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sc_index, str.length()).c_str(), "sc = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sc(signed char(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_sc(signed char(atoi(value.c_str())));
+                }
+            }
 
             unsigned long uc_index = str.find("uc");
             if(uc_index != std::string::npos)
@@ -1340,9 +1323,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(uc_index, str.length()).c_str(), "uc = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_uc(unsigned char(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_uc(unsigned char(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i_index = str.find("i");
             if(i_index != std::string::npos)
@@ -1351,9 +1334,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i_index, str.length()).c_str(), "i = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i(int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i(int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long si_index = str.find("si");
             if(si_index != std::string::npos)
@@ -1362,9 +1345,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(si_index, str.length()).c_str(), "si = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_si(signed(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_si(signed(atoi(value.c_str())));
+                }
+            }
 
             unsigned long sii_index = str.find("sii");
             if(sii_index != std::string::npos)
@@ -1373,9 +1356,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sii_index, str.length()).c_str(), "sii = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sii(signed int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_sii(signed int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u_index = str.find("u");
             if(u_index != std::string::npos)
@@ -1384,9 +1367,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u_index, str.length()).c_str(), "u = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u(unsigned(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u(unsigned(atoi(value.c_str())));
+                }
+            }
 
             unsigned long ui_index = str.find("ui");
             if(ui_index != std::string::npos)
@@ -1395,9 +1378,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ui_index, str.length()).c_str(), "ui = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ui(unsigned int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_ui(unsigned int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u8_index = str.find("u8");
             if(u8_index != std::string::npos)
@@ -1406,9 +1389,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u8_index, str.length()).c_str(), "u8 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u8(uint8_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u8(uint8_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u16_index = str.find("u16");
             if(u16_index != std::string::npos)
@@ -1417,9 +1400,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u16_index, str.length()).c_str(), "u16 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u16(uint16_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u16(uint16_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u32_index = str.find("u32");
             if(u32_index != std::string::npos)
@@ -1428,9 +1411,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u32_index, str.length()).c_str(), "u32 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u32(uint32_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u32(uint32_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long u64_index = str.find("u64");
             if(u64_index != std::string::npos)
@@ -1439,9 +1422,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(u64_index, str.length()).c_str(), "u64 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_u64(uint64_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_u64(uint64_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i8_index = str.find("i8");
             if(i8_index != std::string::npos)
@@ -1450,9 +1433,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i8_index, str.length()).c_str(), "i8 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i8(int8_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i8(int8_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i16_index = str.find("i16");
             if(i16_index != std::string::npos)
@@ -1461,9 +1444,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i16_index, str.length()).c_str(), "i16 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i16(int16_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i16(int16_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i32_index = str.find("i32");
             if(i32_index != std::string::npos)
@@ -1472,9 +1455,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i32_index, str.length()).c_str(), "i32 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i32(int32_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i32(int32_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long i64_index = str.find("i64");
             if(i64_index != std::string::npos)
@@ -1483,9 +1466,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(i64_index, str.length()).c_str(), "i64 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_i64(int64_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_i64(int64_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long s_index = str.find("s");
             if(s_index != std::string::npos)
@@ -1494,9 +1477,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(s_index, str.length()).c_str(), "s = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_s(short(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_s(short(atoi(value.c_str())));
+                }
+            }
 
             unsigned long si_index = str.find("si");
             if(si_index != std::string::npos)
@@ -1505,9 +1488,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(si_index, str.length()).c_str(), "si = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_si(short int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_si(short int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long ss_index = str.find("ss");
             if(ss_index != std::string::npos)
@@ -1516,9 +1499,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ss_index, str.length()).c_str(), "ss = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ss(signed short(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_ss(signed short(atoi(value.c_str())));
+                }
+            }
 
             unsigned long ssi_index = str.find("ssi");
             if(ssi_index != std::string::npos)
@@ -1527,9 +1510,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ssi_index, str.length()).c_str(), "ssi = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ssi(signed short int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_ssi(signed short int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long us_index = str.find("us");
             if(us_index != std::string::npos)
@@ -1538,9 +1521,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(us_index, str.length()).c_str(), "us = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_us(unsigned short(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_us(unsigned short(atoi(value.c_str())));
+                }
+            }
 
             unsigned long usi_index = str.find("usi");
             if(usi_index != std::string::npos)
@@ -1549,9 +1532,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(usi_index, str.length()).c_str(), "usi = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_usi(unsigned short int(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_usi(unsigned short int(atoi(value.c_str())));
+                }
+            }
 
             unsigned long l_index = str.find("l");
             if(l_index != std::string::npos)
@@ -1560,9 +1543,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(l_index, str.length()).c_str(), "l = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_l(long(atol(value.c_str()))); 
-                } 
-            } 
+                    set_l(long(atol(value.c_str())));
+                }
+            }
 
             unsigned long li_index = str.find("li");
             if(li_index != std::string::npos)
@@ -1571,9 +1554,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(li_index, str.length()).c_str(), "li = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_li(long int(atol(value.c_str()))); 
-                } 
-            } 
+                    set_li(long int(atol(value.c_str())));
+                }
+            }
 
             unsigned long sl_index = str.find("sl");
             if(sl_index != std::string::npos)
@@ -1582,9 +1565,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sl_index, str.length()).c_str(), "sl = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sl(signed long(atol(value.c_str()))); 
-                } 
-            } 
+                    set_sl(signed long(atol(value.c_str())));
+                }
+            }
 
             unsigned long sli_index = str.find("sli");
             if(sli_index != std::string::npos)
@@ -1593,9 +1576,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sli_index, str.length()).c_str(), "sli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sli(signed long int(atol(value.c_str()))); 
-                } 
-            } 
+                    set_sli(signed long int(atol(value.c_str())));
+                }
+            }
 
             unsigned long ul_index = str.find("ul");
             if(ul_index != std::string::npos)
@@ -1604,9 +1587,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ul_index, str.length()).c_str(), "ul = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ul(unsigned long(atol(value.c_str()))); 
-                } 
-            } 
+                    set_ul(unsigned long(atol(value.c_str())));
+                }
+            }
 
             unsigned long uli_index = str.find("uli");
             if(uli_index != std::string::npos)
@@ -1615,9 +1598,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(uli_index, str.length()).c_str(), "uli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_uli(unsigned long int(atol(value.c_str()))); 
-                } 
-            } 
+                    set_uli(unsigned long int(atol(value.c_str())));
+                }
+            }
 
             unsigned long ll_index = str.find("ll");
             if(ll_index != std::string::npos)
@@ -1626,9 +1609,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ll_index, str.length()).c_str(), "ll = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ll(long long(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_ll(long long(atoll(value.c_str())));
+                }
+            }
 
             unsigned long lli_index = str.find("lli");
             if(lli_index != std::string::npos)
@@ -1637,9 +1620,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(lli_index, str.length()).c_str(), "lli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_lli(long long int(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_lli(long long int(atoll(value.c_str())));
+                }
+            }
 
             unsigned long sll_index = str.find("sll");
             if(sll_index != std::string::npos)
@@ -1648,9 +1631,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(sll_index, str.length()).c_str(), "sll = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_sll(signed long long(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_sll(signed long long(atoll(value.c_str())));
+                }
+            }
 
             unsigned long slli_index = str.find("slli");
             if(slli_index != std::string::npos)
@@ -1659,9 +1642,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(slli_index, str.length()).c_str(), "slli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_slli(signed long long int(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_slli(signed long long int(atoll(value.c_str())));
+                }
+            }
 
             unsigned long ull_index = str.find("ull");
             if(ull_index != std::string::npos)
@@ -1670,9 +1653,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ull_index, str.length()).c_str(), "ull = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ull(unsigned long long(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_ull(unsigned long long(atoll(value.c_str())));
+                }
+            }
 
             unsigned long ulli_index = str.find("ulli");
             if(ulli_index != std::string::npos)
@@ -1681,9 +1664,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ulli_index, str.length()).c_str(), "ulli = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ulli(unsigned long long int(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_ulli(unsigned long long int(atoll(value.c_str())));
+                }
+            }
 
             unsigned long l64_index = str.find("l64");
             if(l64_index != std::string::npos)
@@ -1692,9 +1675,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(l64_index, str.length()).c_str(), "l64 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_l64(long64_t(atoll(value.c_str()))); 
-                } 
-            } 
+                    set_l64(long64_t(atoll(value.c_str())));
+                }
+            }
 
             unsigned long f_index = str.find("f");
             if(f_index != std::string::npos)
@@ -1703,9 +1686,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(f_index, str.length()).c_str(), "f = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_f(float(atof(value.c_str()))); 
-                } 
-            } 
+                    set_f(float(atof(value.c_str())));
+                }
+            }
 
             unsigned long ft_index = str.find("ft");
             if(ft_index != std::string::npos)
@@ -1714,9 +1697,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ft_index, str.length()).c_str(), "ft = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ft(float_t(atof(value.c_str()))); 
-                } 
-            } 
+                    set_ft(float_t(atof(value.c_str())));
+                }
+            }
 
             unsigned long d_index = str.find("d");
             if(d_index != std::string::npos)
@@ -1725,9 +1708,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(d_index, str.length()).c_str(), "d = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_d(double(atof(value.c_str()))); 
-                } 
-            } 
+                    set_d(double(atof(value.c_str())));
+                }
+            }
 
             unsigned long dt_index = str.find("dt");
             if(dt_index != std::string::npos)
@@ -1736,9 +1719,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(dt_index, str.length()).c_str(), "dt = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_dt(double_t(atof(value.c_str()))); 
-                } 
-            } 
+                    set_dt(double_t(atof(value.c_str())));
+                }
+            }
 
             unsigned long ld_index = str.find("ld");
             if(ld_index != std::string::npos)
@@ -1747,9 +1730,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(ld_index, str.length()).c_str(), "ld = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_ld(long double(atof(value.c_str()))); 
-                } 
-            } 
+                    set_ld(long double(atof(value.c_str())));
+                }
+            }
 
             unsigned long dd_index = str.find("dd");
             if(dd_index != std::string::npos)
@@ -1758,9 +1741,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(dd_index, str.length()).c_str(), "dd = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_dd(double double(atof(value.c_str()))); 
-                } 
-            } 
+                    set_dd(double double(atof(value.c_str())));
+                }
+            }
 
             unsigned long p_index = str.find("p");
             if(p_index != std::string::npos)
@@ -1769,8 +1752,8 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(p_index, str.length()).c_str(), "p = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                } 
-            } 
+                }
+            }
 
             unsigned long strct_index = str.find("strct");
             if(strct_index != std::string::npos)
@@ -1779,8 +1762,8 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(strct_index, str.length()).c_str(), "strct = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                } 
-            } 
+                }
+            }
 
             unsigned long array16_index = str.find("array16");
             if(array16_index != std::string::npos)
@@ -1789,9 +1772,9 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(array16_index, str.length()).c_str(), "array16 = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_array16(int16_t(atoi(value.c_str()))); 
-                } 
-            } 
+                    set_array16(int16_t(atoi(value.c_str())));
+                }
+            }
 
             unsigned long bools_index = str.find("bools");
             if(bools_index != std::string::npos)
@@ -1800,14 +1783,14 @@ namespace guWhiteboard {
                 if(sscanf(str.substr(bools_index, str.length()).c_str(), "bools = %[^,]", var) == 1)
                 {
                     std::string value = std::string(var);
-                    set_bools(value.compare("true") == 0  || value.compare("1") == 0 ? true : false); 
-                } 
-            } 
+                    set_bools(value.compare("true") == 0  || value.compare("1") == 0 ? true : false);
+                }
+            }
 
 #endif /// USE_WB_OLD_C_CONVERSION
-        } 
+        }
 #endif ///   WHITEBOARD_POSTER_STRING_CONVERSION
-    }; 
+    };
 
-} /// namespace guWhiteboard 
-#endif /// Old_DEFINED 
+} /// namespace guWhiteboard
+#endif /// Old_DEFINED
