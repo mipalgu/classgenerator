@@ -8,7 +8,7 @@ all:	swift-test
 swift-build:
 	if [ ! -f "Sources/classgenerator/main.swift" ]; then \
 		cp main.in Sources/classgenerator/main.swift ;\
-	elif cmp -s "main.in" "Sources/classgenerator/main.swift"; then \
+	elif [ ! $(cmp -s "main.in" "Sources/classgenerator/main.swift") ]; then \
 		cp main.in Sources/classgenerator/main.swift ; \
 	fi;
 	$Eenv ${BUILD_ENV} ${SWIFT} build ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
