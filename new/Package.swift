@@ -9,11 +9,10 @@ let package = Package(
     ]
 )
 
-/*
 products.append(
     Product(
         name: "classgenerator",
         type: .Library(.Dynamic),
         modules: ["classgenerator"]
     )
-)*/
+)

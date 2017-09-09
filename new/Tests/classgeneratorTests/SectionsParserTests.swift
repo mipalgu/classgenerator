@@ -80,18 +80,27 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             "-preamble\nA preamble",
             "-properties\nint count = 2 // A simple counter.",
             "-comment\nsome comments.",
-            "-c\nsome c code",
-            "-c++\nsome c++ code",
-            "-swift\nsome swift code"
+            "-c\nsome prepended c code",
+            "+c\nsome appended c code",
+            "-c++\nsome prepended c++ code",
+            "#c++\nsome embedded c++ code",
+            "+c++\nsome appended c++ code",
+            "-swift\nsome prepended swift code",
+            "#swift\nsome embedded swift code",
+            "+swift\nsome appended swift code"
         ]
         let expected = Sections(
             author: "-author Callum McColl",
-            preamble: "A preamble",
+            preC: "some prepended c code",
             variables: "int count = 2 // A simple counter.",
             comments: "some comments.",
-            cExtras: "some c code",
-            cppExtras: "some c++ code",
-            swiftExtras: "some swift code"
+            postC: "some appended c code",
+            preCpp: "some prepended c++ code",
+            embeddedCpp: "some embedded c++ code",
+            postCpp: "some appended c++ code",
+            preSwift: "some prepended swift code",
+            embeddedSwift: "some embedded swift code",
+            postSwift: "some appended swift code"
         )
         for i in 0..<sections.count {
             var str: String = ""

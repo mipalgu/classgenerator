@@ -65,11 +65,11 @@ public final class Parser: ErrorContainer, WarningsContainer {
     public fileprivate(set) var warnings: [String] = []
 
     public var lastError: String? {
-        return self.lastError
+        return self.errors.last
     }
 
     public var lastWarning: String? {
-        return self.lastWarning
+        return self.warnings.last
     }
 
     fileprivate let parser: ClassParser

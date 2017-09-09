@@ -65,11 +65,11 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
     public fileprivate(set) var warnings: [String] = []
 
     public var lastError: String? {
-        return self.errors.first
+        return self.errors.last
     }
 
     public var lastWarning: String? {
-        return self.warnings.first
+        return self.warnings.last
     }
 
     fileprivate let helpers: StringHelpers
@@ -116,11 +116,11 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             name: name,
             author: author,
             comment: comment,
-            preamble: sections.preamble,
+            preamble: sections.preC,
             variables: variables,
-            cExtras: sections.cExtras,
-            cppExtras: sections.cppExtras,
-            swiftExtras: sections.swiftExtras
+            cExtras: sections.postC,
+            cppExtras: sections.postCpp,
+            swiftExtras: sections.postSwift
         )
     }
 

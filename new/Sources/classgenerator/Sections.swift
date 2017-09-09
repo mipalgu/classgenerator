@@ -60,17 +60,25 @@ public struct Sections {
 
     let author: String
 
-    let preamble: String?
+    let preC: String?
 
     let variables: String
 
     let comments: String?
 
-    let cExtras: String?
+    let postC: String?
 
-    let cppExtras: String?
+    let preCpp: String?
 
-    let swiftExtras: String?
+    let embeddedCpp: String?
+
+    let postCpp: String?
+
+    let preSwift: String?
+
+    let embeddedSwift: String?
+
+    let postSwift: String?
 
 }
 
@@ -78,10 +86,14 @@ extension Sections: Equatable {}
 
 public func == (lhs: Sections, rhs: Sections) -> Bool {
     return lhs.author == rhs.author
-        && lhs.preamble == rhs.preamble
+        && lhs.preC == rhs.preC
         && lhs.variables == rhs.variables
         && lhs.comments == rhs.comments
-        && lhs.cExtras == rhs.cExtras
-        && lhs.cppExtras == rhs.cppExtras
-        && lhs.swiftExtras == rhs.swiftExtras
+        && lhs.postC == rhs.postC
+        && lhs.preCpp == rhs.preCpp
+        && lhs.embeddedCpp == rhs.embeddedCpp
+        && lhs.postCpp == rhs.postCpp
+        && lhs.preSwift == rhs.preSwift
+        && lhs.embeddedSwift == rhs.embeddedSwift
+        && lhs.postSwift == rhs.postSwift
 }

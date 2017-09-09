@@ -63,7 +63,7 @@ public final class SectionsParser: ErrorContainer {
     public fileprivate(set) var errors: [String] = []
 
     public var lastError: String? {
-        return errors.first
+        return self.errors.last
     }
 
     public func parseSections(fromContents contents: String) -> Sections? {
@@ -87,14 +87,19 @@ public final class SectionsParser: ErrorContainer {
         return self.createSections(fromGroups: grouped)
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createSections<S: Sequence>(fromGroups seq: S) -> Sections? where S.Iterator.Element == [String] {
         var author: String?
-        var preamble: String?
+        var prec: String?
         var vars: String?
         var comments: String?
-        var cExtras: String?
-        var cppExtras: String?
-        var swiftExtras: String?
+        var postc: String?
+        var precpp: String?
+        var cpp: String?
+        var postcpp: String?
+        var preswift: String?
+        var swift: String?
+        var postswift: String?
         let assignIfValid: (inout String?, String, Bool) -> Bool = {
             if true == $2 { $0 = $1 }; return $2
         }
@@ -105,12 +110,16 @@ public final class SectionsParser: ErrorContainer {
             let combined = $0.dropFirst().reduce("") { $0 + "\n" + $1 }.trimmingCharacters(in: CharacterSet.newlines)
             //swiftlint:disable opening_brace
             if true == (assignIfValid(&author, first, self.isAuthorLine(first))
+                || assignIfValid(&prec, combined, self.isPreCMarker(first))
                 || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
-                || assignIfValid(&preamble, combined, self.isPreambleMarker(first))
-                || assignIfValid(&cExtras, combined, self.isCMarker(first))
                 || assignIfValid(&comments, combined, self.isCommentMarker(first))
-                || assignIfValid(&cppExtras, combined, self.isCppMarker(first))
-                || assignIfValid(&swiftExtras, combined, self.isSwiftMarker(first))
+                || assignIfValid(&postc, combined, self.isPostCMarker(first))
+                || assignIfValid(&precpp, combined, self.isPreCppMarker(first))
+                || assignIfValid(&cpp, combined, self.isCppMarker(first))
+                || assignIfValid(&postcpp, combined, self.isPostCppMarker(first))
+                || assignIfValid(&preswift, combined, self.isPreSwiftMarker(first))
+                || assignIfValid(&swift, combined, self.isSwiftMarker(first))
+                || assignIfValid(&postswift, combined, self.isPostSwiftMarker(first))
             ) {
                 return
             }
@@ -130,12 +139,16 @@ public final class SectionsParser: ErrorContainer {
         }
         return Sections(
             author: a,
-            preamble: preamble,
+            preC: prec,
             variables: variables,
             comments: comments,
-            cExtras: cExtras,
-            cppExtras: cppExtras,
-            swiftExtras: swiftExtras
+            postC: postc,
+            preCpp: precpp,
+            embeddedCpp: cpp,
+            postCpp: postcpp,
+            preSwift: preswift,
+            embeddedSwift: swift,
+            postSwift: postswift
         )
     }
 
@@ -165,12 +178,16 @@ public final class SectionsParser: ErrorContainer {
 
     fileprivate func isMarker(_ str: String) -> Bool {
         return self.isAuthorLine(str)
-            || self.isPreambleMarker(str)
+            || self.isPreCMarker(str)
             || self.isPropertiesMarker(str)
-            || self.isCMarker(str)
             || self.isCommentMarker(str)
+            || self.isPostCMarker(str)
+            || self.isPreCppMarker(str)
             || self.isCppMarker(str)
+            || self.isPostCppMarker(str)
+            || self.isPreSwiftMarker(str)
             || self.isSwiftMarker(str)
+            || self.isPostSwiftMarker(str)
     }
 
     fileprivate func isAuthorLine(_ str: String) -> Bool {
@@ -178,8 +195,8 @@ public final class SectionsParser: ErrorContainer {
             || String(str.characters.prefix(7)) == "-author"
     }
 
-    fileprivate func isPreambleMarker(_ str: String) -> Bool {
-        return str == "-preamble"
+    fileprivate func isPreCMarker(_ str: String) -> Bool {
+        return str == "-c"
     }
 
     fileprivate func isPropertiesMarker(_ str: String) -> Bool {
@@ -190,16 +207,32 @@ public final class SectionsParser: ErrorContainer {
         return str == "-comment"
     }
 
-    fileprivate func isCMarker(_ str: String) -> Bool {
-        return str == "-c"
+    fileprivate func isPostCMarker(_ str: String) -> Bool {
+        return str == "+c"
     }
 
-    fileprivate func isCppMarker(_ str: String) -> Bool {
+    fileprivate func isPreCppMarker(_ str: String) -> Bool {
         return str == "-c++"
     }
 
-    fileprivate func isSwiftMarker(_ str: String) -> Bool {
+    fileprivate func isCppMarker(_ str: String) -> Bool {
+        return str == "#c++"
+    }
+
+    fileprivate func isPostCppMarker(_ str: String) -> Bool {
+        return str == "+c++"
+    }
+
+    fileprivate func isPreSwiftMarker(_ str: String) -> Bool {
         return str == "-swift"
+    }
+
+    fileprivate func isSwiftMarker(_ str: String) -> Bool {
+        return str == "#swift"
+    }
+
+    fileprivate func isPostSwiftMarker(_ str: String) -> Bool {
+        return str == "+swift"
     }
 
 }
