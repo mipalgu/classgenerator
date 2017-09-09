@@ -82,7 +82,7 @@ struct wb_old
     /**
      * A string.
      */
-    PROPERTY(string, str)
+    PROPERTY(char *, str)
 
     /**
      * A boolean.
@@ -297,7 +297,7 @@ struct wb_old
     /**
      * A string.
      */
-    PROPERTY(string, str2)
+    PROPERTY(char *, str2)
 
     /**
      * A boolean.

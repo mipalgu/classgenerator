@@ -1,8 +1,8 @@
 /*
- * BufferSizeCalculator.swift 
+ * CTypeConverter.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 22/08/2017.
+ * Created by Callum McColl on 09/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,89 +56,13 @@
  *
  */
 
-public final class BufferSizeCalculator {
+public final class CTypeConverter {
 
-    fileprivate let lengths: [String: Int] = [
-        "char *": 0,
-        "bool": 5,
-        "char": 1,
-        "signed char": 2,
-        "unsigned char": 1,
-        "signed": 11,
-        "signed int": 11,
-        "unsigned": 11,
-        "unsigned int": 11,
-        "uint8_t": 3,
-        "uint16_t": 5,
-        "uint32_t": 10,
-        "uint64_t": 20,
-        "int8_t": 4,
-        "int16_t": 6,
-        "int32_t": 11,
-        "int64_t": 20,
-        "int": 11,
-        "uint": 10,
-        "short": 6,
-        "short int": 6,
-        "signed short": 6,
-        "signed short int": 6,
-        "unsigned short": 6,
-        "unsigned short int": 6,
-        "long": 11,
-        "long int": 11,
-        "signed long": 11,
-        "signed long int": 11,
-        "unsigned long": 10,
-        "unsigned long int": 10,
-        "long long": 20,
-        "long long int": 20,
-        "signed long long": 20,
-        "signed long long int": 20,
-        "unsigned long long": 20,
-        "unsigned long long int": 20,
-        "long64_t": 20,
-        "float": 64,
-        "float_t": 64,
-        "double": 64,
-        "double_t": 64,
-        "long double": 80,
-        "double double": 80
-    ]
-
-    /**
-     * This determines the description string buffer size which will be declared
-     * as a constant in the generated files.
-     *
-     * - Paramter vars: The array of variables that the `Class` contains.
-     *
-     * - Parameter buffer: The size of the toString buffer.
-     *
-     * - Returns: The size of the buffer.
-     */
-    func getDescriptionBufferSize(fromVariables vars: [Variable], withToStringBufferSize buffer: Int) -> Int {
-        return vars.count + vars.reduce(buffer) { $0 + $1.label.characters.count }
+    public func convert(type: String) -> String {
+        if "string" == type {
+            return "char *"
+        }
+        return type
     }
 
-    /**
-     * This determines the tostring buffer size which will be declared as a
-     * constant in the generated files. It uses information about the variables
-     * as stored in the dictionary.
-     *
-     * - Paramter vars: The array of variables that the `Class` contains.
-     *
-     * - Returns: The size of the buffer.
-     */
-    func getToStringBufferSize(fromVariables vars: [Variable]) -> Int {
-        if true == vars.isEmpty {
-            return 0
-        }
-        return (vars.count - 1) * 2 + vars.reduce(1) {
-            switch $1.type {
-                case .array, .pointer, .unknown:
-                    return $0 + 255
-                default:
-                    return $0 + (self.lengths[$1.cType] ?? 255)
-            }
-        }
-    }
 }

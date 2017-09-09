@@ -76,7 +76,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "str",
                     type: .string,
-                    cType: "string",
+                    cType: "char *",
                     swiftType: "String",
                     defaultValue: "\"hello\"",
                     swiftDefaultValue: "\"hello\"",
@@ -463,7 +463,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "str2",
                     type: .string,
-                    cType: "string",
+                    cType: "char *",
                     swiftType: "String",
                     defaultValue: "\"\"",
                     swiftDefaultValue: "\"\"",

@@ -66,6 +66,8 @@ public final class VariableParser: ErrorContainer {
         return self.errors.first
     }
 
+    fileprivate let cTypeConverter: CTypeConverter
+
     fileprivate let defaultValuesCalculator: DefaultValuesCalculator
 
     fileprivate let identifier: TypeIdentifier
@@ -75,11 +77,13 @@ public final class VariableParser: ErrorContainer {
     fileprivate let typeConverter: TypeConverter
 
     public init(
+        cTypeConverter: CTypeConverter = CTypeConverter(),
         defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator(),
         identifier: TypeIdentifier = TypeIdentifier(),
         sanitiser: Sanitiser = Sanitiser(),
         typeConverter: TypeConverter = TypeConverter()
     ) {
+        self.cTypeConverter = cTypeConverter
         self.defaultValuesCalculator = defaultValuesCalculator
         self.identifier = identifier
         self.sanitiser = sanitiser
@@ -154,10 +158,13 @@ public final class VariableParser: ErrorContainer {
             self.errors.append("Malformed type signature.  Unable to convert to swift equivalent: \(type)")
             return nil
         }
+        let cType = self.cTypeConverter.convert(
+            type: type.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces)
+        )
         return Variable(
             label: trimmedLabel.components(separatedBy: "[")[0].trimmingCharacters(in: .whitespaces),
             type: self.identifier.identify(fromTypeSignature: type, andArrayCounts: arrCounts),
-            cType: type.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces),
+            cType: cType,
             swiftType: swiftType,
             defaultValue: defaultValues.0,
             swiftDefaultValue: defaultValues.1,
