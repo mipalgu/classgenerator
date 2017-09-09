@@ -90,7 +90,8 @@ public final class CHeaderCreator: ErrorContainer {
             return nil
         }
         let head = self.createHead(forFileNamed: fileName, withClass: cls, andGenFile: genfile)
-        let tail = self.createTail(withClassNamed: structName)
+        let postC = nil == cls.postC ? "" : "\n\n" + cls.postC!
+        let tail = self.createTail(withClassNamed: structName, andPostC: postC)
         return head + "\n\n" + strct + "\n\n" + tail + "\n"
     }
 
@@ -130,8 +131,7 @@ public final class CHeaderCreator: ErrorContainer {
             }
         }
         let preC = nil == cls.preC ? "" : cls.preC! + "\n\n"
-        let postC = nil == cls.postC ? "" : "\n\n" + cls.postC!
-        return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines) + postC
+        return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines)
     }
 
     fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
@@ -189,7 +189,7 @@ public final class CHeaderCreator: ErrorContainer {
         }
     }
 
-    fileprivate func createTail(withClassNamed name: String) -> String {
+    fileprivate func createTail(withClassNamed name: String, andPostC postC: String) -> String {
         let name = String(name.characters.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         return """
             #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
@@ -207,7 +207,7 @@ public final class CHeaderCreator: ErrorContainer {
              * Convert from a string.
              */
             struct \(name)* \(name)_from_string(struct \(name)* self, const char* str);
-            #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
+            #endif /// WHITEBOARD_POSTER_STRING_CONVERSION\(postC)
 
             #endif /// \(name)_h
             """

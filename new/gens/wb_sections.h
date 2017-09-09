@@ -102,4 +102,8 @@ const char* wb_sections_to_string(const struct wb_sections* self, char* toString
 struct wb_sections* wb_sections_from_string(struct wb_sections* self, const char* str);
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
+int f() {
+    return 1;
+}
+
 #endif /// wb_sections_h
