@@ -912,11 +912,11 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ],
                 preC: "#include <stdint.h>",
                 postC: "int f() {\n    return 1;\n}",
-                preCpp: "int g() {\n    return 2;\n}",
-                embeddedCpp: "int h() {\n    return c + 3;\n}",
-                postCpp: "int i() {\n    return 4;\n}",
+                preCpp: "#include <iostream>",
+                embeddedCpp: "int g() {\n    return c + 2;\n}",
+                postCpp: "int h() {\n    return 3;\n}",
                 preSwift: "import FSM",
-                embeddedSwift: "func j() -> Int {\n    return 5\n}",
+                embeddedSwift: "var temp: String {\n    return \"c: \\(self.c)\"\n}",
                 postSwift: "extension wb_sections: ExternalVariables {}"
             )
         }

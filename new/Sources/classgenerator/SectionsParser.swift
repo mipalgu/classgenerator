@@ -216,7 +216,7 @@ public final class SectionsParser: ErrorContainer {
     }
 
     fileprivate func isCppMarker(_ str: String) -> Bool {
-        return str == "#c++"
+        return str == "%c++"
     }
 
     fileprivate func isPostCppMarker(_ str: String) -> Bool {
@@ -228,7 +228,7 @@ public final class SectionsParser: ErrorContainer {
     }
 
     fileprivate func isSwiftMarker(_ str: String) -> Bool {
-        return str == "#swift"
+        return str == "%swift"
     }
 
     fileprivate func isPostSwiftMarker(_ str: String) -> Bool {

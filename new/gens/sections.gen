@@ -1,6 +1,6 @@
 -author Callum McColl
 
--preamble
+-c
 #include <stdint.h>
 
 -properties
@@ -9,18 +9,31 @@ int c = 2 // A counter.
 -comment
 This is a global comment.
 
--c
-
++c
 int f() {
-    return c + 1;
+    return 1;
 }
 
 -c++
+#include <iostream>
 
+%c++
 int g() {
     return c + 2;
 }
 
--swift
++c++
+int h() {
+    return 3;
+}
 
+-swift
+import FSM
+
+%swift
+var temp: String {
+    return "c: \(self.c)"
+}
+
++swift
 extension wb_sections: ExternalVariables {}

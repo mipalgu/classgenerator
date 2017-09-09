@@ -82,10 +82,10 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             "-c\nsome prepended c code",
             "+c\nsome appended c code",
             "-c++\nsome prepended c++ code",
-            "#c++\nsome embedded c++ code",
+            "%c++\nsome embedded c++ code",
             "+c++\nsome appended c++ code",
             "-swift\nsome prepended swift code",
-            "#swift\nsome embedded swift code",
+            "%swift\nsome embedded swift code",
             "+swift\nsome appended swift code"
         ]
         let expected = Sections(

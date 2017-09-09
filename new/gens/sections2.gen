@@ -1,4 +1,4 @@
--preamble
+-c
 #include <stdint.h>
 
 -author Callum McColl
@@ -6,21 +6,35 @@
 -comment
 This is a global comment.
 
--swift
-
++swift
 extension wb_sections: ExternalVariables {}
 
--c
-
++c
 int f() {
-    return c + 1;
-}
-
--c++
-
-int g() {
-    return c + 2;
+    return 1;
 }
 
 -properties
 int c = 2 // A counter.
+
+
+-c++
+#include <iostream>
+
+%c++
+int g() {
+    return c + 2;
+}
+
++c++
+int h() {
+    return 3;
+}
+
+-swift
+import FSM
+
+%swift
+var temp: String {
+    return "c: \(self.c)"
+}

@@ -1,26 +1,40 @@
--c
-
-int f() {
-    return c + 1;
+%swift
+var temp: String {
+    return "c: \(self.c)"
 }
 
--comment
-This is a global comment.
++c++
+int h() {
+    return 3;
+}
 
--preamble
-#include <stdint.h>
++swift
+extension wb_sections: ExternalVariables {}
 
--properties
-int c = 2 // A counter.
-
--c++
-
+%c++
 int g() {
     return c + 2;
 }
 
--swift
-
-extension wb_sections: ExternalVariables {}
+-c
+#include <stdint.h>
 
 -author Callum McColl
+
+-comment
+This is a global comment.
+
++c
+int f() {
+    return 1;
+}
+
+-properties
+int c = 2 // A counter.
+
+
+-c++
+#include <iostream>
+
+-swift
+import FSM
