@@ -98,7 +98,7 @@ public class CPPHeaderCreatorTests: ClassGeneratorTestCase {
 
     public func test_createSectionsHeader() {
         guard let expected = try? String(contentsOfFile: "gens/Sections.h") else {
-            XCTFail("Unable to read contents of gens/wb_sections.h")
+            XCTFail("Unable to read contents of gens/Sections.h")
             return
         }
         let cls = super.createSectionsClass("sections")
