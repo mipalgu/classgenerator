@@ -58,12 +58,18 @@
 
 import Foundation
 
-public final class SectionsParser: ErrorContainer {
+public final class SectionsParser: ErrorContainer, WarningsContainer {
 
     public fileprivate(set) var errors: [String] = []
 
+    public fileprivate(set) var warnings: [String] = []
+
     public var lastError: String? {
         return self.errors.last
+    }
+
+    public var lastWarning: String? {
+        return self.warnings.last
     }
 
     public func parseSections(fromContents contents: String) -> Sections? {
@@ -100,6 +106,7 @@ public final class SectionsParser: ErrorContainer {
         var preswift: String?
         var swift: String?
         var postswift: String?
+        var usingOldFormat: Bool = false
         let assignIfValid: (inout String?, String, Bool) -> Bool = {
             if true == $2 { $0 = $1 }; return $2
         }
@@ -126,8 +133,12 @@ public final class SectionsParser: ErrorContainer {
             guard let (tempVars, tempComments) = self.parseWithoutMarkers(section: $0) else {
                 return
             }
+            usingOldFormat = true
             vars = true == tempVars.isEmpty ? vars : tempVars
             comments = tempComments ?? comments
+        }
+        if true == usingOldFormat {
+            self.warnings.append("The old format is depracated. Please convert this class to the new format.")
         }
         guard let variables = vars else {
             self.errors.append("Please specify a property list section (-properties).")

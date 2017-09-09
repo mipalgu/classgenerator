@@ -169,11 +169,20 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
         return name
     }
 
-    fileprivate func delegate<T, EC: ErrorContainer>(_ parse: () -> T?, _ errorContainer: EC) -> T? {
+    fileprivate func delegate<T, C: ErrorContainer>(_ parse: () -> T?, _ cont: C) -> T? {
         guard let result = parse() else {
-            self.errors.append(contentsOf: errorContainer.errors)
+            self.errors.append(contentsOf: cont.errors)
             return nil
         }
+        return result
+    }
+
+    fileprivate func delegate<T, C: ErrorContainer>(_ parse: () -> T?, _ cont: C) -> T? where C: WarningsContainer {
+        guard let result = parse() else {
+            self.errors.append(contentsOf: cont.errors)
+            return nil
+        }
+        self.warnings.append(contentsOf: cont.warnings)
         return result
     }
 
