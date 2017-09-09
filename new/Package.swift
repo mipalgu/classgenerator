@@ -8,11 +8,3 @@ let package = Package(
         Target(name: "classgenerator", dependencies: [])
     ]
 )
-
-products.append(
-    Product(
-        name: "classgenerator",
-        type: .Library(.Dynamic),
-        modules: ["classgenerator"]
-    )
-)
