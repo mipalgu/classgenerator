@@ -89,8 +89,15 @@ public final class CPPHeaderCreator: ErrorContainer {
             withAuthor: cls.author,
             generatedFrom: genfile
         )
-        let content = self.createClass(named: className, extendingStruct: structName, withVariables: cls.variables)
-        return head + "\n\n" + content
+        let content = self.createClass(
+            named: className,
+            extendingStruct: structName,
+            withVariables: cls.variables,
+            andEmbeddedCpp: cls.embeddedCpp,
+            andPostCpp: cls.postCpp
+        )
+        let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
+        return head + pre + "\n\n" + content
     }
 
     fileprivate func createHead(
@@ -123,18 +130,27 @@ public final class CPPHeaderCreator: ErrorContainer {
     fileprivate func createClass(
         named className: String,
         extendingStruct structName: String,
-        withVariables variables: [Variable]
+        withVariables variables: [Variable],
+        andEmbeddedCpp embeddedCpp: String?,
+        andPostCpp postCpp: String?
     ) -> String {
         let namespace = "namespace guWhiteboard {"
-        let content = self.createClassContent(forClassNamed: className, extending: structName, withVariables: variables)
+        let content = self.createClassContent(
+            forClassNamed: className,
+            extending: structName,
+            withVariables: variables,
+            andEmbeddedCpp: embeddedCpp
+        )
+        let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.indent(postCpp!)
         let endNamespace = "};"
-        return namespace + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + endNamespace
+        return namespace + "\n\n" + self.stringHelpers.indent(content) + postCpp + "\n\n" + endNamespace
     }
 
     fileprivate func createClassContent(
         forClassNamed name: String,
         extending extendName: String,
-        withVariables variables: [Variable]
+        withVariables variables: [Variable],
+        andEmbeddedCpp cpp: String?
     ) -> String {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
         let publicLabel = "public:"
@@ -151,7 +167,8 @@ public final class CPPHeaderCreator: ErrorContainer {
         )
         let publicContent = constructor + "\n\n" + copyConstructor + "\n\n" + copyAssignmentOperator
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
-        return def + "\n\n" + publicSection + "\n\n};"
+        let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
+        return def + "\n\n" + publicSection + cpp + "\n\n};"
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
