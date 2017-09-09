@@ -213,7 +213,9 @@ public final class CPPHeaderCreator {
         let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
         let def = "\(className) &operator = (const \(className) &other) {"
         let setters = self.createSetters(forVariables: variables) { "other.\($0.label)()" }
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters)
+        let ret = "return *this;"
+        let content = setters + "\n" + ret
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(content) + "\n}"
     }
 
     fileprivate func createSetters(
