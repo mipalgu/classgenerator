@@ -97,7 +97,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             andPostCpp: cls.postCpp
         )
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
-        return head + pre + "\n\n" + content
+        return head + pre + "\n\n" + content + "\n\n" + "#endif // \(className)_DEFINED"
     }
 
     fileprivate func createHead(

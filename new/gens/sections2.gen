@@ -23,7 +23,7 @@ int c = 2 // A counter.
 
 %c++
 int g() {
-    return c + 2;
+    return c() + 2;
 }
 
 +c++

@@ -913,7 +913,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 preC: "#include <stdint.h>",
                 postC: "int f() {\n    return 1;\n}",
                 preCpp: "#include <iostream>",
-                embeddedCpp: "int g() {\n    return c + 2;\n}",
+                embeddedCpp: "int g() {\n    return c() + 2;\n}",
                 postCpp: "int h() {\n    return 3;\n}",
                 preSwift: "import FSM",
                 embeddedSwift: "var temp: String {\n    return \"c: \\(self.c)\"\n}",

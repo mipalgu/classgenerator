@@ -13,7 +13,7 @@ extension wb_sections: ExternalVariables {}
 
 %c++
 int g() {
-    return c + 2;
+    return c() + 2;
 }
 
 -c
