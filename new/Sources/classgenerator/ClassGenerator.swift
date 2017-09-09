@@ -105,11 +105,12 @@ public final class ClassGenerator<P: Printer> {
             }
         }
         self.handleTask(task)
+        self.printer.message(str: "")
     }
 
     fileprivate func handleTask(_ task: Task) {
         if task.printHelpText {
-            print(self.argumentsParser.helpText)
+            self.printer.message(str: self.argumentsParser.helpText)
             if nil == task.path {
                 return
             }
