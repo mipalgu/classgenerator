@@ -56,7 +56,13 @@
  *
  */
 
-public final class CPPHeaderCreator {
+public final class CPPHeaderCreator: ErrorContainer {
+
+    public let errors: [String] = []
+
+    public var lastError: String? {
+        return self.errors.last
+    }
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers

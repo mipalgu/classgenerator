@@ -61,7 +61,7 @@ import Foundation
 public final class ClassGenerator {
 
     fileprivate let argumentsParser: ClassGeneratorParser
-    fileprivate let parser: Parser
+    fileprivate let parser: ClassParser
     fileprivate let fileHelpers: FileHelpers
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let cHeaderCreator: CHeaderCreator
@@ -70,7 +70,7 @@ public final class ClassGenerator {
 
     public init(
         argumentsParser: ClassGeneratorParser = ClassGeneratorParser(),
-        parser: Parser = Parser(),
+        parser: ClassParser = ClassParser(),
         fileHelpers: FileHelpers = FileHelpers(),
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         cHeaderCreator: CHeaderCreator = CHeaderCreator(),
@@ -94,11 +94,11 @@ public final class ClassGenerator {
         } catch (let e) {
             switch e {
                 case ClassGeneratorErrors.pathNotFound:
-                    fatalError("Path not found")
+                    self.handleError("Path not found")
                 case ClassGeneratorErrors.unknownFlag(let flag):
-                    fatalError("Unknown Flag: \(flag)")
+                    self.handleError("Unknown Flag: \(flag)")
                 default:
-                    fatalError("Unknown Error")
+                    self.handleError("Unknown Error")
             }
         }
         self.handleTask(task)
@@ -112,16 +112,20 @@ public final class ClassGenerator {
             }
         }
         guard let path = task.path else {
-            fatalError("Path not found")
+            self.handleError("Path not found")
         }
         let url = URL(fileURLWithPath: path)
         let genfile = url.lastPathComponent
         if "" == genfile {
-            fatalError("Path not found")
+            self.handleError("Path not found")
         }
-        guard let cls = self.parser.parse(file: url) else {
-            fatalError(self.parser.lastError ?? "Unable to parse class")
+        guard
+            let contents = try? String(contentsOf: url),
+            let cls = self.parser.parse(contents, withName: genfile)
+        else {
+            self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
+        self.parser.warnings.forEach(self.handleWarning)
         self.generateFiles(fromClass: cls, generatedFrom: genfile, generateCppWrapper: task.generateCppWrapper)
     }
 
@@ -140,7 +144,7 @@ public final class ClassGenerator {
                 generatedFrom: genfile
             )
         }) else {
-            fatalError("Unable to create C Header")
+            self.handleError(self.cHeaderCreator.lastError ?? "Unable to create C Header")
         }
         guard true == self.generate(cFile, {
             self.cFileCreator.createCFile(
@@ -150,7 +154,7 @@ public final class ClassGenerator {
                 generatedFrom: genfile
             )
         }) else {
-            fatalError("Unable to create C File")
+            self.handleError(self.cFileCreator.lastError ?? "Unable to create C File")
         }
         if true == generateCppWrapper {
             guard true == self.generate(cppHeader, {
@@ -162,7 +166,7 @@ public final class ClassGenerator {
                     generatedFrom: genfile
                 )
             }) else {
-                fatalError("Unable to create C++ Header")
+                self.handleError(self.cppHeaderCreator.lastError ?? "Unable to create C++ Header")
             }
         }
     }
@@ -185,6 +189,14 @@ public final class ClassGenerator {
             }
             return cs.flatMap { $0 == "-" ? nil : "-\($0)" }
         }
+    }
+
+    fileprivate func handleWarning(_ warn: String) {
+        print(warn)
+    }
+
+    fileprivate func handleError(_ msg: String) -> Never {
+        fatalError(msg)
     }
 
 }

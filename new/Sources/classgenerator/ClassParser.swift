@@ -142,6 +142,9 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             self.errors.append("The class name should start with a letter.")
             return nil
         }
+        if false == str.hasSuffix(".gen") {
+            self.warnings.append("\(str) should have a '.gen' extension.")
+        }
         if nil != name.characters.lazy.filter({ $0 == "_" }).first {
             self.warnings.append("Underscores are not recommended in the class name.")
         }

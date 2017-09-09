@@ -56,7 +56,13 @@
  *
  */
 
-public final class CFileCreator {
+public final class CFileCreator: ErrorContainer {
+
+    public let errors: [String] = []
+
+    public var lastError: String? {
+        return self.errors.last
+    }
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let descriptionCreator: CDescriptionCreator
