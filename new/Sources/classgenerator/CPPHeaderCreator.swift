@@ -158,11 +158,31 @@ public final class CPPHeaderCreator {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
         let startdef = "\(name)("
         let list = variables.map {
-            "\($0.cType) \($0.label) = \($0.defaultValue)"
+            "\($0.cType)\(self.calculateSignatureExtras(forType: $0.type)) \($0.label) = \($0.defaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let def = startdef + list + ") {"
         let setters = self.createSetters(forVariables: variables)
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+
+    fileprivate func calculateSignatureExtras(forType type: VariableTypes) -> String {
+        switch type {
+            case .pointer:
+                return " " + self._calculateSignatureExtras(forType: type)
+            default:
+                return self._calculateSignatureExtras(forType: type)
+        }
+    }
+
+    fileprivate func _calculateSignatureExtras(forType type: VariableTypes) -> String {
+        switch type {
+            case .array(let subtype, let length):
+                return "[\(length)]" + self._calculateSignatureExtras(forType: subtype)
+            case .pointer(let subtype):
+                return "*" + self._calculateSignatureExtras(forType: subtype)
+            default:
+                return ""
+        }
     }
 
     fileprivate func createCopyConstructor(
