@@ -58,7 +58,7 @@
 
 import Foundation
 
-public final class ClassGenerator {
+public final class ClassGenerator<P: Printer> {
 
     fileprivate let argumentsParser: ClassGeneratorParser
     fileprivate let parser: ClassParser
@@ -67,6 +67,7 @@ public final class ClassGenerator {
     fileprivate let cHeaderCreator: CHeaderCreator
     fileprivate let cFileCreator: CFileCreator
     fileprivate let cppHeaderCreator: CPPHeaderCreator
+    fileprivate let printer: P
 
     public init(
         argumentsParser: ClassGeneratorParser = ClassGeneratorParser(),
@@ -75,7 +76,8 @@ public final class ClassGenerator {
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         cHeaderCreator: CHeaderCreator = CHeaderCreator(),
         cFileCreator: CFileCreator = CFileCreator(),
-        cppHeaderCreator: CPPHeaderCreator = CPPHeaderCreator()
+        cppHeaderCreator: CPPHeaderCreator = CPPHeaderCreator(),
+        printer: P
     ) {
         self.argumentsParser = argumentsParser
         self.parser = parser
@@ -84,6 +86,7 @@ public final class ClassGenerator {
         self.cHeaderCreator = cHeaderCreator
         self.cFileCreator = cFileCreator
         self.cppHeaderCreator = cppHeaderCreator
+        self.printer = printer
     }
 
     public func run(_ args: [String]) {
@@ -192,11 +195,12 @@ public final class ClassGenerator {
     }
 
     fileprivate func handleWarning(_ warn: String) {
-        print(warn)
+        self.printer.warning(str: warn)
     }
 
     fileprivate func handleError(_ msg: String) -> Never {
-        fatalError(msg)
+        self.printer.error(str: msg)
+        exit(EXIT_FAILURE)
     }
 
 }
