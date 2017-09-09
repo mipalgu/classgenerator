@@ -77,7 +77,6 @@ public class SectionsParserTests: ClassGeneratorTestCase {
     public func test_sectionsInAnyOrder() {
         let sections = [
             "-author Callum McColl",
-            "-preamble\nA preamble",
             "-properties\nint count = 2 // A simple counter.",
             "-comment\nsome comments.",
             "-c\nsome prepended c code",
@@ -108,12 +107,10 @@ public class SectionsParserTests: ClassGeneratorTestCase {
                 str += "\n\n" + sections[(j + i) % sections.count]
             }
             let contents = str.trimmingCharacters(in: .whitespacesAndNewlines)
-            print("parse")
             guard let result = self.parser.parseSections(fromContents: contents) else {
                 XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
                 return
             }
-            print("end parse")
             XCTAssertEqual(expected, result)
         }
     }

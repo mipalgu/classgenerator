@@ -81,18 +81,17 @@ public final class Parser: ErrorContainer, WarningsContainer {
     public func parse(file: URL) -> Class? {
         self.errors = []
         self.warnings = []
-        /*guard let contents = try? String(contentsOf: file) else {
+        guard let contents = try? String(contentsOf: file) else {
             self.errors.append("Unable to read contents of file: \(file.path)")
             return nil
-        }*/
-        return nil
-        /*guard let c = self.parser.parse(contents, withName: file.lastPathComponent) else {
+        }
+        guard let c = self.parser.parse(contents, withName: file.lastPathComponent) else {
             self.errors.append(contentsOf: self.parser.errors)
             self.warnings.append(contentsOf: self.parser.warnings)
             return nil
         }
-        self.warnings.append(contentsOf: self.parser.warnings)*/
-        //return c
+        self.warnings.append(contentsOf: self.parser.warnings)
+        return c
     }
 
 }
