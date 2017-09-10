@@ -68,6 +68,9 @@
  */
 extension wb_old {
 
+    /**
+     * Create a new `wb_old`.
+     */
     public init(str: String = "hello", b: Bool = false, c: String = "c", sc: String = "c", uc: String = "c", i: Int = 1, si: Int = 1, sii: Int = 1, u: UInt = 1, ui: UInt = 1, u8: UInt8 = 1, u16: UInt16 = 1, u32: UInt32 = 1, u64: UInt64 = 1, i8: Int8 = 1, i16: Int16 = 1, i32: Int32 = 1, i64: Int64 = 1, s: Int16 = 1, si: Int16 = 1, ss: Int16 = 1, ssi: Int16 = 1, us: UInt16 = 1, usi: UInt16 = 1, l: Int32 = 1, li: Int32 = 1, sl: Int32 = 1, sli: Int32 = 1, ul: UInt32 = 1, uli: UInt32 = 1, ll: Int64 = 1, lli: Int64 = 1, sll: Int64 = 1, slli: Int64 = 1, ull: UInt64 = 1, ulli: UInt64 = 1, l64: Int64 = 1, f: Float = 1.0, ft: Float = 1.0, d: Double = 1.0, dt: Double = 1.0, ld: Float80 = 1.0, dd: Float80 = 1.0, str2: String = "", b2: Bool = true, c2: String = String(Character(UnicodeScalar(UInt8.min))), sc2: String = String(Character(UnicodeScalar(UInt8.min))), uc2: String = String(Character(UnicodeScalar(UInt8.min))), i2: Int = 0, si2: Int = 0, sii2: Int = 0, u2: UInt = 0, ui2: UInt = 0, u82: UInt8 = 0, u162: UInt16 = 0, u322: UInt32 = 0, u642: UInt64 = 0, i82: Int8 = 0, i162: Int16 = 0, i322: Int32 = 0, i642: Int64 = 0, s2: Int16 = 0, si2: Int16 = 0, ss2: Int16 = 0, ssi2: Int16 = 0, us2: UInt16 = 0, usi2: UInt16 = 0, l2: Int32 = 0, li2: Int32 = 0, sl2: Int32 = 0, sli2: Int32 = 0, ul2: UInt32 = 0, uli2: UInt32 = 0, ll2: Int64 = 0, lli2: Int64 = 0, sll2: Int64 = 0, slli2: Int64 = 0, ull2: UInt64 = 0, ulli2: UInt64 = 0, l642: Int64 = 0, f2: Float = 0.0, ft2: Float = 0.0, d2: Double = 0.0, dt2: Double = 0.0, ld2: Float80 = 0.0, dd2: Float80 = 0.0, p: UnsafeMutablePointer<Int>? = nil, strct: somestruct = somestruct(), array16: [Int16] = [1, 2, 3, 4], bools: [Bool] = [true, true, true]) {
         self.str = str
         self.b = b

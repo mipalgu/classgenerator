@@ -102,13 +102,14 @@ public final class SwiftFileCreator {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
-        let constructor = self.createConstructor(withVariables: variables)
+        let constructor = self.createConstructor(on: base, withVariables: variables)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
         let content = constructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
-    fileprivate func createConstructor(withVariables variables: [Variable]) -> String {
+    fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
         let startDef = "public init("
         let params = variables.map {
             let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
@@ -119,7 +120,7 @@ public final class SwiftFileCreator {
         let setters = variables.map {
             "self.\($0.label) = \($0.label)"
         }.combine("") { $0 + "\n" + $1 }
-        return def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
     }
 
     fileprivate func createFromDictionaryConstructor(
