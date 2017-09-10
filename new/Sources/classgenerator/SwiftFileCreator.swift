@@ -108,7 +108,8 @@ public final class SwiftFileCreator {
     fileprivate func createConstructor(withVariables variables: [Variable]) -> String {
         let startDef = "public init("
         let params = variables.map {
-            "\($0.label): \($0.swiftType) = \($0.swiftDefaultValue)"
+            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+            return "\($0.label): \(type) = \($0.swiftDefaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
