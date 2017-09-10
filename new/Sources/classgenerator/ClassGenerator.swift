@@ -67,6 +67,7 @@ public final class ClassGenerator<P: Printer> {
     fileprivate let cHeaderCreator: CHeaderCreator
     fileprivate let cFileCreator: CFileCreator
     fileprivate let cppHeaderCreator: CPPHeaderCreator
+    fileprivate let swiftFileCreator: SwiftFileCreator
     fileprivate let printer: P
 
     public init(
@@ -77,6 +78,7 @@ public final class ClassGenerator<P: Printer> {
         cHeaderCreator: CHeaderCreator = CHeaderCreator(),
         cFileCreator: CFileCreator = CFileCreator(),
         cppHeaderCreator: CPPHeaderCreator = CPPHeaderCreator(),
+        swiftFileCreator: SwiftFileCreator = SwiftFileCreator(),
         printer: P
     ) {
         self.argumentsParser = argumentsParser
@@ -86,6 +88,7 @@ public final class ClassGenerator<P: Printer> {
         self.cHeaderCreator = cHeaderCreator
         self.cFileCreator = cFileCreator
         self.cppHeaderCreator = cppHeaderCreator
+        self.swiftFileCreator = swiftFileCreator
         self.printer = printer
     }
 
@@ -130,10 +133,20 @@ public final class ClassGenerator<P: Printer> {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)
-        self.generateFiles(fromClass: cls, generatedFrom: genfile, generateCppWrapper: task.generateCppWrapper)
+        self.generateFiles(
+            fromClass: cls,
+            generatedFrom: genfile,
+            generateCppWrapper: task.generateCppWrapper,
+            generateSwiftWrapper: task.generateSwiftWrapper
+        )
     }
 
-    fileprivate func generateFiles(fromClass cls: Class, generatedFrom genfile: String, generateCppWrapper: Bool) {
+    fileprivate func generateFiles(
+        fromClass cls: Class,
+        generatedFrom genfile: String,
+        generateCppWrapper: Bool,
+        generateSwiftWrapper: Bool
+    ) {
         let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
         let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
         let cHeader = structName + ".h"
@@ -171,6 +184,18 @@ public final class ClassGenerator<P: Printer> {
                 )
             }) else {
                 self.handleError(self.cppHeaderCreator.lastError ?? "Unable to create C++ Header")
+            }
+        }
+        if true == generateSwiftWrapper {
+            guard true == self.generate(swiftFile, {
+                self.swiftFileCreator.createSwiftFile(
+                    forClass: cls,
+                    forFileNamed: swiftFile,
+                    withStructName: structName,
+                    generatedFrom: genfile
+                )
+            }) else {
+                self.handleError(self.swiftFileCreator.lastError ?? "Unable to create Swift file.")
             }
         }
     }

@@ -56,7 +56,13 @@
  *
  */
 
-public final class SwiftFileCreator {
+public final class SwiftFileCreator: ErrorContainer {
+
+    public let errors: [String] = []
+
+    public var lastError: String? {
+        return self.errors.last
+    }
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
