@@ -59,9 +59,11 @@
 public final class SwiftFileCreator {
 
     fileprivate let creatorHelpers: CreatorHelpers
+    fileprivate let stringHelpers: StringHelpers
 
-    public init(creatorHelpers: CreatorHelpers = CreatorHelpers()) {
+    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), stringHelpers: StringHelpers = StringHelpers()) {
         self.creatorHelpers = creatorHelpers
+        self.stringHelpers = stringHelpers
     }
 
     public func createSwiftFile(
@@ -71,7 +73,8 @@ public final class SwiftFileCreator {
         generatedFrom genfile: String
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
-        return head
+        let ext = self.createExtension(on: structName, withVariables: cls.variables)
+        return head + "\n\n" + ext
     }
 
     fileprivate func createHead(
@@ -85,6 +88,26 @@ public final class SwiftFileCreator {
             //swiftlint:disable file_length
             """
         return comment + "\n\n" + swiftLintComments
+    }
+
+    fileprivate func createExtension(on base: String, withVariables variables: [Variable]) -> String {
+        let def = self.createExtensionDef(on: base)
+        let constructor = self.createConstructor(withVariables: variables)
+        let content = constructor
+        return def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+    }
+
+    fileprivate func createConstructor(withVariables variables: [Variable]) -> String {
+        let startDef = "public init("
+        let params = variables.map {
+            "\($0.label): \($0.swiftType) = \($0.swiftDefaultValue)"
+        }.combine("") { $0 + ", " + $1 }
+        let endDef = ") {"
+        let def = startDef + params + endDef
+        let setters = variables.map {
+            "self.\($0.label) = \($0.label)"
+        }.combine("") { $0 + "\n" + $1 }
+        return def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
     }
 
     fileprivate func createExtensionDef(on base: String, extending: [String] = []) -> String {
