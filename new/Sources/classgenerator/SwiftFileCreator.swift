@@ -70,7 +70,29 @@ public final class SwiftFileCreator {
         withStructName structName: String,
         generatedFrom genfile: String
     ) -> String? {
-        return nil
+        let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
+        return head
+    }
+
+    fileprivate func createHead(
+        forFile fileName: String,
+        withAuthor author: String,
+        andGenFile genfile: String
+    ) -> String {
+        let comment = self.creatorHelpers.createFileComment(forFile: fileName, withAuthor: author, andGenFile: genfile)
+        let swiftLintComments = """
+            //swiftlint:disable function_body_length
+            //swiftlint:disable file_length
+            """
+        return comment + "\n\n" + swiftLintComments
+    }
+
+    fileprivate func createExtensionDef(on base: String, extending: [String] = []) -> String {
+        let def = "extension \(base)"
+        if true == extending.isEmpty {
+            return def + "{"
+        }
+        return def + ":" + extending.combine("") { $0 + ", " + $1 } + " {"
     }
 
 }

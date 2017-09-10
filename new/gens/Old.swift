@@ -66,7 +66,7 @@
  */
 extension wb_old {
 
-    public init () {
+    public init() {
         self.str = "hello"
         self.b = false
         self.c = 'c'
