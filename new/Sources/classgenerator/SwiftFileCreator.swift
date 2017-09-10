@@ -74,8 +74,10 @@ public final class SwiftFileCreator {
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
         let ext = self.createExtension(on: structName, withComment: cls.comment, andVariables: cls.variables)
-        let stringExt = self.createStringExtension(on: structName, withVariable: cls.variables)
-        return head + "\n\n" + ext + "\n\n" + stringExt
+        let stringExt = self.createStringExtension(on: structName, withVariables: cls.variables)
+        let eqExt = self.createEquatableExtension(on: structName)
+        let eqOp = self.createEqualsOperator(comparing: structName, withVariables: cls.variables)
+        return [head, ext, stringExt, eqExt, eqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
     }
 
     fileprivate func createHead(
@@ -145,7 +147,7 @@ public final class SwiftFileCreator {
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(g + "\n" + setters) + "\n" + "}"
     }
 
-    fileprivate func createStringExtension(on structName: String, withVariable variables: [Variable]) -> String {
+    fileprivate func createStringExtension(on structName: String, withVariables variables: [Variable]) -> String {
         let def = self.createExtensionDef(on: structName, extending: ["CustomStringConvertible"])
         let descriptionVarComment = self.creatorHelpers.createComment(from: "Convert to a description String.")
         let descriptionVar = "public var description: String {"
@@ -160,6 +162,19 @@ public final class SwiftFileCreator {
             + self.stringHelpers.indent(descriptionVarContent) + "\n"
             + "}"
         return def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+    }
+
+    fileprivate func createEquatableExtension(on structName: String) -> String {
+        return self.createExtensionDef(on: structName, extending: ["Equatable"]) + "}"
+    }
+
+    fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable]) -> String {
+        let def = "public func == (lhs: \(structName), rhs: \(structName)) -> Bool {"
+        let content = "return " + variables.map {
+            "lhs.\($0.label) == rhs.\($0.label)"
+        }.combine("") { $0 + "\n" + self.stringHelpers.indent("&& " + $1) }
+        let endDef = "}"
+        return def + "\n" + self.stringHelpers.indent(content) + "\n" + endDef
     }
 
     fileprivate func createString(fromVariable variable: Variable) -> String? {
