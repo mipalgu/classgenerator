@@ -73,7 +73,7 @@ public final class SwiftFileCreator {
         generatedFrom genfile: String
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
-        let ext = self.createExtension(on: structName, withVariables: cls.variables)
+        let ext = self.createExtension(on: structName, withComment: cls.comment, andVariables: cls.variables)
         return head + "\n\n" + ext
     }
 
@@ -86,15 +86,22 @@ public final class SwiftFileCreator {
         let swiftLintComments = """
             //swiftlint:disable function_body_length
             //swiftlint:disable file_length
+            //swiftlint:disable line_length
+            //swiftlint:disable identifier_name
             """
         return comment + "\n\n" + swiftLintComments
     }
 
-    fileprivate func createExtension(on base: String, withVariables variables: [Variable]) -> String {
+    fileprivate func createExtension(
+        on base: String,
+        withComment comment: String,
+        andVariables variables: [Variable]
+    ) -> String {
+        let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
         let constructor = self.createConstructor(withVariables: variables)
         let content = constructor
-        return def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+        return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
     fileprivate func createConstructor(withVariables variables: [Variable]) -> String {
@@ -113,7 +120,7 @@ public final class SwiftFileCreator {
     fileprivate func createExtensionDef(on base: String, extending: [String] = []) -> String {
         let def = "extension \(base)"
         if true == extending.isEmpty {
-            return def + "{"
+            return def + " {"
         }
         return def + ":" + extending.combine("") { $0 + ", " + $1 } + " {"
     }
