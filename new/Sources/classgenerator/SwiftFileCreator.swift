@@ -79,11 +79,12 @@ public final class SwiftFileCreator: ErrorContainer {
         generatedFrom genfile: String
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
+        let preSwift = nil == cls.preSwift ? "" : "\n\n" + cls.preSwift!
         let ext = self.createExtension(on: structName, withComment: cls.comment, andVariables: cls.variables)
         let stringExt = self.createStringExtension(on: structName, withVariables: cls.variables)
         let eqExt = self.createEquatableExtension(on: structName)
         let eqOp = self.createEqualsOperator(comparing: structName, withVariables: cls.variables)
-        return [head, ext, stringExt, eqExt, eqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
+        return [head + preSwift, ext, stringExt, eqExt, eqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
     }
 
     fileprivate func createHead(
@@ -117,16 +118,58 @@ public final class SwiftFileCreator: ErrorContainer {
     fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
         let startDef = "public init("
+        let containsArrays = nil != variables.lazy.filter {
+            switch $0.type {
+                case .array:
+                    return true
+                default:
+                    return false
+            }
+        }.first
+        let copy = true == containsArrays ? "self = \(structName)()\n" : ""
         let params = variables.map {
             let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
             return "\($0.label): \(type) = \($0.swiftDefaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
-        let setters = variables.map {
-            "self.\($0.label) = \($0.label)"
-        }.combine("") { $0 + "\n" + $1 }
+        let setters = copy + variables.map(self.createSetter).combine("") { $0 + "\n" + $1 }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
+    }
+
+    fileprivate func createSetter(forVariable variable: Variable) -> String {
+        switch variable.type {
+            case .array:
+                return "_ = \(self.createSetterValue(forType: variable.type, withLabel: variable.label))"
+            default:
+                let value = self.createSetterValue(forType: variable.type, withLabel: variable.label)
+                return "self.\(variable.label) = \(value)"
+        }
+    }
+
+    fileprivate func createSetterValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        _ level: Int = 0
+    ) -> String {
+        switch type {
+            case .array(let subtype, let length):
+                let uniqueLabel = label + (0 == level ? "" : "_\(level)")
+                let index = uniqueLabel + "_index"
+                let p = uniqueLabel + "_p"
+                let nextLabel = label + "[\(index)]"
+                let sub = self.createSetterValue(forType: subtype, withLabel: nextLabel)
+                let start = "withUnsafeMutablePointer(&self.\(label).0) { \(p) in"
+                let content = """
+                        for \(index) in 0..<\(length) {
+                            \(p)[\(index)] = \(sub)
+                        }
+                    }
+                    """
+                return start + "\n" + self.stringHelpers.indent(content, level)
+            default:
+                return label
+        }
     }
 
     fileprivate func createFromDictionaryConstructor(
@@ -205,8 +248,10 @@ public final class SwiftFileCreator: ErrorContainer {
                     default:
                         //swiftlint:disable line_length
                         return """
-                            if let first = self.\(label).first {
-                                descString += \"\(label)={\" + self.\(label).dropFirst().reduce(\"\\(first)\") { $0 + "," + $1 } + \"}\"
+                            if let first = self._\(label).first {
+                                descString += \"\(label)={\"
+                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + "," + $1 }
+                                descString += \"}\"
                             } else {
                                 descString += \"\(label)={}\"
                             }
