@@ -66,4 +66,12 @@ public struct Task {
 
     var printHelpText: Bool = false
 
+    var cHeaderOuputPath: String?
+
+    var cFileOutputPath: String?
+
+    var cppHeaderOutputPath: String?
+
+    var swiftFileOutputPath: String?
+
 }

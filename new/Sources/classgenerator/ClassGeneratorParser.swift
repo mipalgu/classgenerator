@@ -68,8 +68,16 @@ public class ClassGeneratorParser {
             USAGE: classgenerator [options] <classname.gen>
 
             OPTIONS:
-                -c  Generate a C++ wrapper.
-                -s  Generate a Swift wrapper.
+                    -c              Generate a C++ wrapper.
+                    -s              Generate a Swift wrapper.
+                    --c-header <directory=./>
+                                    Place the generated C header into <directory>.
+                    --c-file <directory=<c-header>>
+                                    Place the generate C file into <directory>.
+                    --cpp-header <directory=<c-header>>
+                                    Place the C++ file into <directory>.
+                    --swift <directory=<c-header>>
+                                    Place the generated swift file into <directory>.
             """
     }
 
