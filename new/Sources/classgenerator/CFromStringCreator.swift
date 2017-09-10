@@ -91,8 +91,9 @@ public final class CFromStringCreator {
             }
         })
         let assignVarsSection = self.assignVars(cls.variables, forClassNamed: cls.name)
-        let contents = head + "\n" + fillTokens + "\n" + assignVarsSection
-        let endDefinition = "\n}"
+        let cleanup = "free(str_copy);\nreturn self;"
+        let contents = head + "\n" + fillTokens + "\n" + assignVarsSection + "\n" + cleanup
+        let endDefinition = "}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
     }
 

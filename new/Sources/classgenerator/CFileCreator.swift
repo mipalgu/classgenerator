@@ -123,7 +123,7 @@ public final class CFileCreator: ErrorContainer {
             withStructNamed: structName,
             forStrVariable: "str"
         )
-        return comment + "\n\n" + head + "\n\n" + descriptionFunc + "\n\n" + toStringFunc + "\n\n" + fromStringFunc
+        return [comment, head, descriptionFunc, toStringFunc, fromStringFunc].combine("") { $0 + "\n\n" + $1} + "\n"
     }
 
     fileprivate func createHead(forStructNamed structName: String) -> String {

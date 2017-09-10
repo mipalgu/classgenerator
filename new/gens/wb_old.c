@@ -1809,4 +1809,4 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     }
     free(str_copy);
     return self;
-};
+}
