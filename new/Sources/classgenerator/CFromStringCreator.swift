@@ -251,7 +251,7 @@ public final class CFromStringCreator {
         _ level: Int = 0
     ) -> String? {
         switch type {
-            case .array(let subtype, let length):
+            case .array(let subtype, _):
                 let levelStr = 0 == level ? "" : "_\(level)"
                 let sizeLabel = label + levelStr + "_smallest"
                 let countLabel = label + levelStr + "_count"
@@ -318,8 +318,6 @@ public final class CFromStringCreator {
                         return "(\(cType))atol(\(accessor));"
                     case .signed, .unsigned:
                         return "(\(cType))atoi(\(accessor));"
-                    default:
-                        return nil
                 }
             default:
                 return self.createValue(
