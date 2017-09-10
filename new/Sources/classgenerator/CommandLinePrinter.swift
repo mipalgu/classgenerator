@@ -85,22 +85,9 @@ public class CommandLinePrinter<
      */
     public override func error(str: String) {
         print(
-            "\n\u{001B}[1;31merror: \u{001B}[0m\(str)",
+            "\u{001B}[1;31merror: \u{001B}[0m\(str)",
             terminator: "\n",
             to: &super.errorStream
-        )
-    }
-
-    /**
-     *  Print a message to `messageStream`.
-     *
-     *  - Parameter str: The message.
-     */
-    public override func message(str: String) {
-        print(
-            "\n\(str)",
-            terminator: "\n",
-            to: &super.messageStream
         )
     }
 
@@ -111,7 +98,7 @@ public class CommandLinePrinter<
      */
     public override func warning(str: String) {
         print(
-            "\n\u{001B}[1;93mwarning: \u{001B}[0m\(str)",
+            "\u{001B}[1;93mwarning: \u{001B}[0m\(str)",
             terminator: "\n",
             to: &super.warningStream
         )

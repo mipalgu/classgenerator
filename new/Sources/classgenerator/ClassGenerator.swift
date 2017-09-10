@@ -108,17 +108,17 @@ public final class ClassGenerator<P: Printer> {
             }
         }
         self.handleTask(task)
-        self.printer.message(str: "")
     }
 
     fileprivate func handleTask(_ task: Task) {
         if task.printHelpText {
-            self.printer.message(str: self.argumentsParser.helpText)
+            self.printer.message(str: "\n" + self.argumentsParser.helpText + "\n")
             if nil == task.path {
                 return
             }
         }
         guard let path = task.path else {
+            self.printer.message(str: "\n" + self.argumentsParser.helpText + "\n")
             self.handleError("Path not found")
         }
         let url = URL(fileURLWithPath: path)
@@ -221,11 +221,11 @@ public final class ClassGenerator<P: Printer> {
     }
 
     fileprivate func handleWarning(_ warn: String) {
-        self.printer.warning(str: warn)
+        self.printer.warning(str: warn + "\n")
     }
 
     fileprivate func handleError(_ msg: String) -> Never {
-        self.printer.error(str: msg)
+        self.printer.error(str: msg + "\n")
         exit(EXIT_FAILURE)
     }
 
