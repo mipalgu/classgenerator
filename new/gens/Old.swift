@@ -161,10 +161,13 @@ extension wb_old {
         self.bools = bools
     }
 
+    /**
+     * Create a `wb_old` from a dictionary.
+     */
     public init(fromDictionary dictionary: [String: Any]) {
         guard
             let str = dictionary["str"] as? String,
-            let b = dictionary["b"] as? Bool
+            let b = dictionary["b"] as? Bool,
             let c = dictionary["c"] as? String,
             let sc = dictionary["sc"] as? String,
             let uc = dictionary["uc"] as? String,

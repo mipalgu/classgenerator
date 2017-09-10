@@ -100,7 +100,8 @@ public final class SwiftFileCreator {
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
         let constructor = self.createConstructor(withVariables: variables)
-        let content = constructor
+        let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
+        let content = constructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
@@ -115,6 +116,30 @@ public final class SwiftFileCreator {
             "self.\($0.label) = \($0.label)"
         }.combine("") { $0 + "\n" + $1 }
         return def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
+    }
+
+    fileprivate func createFromDictionaryConstructor(
+        on structName: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a `\(structName)` from a dictionary.")
+        let def = "public init(fromDictionary dictionary: [String: Any]) {"
+        let guardDef = "guard"
+        let casts = variables.map {
+            "let \($0.label) = dictionary[\"\($0.label)\"] as? \($0.swiftType)"
+        }.combine("") { $0 + ",\n" + $1 }
+        let elseDef = "else {"
+        let fatal = "fatalError(\"Unable to convert\\(dictionary) to \(structName)\")"
+        let endGuard = "}"
+        let g = guardDef + "\n"
+            + self.stringHelpers.indent(casts) + "\n"
+            + elseDef + "\n"
+            + self.stringHelpers.indent(fatal) + "\n"
+            + endGuard
+        let setters = variables.map {
+            "self.\($0.label) = \($0.label)"
+        }.combine("") { $0 + "\n" + $1 }
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(g + "\n" + setters) + "\n" + "}"
     }
 
     fileprivate func createExtensionDef(on base: String, extending: [String] = []) -> String {
