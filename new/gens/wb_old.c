@@ -1799,22 +1799,14 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
         self->ld2 = (long double)atof(strings[84]);
     if (strings[85] != NULL)
         self->dd2 = (double double)atof(strings[85]);
-
     size_t array16_smallest = array16_count < OLD_ARRAY16_ARRAY_SIZE ? array16_count : OLD_ARRAY16_ARRAY_SIZE;
-
-    for (int i = 0; i < array16_smallest; i++)
-    {
-       self->array16[i] = (int16_t)atoi(array16_values[i]);
+    for (int array16_index = 0; array16_index < array16_smallest; array16_index++) {
+        self->array16[array16_index] = (int16_t)atoi(array16_values[array16_index]);
     }
-
     size_t bools_smallest = bools_count < OLD_BOOLS_ARRAY_SIZE ? bools_count : OLD_BOOLS_ARRAY_SIZE;
-
-    for (int i = 0; i < bools_smallest; i++)
-    {
-            self->bools[i] = strcmp(bools_values[i], "true") == 0  || strcmp(bools_values[i], "1") == 0 ? true : false;
+    for (int bools_index = 0; bools_index < bools_smallest; bools_index++) {
+        self->bools[bools_index] = strcmp(bools_values[bools_index], "true") == 0 || strcmp(bools_values[bools_index], "1") == 0 ? true : false;
     }
-
     free(str_copy);
-
     return self;
 };

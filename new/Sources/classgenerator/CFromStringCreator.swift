@@ -58,11 +58,17 @@
 
 import Foundation
 
+//swiftlint:disable:next type_body_length
 public final class CFromStringCreator {
 
+    fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
 
-    public init(stringHelpers: StringHelpers = StringHelpers()) {
+    public init(
+        creatorHelpers: CreatorHelpers = CreatorHelpers(),
+        stringHelpers: StringHelpers = StringHelpers()
+    ) {
+        self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
     }
 
@@ -84,7 +90,7 @@ public final class CFromStringCreator {
                     return false
             }
         })
-        let assignVarsSection = self.assignVars(cls.variables)
+        let assignVarsSection = self.assignVars(cls.variables, forClassNamed: cls.name)
         let contents = head + "\n" + fillTokens + "\n" + assignVarsSection
         let endDefinition = "\n}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
@@ -174,14 +180,25 @@ public final class CFromStringCreator {
             return head + "\n" + tokens + "\n" + self.stringHelpers.indent(arrs, 2) + "\n" + tail
     }
 
-    fileprivate func assignVars(_ variables: [Variable]) -> String {
+    fileprivate func assignVars(_ variables: [Variable], forClassNamed className: String) -> String {
         return variables.enumerated().flatMap { (index: Int, variable: Variable) -> String? in
-            let label = "strings[\(index)]"
-            guard let value = self.createValue(forVariable: variable, accessedFrom: label) else {
+            let accessor = "strings[\(index)]"
+            guard let value = self.createValue(
+                forType: variable.type,
+                withLabel: variable.label,
+                andCType: variable.cType,
+                accessedFrom: accessor,
+                inClassNamed: className
+            ) else {
                 return nil
             }
-            let assignment = "self->\(variable.label) = \(value)"
-            return self.createGuard(accessing: label) + "\n" + self.stringHelpers.indent(assignment)
+            switch variable.type {
+                case .array:
+                    return value
+                default:
+                    let assignment = "self->\(variable.label) = \(value)"
+                    return self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assignment)
+            }
         }.combine("") { $0 + "\n" + $1}
     }
 
@@ -189,40 +206,128 @@ public final class CFromStringCreator {
         return "if (\(label) != NULL)"
     }
 
-    fileprivate func createValue(forVariable variable: Variable, accessedFrom label: String) -> String? {
-        switch variable.type {
+    fileprivate func createValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClassNamed className: String
+    ) -> String? {
+        switch type {
             case .array:
-                return ""
+                return self.createArrayValue(
+                    forType: type,
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className
+                )
             case .bool:
-                return "strcmp(\(label), \"true\") == 0 || strcmp(\(label), \"1\") == 0 ? true : false;"
+                return "strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0 ? true : false;"
             case .char:
-                return "(\(variable.cType))atoi(\(label));"
+                return "(\(cType))atoi(\(accessor));"
             case.numeric:
-                return self.createNumericValue(forVariable: variable, accessedFrom: label)
+                return self.createNumericValue(
+                    forType: type,
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className
+                )
             case.string:
-                return "(string)(\(label));"
+                return "(string)(\(accessor));"
             default:
                 return nil
         }
     }
 
-    fileprivate func createNumericValue(forVariable variable: Variable, accessedFrom label: String) -> String? {
-        switch variable.type {
+    fileprivate func createArrayValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClassNamed className: String,
+        _ level: Int = 0
+    ) -> String? {
+        switch type {
+            case .array(let subtype, let length):
+                let levelStr = 0 == level ? "" : "_\(level)"
+                let sizeLabel = label + levelStr + "_smallest"
+                let countLabel = label + levelStr + "_count"
+                let countDef = self.creatorHelpers.createArrayCountDef(
+                    forVariable: label,
+                    inClass: className,
+                    level: level
+                )
+                let def = "size_t \(sizeLabel) = \(countLabel) < \(countDef) ? \(countLabel) : \(countDef);"
+                let index = "\(label)\(levelStr)_index"
+                let loopDef = "for (int \(index) = 0; \(index) < \(sizeLabel); \(index)++) {"
+                let accessList = self.createArrayAccess(forVariable: label, level)
+                let loopContent: String
+                switch subtype {
+                    case .array:
+                        return nil
+                    default:
+                        guard let value = self.createValue(
+                            forType: subtype,
+                            withLabel: label,
+                            andCType: cType,
+                            accessedFrom: label + levelStr + "_values" + accessList,
+                            inClassNamed: className
+                        ) else {
+                            return nil
+                        }
+                        loopContent = "self->\(label)\(accessList) = \(value)"
+                }
+                let endLoop = "}"
+                return def + "\n" + loopDef + "\n" + self.stringHelpers.indent(loopContent) + "\n" + endLoop
+            default:
+                return self.createValue(
+                    forType: type,
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className
+                )
+        }
+    }
+
+    fileprivate func createArrayAccess(forVariable label: String, _ level: Int) -> String {
+        if level <= 0 {
+            return "[\(label)_index]"
+        }
+        return self.createArrayAccess(forVariable: label, level - 1) + "[\(label)_\(level)_\(index)]"
+    }
+
+    fileprivate func createNumericValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClassNamed className: String
+    ) -> String? {
+        switch type {
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):
-                        return "(\(variable.cType))atof(\(label));"
+                        return "(\(cType))atof(\(accessor));"
                     case .long(.long):
-                        return "(\(variable.cType))atoll(\(label));"
+                        return "(\(cType))atoll(\(accessor));"
                     case .long(.signed), .long(.unsigned):
-                        return "(\(variable.cType))atol(\(label));"
+                        return "(\(cType))atol(\(accessor));"
                     case .signed, .unsigned:
-                        return "(\(variable.cType))atoi(\(label));"
+                        return "(\(cType))atoi(\(accessor));"
                     default:
                         return nil
                 }
             default:
-                return self.createValue(forVariable: variable, accessedFrom: label)
+                return self.createValue(
+                    forType: type,
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className
+                )
         }
     }
 

@@ -86,6 +86,11 @@ public final class CreatorHelpers {
         return formatter.string(from: self.date)
     }()
 
+    public func createArrayCountDef(forVariable label: String, inClass className: String, level: Int) -> String {
+        let levelStr = 0 == level ? "" : "_\(level)"
+        return "\(className.uppercased())_\(label.uppercased())\(levelStr)_ARRAY_SIZE"
+    }
+
     public func createClassName(forClassNamed className: String) -> String {
         return self.helpers.toCamelCase(String(className.characters.lazy.map {
             self.helpers.isAlphaNumeric($0) ? $0 : "_"
