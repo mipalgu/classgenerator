@@ -126,10 +126,11 @@ public final class SwiftFileCreator {
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
         let guardDef = "guard"
         let casts = variables.map {
-            "let \($0.label) = dictionary[\"\($0.label)\"] as? \($0.swiftType)"
+            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+            return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
         }.combine("") { $0 + ",\n" + $1 }
         let elseDef = "else {"
-        let fatal = "fatalError(\"Unable to convert\\(dictionary) to \(structName)\")"
+        let fatal = "fatalError(\"Unable to convert \\(dictionary) to \(structName).\")"
         let endGuard = "}"
         let g = guardDef + "\n"
             + self.stringHelpers.indent(casts) + "\n"
@@ -148,6 +149,15 @@ public final class SwiftFileCreator {
             return def + " {"
         }
         return def + ":" + extending.combine("") { $0 + ", " + $1 } + " {"
+    }
+
+    fileprivate func createSwiftType(forType type: VariableTypes, withSwiftType swiftType: String) -> String {
+        switch type {
+            case .array(let subtype, _):
+                return "[" + self.createSwiftType(forType: subtype, withSwiftType: swiftType) + "]"
+            default:
+                return swiftType
+        }
     }
 
 }

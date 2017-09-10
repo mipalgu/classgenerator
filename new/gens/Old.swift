@@ -350,6 +350,7 @@ extension wb_old {
         self.array16 = array16
         self.bools = bools
     }
+
 }
 
 extension wb_old: CustomStringConvertible {
