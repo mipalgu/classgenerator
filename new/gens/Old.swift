@@ -252,8 +252,10 @@ extension wb_old {
             let dt2 = dictionary["dt2"] as? Double,
             let ld2 = dictionary["ld2"] as? Float80,
             let dd2 = dictionary["dd2"] as? Float80,
-            let array16 = dictionary["array16"] as? Int16,
-            let bools = dictionary["bools"] as? Bool
+            let p = dictionary["p"] as? UnsafeMutablePointer<Int>?,
+            let strct = dictionary["strct"] as? somestruct,
+            let array16 = dictionary["array16"] as? [Int16],
+            let bools = dictionary["bools"] as? [Bool]
         else {
             fatalError("Unable to convert \(dictionary) to wb_old.")
         }
@@ -343,6 +345,8 @@ extension wb_old {
         self.dt2 = dt2
         self.ld2 = ld2
         self.dd2 = dd2
+        self.p = p
+        self.strct = strct
         self.array16 = array16
         self.bools = bools
     }
