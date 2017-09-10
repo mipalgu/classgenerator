@@ -74,7 +74,8 @@ public final class SwiftFileCreator {
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
         let ext = self.createExtension(on: structName, withComment: cls.comment, andVariables: cls.variables)
-        return head + "\n\n" + ext
+        let stringExt = self.createStringExtension(on: structName, withVariable: cls.variables)
+        return head + "\n\n" + ext + "\n\n" + stringExt
     }
 
     fileprivate func createHead(
@@ -144,12 +145,71 @@ public final class SwiftFileCreator {
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(g + "\n" + setters) + "\n" + "}"
     }
 
+    fileprivate func createStringExtension(on structName: String, withVariable variables: [Variable]) -> String {
+        let def = self.createExtensionDef(on: structName, extending: ["CustomStringConvertible"])
+        let descriptionVarComment = self.creatorHelpers.createComment(from: "Convert to a description String.")
+        let descriptionVar = "public var description: String {"
+        let descDef = "var descString = \"\""
+        let descReturn = "return descString"
+        let setters = variables.flatMap {
+            self.createString(fromVariable: $0)
+        }.combine("") { $0 + "\ndescString += \", \"\n" + $1 }
+        let descriptionVarContent = descDef + "\n" + setters + "\n" + descReturn
+        let content = descriptionVarComment + "\n"
+            + descriptionVar + "\n"
+            + self.stringHelpers.indent(descriptionVarContent) + "\n"
+            + "}"
+        return def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+    }
+
+    fileprivate func createString(fromVariable variable: Variable) -> String? {
+        switch variable.type {
+            case .array:
+                return self.createArrayStringValue(fromType: variable.type, andLabel: variable.label)
+            default:
+                guard let value = self.createStringValue(fromType: variable.type, andLabel: variable.label) else {
+                    return nil
+                }
+                return "descString += " + value
+        }
+    }
+
+    fileprivate func createArrayStringValue(fromType type: VariableTypes, andLabel label: String) -> String? {
+        switch type {
+            case .array(let subtype, _):
+                switch subtype {
+                    case .array:
+                        return nil
+                    default:
+                        //swiftlint:disable line_length
+                        return """
+                            if let first = self.\(label).first {
+                                descString += \"\(label)={\" + self.\(label).dropFirst().reduce(\"\\(first)\") { $0 + "," + $1 } + \"}\"
+                            } else {
+                                descString += \"\(label)={}\"
+                            }
+                            """
+                }
+            default:
+                return self.createStringValue(fromType: type, andLabel: label)
+        }
+    }
+
+    fileprivate func createStringValue(fromType type: VariableTypes, andLabel label: String) -> String? {
+        switch type {
+            case .array:
+                return self.createArrayStringValue(fromType: type, andLabel: label)
+            default:
+                return "\"\(label)=\\(self.\(label))\""
+        }
+    }
+
     fileprivate func createExtensionDef(on base: String, extending: [String] = []) -> String {
         let def = "extension \(base)"
         if true == extending.isEmpty {
             return def + " {"
         }
-        return def + ":" + extending.combine("") { $0 + ", " + $1 } + " {"
+        return def + ": " + extending.combine("") { $0 + ", " + $1 } + " {"
     }
 
     fileprivate func createSwiftType(forType type: VariableTypes, withSwiftType swiftType: String) -> String {
