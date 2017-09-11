@@ -110,11 +110,11 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
-        let wrappers = self.createArrayWrappers(forVariables: variables).map {"\n\n" + $0 } ?? ""
+        let wrappers = self.createArrayWrappers(forVariables: variables).map { $0 + "\n\n" } ?? ""
         let constructor = self.createConstructor(on: base, withVariables: variables)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
-        let content = constructor + "\n\n" + fromDictionary
-        return comment + "\n" + def + wrappers + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+        let content = wrappers + constructor + "\n\n" + fromDictionary
+        return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
     fileprivate func createArrayWrappers(forVariables variables: [Variable]) -> String? {
@@ -185,7 +185,12 @@ public final class SwiftFileCreator: ErrorContainer {
         let endDef = ") {"
         let def = startDef + params + endDef
         let setters = copy + variables.map {
-            self.createSetter(forVariable: $0, accessedBy: "\($0.label)")
+            switch $0.type {
+                case .array:
+                    return "self._\($0.label) = \($0.label)"
+                default:
+                    return "self.\($0.label) = \($0.label)"
+            }
         }.combine("") { $0 + "\n" + $1 }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
     }
