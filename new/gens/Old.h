@@ -81,7 +81,7 @@ namespace guWhiteboard {
         /**
          * Create a new `Old`.
          */
-        Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', int i = 1, signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, short s = 1, short int si = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, int i2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, short s2 = 0, short int si2 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, somestruct strct = somestruct(), int16_t[4] array16 = {1,2,3,4}, bool[3] bools = {true, true, true}) {
+        Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', int i = 1, signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, short s = 1, short int si_2 = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, int i2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, short s2 = 0, short int si_22 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, somestruct strct = somestruct(), int16_t[4] array16 = {1,2,3,4}, bool[3] bools = {true, true, true}) {
             set_str(str);
             set_b(b);
             set_c(c);
@@ -101,7 +101,7 @@ namespace guWhiteboard {
             set_i32(i32);
             set_i64(i64);
             set_s(s);
-            set_si(si);
+            set_si_2(si_2);
             set_ss(ss);
             set_ssi(ssi);
             set_us(us);
@@ -144,7 +144,7 @@ namespace guWhiteboard {
             set_i322(i322);
             set_i642(i642);
             set_s2(s2);
-            set_si2(si2);
+            set_si_22(si_22);
             set_ss2(ss2);
             set_ssi2(ssi2);
             set_us2(us2);
@@ -197,7 +197,7 @@ namespace guWhiteboard {
             set_i32(other.i32());
             set_i64(other.i64());
             set_s(other.s());
-            set_si(other.si());
+            set_si_2(other.si_2());
             set_ss(other.ss());
             set_ssi(other.ssi());
             set_us(other.us());
@@ -240,7 +240,7 @@ namespace guWhiteboard {
             set_i322(other.i322());
             set_i642(other.i642());
             set_s2(other.s2());
-            set_si2(other.si2());
+            set_si_22(other.si_22());
             set_ss2(other.ss2());
             set_ssi2(other.ssi2());
             set_us2(other.us2());
@@ -293,7 +293,7 @@ namespace guWhiteboard {
             set_i32(other.i32());
             set_i64(other.i64());
             set_s(other.s());
-            set_si(other.si());
+            set_si_2(other.si_2());
             set_ss(other.ss());
             set_ssi(other.ssi());
             set_us(other.us());
@@ -336,7 +336,7 @@ namespace guWhiteboard {
             set_i322(other.i322());
             set_i642(other.i642());
             set_s2(other.s2());
-            set_si2(other.si2());
+            set_si_22(other.si_22());
             set_ss2(other.ss2());
             set_ssi2(other.ssi2());
             set_us2(other.us2());

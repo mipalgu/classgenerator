@@ -111,7 +111,7 @@ extension wb_old {
     /**
      * Create a new `wb_old`.
      */
-    public init(str: String = "hello", b: Bool = false, c: String = "c", sc: String = "c", uc: String = "c", i: Int = 1, si: Int = 1, sii: Int = 1, u: UInt = 1, ui: UInt = 1, u8: UInt8 = 1, u16: UInt16 = 1, u32: UInt32 = 1, u64: UInt64 = 1, i8: Int8 = 1, i16: Int16 = 1, i32: Int32 = 1, i64: Int64 = 1, s: Int16 = 1, si: Int16 = 1, ss: Int16 = 1, ssi: Int16 = 1, us: UInt16 = 1, usi: UInt16 = 1, l: Int32 = 1, li: Int32 = 1, sl: Int32 = 1, sli: Int32 = 1, ul: UInt32 = 1, uli: UInt32 = 1, ll: Int64 = 1, lli: Int64 = 1, sll: Int64 = 1, slli: Int64 = 1, ull: UInt64 = 1, ulli: UInt64 = 1, l64: Int64 = 1, f: Float = 1.0, ft: Float = 1.0, d: Double = 1.0, dt: Double = 1.0, ld: Float80 = 1.0, dd: Float80 = 1.0, str2: String = "", b2: Bool = true, c2: String = String(Character(UnicodeScalar(UInt8.min))), sc2: String = String(Character(UnicodeScalar(UInt8.min))), uc2: String = String(Character(UnicodeScalar(UInt8.min))), i2: Int = 0, si2: Int = 0, sii2: Int = 0, u2: UInt = 0, ui2: UInt = 0, u82: UInt8 = 0, u162: UInt16 = 0, u322: UInt32 = 0, u642: UInt64 = 0, i82: Int8 = 0, i162: Int16 = 0, i322: Int32 = 0, i642: Int64 = 0, s2: Int16 = 0, si2: Int16 = 0, ss2: Int16 = 0, ssi2: Int16 = 0, us2: UInt16 = 0, usi2: UInt16 = 0, l2: Int32 = 0, li2: Int32 = 0, sl2: Int32 = 0, sli2: Int32 = 0, ul2: UInt32 = 0, uli2: UInt32 = 0, ll2: Int64 = 0, lli2: Int64 = 0, sll2: Int64 = 0, slli2: Int64 = 0, ull2: UInt64 = 0, ulli2: UInt64 = 0, l642: Int64 = 0, f2: Float = 0.0, ft2: Float = 0.0, d2: Double = 0.0, dt2: Double = 0.0, ld2: Float80 = 0.0, dd2: Float80 = 0.0, p: UnsafeMutablePointer<Int>? = nil, strct: somestruct = somestruct(), array16: [Int16] = [1, 2, 3, 4], bools: [Bool] = [true, true, true]) {
+    public init(str: String = "hello", b: Bool = false, c: String = "c", sc: String = "c", uc: String = "c", i: Int = 1, si: Int = 1, sii: Int = 1, u: UInt = 1, ui: UInt = 1, u8: UInt8 = 1, u16: UInt16 = 1, u32: UInt32 = 1, u64: UInt64 = 1, i8: Int8 = 1, i16: Int16 = 1, i32: Int32 = 1, i64: Int64 = 1, s: Int16 = 1, si_2: Int16 = 1, ss: Int16 = 1, ssi: Int16 = 1, us: UInt16 = 1, usi: UInt16 = 1, l: Int32 = 1, li: Int32 = 1, sl: Int32 = 1, sli: Int32 = 1, ul: UInt32 = 1, uli: UInt32 = 1, ll: Int64 = 1, lli: Int64 = 1, sll: Int64 = 1, slli: Int64 = 1, ull: UInt64 = 1, ulli: UInt64 = 1, l64: Int64 = 1, f: Float = 1.0, ft: Float = 1.0, d: Double = 1.0, dt: Double = 1.0, ld: Float80 = 1.0, dd: Float80 = 1.0, str2: String = "", b2: Bool = true, c2: String = String(Character(UnicodeScalar(UInt8.min))), sc2: String = String(Character(UnicodeScalar(UInt8.min))), uc2: String = String(Character(UnicodeScalar(UInt8.min))), i2: Int = 0, si2: Int = 0, sii2: Int = 0, u2: UInt = 0, ui2: UInt = 0, u82: UInt8 = 0, u162: UInt16 = 0, u322: UInt32 = 0, u642: UInt64 = 0, i82: Int8 = 0, i162: Int16 = 0, i322: Int32 = 0, i642: Int64 = 0, s2: Int16 = 0, si_22: Int16 = 0, ss2: Int16 = 0, ssi2: Int16 = 0, us2: UInt16 = 0, usi2: UInt16 = 0, l2: Int32 = 0, li2: Int32 = 0, sl2: Int32 = 0, sli2: Int32 = 0, ul2: UInt32 = 0, uli2: UInt32 = 0, ll2: Int64 = 0, lli2: Int64 = 0, sll2: Int64 = 0, slli2: Int64 = 0, ull2: UInt64 = 0, ulli2: UInt64 = 0, l642: Int64 = 0, f2: Float = 0.0, ft2: Float = 0.0, d2: Double = 0.0, dt2: Double = 0.0, ld2: Float80 = 0.0, dd2: Float80 = 0.0, p: UnsafeMutablePointer<Int>? = nil, strct: somestruct = somestruct(), array16: [Int16] = [1, 2, 3, 4], bools: [Bool] = [true, true, true]) {
         self = wb_old()
         self.str = str
         self.b = b
@@ -132,7 +132,7 @@ extension wb_old {
         self.i32 = i32
         self.i64 = i64
         self.s = s
-        self.si = si
+        self.si_2 = si_2
         self.ss = ss
         self.ssi = ssi
         self.us = us
@@ -175,7 +175,7 @@ extension wb_old {
         self.i322 = i322
         self.i642 = i642
         self.s2 = s2
-        self.si2 = si2
+        self.si_22 = si_22
         self.ss2 = ss2
         self.ssi2 = ssi2
         self.us2 = us2
@@ -229,7 +229,7 @@ extension wb_old {
             let i32 = dictionary["i32"] as? Int32,
             let i64 = dictionary["i64"] as? Int64,
             let s = dictionary["s"] as? Int16,
-            let si = dictionary["si"] as? Int16,
+            let si_2 = dictionary["si_2"] as? Int16,
             let ss = dictionary["ss"] as? Int16,
             let ssi = dictionary["ssi"] as? Int16,
             let us = dictionary["us"] as? UInt16,
@@ -272,7 +272,7 @@ extension wb_old {
             let i322 = dictionary["i322"] as? Int32,
             let i642 = dictionary["i642"] as? Int64,
             let s2 = dictionary["s2"] as? Int16,
-            let si2 = dictionary["si2"] as? Int16,
+            let si_22 = dictionary["si_22"] as? Int16,
             let ss2 = dictionary["ss2"] as? Int16,
             let ssi2 = dictionary["ssi2"] as? Int16,
             let us2 = dictionary["us2"] as? UInt16,
@@ -322,7 +322,7 @@ extension wb_old {
         self.i32 = i32
         self.i64 = i64
         self.s = s
-        self.si = si
+        self.si_2 = si_2
         self.ss = ss
         self.ssi = ssi
         self.us = us
@@ -365,7 +365,7 @@ extension wb_old {
         self.i322 = i322
         self.i642 = i642
         self.s2 = s2
-        self.si2 = si2
+        self.si_22 = si_22
         self.ss2 = ss2
         self.ssi2 = ssi2
         self.us2 = us2
@@ -450,7 +450,7 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "s=\(self.s)"
         descString += ", "
-        descString += "si=\(self.si)"
+        descString += "si_2=\(self.si_2)"
         descString += ", "
         descString += "ss=\(self.ss)"
         descString += ", "
@@ -536,7 +536,7 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "s2=\(self.s2)"
         descString += ", "
-        descString += "si2=\(self.si2)"
+        descString += "si_22=\(self.si_22)"
         descString += ", "
         descString += "ss2=\(self.ss2)"
         descString += ", "
@@ -630,7 +630,7 @@ public func == (lhs: wb_old, rhs: wb_old) -> Bool {
         && lhs.i32 == rhs.i32
         && lhs.i64 == rhs.i64
         && lhs.s == rhs.s
-        && lhs.si == rhs.si
+        && lhs.si_2 == rhs.si_2
         && lhs.ss == rhs.ss
         && lhs.ssi == rhs.ssi
         && lhs.us == rhs.us
@@ -673,7 +673,7 @@ public func == (lhs: wb_old, rhs: wb_old) -> Bool {
         && lhs.i322 == rhs.i322
         && lhs.i642 == rhs.i642
         && lhs.s2 == rhs.s2
-        && lhs.si2 == rhs.si2
+        && lhs.si_22 == rhs.si_22
         && lhs.ss2 == rhs.ss2
         && lhs.ssi2 == rhs.ssi2
         && lhs.us2 == rhs.us2

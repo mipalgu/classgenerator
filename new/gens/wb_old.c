@@ -231,7 +231,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "si=%d", self->si);
+    len += snprintf(descString + len, bufferSize - len, "si_2=%d", self->si_2);
     if (len >= bufferSize) {
         return descString;
     }
@@ -579,7 +579,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "si2=%d", self->si2);
+    len += snprintf(descString + len, bufferSize - len, "si_22=%d", self->si_22);
     if (len >= bufferSize) {
         return descString;
     }
@@ -980,7 +980,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "si=%d", self->si);
+    len += snprintf(toString + len, bufferSize - len, "si_2=%d", self->si_2);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1328,7 +1328,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "si2=%d", self->si2);
+    len += snprintf(toString + len, bufferSize - len, "si_22=%d", self->si_22);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1666,7 +1666,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[18] != NULL)
         self->s = (short)atoi(strings[18]);
     if (strings[19] != NULL)
-        self->si = (short int)atoi(strings[19]);
+        self->si_2 = (short int)atoi(strings[19]);
     if (strings[20] != NULL)
         self->ss = (signed short)atoi(strings[20]);
     if (strings[21] != NULL)
@@ -1752,7 +1752,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[61] != NULL)
         self->s2 = (short)atoi(strings[61]);
     if (strings[62] != NULL)
-        self->si2 = (short int)atoi(strings[62]);
+        self->si_22 = (short int)atoi(strings[62]);
     if (strings[63] != NULL)
         self->ss2 = (signed short)atoi(strings[63]);
     if (strings[64] != NULL)

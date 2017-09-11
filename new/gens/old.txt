@@ -18,7 +18,7 @@ int16_t	i16=1	An int16.
 int32_t	i32=1	An int32.
 int64_t	i64=1	An int64.
 short	s=1	A short.
-short int	si=1	A short int.
+short int	si_2=1	A short int.
 signed short	ss=1	A signed short.
 signed short int	ssi=1	A signed short int.
 unsigned short	us=1	An unsigned short.
@@ -61,7 +61,7 @@ int16_t	i162	An int16.
 int32_t	i322	An int32.
 int64_t	i642	An int64.
 short	s2	A short.
-short int	si2	A short int.
+short int	si_22	A short int.
 signed short	ss2	A signed short.
 signed short int	ssi2	A signed short int.
 unsigned short	us2	An unsigned short.

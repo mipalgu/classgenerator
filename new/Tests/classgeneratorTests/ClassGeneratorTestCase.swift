@@ -245,7 +245,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     comment: "A short."
                 ),
                 Variable(
-                    label: "si",
+                    label: "si_2",
                     type: .numeric(.signed),
                     cType: "short int",
                     swiftType: "Int16",
@@ -632,7 +632,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     comment: "A short."
                 ),
                 Variable(
-                    label: "si2",
+                    label: "si_22",
                     type: .numeric(.signed),
                     cType: "short int",
                     swiftType: "Int16",

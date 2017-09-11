@@ -66,7 +66,7 @@
 #define OLD_NUMBER_OF_VARIABLES 90
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
-#define OLD_DESC_BUFFER_SIZE 3144
+#define OLD_DESC_BUFFER_SIZE 3148
 #define OLD_TO_STRING_BUFFER_SIZE 2797
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
@@ -177,7 +177,7 @@ struct wb_old
     /**
      * A short int.
      */
-    PROPERTY(short int, si)
+    PROPERTY(short int, si_2)
 
     /**
      * A signed short.
@@ -392,7 +392,7 @@ struct wb_old
     /**
      * A short int.
      */
-    PROPERTY(short int, si2)
+    PROPERTY(short int, si_22)
 
     /**
      * A signed short.
