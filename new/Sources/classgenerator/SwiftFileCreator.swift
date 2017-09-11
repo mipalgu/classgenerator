@@ -124,7 +124,13 @@ public final class SwiftFileCreator: ErrorContainer {
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     let def = "public var _\($0.label): \(type) {"
                     let getterDef = "get {"
-                    let getterContent = "return " + self.createArrayGetter(forType: $0.type, withLabel: $0.label)
+                    let getterSetup = "var \($0.label) = self.\($0.label)"
+                    let getterAssign = "return " + self.createArrayGetter(
+                        forType: $0.type,
+                        withLabel: $0.label,
+                        andSwiftType: $0.swiftType
+                    )
+                    let getterContent = getterSetup + "\n" + getterAssign
                     let endGetterDef = "}"
                     let setterDef = "set {"
                     let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue")
@@ -142,6 +148,7 @@ public final class SwiftFileCreator: ErrorContainer {
     fileprivate func createArrayGetter(
         forType type: VariableTypes,
         withLabel label: String,
+        andSwiftType swiftType: String,
         _ level: Int = 0
     ) -> String {
         switch type {
@@ -149,11 +156,16 @@ public final class SwiftFileCreator: ErrorContainer {
                 let defaultLabel = "_" + label + (0 == level ? "" : "_\(level)")
                 let index = "\(defaultLabel)_index"
                 let p = "\(defaultLabel)_p"
-                let value = self.createArrayGetter(forType: subtype, withLabel: "\(p)[\(index)]", level + 1)
+                let value = self.createArrayGetter(
+                    forType: subtype,
+                    withLabel: "\(p)[\(index)]",
+                    andSwiftType: swiftType,
+                    level + 1
+                )
                 return """
-                    withUnsafePointer(&\(label).0) {
+                    withUnsafePointer(to: &\(label).0) {
                         let \(p) = $0
-                        var \(defaultLabel) = []
+                        var \(defaultLabel): \(self.createSwiftType(forType: type, withSwiftType: swiftType)) = []
                         \(defaultLabel).reserveCapacity(\(length))
                         for \(index) in 0..<\(length) {
                             \(defaultLabel).append(\(value))
@@ -224,7 +236,7 @@ public final class SwiftFileCreator: ErrorContainer {
                     accessedBy: nextAccessor,
                     level + 1
                 )
-                let start = "withUnsafeMutablePointer(&self.\(label).0) { \(p) in"
+                let start = "withUnsafeMutablePointer(to: &self.\(label).0) { \(p) in"
                 let content = """
                         for \(index) in 0..<\(length) {
                             \(p)[\(index)] = \(sub)
