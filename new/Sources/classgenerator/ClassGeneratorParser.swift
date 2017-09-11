@@ -76,7 +76,7 @@ public class ClassGeneratorParser {
                                     Place the generate C file into <directory>.
                     --cpp-header <directory=<c-header>>
                                     Place the C++ file into <directory>.
-                    --swift <directory=<c-header>>
+                    --swift-file <directory=<c-header>>
                                     Place the generated swift file into <directory>.
             """
     }
@@ -93,12 +93,20 @@ public class ClassGeneratorParser {
         return task
     }
 
-    private func handleNextFlag(_ task: Task, words: inout [String]) throws -> Task {
+    fileprivate func handleNextFlag(_ task: Task, words: inout [String]) throws -> Task {
         switch words.first! {
         case "-c":
             return self.handleCFlag(task, words: &words)
         case "-s":
             return self.handleSFlag(task, words: &words)
+        case "--c-header":
+            return self.handleCHeaderFlag(task, words: &words)
+        case "--c-file":
+            return self.handleCFileFlag(task, words: &words)
+        case "--cpp-header":
+            return self.handleCppHeaderFlag(task, words: &words)
+        case "--swift-file":
+            return self.handleSwiftFileFlag(task, words: &words)
         case "--help":
             return self.handleHelpFlag(task, words: &words)
         default:
@@ -106,25 +114,61 @@ public class ClassGeneratorParser {
         }
     }
 
-    private func handleCFlag(_ task: Task, words: inout [String]) -> Task {
+    fileprivate func handleCFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.generateCppWrapper = true
         return temp
     }
 
-    private func handleSFlag(_ task: Task, words: inout [String]) -> Task {
+    fileprivate func handleSFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.generateSwiftWrapper = true
         return temp
     }
 
-    private func handleHelpFlag(_ task: Task, words: inout [String]) -> Task {
+    fileprivate func handleCHeaderFlag(_ task: Task, words: inout [String]) -> Task {
+        var task = task
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        task.cHeaderOutputPath = value
+        return task
+    }
+
+    fileprivate func handleCFileFlag(_ task: Task, words: inout [String]) -> Task {
+        var task = task
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        task.cFileOutputPath = value
+        return task
+    }
+
+    fileprivate func handleCppHeaderFlag(_ task: Task, words: inout [String]) -> Task {
+        var task = task
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        task.cppHeaderOutputPath = value
+        return task
+    }
+
+    fileprivate func handleSwiftFileFlag(_ task: Task, words: inout [String]) -> Task {
+        var task = task
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        task.swiftFileOutputPath = value
+        return task
+    }
+
+    fileprivate func handleHelpFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.printHelpText = true
         return temp
     }
 
-    private func handlePath(_ task: Task, words: inout [String]) throws -> Task {
+    fileprivate func handlePath(_ task: Task, words: inout [String]) throws -> Task {
         // Ignore empty strings
         if true == words.first!.isEmpty {
             return task
@@ -136,6 +180,21 @@ public class ClassGeneratorParser {
         var temp = task
         temp.path = words.first!
         return temp
+    }
+
+    fileprivate func getValue<T>(fromWords words: inout [String], _ transform: (String) -> T?) -> T? {
+        if words.count < 2 {
+            return nil
+        }
+        guard let result = transform(words[1]) else {
+            return nil
+        }
+        words.removeFirst()
+        return result
+    }
+
+    fileprivate func getValue(fromWords words: inout [String]) -> String? {
+        return self.getValue(fromWords: &words) { $0 }
     }
 
 }

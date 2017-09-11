@@ -66,7 +66,7 @@ public struct Task {
 
     var printHelpText: Bool = false
 
-    var cHeaderOuputPath: String?
+    var cHeaderOutputPath: String?
 
     var cFileOutputPath: String?
 
