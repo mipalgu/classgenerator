@@ -108,7 +108,8 @@ public final class TypeConverter {
 
     func convert(type: String) -> String? {
         if type.characters.last != "*" {
-            return self.values[type] ?? type
+            //swiftlint:disable:next line_length
+            return self.values[type] ?? type.components(separatedBy: CharacterSet.whitespaces).last
         }
         let words = String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces)
             .components(separatedBy: CharacterSet.whitespaces)

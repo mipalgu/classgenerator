@@ -517,7 +517,7 @@ struct wb_old
     /**
      * A struct.
      */
-    PROPERTY(somestruct, strct)
+    PROPERTY(struct somestruct, strct)
 
     /**
      * a comment about array16

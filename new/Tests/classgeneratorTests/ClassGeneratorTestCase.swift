@@ -859,7 +859,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "strct",
                     type: .unknown,
-                    cType: "somestruct",
+                    cType: "struct somestruct",
                     swiftType: "somestruct",
                     defaultValue: "somestruct()",
                     swiftDefaultValue: "somestruct()",
