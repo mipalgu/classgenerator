@@ -263,7 +263,14 @@ public final class CDescriptionCreator {
             case .float:
                 return "f"
             case .long(let subtype):
-                return "l" + self.createFormat(forNumericType: subtype)
+                switch subtype {
+                    case .float:
+                        return "f"
+                    case .double:
+                        return "Lf"
+                    default:
+                        return "l" + self.createFormat(forNumericType: subtype)
+                }
             case .signed:
                 return "d"
             case .unsigned:

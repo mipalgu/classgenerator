@@ -72,11 +72,11 @@ public final class TypeIdentifier {
         "uint8_t": .numeric(.unsigned),
         "uint16_t": .numeric(.unsigned),
         "uint32_t": .numeric(.unsigned),
-        "uint64_t": .numeric(.unsigned),
+        "uint64_t": .numeric(.long(.long(.unsigned))),
         "int8_t": .numeric(.signed),
         "int16_t": .numeric(.signed),
         "int32_t": .numeric(.signed),
-        "int64_t": .numeric(.signed),
+        "int64_t": .numeric(.long(.long(.signed))),
         "short": .numeric(.signed),
         "short int": .numeric(.signed),
         "signed short": .numeric(.signed),
@@ -101,7 +101,7 @@ public final class TypeIdentifier {
         "double": .numeric(.double),
         "double_t": .numeric(.double),
         "long double": .numeric(.long(.double)),
-        "double double": .numeric(.long(.double))
+        "double double": .numeric(.double)
     ]
 
     public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String]) -> VariableTypes {
