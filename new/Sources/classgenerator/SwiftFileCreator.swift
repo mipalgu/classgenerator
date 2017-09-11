@@ -249,6 +249,7 @@ public final class SwiftFileCreator: ErrorContainer {
         }
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createFromDictionaryConstructor(
         on structName: String,
         withVariables variables: [Variable]
@@ -257,8 +258,13 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
         let guardDef = "guard"
         let casts = variables.map {
-            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
-            return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
+            switch $0.type {
+                case .array:
+                    return "var \($0.label) = dictionary[\"\($0.label)\"]"
+                default:
+                    let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+                    return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
+            }
         }.combine("") { $0 + ",\n" + $1 }
         let elseDef = "else {"
         let fatal = "fatalError(\"Unable to convert \\(dictionary) to \(structName).\")"
@@ -269,7 +275,18 @@ public final class SwiftFileCreator: ErrorContainer {
             + self.stringHelpers.indent(fatal) + "\n"
             + endGuard
         let setters = variables.map {
-            "self.\($0.label) = \($0.label)"
+            switch $0.type {
+                case .array:
+                    return """
+                        self.\($0.label) = withUnsafeMutablePointer(to: &\($0.label)) {
+                            $0.withMemoryRebound(to: type(of: \(structName)().\($0.label)), capacity: 1) {
+                                $0.pointee
+                            }
+                        }
+                        """
+                default:
+                    return "self.\($0.label) = \($0.label)"
+            }
         }.combine("") { $0 + "\n" + $1 }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(g + "\n" + setters) + "\n" + "}"
     }
@@ -327,7 +344,7 @@ public final class SwiftFileCreator: ErrorContainer {
                         return """
                             if let first = self._\(label).first {
                                 descString += \"\(label)={\"
-                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + "," + $1 }
+                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + ",\\($1)" }
                                 descString += \"}\"
                             } else {
                                 descString += \"\(label)={}\"
