@@ -56,6 +56,7 @@
  *
  */
 
+//swiftlint:disable:next type_body_length
 public final class SwiftFileCreator: ErrorContainer {
 
     public let errors: [String] = []
@@ -109,15 +110,60 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
-        let wrappers = self.createArrayWrapper(forVariables: variables).map {"\n\n" + $0 } ?? ""
+        let wrappers = self.createArrayWrappers(forVariables: variables).map {"\n\n" + $0 } ?? ""
         let constructor = self.createConstructor(on: base, withVariables: variables)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
         let content = constructor + "\n\n" + fromDictionary
         return comment + "\n" + def + wrappers + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
-    fileprivate func createArrayWrapper(forVariables variables: [Variable]) -> String? {
-        return nil
+    fileprivate func createArrayWrappers(forVariables variables: [Variable]) -> String? {
+        return variables.flatMap {
+            switch $0.type {
+                case .array:
+                    let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+                    let def = "public var _\($0.label): \(type) {"
+                    let getterDef = "get {"
+                    let getterContent = "return " + self.createArrayGetter(forType: $0.type, withLabel: $0.label)
+                    let endGetterDef = "}"
+                    let setterDef = "set {"
+                    let setterContent = self.createSetter(forVariable: $0)
+                    let endSetterDef = "}"
+                    let endDef = "}"
+                    let getter = getterDef + "\n" + self.stringHelpers.indent(getterContent) + "\n" + endGetterDef
+                    let setter = setterDef + "\n" + self.stringHelpers.indent(setterContent) + "\n" + endSetterDef
+                    return def + "\n" + self.stringHelpers.indent(getter + " " + setter) + "\n" + endDef
+                default:
+                    return nil
+            }
+        }.combine("") { $0 + "\n\n" + $1 }
+    }
+
+    fileprivate func createArrayGetter(
+        forType type: VariableTypes,
+        withLabel label: String,
+        _ level: Int = 0
+    ) -> String {
+        switch type {
+            case .array(let subtype, let length):
+                let defaultLabel = "_" + label + (0 == level ? "" : "_\(level)")
+                let index = "\(defaultLabel)_index"
+                let p = "\(defaultLabel)_p"
+                let value = self.createArrayGetter(forType: subtype, withLabel: "\(p)[\(index)]", level + 1)
+                return """
+                    withUnsafePointer(&\(label).0) {
+                        let \(p) = $0
+                        var \(defaultLabel) = []
+                        \(defaultLabel).reserveCapacity(\(length))
+                        for \(index) in 0..<\(length) {
+                            \(defaultLabel).append(\(value))
+                        }
+                        return \(defaultLabel)
+                    }
+                    """
+            default:
+                return label
+        }
     }
 
     fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {
