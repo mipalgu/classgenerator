@@ -278,7 +278,7 @@ public final class SwiftFileCreator: ErrorContainer {
             switch $0.type {
                 case .array:
                     return """
-                        self.\($0.label) = withUnsafeMutablePointer(to: &\($0.label)) {
+                        self.\($0.label) = withUnsafePointer(to: &\($0.label)) {
                             $0.withMemoryRebound(to: type(of: \(structName)().\($0.label)), capacity: 1) {
                                 $0.pointee
                             }
