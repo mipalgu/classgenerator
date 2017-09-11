@@ -153,7 +153,7 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         switch type {
             case .array(let subtype, let length):
-                let defaultLabel = "_" + label + (0 == level ? "" : "_\(level)")
+                let defaultLabel = label + (0 == level ? "" : "_\(level)")
                 let index = "\(defaultLabel)_index"
                 let p = "\(defaultLabel)_p"
                 let value = self.createArrayGetter(
@@ -163,8 +163,7 @@ public final class SwiftFileCreator: ErrorContainer {
                     level + 1
                 )
                 return """
-                    withUnsafePointer(to: &\(label).0) {
-                        let \(p) = $0
+                    withUnsafePointer(to: &\(label).0) { \(p) in
                         var \(defaultLabel): \(self.createSwiftType(forType: type, withSwiftType: swiftType)) = []
                         \(defaultLabel).reserveCapacity(\(length))
                         for \(index) in 0..<\(length) {
