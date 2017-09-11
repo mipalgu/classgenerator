@@ -109,10 +109,15 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
+        let wrappers = self.createArrayWrapper(forVariables: variables).map {"\n\n" + $0 } ?? ""
         let constructor = self.createConstructor(on: base, withVariables: variables)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
         let content = constructor + "\n\n" + fromDictionary
-        return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+        return comment + "\n" + def + wrappers + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
+    }
+
+    fileprivate func createArrayWrapper(forVariables variables: [Variable]) -> String? {
+        return nil
     }
 
     fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {
