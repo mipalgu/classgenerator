@@ -192,7 +192,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "u64",
-                    type: .numeric(.unsigned),
+                    type: .numeric(.long(.long(.unsigned))),
                     cType: "uint64_t",
                     swiftType: "UInt64",
                     defaultValue: "1",
@@ -228,7 +228,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "i64",
-                    type: .numeric(.signed),
+                    type: .numeric(.long(.long(.signed))),
                     cType: "int64_t",
                     swiftType: "Int64",
                     defaultValue: "1",
@@ -453,7 +453,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "dd",
-                    type: .numeric(.long(.double)),
+                    type: .numeric(.double),
                     cType: "double double",
                     swiftType: "Float80",
                     defaultValue: "1.0",
@@ -579,7 +579,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "u642",
-                    type: .numeric(.unsigned),
+                    type: .numeric(.long(.long(.unsigned))),
                     cType: "uint64_t",
                     swiftType: "UInt64",
                     defaultValue: "0",
@@ -615,7 +615,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "i642",
-                    type: .numeric(.signed),
+                    type: .numeric(.long(.long(.signed))),
                     cType: "int64_t",
                     swiftType: "Int64",
                     defaultValue: "0",
@@ -840,7 +840,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "dd2",
-                    type: .numeric(.long(.double)),
+                    type: .numeric(.double),
                     cType: "double double",
                     swiftType: "Float80",
                     defaultValue: "0.0",

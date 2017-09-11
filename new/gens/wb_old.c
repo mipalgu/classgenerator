@@ -183,7 +183,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "u64=%u", self->u64);
+    len += snprintf(descString + len, bufferSize - len, "u64=%llu", self->u64);
     if (len >= bufferSize) {
         return descString;
     }
@@ -215,7 +215,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i64=%d", self->i64);
+    len += snprintf(descString + len, bufferSize - len, "i64=%lld", self->i64);
     if (len >= bufferSize) {
         return descString;
     }
@@ -407,7 +407,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "ld=%llf", self->ld);
+    len += snprintf(descString + len, bufferSize - len, "ld=%Lf", self->ld);
     if (len >= bufferSize) {
         return descString;
     }
@@ -415,7 +415,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "dd=%llf", self->dd);
+    len += snprintf(descString + len, bufferSize - len, "dd=%lf", self->dd);
     if (len >= bufferSize) {
         return descString;
     }
@@ -531,7 +531,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "u642=%u", self->u642);
+    len += snprintf(descString + len, bufferSize - len, "u642=%llu", self->u642);
     if (len >= bufferSize) {
         return descString;
     }
@@ -563,7 +563,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i642=%d", self->i642);
+    len += snprintf(descString + len, bufferSize - len, "i642=%lld", self->i642);
     if (len >= bufferSize) {
         return descString;
     }
@@ -755,7 +755,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "ld2=%llf", self->ld2);
+    len += snprintf(descString + len, bufferSize - len, "ld2=%Lf", self->ld2);
     if (len >= bufferSize) {
         return descString;
     }
@@ -763,7 +763,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "dd2=%llf", self->dd2);
+    len += snprintf(descString + len, bufferSize - len, "dd2=%lf", self->dd2);
     if (len >= bufferSize) {
         return descString;
     }
@@ -932,7 +932,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "u64=%u", self->u64);
+    len += snprintf(toString + len, bufferSize - len, "u64=%llu", self->u64);
     if (len >= bufferSize) {
         return toString;
     }
@@ -964,7 +964,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "i64=%d", self->i64);
+    len += snprintf(toString + len, bufferSize - len, "i64=%lld", self->i64);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1156,7 +1156,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "ld=%llf", self->ld);
+    len += snprintf(toString + len, bufferSize - len, "ld=%Lf", self->ld);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1164,7 +1164,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "dd=%llf", self->dd);
+    len += snprintf(toString + len, bufferSize - len, "dd=%lf", self->dd);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1280,7 +1280,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "u642=%u", self->u642);
+    len += snprintf(toString + len, bufferSize - len, "u642=%llu", self->u642);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1312,7 +1312,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "i642=%d", self->i642);
+    len += snprintf(toString + len, bufferSize - len, "i642=%lld", self->i642);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1504,7 +1504,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "ld2=%llf", self->ld2);
+    len += snprintf(toString + len, bufferSize - len, "ld2=%Lf", self->ld2);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1512,7 +1512,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "dd2=%llf", self->dd2);
+    len += snprintf(toString + len, bufferSize - len, "dd2=%lf", self->dd2);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1654,7 +1654,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[12] != NULL)
         self->u32 = (uint32_t)atoi(strings[12]);
     if (strings[13] != NULL)
-        self->u64 = (uint64_t)atoi(strings[13]);
+        self->u64 = (uint64_t)atoll(strings[13]);
     if (strings[14] != NULL)
         self->i8 = (int8_t)atoi(strings[14]);
     if (strings[15] != NULL)
@@ -1662,7 +1662,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[16] != NULL)
         self->i32 = (int32_t)atoi(strings[16]);
     if (strings[17] != NULL)
-        self->i64 = (int64_t)atoi(strings[17]);
+        self->i64 = (int64_t)atoll(strings[17]);
     if (strings[18] != NULL)
         self->s = (short)atoi(strings[18]);
     if (strings[19] != NULL)
@@ -1740,7 +1740,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[55] != NULL)
         self->u322 = (uint32_t)atoi(strings[55]);
     if (strings[56] != NULL)
-        self->u642 = (uint64_t)atoi(strings[56]);
+        self->u642 = (uint64_t)atoll(strings[56]);
     if (strings[57] != NULL)
         self->i82 = (int8_t)atoi(strings[57]);
     if (strings[58] != NULL)
@@ -1748,7 +1748,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[59] != NULL)
         self->i322 = (int32_t)atoi(strings[59]);
     if (strings[60] != NULL)
-        self->i642 = (int64_t)atoi(strings[60]);
+        self->i642 = (int64_t)atoll(strings[60]);
     if (strings[61] != NULL)
         self->s2 = (short)atoi(strings[61]);
     if (strings[62] != NULL)
