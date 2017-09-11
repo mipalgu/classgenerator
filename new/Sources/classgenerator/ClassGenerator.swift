@@ -107,6 +107,7 @@ public final class ClassGenerator<P: Printer> {
                     self.handleError("Unknown Error")
             }
         }
+        print("task: \(task)")
         self.handleTask(task)
     }
 
@@ -133,40 +134,60 @@ public final class ClassGenerator<P: Printer> {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)
+        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
+        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
         self.generateFiles(
             fromClass: cls,
+            cHeaderPath: self.create(task.cHeaderOutputPath, structName + ".h"),
+            cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, structName + ".c"),
+            cppHeaderPath: self.create(task.cppHeaderOutputPath ?? task.cHeaderOutputPath, className + ".h"),
+            swiftFilePath: self.create(task.swiftFileOutputPath ?? task.cHeaderOutputPath, className + ".swift"),
+            className: className,
+            structName: structName,
             generatedFrom: genfile,
             generateCppWrapper: task.generateCppWrapper,
             generateSwiftWrapper: task.generateSwiftWrapper
         )
     }
 
+    fileprivate func create(_ path: String?, _ fileName: String) -> URL {
+        guard let path = path else {
+            return URL(fileURLWithPath: fileName)
+        }
+        if true == self.fileHelpers.directoryExists(path) {
+            let url = URL(fileURLWithPath: path, isDirectory: true)
+            return url.appendingPathComponent(fileName, isDirectory: false)
+        }
+        return URL(fileURLWithPath: path, isDirectory: false)
+    }
+
+    //swiftlint:disable:next function_parameter_count
     fileprivate func generateFiles(
         fromClass cls: Class,
+        cHeaderPath: URL,
+        cFilePath: URL,
+        cppHeaderPath: URL,
+        swiftFilePath: URL,
+        className: String,
+        structName: String,
         generatedFrom genfile: String,
         generateCppWrapper: Bool,
         generateSwiftWrapper: Bool
     ) {
-        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
-        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
-        let cHeader = structName + ".h"
-        let cFile = structName + ".c"
-        let cppHeader = className + ".h"
-        let swiftFile = className + ".swift"
-        guard true == self.generate(cHeader, {
+        guard true == self.generate(cHeaderPath.path, {
             self.cHeaderCreator.createCHeader(
                 forClass: cls,
-                forFileNamed: cHeader,
+                forFileNamed: cHeaderPath.lastPathComponent,
                 withStructName: structName,
                 generatedFrom: genfile
             )
         }) else {
-            self.handleError(self.cHeaderCreator.lastError ?? "Unable to create C Header")
+            self.handleError(self.cHeaderCreator.lastError ?? "Unable to create C Header at path: \(cHeaderPath.path)")
         }
-        guard true == self.generate(cFile, {
+        guard true == self.generate(cFilePath.path, {
             self.cFileCreator.createCFile(
                 forClass: cls,
-                forFileNamed: cFile,
+                forFileNamed: cFilePath.lastPathComponent,
                 withStructName: structName,
                 generatedFrom: genfile
             )
@@ -174,10 +195,10 @@ public final class ClassGenerator<P: Printer> {
             self.handleError(self.cFileCreator.lastError ?? "Unable to create C File")
         }
         if true == generateCppWrapper {
-            guard true == self.generate(cppHeader, {
+            guard true == self.generate(cppHeaderPath.path, {
                 self.cppHeaderCreator.createCPPHeader(
                     forClass: cls,
-                    forFileNamed: cppHeader,
+                    forFileNamed: cppHeaderPath.lastPathComponent,
                     withClassName: className,
                     withStructName: structName,
                     generatedFrom: genfile
@@ -187,10 +208,10 @@ public final class ClassGenerator<P: Printer> {
             }
         }
         if true == generateSwiftWrapper {
-            guard true == self.generate(swiftFile, {
+            guard true == self.generate(swiftFilePath.path, {
                 self.swiftFileCreator.createSwiftFile(
                     forClass: cls,
-                    forFileNamed: swiftFile,
+                    forFileNamed: swiftFilePath.lastPathComponent,
                     withStructName: structName,
                     generatedFrom: genfile
                 )
@@ -202,8 +223,10 @@ public final class ClassGenerator<P: Printer> {
 
     fileprivate func generate(_ file: String, _ generateContent: () -> String?) -> Bool {
         guard let content = generateContent() else {
+            print("wtf")
             return false
         }
+        print("create file: \(file)")
         return self.fileHelpers.createFile(atPath: URL(fileURLWithPath: file), withContents: content)
     }
 

@@ -60,12 +60,14 @@ import Foundation
 
 public final class FileHelpers {
 
+    //swiftlint:disable:next identifier_name
     fileprivate let fm: FileManager
 
     public var cwd: URL? {
         return URL(string: self.fm.currentDirectoryPath)
     }
 
+    //swiftlint:disable:next identifier_name
     public init(fm: FileManager = FileManager.default) {
         self.fm = fm
     }
@@ -88,7 +90,7 @@ public final class FileHelpers {
 
     public func createFile(atPath path: URL, withContents str: String) -> Bool {
         guard let encoded = str.data(using: String.Encoding.utf8) else {
-            return false 
+            return false
         }
         return self.fm.createFile(atPath: path.path, contents: encoded)
     }
@@ -102,13 +104,19 @@ public final class FileHelpers {
     }
 
     public func deleteItem(atPath path: URL) -> Bool {
-        if (false == self.fm.fileExists(atPath: path.path)) {
+        if false == self.fm.fileExists(atPath: path.path) {
             return true
         }
         guard let _ = try? self.fm.removeItem(at: path) else {
             return false
         }
         return true
+    }
+
+    public func directoryExists(_ dir: String) -> Bool {
+        var directoryExists: ObjCBool = false
+        self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
+        return directoryExists.boolValue
     }
 
     public func makeSubDirectory(_ subdir: String, inDirectory dir: URL) -> URL? {
