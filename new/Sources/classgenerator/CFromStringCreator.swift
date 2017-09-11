@@ -236,7 +236,7 @@ public final class CFromStringCreator {
                     inClassNamed: className
                 )
             case.string:
-                return "(string)(\(accessor));"
+                return "\(accessor);"
             default:
                 return nil
         }

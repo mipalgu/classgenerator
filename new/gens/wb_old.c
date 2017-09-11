@@ -1628,7 +1628,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
         tokenS = strtok_r(NULL, s, &saveptr);
     }
     if (strings[0] != NULL)
-        self->str = (string)(strings[0]);
+        self->str = strings[0];
     if (strings[1] != NULL)
         self->b = strcmp(strings[1], "true") == 0 || strcmp(strings[1], "1") == 0 ? true : false;
     if (strings[2] != NULL)
@@ -1714,7 +1714,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[42] != NULL)
         self->dd = (double double)atof(strings[42]);
     if (strings[43] != NULL)
-        self->str2 = (string)(strings[43]);
+        self->str2 = strings[43];
     if (strings[44] != NULL)
         self->b2 = strcmp(strings[44], "true") == 0 || strcmp(strings[44], "1") == 0 ? true : false;
     if (strings[45] != NULL)
