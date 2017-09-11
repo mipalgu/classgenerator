@@ -127,7 +127,7 @@ public final class SwiftFileCreator: ErrorContainer {
                     let getterContent = "return " + self.createArrayGetter(forType: $0.type, withLabel: $0.label)
                     let endGetterDef = "}"
                     let setterDef = "set {"
-                    let setterContent = self.createSetter(forVariable: $0)
+                    let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue")
                     let endSetterDef = "}"
                     let endDef = "}"
                     let getter = getterDef + "\n" + self.stringHelpers.indent(getterContent) + "\n" + endGetterDef
@@ -184,16 +184,18 @@ public final class SwiftFileCreator: ErrorContainer {
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
-        let setters = copy + variables.map(self.createSetter).combine("") { $0 + "\n" + $1 }
+        let setters = copy + variables.map {
+            self.createSetter(forVariable: $0, accessedBy: "\($0.label)")
+        }.combine("") { $0 + "\n" + $1 }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
     }
 
-    fileprivate func createSetter(forVariable variable: Variable) -> String {
+    fileprivate func createSetter(forVariable variable: Variable, accessedBy accessor: String) -> String {
+        let value = self.createSetterValue(forType: variable.type, withLabel: variable.label, accessedBy: accessor)
         switch variable.type {
             case .array:
-                return "_ = \(self.createSetterValue(forType: variable.type, withLabel: variable.label))"
+                return "_ = \(value)"
             default:
-                let value = self.createSetterValue(forType: variable.type, withLabel: variable.label)
                 return "self.\(variable.label) = \(value)"
         }
     }
@@ -201,6 +203,7 @@ public final class SwiftFileCreator: ErrorContainer {
     fileprivate func createSetterValue(
         forType type: VariableTypes,
         withLabel label: String,
+        accessedBy accessor: String,
         _ level: Int = 0
     ) -> String {
         switch type {
@@ -208,8 +211,14 @@ public final class SwiftFileCreator: ErrorContainer {
                 let uniqueLabel = label + (0 == level ? "" : "_\(level)")
                 let index = uniqueLabel + "_index"
                 let p = uniqueLabel + "_p"
-                let nextLabel = label + "[\(index)]"
-                let sub = self.createSetterValue(forType: subtype, withLabel: nextLabel)
+                let nextLabel = label + ".0"
+                let nextAccessor = accessor + "[\(index)]"
+                let sub = self.createSetterValue(
+                    forType: subtype,
+                    withLabel: nextLabel,
+                    accessedBy: nextAccessor,
+                    level + 1
+                )
                 let start = "withUnsafeMutablePointer(&self.\(label).0) { \(p) in"
                 let content = """
                         for \(index) in 0..<\(length) {
@@ -219,7 +228,7 @@ public final class SwiftFileCreator: ErrorContainer {
                     """
                 return start + "\n" + self.stringHelpers.indent(content, level)
             default:
-                return label
+                return accessor
         }
     }
 
