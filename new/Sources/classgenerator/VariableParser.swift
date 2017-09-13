@@ -91,6 +91,7 @@ public final class VariableParser: ErrorContainer {
     }
 
     public func parseVariable(fromLine line: String) -> Variable? {
+        self.errors = []
         guard
             let (remaining, comment) = self.parseComment(fromLine: line)
         else {

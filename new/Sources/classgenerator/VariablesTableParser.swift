@@ -76,6 +76,7 @@ public final class VariablesTableParser: ErrorContainer {
         let lines = section.components(separatedBy: CharacterSet.newlines)
         return lines.failMap {
             guard let v = self.parser.parseVariable(fromLine: $0) else {
+                self.errors.append(contentsOf: self.parser.errors)
                 return nil
             }
             return v

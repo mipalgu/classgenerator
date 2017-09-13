@@ -105,11 +105,12 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
         else {
             return nil
         }
-        guard
-            let author: String = self.parseAuthor(fromSection: sections.author),
-            let comment = sections.comments
-        else {
+        guard let author: String = self.parseAuthor(fromSection: sections.author) else {
             self.errors.append("You must specify the author of the class.")
+            return nil
+        }
+        guard let comment = sections.comments else {
+            self.errors.append("You must specify a comment for the class.")
             return nil
         }
         return Class(

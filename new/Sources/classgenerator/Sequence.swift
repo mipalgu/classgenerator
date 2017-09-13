@@ -114,6 +114,31 @@ extension Sequence where
 
 }
 
+extension Sequence where Self.SubSequence: Sequence, Self.SubSequence.Iterator.Element == Self.Iterator.Element {
+
+    public func trim(
+        _ shouldTrim: (Self.Iterator.Element) -> Bool
+    ) -> RandomAccessSlice<ReversedRandomAccessCollection<ArraySlice<Self.Element>>> {
+        let droppedReversed = self.reversed().drop(while: shouldTrim)
+        return droppedReversed.reversed().drop(while: shouldTrim)
+    }
+
+}
+
+extension Sequence where
+    Self.SubSequence: Sequence,
+    Self.SubSequence.Iterator.Element == Self.Iterator.Element,
+    Self.Iterator.Element: Equatable
+{
+
+    public func trim(
+        _ element: Self.Iterator.Element
+    ) -> RandomAccessSlice<ReversedRandomAccessCollection<ArraySlice<Self.Element>>> {
+        return self.trim { $0 == element }
+    }
+
+}
+
 extension Sequence {
 
     public func failMap<T>(_ transform: (Self.Iterator.Element) -> T?) -> [T]? {

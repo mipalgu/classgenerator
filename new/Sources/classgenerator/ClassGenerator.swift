@@ -107,7 +107,6 @@ public final class ClassGenerator<P: Printer> {
                     self.handleError("Unknown Error")
             }
         }
-        print("task: \(task)")
         self.handleTask(task)
     }
 
@@ -223,10 +222,8 @@ public final class ClassGenerator<P: Printer> {
 
     fileprivate func generate(_ file: String, _ generateContent: () -> String?) -> Bool {
         guard let content = generateContent() else {
-            print("wtf")
             return false
         }
-        print("create file: \(file)")
         return self.fileHelpers.createFile(atPath: URL(fileURLWithPath: file), withContents: content)
     }
 

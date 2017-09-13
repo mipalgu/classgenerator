@@ -87,14 +87,19 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
         else {
             return nil
         }
-        let grouped = sanitisedLines.grouped(by: { (last, str) in
+        let grouped = sanitisedLines.lazy.grouped(by: { (last, str) in
             false == (self.isAuthorLine(last) || self.isMarker(str.trimmingCharacters(in: CharacterSet.whitespaces)))
         })
-        return self.createSections(fromGroups: grouped)
+        let trimmedGroup = grouped.map { $0.trim("") }
+        return self.createSections(fromGroups: trimmedGroup)
     }
 
+    //swiftlint:disable opening_brace
     //swiftlint:disable:next function_body_length
-    fileprivate func createSections<S: Sequence>(fromGroups seq: S) -> Sections? where S.Iterator.Element == [String] {
+    fileprivate func createSections<S: Sequence, C: Collection>(fromGroups seq: S) -> Sections? where
+        S.Iterator.Element == C,
+        C.Iterator.Element == String
+    {
         var author: String?
         var prec: String?
         var vars: String?
@@ -163,7 +168,9 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
         )
     }
 
-    fileprivate func parseWithoutMarkers(section: [String]) -> (String, String?)? {
+    fileprivate func parseWithoutMarkers<C: Collection>(
+        section: C
+    ) -> (String, String?)? where C.Iterator.Element == String {
         let varsGrouped = section.lazy.grouped { (first, _) in
             return first != ""
         }
