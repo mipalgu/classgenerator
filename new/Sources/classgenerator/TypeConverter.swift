@@ -63,9 +63,9 @@ public final class TypeConverter {
     fileprivate let values: [String: String] = [
         "string": "String",
         "bool": "Bool",
-        "char": "String",
-        "signed char": "String",
-        "unsigned char": "String",
+        "char": "Character",
+        "signed char": "Character",
+        "unsigned char": "Character",
         "int": "Int32",
         "signed": "Int32",
         "signed int": "Int32",
@@ -116,7 +116,7 @@ public final class TypeConverter {
         guard let last = words.last, let newType = self.convert(type: last) else {
             return nil
         }
-        return "UnsafeMutablePointer<\(newType)>?"
+        return "UnsafeMutablePointer<\(newType)>!"
     }
 
 }
