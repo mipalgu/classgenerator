@@ -197,7 +197,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = startDef + params + endDef
         let setters = copy + variables.map {
             switch $0.type {
-                case .array, .string:
+                case .array, .string, .char:
                     return "self._\($0.label) = \($0.label)"
                 default:
                     return "self.\($0.label) = \($0.label)"
@@ -273,20 +273,27 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a `\(structName)` from a dictionary.")
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
-        let containsArrays = nil != variables.lazy.filter {
+        let shouldCopy = nil != variables.lazy.filter {
             switch $0.type {
-                case .array, .string:
+                case .array, .string, .char:
                     return true
                 default:
                     return false
             }
         }.first
-        let copy = true == containsArrays ? "self = \(structName)()\n" : ""
+        let copy = true == shouldCopy ? "self = \(structName)()\n" : ""
         let guardDef = "guard"
         let casts = variables.map {
             switch $0.type {
                 case .array, .string:
                     return "var \($0.label) = dictionary[\"\($0.label)\"]"
+                case .char(let sign):
+                    switch sign {
+                        case .signed:
+                            return "let \($0.label) = dictionary[\"\($0.label)\"] as? Int8"
+                        case .unsigned:
+                            return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt8"
+                    }
                 default:
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
