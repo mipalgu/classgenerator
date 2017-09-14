@@ -93,7 +93,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "c",
-                    type: .char,
+                    type: .char(.signed),
                     cType: "char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
@@ -102,7 +102,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "sc",
-                    type: .char,
+                    type: .char(.signed),
                     cType: "signed char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
@@ -111,7 +111,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "uc",
-                    type: .char,
+                    type: .char(.unsigned),
                     cType: "unsigned char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
@@ -480,7 +480,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "c2",
-                    type: .char,
+                    type: .char(.signed),
                     cType: "char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "0",
@@ -489,7 +489,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "sc2",
-                    type: .char,
+                    type: .char(.signed),
                     cType: "signed char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "0",
@@ -498,7 +498,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "uc2",
-                    type: .char,
+                    type: .char(.unsigned),
                     cType: "unsigned char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "0",

@@ -1,8 +1,8 @@
 /*
- * VariableTypes.swift 
+ * CharSigns.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 06/08/2017.
+ * Created by Callum McColl on 15/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,33 +56,9 @@
  *
  */
 
-public enum VariableTypes {
+public enum CharSigns {
 
-    indirect case array(VariableTypes, String)
-    case bool
-    case char(CharSigns)
-    case numeric(NumericTypes)
-    indirect case pointer(VariableTypes)
-    case string(String)
-    case unknown
+   case signed
+   case unsigned
 
-}
-
-extension VariableTypes: Equatable {}
-
-public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
-    switch (lhs, rhs) {
-        case (.bool, .bool), (.char, .char), (.unknown, .unknown):
-            return true
-        case (.string(let llength), .string(let rlength)):
-            return llength == rlength
-        case (.array(let ltype, let llength), .array(let rtype, let rlength)):
-            return ltype == rtype && llength == rlength
-        case (.numeric(let ltype), .numeric(let rtype)):
-            return ltype == rtype
-        case (.pointer(let ltype), .pointer(let rtype)):
-            return ltype == rtype
-        default:
-            return false
-    }
 }

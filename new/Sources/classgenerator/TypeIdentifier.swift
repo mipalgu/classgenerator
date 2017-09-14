@@ -60,9 +60,9 @@ public final class TypeIdentifier {
 
     fileprivate let values: [String: VariableTypes] = [
         "bool": .bool,
-        "char": .char,
-        "signed char": .char,
-        "unsigned char": .char,
+        "char": .char(.signed),
+        "signed char": .char(.signed),
+        "unsigned char": .char(.unsigned),
         "int": .numeric(.signed),
         "signed": .numeric(.signed),
         "signed int": .numeric(.signed),
