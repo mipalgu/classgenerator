@@ -76,7 +76,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "str",
                     type: .string("6"),
-                    cType: "char *",
+                    cType: "string",
                     swiftType: "String",
                     defaultValue: "\"hello\"",
                     swiftDefaultValue: "\"hello\"",
@@ -95,34 +95,34 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "c",
                     type: .char,
                     cType: "char",
-                    swiftType: "String",
+                    swiftType: "Character",
                     defaultValue: "'c'",
-                    swiftDefaultValue: "\"c\"",
+                    swiftDefaultValue: "Character(\"c\")",
                     comment: "A char."
                 ),
                 Variable(
                     label: "sc",
                     type: .char,
                     cType: "signed char",
-                    swiftType: "String",
+                    swiftType: "Character",
                     defaultValue: "'c'",
-                    swiftDefaultValue: "\"c\"",
+                    swiftDefaultValue: "Character(\"c\")",
                     comment: "A signed char."
                 ),
                 Variable(
                     label: "uc",
                     type: .char,
                     cType: "unsigned char",
-                    swiftType: "String",
+                    swiftType: "Character",
                     defaultValue: "'c'",
-                    swiftDefaultValue: "\"c\"",
+                    swiftDefaultValue: "Character(\"c\")",
                     comment: "An unsigned char."
                 ),
                 Variable(
                     label: "i",
                     type: .numeric(.signed),
                     cType: "int",
-                    swiftType: "Int",
+                    swiftType: "Int32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "An int."
@@ -131,7 +131,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "si",
                     type: .numeric(.signed),
                     cType: "signed",
-                    swiftType: "Int",
+                    swiftType: "Int32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "A signed."
@@ -140,7 +140,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sii",
                     type: .numeric(.signed),
                     cType: "signed int",
-                    swiftType: "Int",
+                    swiftType: "Int32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "A signed int."
@@ -149,7 +149,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "u",
                     type: .numeric(.unsigned),
                     cType: "unsigned",
-                    swiftType: "UInt",
+                    swiftType: "UInt32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "An unsigned."
@@ -158,7 +158,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "ui",
                     type: .numeric(.unsigned),
                     cType: "unsigned int",
-                    swiftType: "UInt",
+                    swiftType: "UInt32",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "An unsigned int."
@@ -293,7 +293,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "l",
                     type: .numeric(.long(.signed)),
                     cType: "long",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "A long."
@@ -302,7 +302,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "li",
                     type: .numeric(.long(.signed)),
                     cType: "long int",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "A long int."
@@ -311,7 +311,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sl",
                     type: .numeric(.long(.signed)),
                     cType: "signed long",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "A signed long."
@@ -320,7 +320,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sli",
                     type: .numeric(.long(.signed)),
                     cType: "signed long int",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "A signed long int."
@@ -329,7 +329,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "ul",
                     type: .numeric(.long(.unsigned)),
                     cType: "unsigned long",
-                    swiftType: "UInt32",
+                    swiftType: "UInt",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "An unsigned long."
@@ -338,7 +338,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "uli",
                     type: .numeric(.long(.unsigned)),
                     cType: "unsigned long int",
-                    swiftType: "UInt32",
+                    swiftType: "UInt",
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "An unsigned long int."
@@ -463,7 +463,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "str2",
                     type: .string("6"),
-                    cType: "char *",
+                    cType: "string",
                     swiftType: "String",
                     defaultValue: "\"\"",
                     swiftDefaultValue: "\"\"",
@@ -482,34 +482,34 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "c2",
                     type: .char,
                     cType: "char",
-                    swiftType: "String",
+                    swiftType: "Character",
                     defaultValue: "0",
-                    swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
+                    swiftDefaultValue: "Character(UnicodeScalar(UInt8.min))",
                     comment: "A char."
                 ),
                 Variable(
                     label: "sc2",
                     type: .char,
                     cType: "signed char",
-                    swiftType: "String",
+                    swiftType: "Character",
                     defaultValue: "0",
-                    swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
+                    swiftDefaultValue: "Character(UnicodeScalar(UInt8.min))",
                     comment: "A signed char."
                 ),
                 Variable(
                     label: "uc2",
                     type: .char,
                     cType: "unsigned char",
-                    swiftType: "String",
+                    swiftType: "Character",
                     defaultValue: "0",
-                    swiftDefaultValue: "String(Character(UnicodeScalar(UInt8.min)))",
+                    swiftDefaultValue: "Character(UnicodeScalar(UInt8.min))",
                     comment: "An unsigned char."
                 ),
                 Variable(
                     label: "i2",
                     type: .numeric(.signed),
                     cType: "int",
-                    swiftType: "Int",
+                    swiftType: "Int32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "An int."
@@ -518,7 +518,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "si2",
                     type: .numeric(.signed),
                     cType: "signed",
-                    swiftType: "Int",
+                    swiftType: "Int32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "A signed."
@@ -527,7 +527,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sii2",
                     type: .numeric(.signed),
                     cType: "signed int",
-                    swiftType: "Int",
+                    swiftType: "Int32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "A signed int."
@@ -536,7 +536,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "u2",
                     type: .numeric(.unsigned),
                     cType: "unsigned",
-                    swiftType: "UInt",
+                    swiftType: "UInt32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "An unsigned."
@@ -545,7 +545,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "ui2",
                     type: .numeric(.unsigned),
                     cType: "unsigned int",
-                    swiftType: "UInt",
+                    swiftType: "UInt32",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "An unsigned int."
@@ -680,7 +680,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "l2",
                     type: .numeric(.long(.signed)),
                     cType: "long",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "A long."
@@ -689,7 +689,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "li2",
                     type: .numeric(.long(.signed)),
                     cType: "long int",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "A long int."
@@ -698,7 +698,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sl2",
                     type: .numeric(.long(.signed)),
                     cType: "signed long",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "A signed long."
@@ -707,7 +707,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sli2",
                     type: .numeric(.long(.signed)),
                     cType: "signed long int",
-                    swiftType: "Int32",
+                    swiftType: "Int",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "A signed long int."
@@ -716,7 +716,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "ul2",
                     type: .numeric(.long(.unsigned)),
                     cType: "unsigned long",
-                    swiftType: "UInt32",
+                    swiftType: "UInt",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "An unsigned long."
@@ -725,7 +725,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "uli2",
                     type: .numeric(.long(.unsigned)),
                     cType: "unsigned long int",
-                    swiftType: "UInt32",
+                    swiftType: "UInt",
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "An unsigned long int."
@@ -851,7 +851,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "p",
                     type: .pointer(.numeric(.signed)),
                     cType: "int",
-                    swiftType: "UnsafeMutablePointer<Int>?",
+                    swiftType: "UnsafeMutablePointer<Int32>!",
                     defaultValue: "NULL",
                     swiftDefaultValue: "nil",
                     comment: "A pointer."
@@ -904,7 +904,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                         label: "c",
                         type: .numeric(.signed),
                         cType: "int",
-                        swiftType: "Int",
+                        swiftType: "Int32",
                         defaultValue: "2",
                         swiftDefaultValue: "2",
                         comment: "A counter."

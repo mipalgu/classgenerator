@@ -91,10 +91,10 @@ public class ParserTests: ClassGeneratorTestCase {
         }
         let zipped = zip(super.oldClass.variables, result.variables)
         for (l, r) in zipped where l != r {
-            XCTAssertEqual(l, r)
+            XCTAssertEqual(l, r, "result variable: \(r) is not equal to expected variable: \(l)")
             return
         }
-        XCTAssertEqual(super.oldClass, result)
+        XCTAssertEqual(super.oldClass, result, "result: \(result) is not equal to expected: \(super.oldClass)")
     }
 
     public func test_parsesSections() {
