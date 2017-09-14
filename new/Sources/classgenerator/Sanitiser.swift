@@ -103,7 +103,7 @@ public final class Sanitiser {
 
     fileprivate func sanitiseChar(value: String) -> String? {
         if value.characters.first == "'" && value.characters.last == "'" {
-            return "\"\(String(value.characters.dropFirst().dropLast()))\""
+            return "Character(\"\(String(value.characters.dropFirst().dropLast()))\")"
         }
         return nil
     }
