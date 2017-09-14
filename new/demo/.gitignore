@@ -1,0 +1,8 @@
+.DS_Store
+/.build
+/Packages
+/*.xcodeproj
+Sources/bridge/wb_demo.h
+Sources/bridge/wb_demo.c
+Sources/bridge/Demo.h
+Sources/demo/Demo.swift
