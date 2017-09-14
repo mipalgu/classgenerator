@@ -72,8 +72,10 @@ extension VariableTypes: Equatable {}
 
 public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
     switch (lhs, rhs) {
-        case (.bool, .bool), (.char, .char), (.string, .string), (.unknown, .unknown):
+        case (.bool, .bool), (.char, .char), (.unknown, .unknown):
             return true
+        case (.string(let llength), .string(let rlength)):
+            return llength == rlength
         case (.array(let ltype, let llength), .array(let rtype, let rlength)):
             return ltype == rtype && llength == rlength
         case (.numeric(let ltype), .numeric(let rtype)):
