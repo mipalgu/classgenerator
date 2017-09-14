@@ -121,28 +121,25 @@ public final class SwiftFileCreator: ErrorContainer {
     fileprivate func createArrayWrappers(forVariables variables: [Variable]) -> String? {
         return variables.flatMap {
             switch $0.type {
-                case .array:
-                    let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
-                    let def = "public var _\($0.label): \(type) {"
-                    let getterDef = "get {"
-                    let getterSetup = "var \($0.label) = self.\($0.label)"
-                    let getterAssign = "return " + self.createArrayGetter(
-                        forType: $0.type,
-                        withLabel: $0.label,
-                        andSwiftType: $0.swiftType
-                    )
-                    let getterContent = getterSetup + "\n" + getterAssign
-                    let endGetterDef = "}"
-                    let setterDef = "set {"
-                    let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue")
-                    let endSetterDef = "}"
-                    let endDef = "}"
-                    let getter = getterDef + "\n" + self.stringHelpers.indent(getterContent) + "\n" + endGetterDef
-                    let setter = setterDef + "\n" + self.stringHelpers.indent(setterContent) + "\n" + endSetterDef
-                    return def + "\n" + self.stringHelpers.indent(getter + " " + setter) + "\n" + endDef
+                case .array, .string:
+                    break
                 default:
                     return nil
             }
+            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+            let def = "public var _\($0.label): \(type) {"
+            let getterDef = "get {"
+            let getterAssign = self.createArrayGetter(forType: $0.type, withLabel: $0.label, andSwiftType: $0.swiftType)
+            let getterSetup = "var \($0.label) = self.\($0.label)"
+            let getterContent = getterSetup + "\nreturn " + getterAssign
+            let endGetterDef = "}"
+            let setterDef = "set {"
+            let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue")
+            let endSetterDef = "}"
+            let endDef = "}"
+            let getter = getterDef + "\n" + self.stringHelpers.indent(getterContent) + "\n" + endGetterDef
+            let setter = setterDef + "\n" + self.stringHelpers.indent(setterContent) + "\n" + endSetterDef
+            return def + "\n" + self.stringHelpers.indent(getter + " " + setter) + "\n" + endDef
         }.combine("") { $0 + "\n\n" + $1 }
     }
 
@@ -173,6 +170,8 @@ public final class SwiftFileCreator: ErrorContainer {
                         return \(defaultLabel)
                     }
                     """
+            case .string:
+                return "String(cString: withUnsafePointer(to: &\(label).0) { $0 })"
             default:
                 return label
         }
@@ -198,10 +197,8 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = startDef + params + endDef
         let setters = copy + variables.map {
             switch $0.type {
-                case .array:
+                case .array, .string:
                     return "self._\($0.label) = \($0.label)"
-                case .string(let length):
-                    return self.createSetString(withLabel: $0.label, andLength: length)
                 default:
                     return "self.\($0.label) = \($0.label)"
             }
@@ -214,6 +211,8 @@ public final class SwiftFileCreator: ErrorContainer {
         switch variable.type {
             case .array:
                 return "_ = \(value)"
+            case .string(let length):
+                return self.createSetString(withLabel: variable.label, with: accessor, andLength: length)
             default:
                 return "self.\(variable.label) = \(value)"
         }
@@ -251,13 +250,17 @@ public final class SwiftFileCreator: ErrorContainer {
         }
     }
 
-    fileprivate func createSetString(withLabel label: String, andLength length: String) -> String {
+    fileprivate func createSetString(
+        withLabel label: String,
+        with otherLabel: String,
+        andLength length: String
+    ) -> String {
         let p = "\(label)_p"
         return """
-            _ = withUnsafeMutablePointer(to: &self.\(label)) { \(p) in
-                let arr = \(label).utf8CString
-                arr.withUnsafeBufferPointer {
-                    strncpy(\(p).pointee, $0.baseAddress, \(length))
+            _ = withUnsafeMutablePointer(to: &self.\(label).0) { \(p) in
+                let arr = \(otherLabel).utf8CString
+                _ = arr.withUnsafeBufferPointer {
+                    strncpy(\(p), $0.baseAddress, \(length))
                 }
             }
             """
@@ -282,11 +285,8 @@ public final class SwiftFileCreator: ErrorContainer {
         let guardDef = "guard"
         let casts = variables.map {
             switch $0.type {
-                case .array:
+                case .array, .string:
                     return "var \($0.label) = dictionary[\"\($0.label)\"]"
-                case .string:
-                    //swiftlint:disable:next line_length
-                    return "let \($0.label) = (dictionary[\"\($0.label)\"] as? UnsafeMutablePointer<CChar>).map({ String(cString: UnsafePointer($0)) })"
                 default:
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
@@ -302,7 +302,7 @@ public final class SwiftFileCreator: ErrorContainer {
             + endGuard
         let setters = variables.map {
             switch $0.type {
-                case .array:
+                case .array, .string:
                     return """
                         self.\($0.label) = withUnsafePointer(to: &\($0.label)) {
                             $0.withMemoryRebound(to: type(of: \(structName)().\($0.label)), capacity: 1) {
@@ -310,8 +310,6 @@ public final class SwiftFileCreator: ErrorContainer {
                             }
                         }
                         """
-                    case .string(let length):
-                        return self.createSetString(withLabel: $0.label, andLength: length)
                 default:
                     return "self.\($0.label) = \($0.label)"
             }
@@ -346,6 +344,8 @@ public final class SwiftFileCreator: ErrorContainer {
             switch $0.type {
                 case .unknown:
                     return nil
+                case .array, .string:
+                    return "lhs._\($0.label) == rhs._\($0.label)"
                 default:
                     return "lhs.\($0.label) == rhs.\($0.label)"
             }
