@@ -87,9 +87,9 @@ extension wb_old {
             return UnicodeScalar(UInt8(self.c))
         } set {
             if false == newValue.isASCII {
-                fatalError("You can only assign ASCII values to wb_old.c")
+                fatalError("You can only assign ASCII values to c")
             }
-            self.c = CChar(newValue.value)
+            self.c = Int8(newValue.value)
         }
     }
 
@@ -98,9 +98,9 @@ extension wb_old {
             return UnicodeScalar(UInt8(self.sc))
         } set {
             if false == newValue.isASCII {
-                fatalError("You can only assign ASCII values to wb_old.sc")
+                fatalError("You can only assign ASCII values to sc")
             }
-            self.sc = CChar(newValue.value)
+            self.sc = Int8(newValue.value)
         }
     }
 
@@ -109,7 +109,7 @@ extension wb_old {
             return UnicodeScalar(self.uc)
         } set {
             if false == newValue.isASCII {
-                fatalError("You can only assign ASCII values to wb_old.uc")
+                fatalError("You can only assign ASCII values to uc")
             }
             self.uc = UInt8(newValue.value)
         }
@@ -134,9 +134,9 @@ extension wb_old {
             return UnicodeScalar(UInt8(self.c2))
         } set {
             if false == newValue.isASCII {
-                fatalError("You can only assign ASCII values to wb_old.c2")
+                fatalError("You can only assign ASCII values to c2")
             }
-            self.c2 = CChar(newValue.value)
+            self.c2 = Int8(newValue.value)
         }
     }
 
@@ -145,9 +145,9 @@ extension wb_old {
             return UnicodeScalar(UInt8(self.sc2))
         } set {
             if false == newValue.isASCII {
-                fatalError("You can only assign ASCII values to wb_old.sc2")
+                fatalError("You can only assign ASCII values to sc2")
             }
-            self.sc2 = CChar(newValue.value)
+            self.sc2 = Int8(newValue.value)
         }
     }
 
@@ -156,7 +156,7 @@ extension wb_old {
             return UnicodeScalar(self.uc2)
         } set {
             if false == newValue.isASCII {
-                fatalError("You can only assign ASCII values to wb_old.uc2")
+                fatalError("You can only assign ASCII values to uc2")
             }
             self.uc2 = UInt8(newValue.value)
         }
@@ -307,9 +307,9 @@ extension wb_old {
         guard
             var str = dictionary["str"],
             let b = dictionary["b"] as? Bool,
-            let c = dictionary["c"] as? Character,
-            let sc = dictionary["sc"] as? Character,
-            let uc = dictionary["uc"] as? Character,
+            let c = dictionary["c"] as? Int8,
+            let sc = dictionary["sc"] as? Int8,
+            let uc = dictionary["uc"] as? UInt8,
             let i = dictionary["i"] as? Int32,
             let si = dictionary["si"] as? Int32,
             let sii = dictionary["sii"] as? Int32,
@@ -350,9 +350,9 @@ extension wb_old {
             let dd = dictionary["dd"] as? Float80,
             var str2 = dictionary["str2"],
             let b2 = dictionary["b2"] as? Bool,
-            let c2 = dictionary["c2"] as? Character,
-            let sc2 = dictionary["sc2"] as? Character,
-            let uc2 = dictionary["uc2"] as? Character,
+            let c2 = dictionary["c2"] as? Int8,
+            let sc2 = dictionary["sc2"] as? Int8,
+            let uc2 = dictionary["uc2"] as? UInt8,
             let i2 = dictionary["i2"] as? Int32,
             let si2 = dictionary["si2"] as? Int32,
             let sii2 = dictionary["sii2"] as? Int32,

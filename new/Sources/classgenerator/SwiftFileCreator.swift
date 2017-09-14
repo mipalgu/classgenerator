@@ -120,18 +120,26 @@ public final class SwiftFileCreator: ErrorContainer {
 
     fileprivate func createArrayWrappers(forVariables variables: [Variable]) -> String? {
         return variables.flatMap {
+            let getterSetup: String
+            let getterAssign: String
             switch $0.type {
                 case .array, .string:
-                    break
+                    getterSetup = "var \($0.label) = self.\($0.label)\n"
+                    getterAssign = self.createArrayGetter(
+                        forType: $0.type,
+                        withLabel: $0.label,
+                        andSwiftType: $0.swiftType
+                    )
+                case .char(let sign):
+                    getterSetup = ""
+                    getterAssign = self.createCharGetter(withLabel: $0.label, andSign: sign)
                 default:
                     return nil
             }
             let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
             let def = "public var _\($0.label): \(type) {"
             let getterDef = "get {"
-            let getterAssign = self.createArrayGetter(forType: $0.type, withLabel: $0.label, andSwiftType: $0.swiftType)
-            let getterSetup = "var \($0.label) = self.\($0.label)"
-            let getterContent = getterSetup + "\nreturn " + getterAssign
+            let getterContent = getterSetup + "return " + getterAssign
             let endGetterDef = "}"
             let setterDef = "set {"
             let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue")
@@ -141,6 +149,15 @@ public final class SwiftFileCreator: ErrorContainer {
             let setter = setterDef + "\n" + self.stringHelpers.indent(setterContent) + "\n" + endSetterDef
             return def + "\n" + self.stringHelpers.indent(getter + " " + setter) + "\n" + endDef
         }.combine("") { $0 + "\n\n" + $1 }
+    }
+
+    fileprivate func createCharGetter(withLabel label: String, andSign sign: CharSigns) -> String {
+        switch sign {
+            case .signed:
+                return "UnicodeScalar(UInt8(self.\(label)))"
+            case .unsigned:
+                return "UnicodeScalar(self.\(label))"
+        }
     }
 
     fileprivate func createArrayGetter(
@@ -213,6 +230,8 @@ public final class SwiftFileCreator: ErrorContainer {
                 return "_ = \(value)"
             case .string(let length):
                 return self.createSetString(withLabel: variable.label, with: accessor, andLength: length)
+            case .char:
+                return value
             default:
                 return "self.\(variable.label) = \(value)"
         }
@@ -245,6 +264,20 @@ public final class SwiftFileCreator: ErrorContainer {
                     }
                     """
                 return start + "\n" + self.stringHelpers.indent(content, level)
+            case .char(let sign):
+                let intType: String
+                switch sign {
+                    case .signed:
+                        intType = "Int8"
+                    case .unsigned:
+                        intType = "UInt8"
+                }
+                return """
+                    if false == \(accessor).isASCII {
+                        fatalError("You can only assign ASCII values to \(label)")
+                    }
+                    self.\(label) = \(intType)(newValue.value)
+                    """
             default:
                 return accessor
         }
