@@ -97,7 +97,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     cType: "char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
-                    swiftDefaultValue: "Character(\"c\")",
+                    swiftDefaultValue: "\"c\"",
                     comment: "A char."
                 ),
                 Variable(
@@ -106,7 +106,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     cType: "signed char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
-                    swiftDefaultValue: "Character(\"c\")",
+                    swiftDefaultValue: "\"c\"",
                     comment: "A signed char."
                 ),
                 Variable(
@@ -115,7 +115,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     cType: "unsigned char",
                     swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
-                    swiftDefaultValue: "Character(\"c\")",
+                    swiftDefaultValue: "\"c\"",
                     comment: "An unsigned char."
                 ),
                 Variable(

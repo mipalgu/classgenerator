@@ -63,9 +63,9 @@ public final class TypeConverter {
     fileprivate let values: [String: String] = [
         "string": "String",
         "bool": "Bool",
-        "char": "Character",
-        "signed char": "Character",
-        "unsigned char": "Character",
+        "char": "UnicodeScalar",
+        "signed char": "UnicodeScalar",
+        "unsigned char": "UnicodeScalar",
         "int": "Int32",
         "signed": "Int32",
         "signed int": "Int32",

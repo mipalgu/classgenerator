@@ -103,9 +103,10 @@ public final class Sanitiser {
 
     fileprivate func sanitiseChar(value: String) -> String? {
         if value.characters.first == "'" && value.characters.last == "'" {
-            return "Character(\"\(String(value.characters.dropFirst().dropLast()))\")"
+            return "\"\(String(value.characters.dropFirst().dropLast()))\""
+        } else {
+            return "UnicodeScalar(\(value))"
         }
-        return nil
     }
 
     fileprivate func sanitiseFloat(value: String) -> String? {
