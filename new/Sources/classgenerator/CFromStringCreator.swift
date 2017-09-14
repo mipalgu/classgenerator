@@ -194,7 +194,7 @@ public final class CFromStringCreator {
                 return nil
             }
             switch variable.type {
-                case .array:
+                case .array, .string:
                     return value
                 default:
                     let assignment = "self->\(variable.label) = \(value)"
