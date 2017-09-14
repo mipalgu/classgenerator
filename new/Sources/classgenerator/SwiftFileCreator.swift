@@ -56,6 +56,7 @@
  *
  */
 
+//swiftlint:disable file_length
 //swiftlint:disable:next type_body_length
 public final class SwiftFileCreator: ErrorContainer {
 
@@ -182,7 +183,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let startDef = "public init("
         let containsArrays = nil != variables.lazy.filter {
             switch $0.type {
-                case .array:
+                case .array, .string:
                     return true
                 default:
                     return false
@@ -199,6 +200,8 @@ public final class SwiftFileCreator: ErrorContainer {
             switch $0.type {
                 case .array:
                     return "self._\($0.label) = \($0.label)"
+                case .string(let length):
+                    return self.createSetString(withLabel: $0.label, andLength: length)
                 default:
                     return "self.\($0.label) = \($0.label)"
             }
@@ -248,6 +251,18 @@ public final class SwiftFileCreator: ErrorContainer {
         }
     }
 
+    fileprivate func createSetString(withLabel label: String, andLength length: String) -> String {
+        let p = "\(label)_p"
+        return """
+            _ = withUnsafeMutablePointer(to: &self.\(label)) { \(p) in
+                let arr = \(label).utf8CString
+                arr.withUnsafeBufferPointer {
+                    strncpy(\(p).pointee, $0.baseAddress, \(length))
+                }
+            }
+            """
+    }
+
     //swiftlint:disable:next function_body_length
     fileprivate func createFromDictionaryConstructor(
         on structName: String,
@@ -255,11 +270,23 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a `\(structName)` from a dictionary.")
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
+        let containsArrays = nil != variables.lazy.filter {
+            switch $0.type {
+                case .array, .string:
+                    return true
+                default:
+                    return false
+            }
+        }.first
+        let copy = true == containsArrays ? "self = \(structName)()\n" : ""
         let guardDef = "guard"
         let casts = variables.map {
             switch $0.type {
                 case .array:
                     return "var \($0.label) = dictionary[\"\($0.label)\"]"
+                case .string:
+                    //swiftlint:disable:next line_length
+                    return "let \($0.label) = (dictionary[\"\($0.label)\"] as? UnsafeMutablePointer<CChar>).map({ String(cString: UnsafePointer($0)) })"
                 default:
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
@@ -268,7 +295,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let elseDef = "else {"
         let fatal = "fatalError(\"Unable to convert \\(dictionary) to \(structName).\")"
         let endGuard = "}"
-        let g = guardDef + "\n"
+        let g = copy + guardDef + "\n"
             + self.stringHelpers.indent(casts) + "\n"
             + elseDef + "\n"
             + self.stringHelpers.indent(fatal) + "\n"
@@ -283,6 +310,8 @@ public final class SwiftFileCreator: ErrorContainer {
                             }
                         }
                         """
+                    case .string(let length):
+                        return self.createSetString(withLabel: $0.label, andLength: length)
                 default:
                     return "self.\($0.label) = \($0.label)"
             }
@@ -313,8 +342,13 @@ public final class SwiftFileCreator: ErrorContainer {
 
     fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable]) -> String {
         let def = "public func == (lhs: \(structName), rhs: \(structName)) -> Bool {"
-        let content = "return " + variables.map {
-            "lhs.\($0.label) == rhs.\($0.label)"
+        let content = "return " + variables.flatMap {
+            switch $0.type {
+                case .unknown:
+                    return nil
+                default:
+                    return "lhs.\($0.label) == rhs.\($0.label)"
+            }
         }.combine("") { $0 + "\n" + self.stringHelpers.indent("&& " + $1) }
         let endDef = "}"
         return def + "\n" + self.stringHelpers.indent(content) + "\n" + endDef

@@ -59,9 +59,6 @@
 public final class CTypeConverter {
 
     public func convert(type: String) -> String {
-        if "string" == type {
-            return "char *"
-        }
         return type
     }
 

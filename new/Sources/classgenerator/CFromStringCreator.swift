@@ -235,8 +235,8 @@ public final class CFromStringCreator {
                     accessedFrom: accessor,
                     inClassNamed: className
                 )
-            case.string:
-                return "\(accessor);"
+            case.string(let length):
+                return "strncpy(&self->\(label)[0], \(accessor), \(length));"
             default:
                 return nil
         }

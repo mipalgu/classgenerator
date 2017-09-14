@@ -63,7 +63,7 @@ public enum VariableTypes {
     case char
     case numeric(NumericTypes)
     indirect case pointer(VariableTypes)
-    case string
+    case string(String)
     case unknown
 
 }

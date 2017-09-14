@@ -1,5 +1,5 @@
 author	Callum McColl
-string	str = "hello"	A string.
+string	str[6] = "hello"	A string.
 bool	b = false	A boolean.
 char	c = 'c'	A char.
 signed char	sc = 'c'	A signed char.
@@ -42,7 +42,7 @@ double	d=1.0	A double.
 double_t	dt=1.0	A double_t.
 long double	ld=1.0	A long double.
 double double	dd=1.0	A double double.
-string	str2	A string.
+string	str2[6]	A string.
 bool	b2	A boolean.
 char	c2	A char.
 signed char	sc2	A signed char.

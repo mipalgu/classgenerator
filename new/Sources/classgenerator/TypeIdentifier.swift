@@ -59,7 +59,6 @@
 public final class TypeIdentifier {
 
     fileprivate let values: [String: VariableTypes] = [
-        "string": .string,
         "bool": .bool,
         "char": .char,
         "signed char": .char,
@@ -111,6 +110,9 @@ public final class TypeIdentifier {
         if type.characters.last == "*" {
             return self.identifyPointer(fromType: type)
         }
+        if "string" == type {
+            return .string("0")
+        }
         return self.values[type] ?? .unknown
     }
 
@@ -124,6 +126,13 @@ public final class TypeIdentifier {
     }
 
     fileprivate func identifyArray(fromType type: String, andCounts arrCounts: [String]) -> VariableTypes {
+        let vtype = self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst()))
+        switch vtype {
+            case .string:
+                return .string(arrCounts[0])
+            default:
+                break
+        }
         return .array(
             self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst())),
             arrCounts[0]

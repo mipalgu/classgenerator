@@ -175,6 +175,8 @@ public final class CHeaderCreator: ErrorContainer {
                     + "\(0 == level ? "" : "\(level)_")ARRAY_SIZE)"
             case .pointer:
                 return "PROPERTY(" + cType + self.createPointers(forType: type) + ", " + label + ")"
+            case .string(let length):
+                return "ARRAY_PROPERTY(char, \(label), \(length))"
             default:
                 return "PROPERTY(" + cType + ", " + label + ")"
         }
