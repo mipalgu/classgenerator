@@ -95,7 +95,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "c",
                     type: .char,
                     cType: "char",
-                    swiftType: "Character",
+                    swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
                     swiftDefaultValue: "Character(\"c\")",
                     comment: "A char."
@@ -104,7 +104,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "sc",
                     type: .char,
                     cType: "signed char",
-                    swiftType: "Character",
+                    swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
                     swiftDefaultValue: "Character(\"c\")",
                     comment: "A signed char."
@@ -113,7 +113,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "uc",
                     type: .char,
                     cType: "unsigned char",
-                    swiftType: "Character",
+                    swiftType: "UnicodeScalar",
                     defaultValue: "'c'",
                     swiftDefaultValue: "Character(\"c\")",
                     comment: "An unsigned char."
@@ -482,27 +482,27 @@ public class ClassGeneratorTestCase: XCTestCase {
                     label: "c2",
                     type: .char,
                     cType: "char",
-                    swiftType: "Character",
+                    swiftType: "UnicodeScalar",
                     defaultValue: "0",
-                    swiftDefaultValue: "Character(UnicodeScalar(UInt8.min))",
+                    swiftDefaultValue: "UnicodeScalar(UInt8.min)",
                     comment: "A char."
                 ),
                 Variable(
                     label: "sc2",
                     type: .char,
                     cType: "signed char",
-                    swiftType: "Character",
+                    swiftType: "UnicodeScalar",
                     defaultValue: "0",
-                    swiftDefaultValue: "Character(UnicodeScalar(UInt8.min))",
+                    swiftDefaultValue: "UnicodeScalar(UInt8.min)",
                     comment: "A signed char."
                 ),
                 Variable(
                     label: "uc2",
                     type: .char,
                     cType: "unsigned char",
-                    swiftType: "Character",
+                    swiftType: "UnicodeScalar",
                     defaultValue: "0",
-                    swiftDefaultValue: "Character(UnicodeScalar(UInt8.min))",
+                    swiftDefaultValue: "UnicodeScalar(UInt8.min)",
                     comment: "An unsigned char."
                 ),
                 Variable(
