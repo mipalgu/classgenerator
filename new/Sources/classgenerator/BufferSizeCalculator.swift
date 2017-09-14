@@ -59,7 +59,6 @@
 public final class BufferSizeCalculator {
 
     fileprivate let lengths: [String: Int] = [
-        "char *": 0,
         "bool": 5,
         "char": 1,
         "signed char": 2,
@@ -135,6 +134,11 @@ public final class BufferSizeCalculator {
         return (vars.count - 1) * 2 + vars.reduce(1) {
             switch $1.type {
                 case .array, .pointer, .unknown:
+                    return $0 + 255
+                case .string(let length):
+                    if let num = Int(length) {
+                        return $0 + num
+                    }
                     return $0 + 255
                 default:
                     return $0 + (self.lengths[$1.cType] ?? 255)
