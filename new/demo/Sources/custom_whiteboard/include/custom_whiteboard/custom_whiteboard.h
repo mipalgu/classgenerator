@@ -1,8 +1,8 @@
 /*
- * bridge.h 
- * bridge 
+ * custom_whiteboard.h 
+ * custom_whiteboard 
  *
- * Created by Callum McColl on 11/09/2017.
+ * Created by Callum McColl on 19/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,12 +56,14 @@
  *
  */
 
-#ifndef BRIDGE_H
-#define BRIDGE_H
+#ifndef CUSTOM_WHITEBOARD_H
+#define CUSTOM_WHITEBOARD_H
 
-#include <custom_whiteboard/gusimplewhiteboard.h>
-#include <custom_whiteboard/guwhiteboardtypelist_c_generated.h>
-#include "somestruct.h"
-#include "wb_demo.h"
+#include "WBFunctor_types_generated.h"
+#include "gugenericwhiteboardobject.h"
+#include "gusimplewhiteboard.h"
+#include "guwhiteboardtypelist_c_generated.h"
+#include "guwhiteboardtypelist_generated.h"
+#include "guwhiteboardtypelist_tcp_generated.h"
 
-#endif  /* BRIDGE_H */
+#endif  /* CUSTOM_WHITEBOARD_H */
