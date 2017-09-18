@@ -5,8 +5,15 @@ import PackageDescription
 
 let package = Package(
     name: "demo",
+    products: [
+        .library(name: "demo", targets: ["demo"])
+    ],
+    dependencies: [
+        .package(url: "ssh://git.mipal.net/git/swift_wb.git", .branch("master"))
+    ],
     targets: [
         .target(name: "bridge", dependencies: []),
-        .target(name: "demo", dependencies: ["bridge"])
+        .target(name: "demo", dependencies: ["bridge"]),
+        .testTarget(name: "demoTests", dependencies: [.target(name: "bridge"), .target(name: "demo"), "GUSimpleWhiteboard"])
     ]
 )

@@ -1,15 +1,12 @@
 SWIFT=swift
-DIR!=pwd
+CUSTOM_WB_NAME=custom_whiteboard
+CUSTOM_WB_CLASSES=demo
+ALL_TARGETS=generate-classes host
 
-all:	swift-test
+all:	all-real
 
-.include "../../../../mk/prefs.mk"
-
-swift-test:
+generate-classes:
 	../.build/debug/classgenerator -s --c-header ./Sources/bridge --c-file ./Sources/bridge --swift-file ./Sources/demo demo.gen
-	$Eenv ${BUILD_ENV} ${SWIFT} test ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
 
-test:	swift-test
-
-clean:
-	rm -r .build
+.include "../../../../mk/whiteboard_custom.mk"
+.include "../../../../mk/mipal.mk"
