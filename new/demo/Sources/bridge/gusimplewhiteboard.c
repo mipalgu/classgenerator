@@ -102,7 +102,7 @@
 #include <sys/mman.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
-#include <gu_util.h>
+#include "gu_util.h"
 #include "gusimplewhiteboard.h"
 #include "guwhiteboardtypelist_c_generated.h"
 

@@ -59,8 +59,10 @@
 #ifndef BRIDGE_H
 #define BRIDGE_H
 
-#include <custom_whiteboard/gusimplewhiteboard.h>
-#include <custom_whiteboard/guwhiteboardtypelist_c_generated.h>
+#include "WBFunctor_types_generated.h"
+#include "gusimplewhiteboard.h"
+#include "guwhiteboardtypelist_c_generated.h"
+#include "gu_util.h"
 #include "somestruct.h"
 #include "wb_demo.h"
 
