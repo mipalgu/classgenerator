@@ -94,6 +94,18 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(self.expectedDemoDescription, self.cDescription)
     }
 
+    public func test_cFromStringCreatesStruct() {
+        var target: wb_demo = wb_demo()
+        let result = self.expectedDemoDescription.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(r.pointee, self.demo)
+    }
+
     public func test_swiftDescriptionEqualsExpectedDescription() {
         XCTAssertEqual(self.expectedDemoDescription, "\(demo)")
     }
