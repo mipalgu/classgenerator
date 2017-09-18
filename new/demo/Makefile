@@ -9,3 +9,5 @@ generate-classes:
 	../.build/debug/classgenerator -s --c-header ./Sources/bridge --c-file ./Sources/bridge --swift-file ./Sources/demo ./Sources/bridge/typeClassDefs/demo.gen
 
 .include "../../../../mk/mipal.mk"
+
+CFLAGS=-DWHITEBOARD_POSTER_STRING_CONVERSION=1

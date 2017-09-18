@@ -1,8 +1,8 @@
 /*
- * DemoTests.swift 
- * classgeneratorTests 
+ * StringTests.swift 
+ * demoTests 
  *
- * Created by Callum McColl on 15/09/2017.
+ * Created by Callum McColl on 19/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,73 +52,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see http://www.gnu.org/licenses/
  * or write to the Free Software Foundation, Inc., 51 Franklin Street,
- * Fifth Floor, Boston, MA  02110-1301, USA.
+ * Fifth Floor, Boston, MA  021.000000-1.0000001, USA.
  *
  */
 
-import Foundation
-@testable import classgenerator
+import bridge
+@testable import demo
+
+import CGUSimpleWhiteboard
+import GUSimpleWhiteboard
 import XCTest
 
-public class DemoTests: ClassGeneratorTestCase {
+public class StringTests: XCTestCase {
 
-    public static var allTests: [(String, (DemoTests) -> () throws -> Void)] {
+    public static var allTests: [(String, (StringTests) -> () throws -> Void)] {
         return [
-            ("test_demo", test_demo)
+            ("test_cDescriptionEqualsExpectedDescription", test_cDescriptionEqualsExpectedDescription),
+            ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription)
         ]
     }
 
-    public var startingDirectory: String!
+    var demo: wb_demo = wb_demo()
 
-    public var filemanager: FileManager!
+    //swiftlint:disable line_length
+    let expectedDemoDescription: String = """
+        str=hi, b=false, c=c, sc=c, uc=c, i=1, si=1, sii=1, u=1, ui=1, u8=1, u16=1, u32=1, u64=1, i8=1, i16=1, i32=1, i64=1, s=1, si_2=1, ss=1, ssi=1, us=1, usi=1, l=1, li=1, sl=1, sli=1, ul=1, uli=1, ll=1, lli=1, sll=1, slli=1, ull=1, ulli=1, f=1.000000, ft=1.000000, d=1.000000, dt=1.000000, str2=, b2=true, c2=, sc2=, uc2=, i2=0, si2=0, sii2=0, u2=0, ui2=0, u82=0, u162=0, u322=0, u642=0, i82=0, i162=0, i322=0, i642=0, s2=0, si_22=0, ss2=0, ssi2=0, us2=0, usi2=0, l2=0, li2=0, sl2=0, sli2=0, ul2=0, uli2=0, ll2=0, lli2=0, sll2=0, slli2=0, ull2=0, ulli2=0, f2=0.000000, ft2=0.000000, d2=0.000000, dt2=0.000000, array16={1, 2, 3, 4}, bools={true, true, true}
+        """
 
-    public var generator: ClassGenerator<
-        CommandLinePrinter<
-            StderrOutputStream,
-            StdoutOutputStream,
-            StdoutOutputStream
-        >
-    >!
+    var cDescription: String {
+        let buffer = ContiguousArray<CChar>(repeating: 0, count: Int(DEMO_DESC_BUFFER_SIZE))
+        return String(cString: buffer.withUnsafeBufferPointer {
+            wb_demo_description(&self.demo, UnsafeMutablePointer(mutating: $0.baseAddress), Int(DEMO_DESC_BUFFER_SIZE))
+        })
+    }
 
     public override func setUp() {
-        self.filemanager = FileManager.default
-        self.startingDirectory = self.filemanager.currentDirectoryPath
-        self.generator = ClassGenerator(
-            printer: CommandLinePrinter(
-                errorStream: StderrOutputStream(),
-                messageStream: StdoutOutputStream(),
-                warningStream: StdoutOutputStream()
-            )
-        )
+        self.demo = wb_demo(str: "hi")
     }
 
-    public override func tearDown() {
-        self.filemanager.changeCurrentDirectoryPath(self.startingDirectory)
+    public func test_cDescriptionEqualsExpectedDescription() {
+        XCTAssertEqual(self.expectedDemoDescription, self.cDescription)
     }
 
-    public func test_demo() {
-        guard true == self.filemanager.changeCurrentDirectoryPath("demo") else {
-            XCTFail("Unable to change into demo directory.")
-            return
-        }
-        self.generator.run([
-            "classgenerator",
-            "-s",
-            "--c-header",
-            "./Sources/bridge",
-            "--c-file",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./Sources/bridge/typeClassDefs/demo.gen"
-        ])
-        let p = Process()
-        p.currentDirectoryPath = self.filemanager.currentDirectoryPath
-        p.launchPath = "/usr/bin/env"
-        p.arguments = ["swift", "test", "-Xcc", "-DWHITEBOARD_POSTER_STRING_CONVERSION=1"]
-        p.launch()
-        p.waitUntilExit()
-        XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
+    public func test_swiftDescriptionEqualsExpectedDescription() {
+        XCTAssertEqual(self.expectedDemoDescription, "\(demo)")
     }
 
 }
