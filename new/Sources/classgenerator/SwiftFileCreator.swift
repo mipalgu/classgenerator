@@ -433,6 +433,8 @@ public final class SwiftFileCreator: ErrorContainer {
         switch type {
             case .array:
                 return self.createArrayStringValue(fromType: type, andLabel: label)
+            case .string, .char:
+                return "\"\(label)=\\(self._\(label))\""
             default:
                 return "\"\(label)=\\(self.\(label))\""
         }
