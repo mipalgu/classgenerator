@@ -1627,15 +1627,22 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
         }
         tokenS = strtok_r(NULL, s, &saveptr);
     }
-    strncpy(&self->str[0], strings[0], 6);
+    if (strings[0] != NULL)
+        strncpy(&self->str[0], strings[0], 6);
     if (strings[1] != NULL)
         self->b = strcmp(strings[1], "true") == 0 || strcmp(strings[1], "1") == 0 ? true : false;
-    if (strings[2] != NULL)
-        self->c = (char)atoi(strings[2]);
-    if (strings[3] != NULL)
-        self->sc = (signed char)atoi(strings[3]);
-    if (strings[4] != NULL)
-        self->uc = (unsigned char)atoi(strings[4]);
+    if (strings[2] != NULL) {
+        char c_temp;
+        self->c = (*strncpy(&c_temp, strings[2], 1));
+    }
+    if (strings[3] != NULL) {
+        char sc_temp;
+        self->sc = (signed char) (*strncpy(&sc_temp, strings[3], 1));
+    }
+    if (strings[4] != NULL) {
+        char uc_temp;
+        self->uc = (unsigned char) (*strncpy(&uc_temp, strings[4], 1));
+    }
     if (strings[5] != NULL)
         self->i = (int)atoi(strings[5]);
     if (strings[6] != NULL)
@@ -1712,15 +1719,22 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
         self->ld = (long double)atof(strings[41]);
     if (strings[42] != NULL)
         self->dd = (double double)atof(strings[42]);
-    strncpy(&self->str2[0], strings[43], 6);
+    if (strings[43] != NULL)
+        strncpy(&self->str2[0], strings[43], 6);
     if (strings[44] != NULL)
         self->b2 = strcmp(strings[44], "true") == 0 || strcmp(strings[44], "1") == 0 ? true : false;
-    if (strings[45] != NULL)
-        self->c2 = (char)atoi(strings[45]);
-    if (strings[46] != NULL)
-        self->sc2 = (signed char)atoi(strings[46]);
-    if (strings[47] != NULL)
-        self->uc2 = (unsigned char)atoi(strings[47]);
+    if (strings[45] != NULL) {
+        char c2_temp;
+        self->c2 = (*strncpy(&c2_temp, strings[45], 1));
+    }
+    if (strings[46] != NULL) {
+        char sc2_temp;
+        self->sc2 = (signed char) (*strncpy(&sc2_temp, strings[46], 1));
+    }
+    if (strings[47] != NULL) {
+        char uc2_temp;
+        self->uc2 = (unsigned char) (*strncpy(&uc2_temp, strings[47], 1));
+    }
     if (strings[48] != NULL)
         self->i2 = (int)atoi(strings[48]);
     if (strings[49] != NULL)

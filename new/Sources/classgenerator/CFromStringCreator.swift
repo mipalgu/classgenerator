@@ -194,8 +194,12 @@ public final class CFromStringCreator {
                 return nil
             }
             switch variable.type {
-                case .array, .string:
+                case .array:
                     return value
+                case .string:
+                    return self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(value)
+                case .char:
+                    return self.createGuard(accessing: accessor) + " {\n" + self.stringHelpers.indent(value) + "\n}"
                 default:
                     let assignment = "self->\(variable.label) = \(value)"
                     return self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assignment)
@@ -226,7 +230,11 @@ public final class CFromStringCreator {
             case .bool:
                 return "strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0 ? true : false;"
             case .char:
-                return "(\(cType))atoi(\(accessor));"
+                let cast = "char" == cType ? "" : "(\(cType)) "
+                return """
+                    char \(label)_temp;
+                    self->\(label) = \(cast)(*strncpy(&\(label)_temp, \(accessor), 1));
+                    """
             case.numeric:
                 return self.createNumericValue(
                     forType: type,
