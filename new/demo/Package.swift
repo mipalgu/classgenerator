@@ -14,6 +14,9 @@ let package = Package(
     targets: [
         .target(name: "bridge", dependencies: []),
         .target(name: "demo", dependencies: ["bridge"]),
-        .testTarget(name: "demoTests", dependencies: [.target(name: "bridge"), .target(name: "demo"), "GUSimpleWhiteboard"])
+        .testTarget(
+            name: "demoTests",
+            dependencies: [.target(name: "bridge"), .target(name: "demo"), "GUSimpleWhiteboard"]
+        )
     ]
 )
