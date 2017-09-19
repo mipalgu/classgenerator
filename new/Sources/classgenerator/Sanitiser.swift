@@ -68,7 +68,7 @@ public final class Sanitiser {
             case "float", "float_t":
                 return self.sanitiseFloat(value: value)
             default:
-                if type.characters.last == "*" && value == "NULL" {
+                if type.last == "*" && value == "NULL" {
                     return "nil"
                 }
                 return value
@@ -77,15 +77,15 @@ public final class Sanitiser {
 
     fileprivate func sanitiseArray(value: String, forType type: String) -> String? {
         guard
-            let first = value.characters.first,
-            let last = value.characters.last,
+            let first = value.first,
+            let last = value.last,
             first == "{",
             last == "}"
         else {
             return nil
         }
-        let values = String(value.characters.dropFirst().dropLast())
-        guard let firstChar = values.characters.first else {
+        let values = String(value.dropFirst().dropLast())
+        guard let firstChar = values.first else {
             return "[]"
         }
         let isArray = firstChar == "{"
@@ -102,16 +102,16 @@ public final class Sanitiser {
     }
 
     fileprivate func sanitiseChar(value: String) -> String? {
-        if value.characters.first == "'" && value.characters.last == "'" {
-            return "\"\(String(value.characters.dropFirst().dropLast()))\""
+        if value.first == "'" && value.last == "'" {
+            return "\"\(String(value.dropFirst().dropLast()))\""
         } else {
             return "UnicodeScalar(\(value))"
         }
     }
 
     fileprivate func sanitiseFloat(value: String) -> String? {
-        if value.characters.last == "f" {
-            return String(value.characters.dropLast())
+        if value.last == "f" {
+            return String(value.dropLast())
         }
         return nil
     }

@@ -115,7 +115,7 @@ public final class BufferSizeCalculator {
      * - Returns: The size of the buffer.
      */
     func getDescriptionBufferSize(fromVariables vars: [Variable], withToStringBufferSize buffer: Int) -> Int {
-        return vars.count + vars.reduce(buffer) { $0 + $1.label.characters.count }
+        return vars.count + vars.reduce(buffer) { $0 + $1.label.count }
     }
 
     /**

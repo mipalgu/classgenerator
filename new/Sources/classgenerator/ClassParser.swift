@@ -139,17 +139,17 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             self.errors.append("The class name is empty.")
             return nil
         }
-        guard let first = name.characters.first, true == self.helpers.isLetter(first) else {
+        guard let first = name.first, true == self.helpers.isLetter(first) else {
             self.errors.append("The class name should start with a letter.")
             return nil
         }
         if false == str.hasSuffix(".gen") {
             self.warnings.append("\(str) should have a '.gen' extension.")
         }
-        if nil != name.characters.lazy.filter({ $0 == "_" }).first {
+        if nil != name.lazy.filter({ $0 == "_" }).first {
             self.warnings.append("Underscores are not recommended in the class name.")
         }
-        guard nil == name.characters.lazy.filter({ false == self.helpers.isAlphaNumeric($0) && $0 != "_" }).first else {
+        guard nil == name.lazy.filter({ false == self.helpers.isAlphaNumeric($0) && $0 != "_" }).first else {
             self.errors.append("The filename can only contain alphanumeric characters and underscores.")
             return nil
         }

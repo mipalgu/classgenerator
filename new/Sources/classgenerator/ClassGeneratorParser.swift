@@ -174,7 +174,7 @@ public class ClassGeneratorParser {
             return task
         }
         // Ignore unknown flags
-        if "-" == words.first!.characters.first {
+        if "-" == words.first!.first {
             throw ClassGeneratorErrors.unknownFlag(flag: words.first!)
         }
         var temp = task

@@ -229,7 +229,7 @@ public final class ClassGenerator<P: Printer> {
 
     fileprivate func cleanArgs(_ args: [String]) -> [String] {
         return args[1 ..< args.count].flatMap { (str: String) -> [String] in
-            let cs = Array(str.characters)
+            let cs = Array(str)
             if cs.count < 2 || cs.first != "-" {
                 return [str]
             }

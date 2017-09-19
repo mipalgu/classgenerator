@@ -105,7 +105,7 @@ public final class CHeaderCreator: ErrorContainer {
             withAuthor: cls.author,
             andGenFile: genfile
         )
-        let fileName = String(fileName.characters.lazy.map { $0 == "." ? "_" : $0 })
+        let fileName = String(fileName.lazy.map { $0 == "." ? "_" : $0 })
         let head = """
             #ifndef \(fileName)
             #define \(fileName)
@@ -192,7 +192,7 @@ public final class CHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createTail(withClassNamed name: String, andPostC postC: String) -> String {
-        let name = String(name.characters.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
+        let name = String(name.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         return """
             #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
             /**

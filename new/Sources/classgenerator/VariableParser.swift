@@ -177,11 +177,11 @@ public final class VariableParser: ErrorContainer {
         let split = label.components(separatedBy: "[")
         return split.dropFirst().failMap {
             let trimmed = $0.trimmingCharacters(in: .whitespaces)
-            guard "]" == trimmed.characters.last else {
+            guard "]" == trimmed.last else {
                 self.errors.append("Unable to parse array count for: \(trimmed)")
                 return nil
             }
-            return String(trimmed.characters.dropLast())
+            return String(trimmed.dropLast())
         }
     }
 

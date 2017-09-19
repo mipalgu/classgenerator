@@ -78,7 +78,7 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
             .components(separatedBy: CharacterSet.newlines)
         guard let sanitisedLines = lines.failMap({ (line: String) -> String? in
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
-                if "-" == trimmed.characters.first && false == self.isMarker(trimmed) {
+                if "-" == trimmed.first && false == self.isMarker(trimmed) {
                     self.errors.append("Malformed marker detected: \(trimmed)")
                     return nil
                 }
@@ -209,8 +209,8 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
     }
 
     fileprivate func isAuthorLine(_ str: String) -> Bool {
-        return String(str.characters.prefix(6)) == "author"
-            || String(str.characters.prefix(7)) == "-author"
+        return String(str.prefix(6)) == "author"
+            || String(str.prefix(7)) == "-author"
     }
 
     fileprivate func isPreCMarker(_ str: String) -> Bool {

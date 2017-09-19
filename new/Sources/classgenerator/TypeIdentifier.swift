@@ -107,7 +107,7 @@ public final class TypeIdentifier {
         if nil != arrCounts.first {
             return self.identifyArray(fromType: type, andCounts: arrCounts)
         }
-        if type.characters.last == "*" {
+        if type.last == "*" {
             return self.identifyPointer(fromType: type)
         }
         if "string" == type {
@@ -119,7 +119,7 @@ public final class TypeIdentifier {
     fileprivate func identifyPointer(fromType type: String) -> VariableTypes {
         return .pointer(
             self.identify(
-                fromTypeSignature: String(type.characters.dropLast()).trimmingCharacters(in: .whitespaces),
+                fromTypeSignature: String(type.dropLast()).trimmingCharacters(in: .whitespaces),
                 andArrayCounts: []
             )
         )

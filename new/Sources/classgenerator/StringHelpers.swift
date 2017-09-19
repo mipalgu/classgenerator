@@ -100,8 +100,8 @@ public final class StringHelpers {
             return str
         }
         var chars: [Character] = ["_"]
-        chars.reserveCapacity(str.characters.count)
-        let _: Character = str.characters.reduce("_") {
+        chars.reserveCapacity(str.count)
+        let _: Character = str.reduce("_") {
             if $0 != "_" && false == self.isWhitespace($0) {
                 chars.append($1)
                 return $1
@@ -113,9 +113,9 @@ public final class StringHelpers {
     }
 
     public func toSnakeCase(_ str: String) -> String {
-        var chars = String.CharacterView()
-        chars.reserveCapacity(str.characters.count)
-        let _: Character = str.characters.reduce("_") {
+        var chars = String()
+        chars.reserveCapacity(str.count)
+        let _: Character = str.reduce("_") {
             let isWhitespace = true == self.isWhitespace($1)
             guard true == self.isUpperCase($1) || true == self.isNumeric($1) || true == isWhitespace else {
                 chars.append($1)
@@ -133,11 +133,11 @@ public final class StringHelpers {
     }
 
     public func toLower(_ char: Character) -> Character {
-        return String(char).lowercased().characters.first!
+        return String(char).lowercased().first!
     }
 
     public func toUpper(_ char: Character) -> Character {
-        return String(char).uppercased().characters.first!
+        return String(char).uppercased().first!
     }
 
 }

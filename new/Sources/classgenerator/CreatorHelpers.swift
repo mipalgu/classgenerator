@@ -92,7 +92,7 @@ public final class CreatorHelpers {
     }
 
     public func createClassName(forClassNamed className: String) -> String {
-        return self.helpers.toCamelCase(String(className.characters.lazy.map {
+        return self.helpers.toCamelCase(String(className.lazy.map {
             self.helpers.isAlphaNumeric($0) ? $0 : "_"
         })).capitalized
     }
@@ -175,7 +175,7 @@ public final class CreatorHelpers {
     }
 
     public func createStructName(forClassNamed className: String) -> String {
-        return "wb_" + self.helpers.toSnakeCase(String(className.characters.lazy.map {
+        return "wb_" + self.helpers.toSnakeCase(String(className.lazy.map {
             self.helpers.isAlphaNumeric($0) ? $0 : "_"
         }))
     }
