@@ -123,12 +123,15 @@ public final class CFileCreator: ErrorContainer {
             withStructNamed: structName,
             forStrVariable: "str"
         )
-        return [comment, head, descriptionFunc, toStringFunc, fromStringFunc].combine("") { $0 + "\n\n" + $1} + "\n"
+        let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
+        return comment + "\n\n" + head
+            + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
+            + "\n\n" + fromStringFunc + "\n" + endif + "\n"
     }
 
     fileprivate func createHead(forStructNamed structName: String) -> String {
         return """
-            #define WHITEBOARD_POSTER_STRING_CONVERSION
+            #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
             #include "\(structName).h"
             #include <stdio.h>
             #include <string.h>

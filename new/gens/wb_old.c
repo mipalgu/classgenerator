@@ -58,7 +58,7 @@
  *
  */
 
-#define WHITEBOARD_POSTER_STRING_CONVERSION
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 #include "wb_old.h"
 #include <stdio.h>
 #include <string.h>
@@ -1822,3 +1822,4 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     free(str_copy);
     return self;
 }
+#endif // WHITEBOARD_POSTER_STRING_CONVERSION
