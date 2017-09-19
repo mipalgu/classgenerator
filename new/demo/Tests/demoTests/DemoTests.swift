@@ -69,14 +69,20 @@ public class DemoTests: XCTestCase {
 
     public static var allTests: [(String, (DemoTests) -> () throws -> Void)] {
         return [
-            ("test_equality", test_equality)
+            ("test_equality", test_equality),
+            ("test_constructorUsesDefaultValues", test_constructorUsesDefaultValues)
         ]
     }
 
     var demo: wb_demo = wb_demo()
 
     public override func setUp() {
-        self.demo = wb_demo(str: "hi")
+        self.demo = wb_demo(str: "hello")
+    }
+
+    public func test_constructorUsesDefaultValues() {
+        let expected = wb_demo()
+        XCTAssertEqual(self.demo, expected)
     }
 
     //swiftlint:disable:next function_body_length
