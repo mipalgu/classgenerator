@@ -199,7 +199,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let startDef = "public init("
         let containsArrays = nil != variables.lazy.filter {
             switch $0.type {
-                case .array, .string:
+                case .array, .string, .char:
                     return true
                 default:
                     return false
