@@ -687,10 +687,6 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "dd2=\(self.dd2)"
         descString += ", "
-        descString += "p=\(self.p)"
-        descString += ", "
-        descString += "strct=\(self.strct)"
-        descString += ", "
         if let first = self._array16.first {
             descString += "array16={"
             descString += self._array16.dropFirst().reduce("\(first)") { $0 + ", \($1)" }
