@@ -112,9 +112,10 @@ public final class SwiftFileCreator: ErrorContainer {
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createExtensionDef(on: base)
         let wrappers = self.createArrayWrappers(forVariables: variables).map { $0 + "\n\n" } ?? ""
+        let makeFunction = self.createMakeFunction(on: base, withVariables: variables)
         let constructor = self.createConstructor(on: base, withVariables: variables)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
-        let content = wrappers + constructor + "\n\n" + fromDictionary
+        let content = wrappers + makeFunction + "\n\n" + constructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
@@ -192,6 +193,18 @@ public final class SwiftFileCreator: ErrorContainer {
             default:
                 return label
         }
+    }
+
+    fileprivate func createMakeFunction(on structName: String, withVariables variables: [Variable]) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
+        let def = "public static func make() -> \(structName) {"
+        let content: String
+        if let v = variables.first {
+            content = "return \(structName)(\(v.label): \(v.swiftDefaultValue))"
+        } else {
+            content = "return \(structName)()"
+        }
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(content) + "\n" + "}"
     }
 
     fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {

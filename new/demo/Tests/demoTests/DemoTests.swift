@@ -81,7 +81,7 @@ public class DemoTests: XCTestCase {
     }
 
     public func test_constructorUsesDefaultValues() {
-        let expected = wb_demo()
+        let expected = wb_demo.make()
         XCTAssertEqual(self.demo, expected)
     }
 
