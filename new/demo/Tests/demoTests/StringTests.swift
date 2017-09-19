@@ -68,6 +68,7 @@ public class StringTests: XCTestCase {
     public static var allTests: [(String, (StringTests) -> () throws -> Void)] {
         return [
             ("test_cDescriptionEqualsExpectedDescription", test_cDescriptionEqualsExpectedDescription),
+            ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription)
         ]
     }
@@ -110,7 +111,21 @@ public class StringTests: XCTestCase {
         let expected = self.expectedDemoDescription
             .replacingOccurrences(of: "0.000000", with: "0.0")
             .replacingOccurrences(of: "1.000000", with: "1.0")
-        XCTAssertEqual(expected, "\(demo)")
+        XCTAssertEqual(expected, "\(self.demo)")
+    }
+
+    public func test_swiftDescriptionCanBeConvertedToStruct() {
+        var target = wb_demo(str: "tar")
+        let description = "\(self.demo)"
+        let result = description.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(r.pointee, self.demo)
+        XCTAssertEqual(r.pointee, target)
     }
 
 }
