@@ -417,7 +417,7 @@ public final class SwiftFileCreator: ErrorContainer {
                         return """
                             if let first = self._\(label).first {
                                 descString += \"\(label)={\"
-                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + ",\\($1)" }
+                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + ", \\($1)" }
                                 descString += \"}\"
                             } else {
                                 descString += \"\(label)={}\"
@@ -433,8 +433,10 @@ public final class SwiftFileCreator: ErrorContainer {
         switch type {
             case .array:
                 return self.createArrayStringValue(fromType: type, andLabel: label)
-            case .string, .char:
+            case .string:
                 return "\"\(label)=\\(self._\(label))\""
+            case .char:
+                return "\"\(label)=\\(0 == self.\(label) ? \"\" : String(Character(self._\(label))))\""
             default:
                 return "\"\(label)=\\(self.\(label))\""
         }

@@ -107,6 +107,7 @@ public class StringTests: XCTestCase {
     }
 
     public func test_swiftDescriptionEqualsExpectedDescription() {
+        print("demo: \(demo.description)")
         XCTAssertEqual(self.expectedDemoDescription, "\(demo)")
     }
 

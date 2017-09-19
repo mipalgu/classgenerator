@@ -519,11 +519,11 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "b=\(self.b)"
         descString += ", "
-        descString += "c=\(self._c)"
+        descString += "c=\(0 == self.c ? "" : String(Character(self._c)))"
         descString += ", "
-        descString += "sc=\(self._sc)"
+        descString += "sc=\(0 == self.sc ? "" : String(Character(self._sc)))"
         descString += ", "
-        descString += "uc=\(self._uc)"
+        descString += "uc=\(0 == self.uc ? "" : String(Character(self._uc)))"
         descString += ", "
         descString += "i=\(self.i)"
         descString += ", "
@@ -605,11 +605,11 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "b2=\(self.b2)"
         descString += ", "
-        descString += "c2=\(self._c2)"
+        descString += "c2=\(0 == self.c2 ? "" : String(Character(self._c2)))"
         descString += ", "
-        descString += "sc2=\(self._sc2)"
+        descString += "sc2=\(0 == self.sc2 ? "" : String(Character(self._sc2)))"
         descString += ", "
-        descString += "uc2=\(self._uc2)"
+        descString += "uc2=\(0 == self.uc2 ? "" : String(Character(self._uc2)))"
         descString += ", "
         descString += "i2=\(self.i2)"
         descString += ", "
@@ -693,7 +693,7 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         if let first = self._array16.first {
             descString += "array16={"
-            descString += self._array16.dropFirst().reduce("\(first)") { $0 + ",\($1)" }
+            descString += self._array16.dropFirst().reduce("\(first)") { $0 + ", \($1)" }
             descString += "}"
         } else {
             descString += "array16={}"
@@ -701,7 +701,7 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         if let first = self._bools.first {
             descString += "bools={"
-            descString += self._bools.dropFirst().reduce("\(first)") { $0 + ",\($1)" }
+            descString += self._bools.dropFirst().reduce("\(first)") { $0 + ", \($1)" }
             descString += "}"
         } else {
             descString += "bools={}"
