@@ -398,7 +398,6 @@ extension wb_old {
             let dt2 = dictionary["dt2"] as? Double,
             let ld2 = dictionary["ld2"] as? Float80,
             let dd2 = dictionary["dd2"] as? Float80,
-            let p = dictionary["p"] as? UnsafeMutablePointer<Int32>!,
             let strct = dictionary["strct"] as? somestruct,
             var array16 = dictionary["array16"],
             var bools = dictionary["bools"]
@@ -499,7 +498,7 @@ extension wb_old {
         self.dt2 = dt2
         self.ld2 = ld2
         self.dd2 = dd2
-        self.p = p
+        self.p = dictionary["p"] as? UnsafeMutablePointer<Int32>!
         self.strct = strct
         self.array16 = withUnsafePointer(to: &array16) {
             $0.withMemoryRebound(to: type(of: wb_old().array16), capacity: 1) {

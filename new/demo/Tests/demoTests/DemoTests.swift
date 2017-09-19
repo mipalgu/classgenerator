@@ -70,7 +70,8 @@ public class DemoTests: XCTestCase {
     public static var allTests: [(String, (DemoTests) -> () throws -> Void)] {
         return [
             ("test_equality", test_equality),
-            ("test_constructorUsesDefaultValues", test_constructorUsesDefaultValues)
+            ("test_constructorUsesDefaultValues", test_constructorUsesDefaultValues),
+            ("test_fromDictionaryConstructorWorks", test_fromDictionaryConstructorWorks)
         ]
     }
 
@@ -410,6 +411,98 @@ public class DemoTests: XCTestCase {
         XCTAssertNotEqual(lhs, rhs)
         rhs.dt2 = lhs.dt2
         XCTAssertEqual(lhs, rhs)
+    }
+
+    //swiftlint:disable:next function_body_length
+    public func test_fromDictionaryConstructorWorks() {
+        let d: [String: Any] = [
+            "str": self.demo.str,
+            "b": self.demo.b,
+            "c": self.demo.c,
+            "sc": self.demo.sc,
+            "uc": self.demo.uc,
+            "i": self.demo.i,
+            "si": self.demo.si,
+            "sii": self.demo.sii,
+            "u": self.demo.u,
+            "ui": self.demo.ui,
+            "u8": self.demo.u8,
+            "u16": self.demo.u16,
+            "u32": self.demo.u32,
+            "u64": self.demo.u64,
+            "i8": self.demo.i8,
+            "i16": self.demo.i16,
+            "i32": self.demo.i32,
+            "i64": self.demo.i64,
+            "s": self.demo.s,
+            "si_2": self.demo.si_2,
+            "ss": self.demo.ss,
+            "ssi": self.demo.ssi,
+            "us": self.demo.us,
+            "usi": self.demo.usi,
+            "l": self.demo.l,
+            "li": self.demo.li,
+            "sl": self.demo.sl,
+            "sli": self.demo.sli,
+            "ul": self.demo.ul,
+            "uli": self.demo.uli,
+            "ll": self.demo.ll,
+            "lli": self.demo.lli,
+            "sll": self.demo.sll,
+            "slli": self.demo.slli,
+            "ull": self.demo.ull,
+            "ulli": self.demo.ulli,
+            "f": self.demo.f,
+            "ft": self.demo.ft,
+            "d": self.demo.d,
+            "dt": self.demo.dt,
+            "str2": self.demo.str2,
+            "b2": self.demo.b2,
+            "c2": self.demo.c2,
+            "sc2": self.demo.sc2,
+            "uc2": self.demo.uc2,
+            "i2": self.demo.i2,
+            "si2": self.demo.si2,
+            "sii2": self.demo.sii2,
+            "u2": self.demo.u2,
+            "ui2": self.demo.ui2,
+            "u82": self.demo.u82,
+            "u162": self.demo.u162,
+            "u322": self.demo.u322,
+            "u642": self.demo.u642,
+            "i82": self.demo.i82,
+            "i162": self.demo.i162,
+            "i322": self.demo.i322,
+            "i642": self.demo.i642,
+            "s2": self.demo.s2,
+            "si_22": self.demo.si_22,
+            "ss2": self.demo.ss2,
+            "ssi2": self.demo.ssi2,
+            "us2": self.demo.us2,
+            "usi2": self.demo.usi2,
+            "l2": self.demo.l2,
+            "li2": self.demo.li2,
+            "sl2": self.demo.sl2,
+            "sli2": self.demo.sli2,
+            "ul2": self.demo.ul2,
+            "uli2": self.demo.uli2,
+            "ll2": self.demo.ll2,
+            "lli2": self.demo.lli2,
+            "sll2": self.demo.sll2,
+            "slli2": self.demo.slli2,
+            "ull2": self.demo.ull2,
+            "ulli2": self.demo.ulli2,
+            "f2": self.demo.f2,
+            "ft2": self.demo.ft2,
+            "d2": self.demo.d2,
+            "dt2": self.demo.dt2,
+            "p": self.demo.p,
+            "strct": self.demo.strct,
+            "array16": self.demo.array16,
+            "bools": self.demo.bools
+        ]
+        let result = wb_demo(fromDictionary: d)
+        XCTAssertEqual(self.demo, result)
     }
 
 }

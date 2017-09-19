@@ -329,7 +329,7 @@ public final class SwiftFileCreator: ErrorContainer {
         }.first
         let copy = true == shouldCopy ? "self = \(structName)()\n" : ""
         let guardDef = "guard"
-        let casts = variables.map {
+        let casts = variables.flatMap {
             switch $0.type {
                 case .array, .string:
                     return "var \($0.label) = dictionary[\"\($0.label)\"]"
@@ -340,6 +340,8 @@ public final class SwiftFileCreator: ErrorContainer {
                         case .unsigned:
                             return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt8"
                     }
+                case .pointer:
+                    return nil
                 default:
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
@@ -363,6 +365,9 @@ public final class SwiftFileCreator: ErrorContainer {
                             }
                         }
                         """
+                case .pointer:
+                    let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+                    return "self.\($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
                 default:
                     return "self.\($0.label) = \($0.label)"
             }
