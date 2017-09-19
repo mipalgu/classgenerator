@@ -143,7 +143,9 @@ public final class CPPHeaderCreator: ErrorContainer {
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.indent(postCpp!)
         let endNamespace = "};"
-        return namespace + "\n\n" + self.stringHelpers.indent(content) + postCpp + "\n\n" + endNamespace
+        return namespace + "\n\n"
+            + content + postCpp + "\n\n"
+            + endNamespace
     }
 
     fileprivate func createClassContent(
@@ -165,10 +167,13 @@ public final class CPPHeaderCreator: ErrorContainer {
             withStructNamed: extendName,
             forVariables: variables
         )
+        let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
+        let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         let publicContent = constructor + "\n\n" + copyConstructor + "\n\n" + copyAssignmentOperator
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
-        return def + "\n\n" + publicSection + cpp + "\n\n};"
+        return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
+            + ifdef + self.stringHelpers.indent(cpp + "\n\n};")
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
