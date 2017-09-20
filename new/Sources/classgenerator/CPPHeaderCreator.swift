@@ -56,6 +56,7 @@
  *
  */
 
+//swiftlint:disable type_body_length
 public final class CPPHeaderCreator: ErrorContainer {
 
     public let errors: [String] = []
@@ -167,15 +168,33 @@ public final class CPPHeaderCreator: ErrorContainer {
             withStructNamed: extendName,
             forVariables: variables
         )
-        let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
-        let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         let publicContent = constructor + "\n\n" + copyConstructor + "\n\n" + copyAssignmentOperator
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
+        let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
+        let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name)
+        let ifCConversion = "#ifdef USE_\(extendName.uppercased())_C_CONVERSION"
+        let elseDef = "#else"
+        let endifCConversion = "#endif /// USE_\(extendName.uppercased())_C_CONVERSION"
+        let startDescription = self.createDescriptionDef()
+        let cConversionDescription = self.createCConversionDescription(
+            forClassNamed: name,
+            withStructNamed: extendName
+        )
+        let cppDescription = self.createCPPDescription(
+            forClassNamed: name,
+            withVariables: variables
+        )
         return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
-            + self.stringHelpers.indent(fromStringConstructor, 2)
+            + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
+            + self.stringHelpers.indent(startDescription, 2) + "\n"
+            + ifCConversion + "\n"
+            + self.stringHelpers.indent(cConversionDescription, 3) + "\n"
+            + elseDef + "\n"
+            + self.stringHelpers.indent(cppDescription, 3) + "\n"
+            + endifCConversion + "\n"
             + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
             + self.stringHelpers.indent("}")
     }
@@ -272,6 +291,37 @@ public final class CPPHeaderCreator: ErrorContainer {
         let comment = self.creatorHelpers.createComment(from: "String Constructor.")
         let constructor = "\(className)(const std::string &str) { from_string(str.c_str()); }"
         return comment + "\n" + constructor
+    }
+
+    fileprivate func createDescriptionDef() -> String {
+        return "std::string description() {"
+    }
+
+    fileprivate func createCConversionDescription(
+        forClassNamed className: String,
+        withStructNamed structName: String
+    ) -> String {
+        return """
+            char buffer[\(className.uppercased())_DESC_BUFFER_SIZE];
+            \(structName)_description(this, buffer, sizeof(buffer));
+            std::string descr = buffer;
+            return descr;
+            """
+    }
+
+    fileprivate func createCPPDescription(
+        forClassNamed className: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let ssdef = "std::ostringstream ss;"
+        let concat = variables.map {
+            switch $0.type {
+                default:
+                    return "ss << \"\($0.label)=\" << \($0.label)();"
+            }
+        }.combine("") { $0 + "\nss << \", \";\n" + $1 }
+        let returnStatement = "return ss.str();"
+        return ssdef + "\n" + concat + "\n" + returnStatement
     }
 
 }
