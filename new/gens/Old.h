@@ -371,7 +371,7 @@ namespace guWhiteboard {
         /**
          * String Constructor.
          */
-        Old(const std::string &str) { from_string(str.c_str()); } 
+        Old(const std::string &str) { from_string(str.c_str()); }
 
         std::string description()
         {
@@ -564,7 +564,7 @@ namespace guWhiteboard {
             for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
             {
                 ss << (array16_first ? "" : ",") << array16(i);
-                array16_first = false; 
+                array16_first = false;
             }
             ss << "}";
             ss << ", ";
@@ -574,7 +574,7 @@ namespace guWhiteboard {
             for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
             {
                 ss << (bools_first ? "" : ",") << bools(i);
-                bools_first = false; 
+                bools_first = false;
             }
             ss << "}";
 
@@ -774,7 +774,7 @@ namespace guWhiteboard {
             for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
             {
                 ss << (array16_first ? "" : ",") << array16(i);
-                array16_first = false; 
+                array16_first = false;
             }
             ss << "}";
             ss << ", ";
@@ -784,7 +784,7 @@ namespace guWhiteboard {
             for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
             {
                 ss << (bools_first ? "" : ",") << bools(i);
-                bools_first = false; 
+                bools_first = false;
             }
             ss << "}";
 

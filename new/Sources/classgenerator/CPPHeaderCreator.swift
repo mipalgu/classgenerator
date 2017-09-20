@@ -172,8 +172,12 @@ public final class CPPHeaderCreator: ErrorContainer {
         let publicContent = constructor + "\n\n" + copyConstructor + "\n\n" + copyAssignmentOperator
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
+        let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name)
         return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
-            + ifdef + self.stringHelpers.indent(cpp + "\n\n};")
+            + ifdef + "\n"
+            + self.stringHelpers.indent(fromStringConstructor, 2)
+            + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
+            + self.stringHelpers.indent("}")
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
@@ -262,6 +266,12 @@ public final class CPPHeaderCreator: ErrorContainer {
         _ transformGetter: (Variable) -> String = { "\($0.label)" }
     ) -> String {
         return "set_\(variable.label)(\(transformGetter(variable)));"
+    }
+
+    fileprivate func createFromStringConstructor(forClassNamed className: String) -> String {
+        let comment = self.creatorHelpers.createComment(from: "String Constructor.")
+        let constructor = "\(className)(const std::string &str) { from_string(str.c_str()); }"
+        return comment + "\n" + constructor
     }
 
 }
