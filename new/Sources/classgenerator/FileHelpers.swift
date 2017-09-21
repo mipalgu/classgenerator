@@ -78,6 +78,7 @@ public final class FileHelpers {
 
     public func createDirectory(atPath path: URL) -> Bool {
         guard
+            //swiftlint:disable:next unused_optional_binding
             let _ = try? self.fm.createDirectory(
                 at: path,
                 withIntermediateDirectories: false
@@ -107,6 +108,7 @@ public final class FileHelpers {
         if false == self.fm.fileExists(atPath: path.path) {
             return true
         }
+        //swiftlint:disable:next unused_optional_binding
         guard let _ = try? self.fm.removeItem(at: path) else {
             return false
         }
@@ -114,9 +116,15 @@ public final class FileHelpers {
     }
 
     public func directoryExists(_ dir: String) -> Bool {
+#if os(OSX)
+        var directoryExists: ObjCBool = false
+        self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
+        return directoryExists.boolValue
+#else
         var directoryExists: Bool = false
         self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
         return directoryExists
+#endif
     }
 
     public func makeSubDirectory(_ subdir: String, inDirectory dir: URL) -> URL? {

@@ -76,7 +76,7 @@ extension wb_old {
             _ = withUnsafeMutablePointer(to: &self.str.0) { str_p in
                 let arr = newValue.utf8CString
                 _ = arr.withUnsafeBufferPointer {
-                    strncpy(str_p, $0.baseAddress, 6)
+                    strncpy(str_p, $0.baseAddress!, 6)
                 }
             }
         }
@@ -123,7 +123,7 @@ extension wb_old {
             _ = withUnsafeMutablePointer(to: &self.str2.0) { str2_p in
                 let arr = newValue.utf8CString
                 _ = arr.withUnsafeBufferPointer {
-                    strncpy(str2_p, $0.baseAddress, 6)
+                    strncpy(str2_p, $0.baseAddress!, 6)
                 }
             }
         }
