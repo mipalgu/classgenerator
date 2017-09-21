@@ -1,0 +1,109 @@
+-author	Callum McColl
+
+-c
+#include <ctype.h>
+#include <errno.h>
+#include <float.h>
+#include <limits.h>
+#include <locale.h>
+#include <math.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "somestruct.h"
+
+-swift
+import bridge
+
+-comment
+This is a test of all of the supported types.
+
+-properties
+string str[6] = "hello" // A string.
+bool b = false // A boolean.
+char c = 'c' // A char.
+signed char sc = 'c' // A signed char.
+unsigned char uc = 'c' // An unsigned char.
+int i=1 // An int.
+signed si=1 // A signed.
+signed int sii=1 // A signed int.
+unsigned u=1 // An unsigned.
+unsigned int ui=1 // An unsigned int.
+uint8_t u8=1 // A uint8.
+uint16_t u16=1 // A uint16.
+uint32_t u32=1 // A uint32.
+uint64_t u64=1 // A uint64.
+int8_t i8=1 // An int8.
+int16_t i16=1 // An int16.
+int32_t i32=1 // An int32.
+int64_t i64=1 // An int64.
+short s=1 // A short.
+short int si_2=1 // A short int.
+signed short ss=1 // A signed short.
+signed short int ssi=1 // A signed short int.
+unsigned short us=1 // An unsigned short.
+unsigned short int usi=1 // An unsigned short int.
+long l=1 // A long.
+long int li = 1 // A long int.
+signed long sl = 1 // A signed long.
+signed long int sli = 1 // A signed long int.
+unsigned long ul = 1 // An unsigned long.
+unsigned long int uli=1 // An unsigned long int.
+long long ll=1 // A long long.
+long long int lli=1 // A long long int.
+signed long long sll=1 // A signed long long.
+signed long long int slli=1 // A signed long long int.
+unsigned long long ull=1 // An unsigned long long.
+unsigned long long int ulli=1 // An unsigned long long int.
+float f=1.0f // A float.
+float_t ft=1.0f // A float_t.
+double d=1.0 // A double.
+double_t dt=1.0 // A double_t.
+string str2[6] // A string.
+bool b2 // A boolean.
+char c2 // A char.
+signed char sc2 // A signed char.
+unsigned char uc2 // An unsigned char.
+int i2 // An int.
+signed si2 // A signed.
+signed int sii2 // A signed int.
+unsigned u2 // An unsigned.
+unsigned int ui2 // An unsigned int.
+uint8_t u82 // A uint8.
+uint16_t u162 // A uint16.
+uint32_t u322 // A uint32.
+uint64_t u642 // A uint64.
+int8_t i82 // An int8.
+int16_t i162 // An int16.
+int32_t i322 // An int32.
+int64_t i642 // An int64.
+short s2 // A short.
+short int si_22 // A short int.
+signed short ss2 // A signed short.
+signed short int ssi2 // A signed short int.
+unsigned short us2 // An unsigned short.
+unsigned short int usi2 // An unsigned short int.
+long l2 // A long.
+long int li2 // A long int.
+signed long sl2 // A signed long.
+signed long int sli2 // A signed long int.
+unsigned long ul2 // An unsigned long.
+unsigned long int uli2 //An unsigned long int.
+long long ll2 // A long long.
+long long int lli2 // A long long int.
+signed long long sll2 // A signed long long.
+signed long long int slli2 // A signed long long int.
+unsigned long long ull2 // An unsigned long long.
+unsigned long long int ulli2 //An unsigned long long int.
+float f2 // A float.
+float_t ft2 // A float_t.
+double d2 // A double.
+double_t dt2 // A double_t.
+int * p=NULL // A pointer.
+struct somestruct strct=somestruct() // A struct.
+int16_t array16[4]={1,2,3,4} // a comment about array16
+bool bools[3] // a comment about bools
