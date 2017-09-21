@@ -58,6 +58,8 @@
 
 public final class CTypeConverter {
 
+    public init() {}
+
     public func convert(type: String) -> String {
         return type
     }

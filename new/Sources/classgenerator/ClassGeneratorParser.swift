@@ -81,6 +81,8 @@ public class ClassGeneratorParser {
             """
     }
 
+    public init() {}
+
     public func parse(words: [String]) throws -> Task {
         var wds: [String] = words
         var task = Task()

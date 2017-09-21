@@ -1,10 +1,11 @@
-// swift-tools-version:3.1
+// swift-tools-version:4.0
 
 import PackageDescription
 
 let package = Package(
     name: "classgenerator",
     targets: [
-        Target(name: "classgenerator", dependencies: [])
+        .target(name: "classgenerator", dependencies: []),
+        .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator")])
     ]
 )

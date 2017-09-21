@@ -106,6 +106,8 @@ public final class TypeConverter {
         "double double": "Float80"
     ]
 
+    public init() {}
+
     func convert(type: String) -> String? {
         if type.last != "*" {
             //swiftlint:disable:next line_length

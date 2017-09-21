@@ -58,6 +58,8 @@
 
 public final class Sanitiser {
 
+    public init() {}
+
     public func sanitise(value: String, forType type: String, isArray: Bool) -> String? {
         if true == isArray {
             return self.sanitiseArray(value: value, forType: type)

@@ -59,6 +59,8 @@
 #ifndef BRIDGE_H
 #define BRIDGE_H
 
+#include <termios.h> 
+
 #include "WBFunctor_types_generated.h"
 #include "gusimplewhiteboard.h"
 #include "guwhiteboardtypelist_c_generated.h"

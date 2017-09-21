@@ -104,6 +104,8 @@ public final class BufferSizeCalculator {
         "double double": 80
     ]
 
+    public init() {}
+
     /**
      * This determines the description string buffer size which will be declared
      * as a constant in the generated files.

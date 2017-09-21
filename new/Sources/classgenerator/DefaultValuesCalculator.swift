@@ -105,6 +105,8 @@ public final class DefaultValuesCalculator {
         "double double": ("0.0", "0.0")
     ]
 
+    public init() {}
+
     func calculateDefaultValues(forTypeSignature type: String, withArrayCounts counts: [String]) -> (String, String)? {
         if type != "string" && nil != counts.first(where: { _ in true }) {
             return self.calculateArrayDefaultValues(forType: type, withCounts: counts)

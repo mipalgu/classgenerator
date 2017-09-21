@@ -103,6 +103,8 @@ public final class TypeIdentifier {
         "double double": .numeric(.double)
     ]
 
+    public init() {}
+
     public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String]) -> VariableTypes {
         if nil != arrCounts.first {
             return self.identifyArray(fromType: type, andCounts: arrCounts)

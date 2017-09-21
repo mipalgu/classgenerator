@@ -60,6 +60,8 @@ import Foundation
 
 public final class StringHelpers {
 
+    public init() {}
+
     public func indent(_ str: String, _ level: Int = 1) -> String {
         let indent = String([Character](repeating: " ", count: 4 * level))
         let lines = str.components(separatedBy: CharacterSet.newlines)

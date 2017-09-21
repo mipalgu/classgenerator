@@ -126,10 +126,10 @@ public final class ClassGenerator<P: Printer> {
         if "" == genfile {
             self.handleError("Path not found")
         }
-        guard
-            let contents = self.fileHelpers.read(url),
-            let cls = self.parser.parse(contents, withName: genfile)
-        else {
+        guard let contents = self.fileHelpers.read(url) else {
+            self.handleError("Unable to open file: \(url.path)")
+        }
+        guard let cls = self.parser.parse(contents, withName: genfile) else {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)
