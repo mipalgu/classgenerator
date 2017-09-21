@@ -118,11 +118,11 @@ public final class FileHelpers {
     public func directoryExists(_ dir: String) -> Bool {
 #if os(OSX)
         var directoryExists: ObjCBool = false
-        self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
+        _ = self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
         return directoryExists.boolValue
 #else
         var directoryExists: Bool = false
-        self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
+        _ = self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
         return directoryExists
 #endif
     }
