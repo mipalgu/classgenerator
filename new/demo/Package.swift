@@ -12,12 +12,15 @@ let package = Package(
         .package(url: "ssh://git.mipal.net/git/swift_wb.git", .branch("master"))
     ],
     targets: [
-        .target(name: "cpp_bridge", dependencies: []),
-        .target(name: "bridge", dependencies: ["cpp_bridge"]),
+        .target(name: "bridge", dependencies: []),
         .target(name: "demo", dependencies: ["bridge"]),
         .testTarget(
             name: "demoTests",
-            dependencies: [.target(name: "bridge"), .target(name: "demo"), "GUSimpleWhiteboard"]
+            dependencies: [
+                .target(name: "bridge"),
+                .target(name: "demo"),
+                "GUSimpleWhiteboard"
+            ]
         )
     ]
 )
