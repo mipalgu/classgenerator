@@ -116,7 +116,7 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_warnsAboutUnderscores() {
-        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_s.gen"))
+        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_S.gen"))
         XCTAssertTrue(self.parser.warnings.count > 0)
     }
 

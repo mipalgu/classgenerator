@@ -146,8 +146,11 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
         if false == str.hasSuffix(".gen") {
             self.warnings.append("\(str) should have a '.gen' extension.")
         }
-        if nil != name.lazy.filter({ $0 == "_" }).first {
-            self.warnings.append("Underscores are not recommended in the class name.")
+        if  nil != name.lazy.filter({ $0 == "_" }).first &&
+            nil != name.lazy.filter({ self.helpers.isUpperCase($0) }).first
+        {
+            //swiftlint:disable:next line_length
+            self.warnings.append("Detected using underscores with capital letters in the class name.  This may result in undesirable names of the generated files.")
         }
         guard nil == name.lazy.filter({ false == self.helpers.isAlphaNumeric($0) && $0 != "_" }).first else {
             self.errors.append("The filename can only contain alphanumeric characters and underscores.")

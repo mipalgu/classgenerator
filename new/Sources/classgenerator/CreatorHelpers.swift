@@ -92,9 +92,11 @@ public final class CreatorHelpers {
     }
 
     public func createClassName(forClassNamed className: String) -> String {
-        return self.helpers.toCamelCase(String(className.lazy.map {
-            self.helpers.isAlphaNumeric($0) ? $0 : "_"
-        })).capitalized
+        let camel = self.helpers.toCamelCase(className)
+        guard let first = camel.first else {
+            return ""
+        }
+        return String(self.helpers.toUpper(first)) + String(camel.dropFirst())
     }
 
     public func createComment(from str: String, prepend: String = "") -> String {
