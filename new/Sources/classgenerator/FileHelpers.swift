@@ -114,9 +114,9 @@ public final class FileHelpers {
     }
 
     public func directoryExists(_ dir: String) -> Bool {
-        var directoryExists: ObjCBool = false
+        var directoryExists: Bool = false
         self.fm.fileExists(atPath: dir, isDirectory: &directoryExists)
-        return directoryExists.boolValue
+        return directoryExists
     }
 
     public func makeSubDirectory(_ subdir: String, inDirectory dir: URL) -> URL? {
