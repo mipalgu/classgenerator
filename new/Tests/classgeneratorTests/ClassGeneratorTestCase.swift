@@ -945,4 +945,14 @@ public class ClassGeneratorTestCase: XCTestCase {
             XCTFail("\nline \(badLine.0):\n|" + badLine.1.0 + "| vs\n" + "|" + badLine.1.1 + "|")
         }
 
+        func read(_ file: String) -> String {
+            guard let contents = (try? Data(contentsOf: URL(fileURLWithPath: file))).flatMap({
+                String(data: $0, encoding: .utf8)
+            }) else {
+                XCTFail("Unable to read \(file)")
+                return ""
+            }
+            return contents
+        }
+
 }

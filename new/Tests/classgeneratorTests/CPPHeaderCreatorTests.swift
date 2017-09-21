@@ -79,10 +79,7 @@ public class CPPHeaderCreatorTests: ClassGeneratorTestCase {
     }
 
     public func test_isBackwardsCompatible() {
-        guard let contents = try? String(contentsOfFile: "gens/Old.h") else {
-            XCTFail("Unable to open wb_old.h")
-            return
-        }
+        let contents = super.read("gens/Old.h")
         guard let result = self.creator.createCPPHeader(
             forClass: self.oldClass,
             forFileNamed: "Old.h",
@@ -97,10 +94,7 @@ public class CPPHeaderCreatorTests: ClassGeneratorTestCase {
     }
 
     public func test_createSectionsHeader() {
-        guard let expected = try? String(contentsOfFile: "gens/Sections.h") else {
-            XCTFail("Unable to read contents of gens/Sections.h")
-            return
-        }
+        let expected = super.read("gens/Sections.h")
         let cls = super.createSectionsClass("sections")
         guard let result = self.creator.createCPPHeader(
             forClass: cls,
