@@ -65,9 +65,9 @@ extern "C" {
 
 #include "wb_demo.h"
 
-char * cpp_to_string(wb_demo *);
-char * cpp_description(wb_demo *);
-wb_demo * cpp_from_string(char *);
+char * cpp_to_string(struct wb_demo *);
+char * cpp_description(struct wb_demo *);
+struct wb_demo * cpp_from_string(char *);
 
 #ifdef __cplusplus
 }

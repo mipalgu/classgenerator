@@ -56,18 +56,17 @@
  *
  */
 
-#include <cstdlib>
 #include "Demo.h"
-#include "include/cpp_bridge/cpp_bridge.h"
+#include "include/bridge/cpp_bridge.h"
 
-char * cpp_to_string(wb_demo * self) {
+char * cpp_to_string(struct wb_demo *) {
     return NULL;
 }
 
-char * cpp_description(wb_demo * self) {
+char * cpp_description(struct wb_demo *) {
     return NULL;
 }
 
-wb_demo * cpp_from_string(char * str) {
+struct wb_demo * cpp_from_string(char *) {
     return NULL;
 }

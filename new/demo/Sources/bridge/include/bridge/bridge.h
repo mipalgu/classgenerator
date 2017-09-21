@@ -66,5 +66,6 @@
 #include "gu_util.h"
 #include "somestruct.h"
 #include "wb_demo.h"
+#include "cpp_bridge.h"
 
 #endif  /* BRIDGE_H */
