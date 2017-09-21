@@ -78,10 +78,7 @@ public class SwiftFileCreatorTests: ClassGeneratorTestCase {
     }
 
     public func test_isBackwardsCompatible() {
-        guard let contents = try? String(contentsOfFile: "gens/Old.swift") else {
-            XCTFail("Unable to read contents of Old.swift")
-            return
-        }
+        let contents = super.read("gens/Old.swift")
         guard let result = self.creator.createSwiftFile(
             forClass: self.oldClass,
             forFileNamed: "Old.swift",

@@ -73,15 +73,17 @@ public final class Parser: ErrorContainer, WarningsContainer {
     }
 
     fileprivate let parser: ClassParser
+    fileprivate let fileHelpers: FileHelpers
 
-    public init(parser: ClassParser = ClassParser()) {
+    public init(parser: ClassParser = ClassParser(), fileHelpers: FileHelpers = FileHelpers()) {
         self.parser = parser
+        self.fileHelpers = fileHelpers
     }
 
     public func parse(file: URL) -> Class? {
         self.errors = []
         self.warnings = []
-        guard let contents = try? String(contentsOf: file) else {
+        guard let contents = self.fileHelpers.read(file) else {
             self.errors.append("Unable to read contents of file: \(file.path)")
             return nil
         }

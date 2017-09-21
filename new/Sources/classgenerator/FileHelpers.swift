@@ -142,4 +142,12 @@ public final class FileHelpers {
         return self.overwriteDirectory(fullPath)
     }
 
+    public func read(_ file: URL) -> String? {
+        return (try? Data(contentsOf: file)).flatMap { String(data: $0, encoding: .utf8) }
+    }
+
+    public func read(_ file: String) -> String? {
+        return self.read(URL(fileURLWithPath: file))
+    }
+
 }
