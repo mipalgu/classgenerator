@@ -306,7 +306,7 @@ public final class SwiftFileCreator: ErrorContainer {
             _ = withUnsafeMutablePointer(to: &self.\(label).0) { \(p) in
                 let arr = \(otherLabel).utf8CString
                 _ = arr.withUnsafeBufferPointer {
-                    strncpy(\(p), $0.baseAddress, \(length))
+                    strncpy(\(p), $0.baseAddress!, \(length))
                 }
             }
             """
