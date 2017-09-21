@@ -103,11 +103,13 @@ public class DemoTests: ClassGeneratorTestCase {
         }
         self.generator.run([
             "classgenerator",
-            "-s",
+            "-cs",
             "--c-header",
             "./Sources/bridge",
             "--c-file",
             "./Sources/bridge",
+            "--cpp-header",
+            "./Sources/cpp_bridge",
             "--swift-file",
             "./Sources/demo",
             "./Sources/bridge/typeClassDefs/demo.gen"
