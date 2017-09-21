@@ -13,7 +13,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "bridge", dependencies: []),
-        .target(name: "demo", dependencies: ["bridge"]),
+        .target(name: "cpp_bridge", dependencies: ["bridge"]),
+        .target(name: "demo", dependencies: ["bridge", "cpp_bridge"]),
         .testTarget(
             name: "demoTests",
             dependencies: [

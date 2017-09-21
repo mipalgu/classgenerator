@@ -1,8 +1,8 @@
 /*
- * bridge.h 
+ * cpp_bridge.h 
  * bridge 
  *
- * Created by Callum McColl on 11/09/2017.
+ * Created by Callum McColl on 21/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,15 +56,21 @@
  *
  */
 
-#ifndef BRIDGE_H
-#define BRIDGE_H
+#ifndef CPP_BRIDGE_H
+#define CPP_BRIDGE_H
 
-#include <termios.h> 
-#include "WBFunctor_types_generated.h"
-#include "gusimplewhiteboard.h"
-#include "guwhiteboardtypelist_c_generated.h"
-#include "gu_util.h"
-#include "somestruct.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "wb_demo.h"
 
-#endif  /* BRIDGE_H */
+char * cpp_to_string(wb_demo *);
+char * cpp_description(wb_demo *);
+wb_demo * cpp_from_string(char *);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  /* CPP_BRIDGE_H */
