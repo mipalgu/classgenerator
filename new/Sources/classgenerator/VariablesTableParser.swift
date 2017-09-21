@@ -73,7 +73,9 @@ public final class VariablesTableParser: ErrorContainer {
     }
 
     public func parseVariables(fromSection section: String) -> [Variable]? {
-        let lines = section.components(separatedBy: CharacterSet.newlines)
+        let lines = section.components(separatedBy: CharacterSet.newlines).filter {
+            $0.trimmingCharacters(in: .whitespaces) != ""
+        }
         return lines.failMap {
             guard let v = self.parser.parseVariable(fromLine: $0) else {
                 self.errors.append(contentsOf: self.parser.errors)
