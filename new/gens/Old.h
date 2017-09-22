@@ -557,7 +557,6 @@ namespace guWhiteboard {
             ss << ", ";
             ss << "strct=" << strct();
             ss << ", ";
-
             bool array16_first = true;
             ss << "array16={";
             for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
@@ -567,7 +566,6 @@ namespace guWhiteboard {
             }
             ss << "}";
             ss << ", ";
-
             bool bools_first = true;
             ss << "bools={";
             for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
@@ -578,7 +576,6 @@ namespace guWhiteboard {
             ss << "}";
 
             return ss.str();
-
 #endif /// USE_WB_OLD_C_CONVERSION
         }
 
@@ -767,7 +764,6 @@ namespace guWhiteboard {
             ss << ", ";
             ss << strct();
             ss << ", ";
-
             bool array16_first = true;
             ss << "{";
             for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
@@ -777,7 +773,6 @@ namespace guWhiteboard {
             }
             ss << "}";
             ss << ", ";
-
             bool bools_first = true;
             ss << "{";
             for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
@@ -786,9 +781,7 @@ namespace guWhiteboard {
                 bools_first = false;
             }
             ss << "}";
-
             return ss.str();
-
 #endif /// USE_WB_OLD_C_CONVERSION
         }
 
