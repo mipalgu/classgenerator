@@ -98,7 +98,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             andPostCpp: cls.postCpp
         )
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
-        return head + pre + "\n\n" + content + "\n\n" + "#endif // \(className)_DEFINED"
+        return head + pre + "\n\n" + content + "\n\n" + "#endif // \(className)_DEFINED\n"
     }
 
     fileprivate func createHead(
@@ -197,7 +197,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             + endifCConversion + "\n"
             + self.stringHelpers.indent("}", 2)
             + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
-            + self.stringHelpers.indent("}")
+            + self.stringHelpers.indent("};")
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
