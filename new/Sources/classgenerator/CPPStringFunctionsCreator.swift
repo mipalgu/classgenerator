@@ -193,7 +193,7 @@ public final class CPPStringFunctionsCreator {
                     }
                     return """
                         bool \($0.label)_first = true;
-                        ss << \(true == includeLabel ? "\"\($0.label)={\";" : "{;")
+                        ss << \(true == includeLabel ? "\"\($0.label)={\";" : "\"{\";")
                         for (int i = 0; i < \(className.uppercased())_\($0.label.uppercased())_ARRAY_SIZE; i++) {
                             ss << (\($0.label)_first ? "" : ",") << \($0.label)(i);
                             \($0.label)_first = false;
