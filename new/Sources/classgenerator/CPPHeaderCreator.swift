@@ -174,28 +174,15 @@ public final class CPPHeaderCreator: ErrorContainer {
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name)
-        let ifCConversion = "#ifdef USE_\(extendName.uppercased())_C_CONVERSION"
-        let elseDef = "#else"
-        let endifCConversion = "#endif /// USE_\(extendName.uppercased())_C_CONVERSION"
-        let startDescription = self.createDescriptionDef()
-        let cConversionDescription = self.createCConversionDescription(
+        let description = self.createDescription(
             forClassNamed: name,
-            withStructNamed: extendName
-        )
-        let cppDescription = self.createCPPDescription(
-            forClassNamed: name,
+            andStructNamed: extendName,
             withVariables: variables
         )
         return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
             + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
-            + self.stringHelpers.indent(startDescription, 2) + "\n"
-            + ifCConversion + "\n"
-            + self.stringHelpers.indent(cConversionDescription, 3) + "\n"
-            + elseDef + "\n"
-            + self.stringHelpers.indent(cppDescription, 3) + "\n"
-            + endifCConversion + "\n"
-            + self.stringHelpers.indent("}", 2)
+            + description
             + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
             + self.stringHelpers.indent("};")
     }
@@ -294,6 +281,33 @@ public final class CPPHeaderCreator: ErrorContainer {
         return comment + "\n" + constructor
     }
 
+    fileprivate func createDescription(
+        forClassNamed className: String,
+        andStructNamed structName: String,
+        withVariables variables: [Variable]
+    ) -> String {
+        let startDescription = self.createDescriptionDef()
+        let ifCConversion = "#ifdef USE_\(structName.uppercased())_C_CONVERSION"
+        let elseDef = "#else"
+        let endifCConversion = "#endif /// USE_\(structName.uppercased())_C_CONVERSION"
+        let cConversionDescription = self.createCConversionDescription(
+            forClassNamed: className,
+            withStructNamed: structName
+        )
+        let cppDescription = self.createCPPVariableStringSetters(
+            forClassNamed: className,
+            withVariables: variables,
+            andIncludeLabels: true
+        )
+        return self.stringHelpers.indent(startDescription, 2) + "\n"
+            + ifCConversion + "\n"
+            + self.stringHelpers.indent(cConversionDescription, 3) + "\n"
+            + elseDef + "\n"
+            + self.stringHelpers.indent(cppDescription, 3) + "\n"
+            + endifCConversion + "\n"
+            + self.stringHelpers.indent("}", 2)
+    }
+
     fileprivate func createDescriptionDef() -> String {
         return "std::string description() {"
     }
@@ -310,12 +324,17 @@ public final class CPPHeaderCreator: ErrorContainer {
             """
     }
 
-    fileprivate func createCPPDescription(
+    fileprivate func createCPPVariableStringSetters(
         forClassNamed className: String,
-        withVariables variables: [Variable]
+        withVariables variables: [Variable],
+        andIncludeLabels includeLabels: Bool
     ) -> String {
         let ssdef = "std::ostringstream ss;"
-        let concat = self.createConcatString(forClassNamed: className, withVariables: variables, andIncludeLabels: true)
+        let concat = self.createConcatString(
+            forClassNamed: className,
+            withVariables: variables,
+            andIncludeLabels: includeLabels
+        )
         let returnStatement = "return ss.str();"
         return ssdef + "\n" + concat + "\n" + returnStatement
     }
