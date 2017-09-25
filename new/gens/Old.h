@@ -371,7 +371,7 @@ namespace guWhiteboard {
         /**
          * String Constructor.
          */
-        Old(const std::string &str) { from_string(str.c_str()); }
+        Old(const std::string &str) { wb_old_from_string(this, str.c_str()); }
 
         std::string description() {
 #ifdef USE_WB_OLD_C_CONVERSION

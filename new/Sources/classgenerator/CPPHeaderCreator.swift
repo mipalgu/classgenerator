@@ -176,7 +176,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
-        let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name)
+        let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name, andStructNamed: extendName)
         let description = self.stringFunctionsCreator.createDescriptionFunction(
             forClassNamed: name,
             andStructNamed: extendName,
@@ -283,9 +283,12 @@ public final class CPPHeaderCreator: ErrorContainer {
         return "set_\(variable.label)(\(transformGetter(variable)));"
     }
 
-    fileprivate func createFromStringConstructor(forClassNamed className: String) -> String {
+    fileprivate func createFromStringConstructor(
+        forClassNamed className: String,
+        andStructNamed structName: String
+    ) -> String {
         let comment = self.creatorHelpers.createComment(from: "String Constructor.")
-        let constructor = "\(className)(const std::string &str) { from_string(str.c_str()); }"
+        let constructor = "\(className)(const std::string &str) { \(structName)_from_string(this, str.c_str()); }"
         return comment + "\n" + constructor
     }
 
