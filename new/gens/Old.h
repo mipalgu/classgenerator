@@ -576,10 +576,9 @@ namespace guWhiteboard {
 #endif /// USE_WB_OLD_C_CONVERSION
         }
 
-        std::string to_string()
-        {
+        std::string to_string() {
 #ifdef USE_WB_OLD_C_CONVERSION
-            char buffer[OLD_DESC_BUFFER_SIZE];
+            char buffer[OLD_TO_STRING_BUFFER_SIZE];
             wb_old_to_string(this, buffer, sizeof(buffer));
             std::string toString = buffer;
             return toString;

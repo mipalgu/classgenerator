@@ -127,8 +127,7 @@ public final class CPPStringFunctionsCreator {
             + self.stringHelpers.indent(cImplementation, 3) + "\n"
             + elseDef + "\n"
             + self.stringHelpers.indent(cppImplementation, 3) + "\n"
-            + endifCConversion + "\n"
-
+            + endifCConversion
     }
 
     fileprivate func createDescriptionDef() -> String {
@@ -157,9 +156,9 @@ public final class CPPStringFunctionsCreator {
     ) -> String {
         return """
             char buffer[\(className.uppercased())_TO_STRING_BUFFER_SIZE];
-            \(structName)_description(this, buffer, sizeof(buffer));
-            std::string descr = buffer;
-            return descr;
+            \(structName)_to_string(this, buffer, sizeof(buffer));
+            std::string toString = buffer;
+            return toString;
             """
     }
 
