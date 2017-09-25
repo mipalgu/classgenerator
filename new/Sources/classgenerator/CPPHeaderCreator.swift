@@ -67,13 +67,16 @@ public final class CPPHeaderCreator: ErrorContainer {
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
+    fileprivate let stringFunctionsCreator: CPPStringFunctionsCreator
 
     public init(
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
-        stringHelpers: StringHelpers = StringHelpers()
+        stringHelpers: StringHelpers = StringHelpers(),
+        stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator()
     ) {
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
+        self.stringFunctionsCreator = stringFunctionsCreator
     }
 
     public func createCPPHeader(
@@ -174,7 +177,12 @@ public final class CPPHeaderCreator: ErrorContainer {
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name)
-        let description = self.createDescription(
+        let description = self.stringFunctionsCreator.createDescriptionFunction(
+            forClassNamed: name,
+            andStructNamed: extendName,
+            withVariables: variables
+        )
+        let toString = self.stringFunctionsCreator.createToStringFunction(
             forClassNamed: name,
             andStructNamed: extendName,
             withVariables: variables
@@ -182,7 +190,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
             + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
-            + description
+            + description + "\n\n" + toString
             + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
             + self.stringHelpers.indent("};")
     }
@@ -279,93 +287,6 @@ public final class CPPHeaderCreator: ErrorContainer {
         let comment = self.creatorHelpers.createComment(from: "String Constructor.")
         let constructor = "\(className)(const std::string &str) { from_string(str.c_str()); }"
         return comment + "\n" + constructor
-    }
-
-    fileprivate func createDescription(
-        forClassNamed className: String,
-        andStructNamed structName: String,
-        withVariables variables: [Variable]
-    ) -> String {
-        let startDescription = self.createDescriptionDef()
-        let ifCConversion = "#ifdef USE_\(structName.uppercased())_C_CONVERSION"
-        let elseDef = "#else"
-        let endifCConversion = "#endif /// USE_\(structName.uppercased())_C_CONVERSION"
-        let cConversionDescription = self.createCConversionDescription(
-            forClassNamed: className,
-            withStructNamed: structName
-        )
-        let cppDescription = self.createCPPVariableStringSetters(
-            forClassNamed: className,
-            withVariables: variables,
-            andIncludeLabels: true
-        )
-        return self.stringHelpers.indent(startDescription, 2) + "\n"
-            + ifCConversion + "\n"
-            + self.stringHelpers.indent(cConversionDescription, 3) + "\n"
-            + elseDef + "\n"
-            + self.stringHelpers.indent(cppDescription, 3) + "\n"
-            + endifCConversion + "\n"
-            + self.stringHelpers.indent("}", 2)
-    }
-
-    fileprivate func createDescriptionDef() -> String {
-        return "std::string description() {"
-    }
-
-    fileprivate func createCConversionDescription(
-        forClassNamed className: String,
-        withStructNamed structName: String
-    ) -> String {
-        return """
-            char buffer[\(className.uppercased())_DESC_BUFFER_SIZE];
-            \(structName)_description(this, buffer, sizeof(buffer));
-            std::string descr = buffer;
-            return descr;
-            """
-    }
-
-    fileprivate func createCPPVariableStringSetters(
-        forClassNamed className: String,
-        withVariables variables: [Variable],
-        andIncludeLabels includeLabels: Bool
-    ) -> String {
-        let ssdef = "std::ostringstream ss;"
-        let concat = self.createConcatString(
-            forClassNamed: className,
-            withVariables: variables,
-            andIncludeLabels: includeLabels
-        )
-        let returnStatement = "return ss.str();"
-        return ssdef + "\n" + concat + "\n" + returnStatement
-    }
-
-    fileprivate func createConcatString(
-        forClassNamed className: String,
-        withVariables variables: [Variable],
-        andIncludeLabels includeLabel: Bool
-    ) -> String {
-        return variables.flatMap {
-            switch $0.type {
-                case .array(let subtype, _):
-                    switch subtype {
-                        case .array:
-                            return nil
-                        default:
-                            break
-                    }
-                    return """
-                        bool \($0.label)_first = true;
-                        ss << \(true == includeLabel ? "\"\($0.label)={\";" : "{;")
-                        for (int i = 0; i < \(className.uppercased())_\($0.label.uppercased())_ARRAY_SIZE; i++) {
-                            ss << (\($0.label)_first ? "" : ",") << \($0.label)(i);
-                            \($0.label)_first = false;
-                        }
-                        ss << "}";
-                        """
-                default:
-                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")\($0.label)();"
-            }
-        }.combine("") { $0 + "\nss << \", \";\n" + $1 }
     }
 
 }
