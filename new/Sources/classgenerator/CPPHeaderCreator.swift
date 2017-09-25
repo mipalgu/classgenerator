@@ -315,14 +315,38 @@ public final class CPPHeaderCreator: ErrorContainer {
         withVariables variables: [Variable]
     ) -> String {
         let ssdef = "std::ostringstream ss;"
-        let concat = variables.map {
-            switch $0.type {
-                default:
-                    return "ss << \"\($0.label)=\" << \($0.label)();"
-            }
-        }.combine("") { $0 + "\nss << \", \";\n" + $1 }
+        let concat = self.createConcatString(forClassNamed: className, withVariables: variables, andIncludeLabels: true)
         let returnStatement = "return ss.str();"
         return ssdef + "\n" + concat + "\n" + returnStatement
+    }
+
+    fileprivate func createConcatString(
+        forClassNamed className: String,
+        withVariables variables: [Variable],
+        andIncludeLabels includeLabel: Bool
+    ) -> String {
+        return variables.flatMap {
+            switch $0.type {
+                case .array(let subtype, _):
+                    switch subtype {
+                        case .array:
+                            return nil
+                        default:
+                            break
+                    }
+                    return """
+                        bool \($0.label)_first = true;
+                        ss << \(true == includeLabel ? "\"\($0.label)={\";" : "{;")
+                        for (int i = 0; i < \(className.uppercased())_\($0.label.uppercased())_ARRAY_SIZE; i++) {
+                            ss << (\($0.label)_first ? "" : ",") << \($0.label)(i);
+                            \($0.label)_first = false;
+                        }
+                        ss << "}";
+                        """
+                default:
+                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")\($0.label)();"
+            }
+        }.combine("") { $0 + "\nss << \", \";\n" + $1 }
     }
 
 }

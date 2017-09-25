@@ -559,8 +559,7 @@ namespace guWhiteboard {
             ss << ", ";
             bool array16_first = true;
             ss << "array16={";
-            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++)
-            {
+            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) {
                 ss << (array16_first ? "" : ",") << array16(i);
                 array16_first = false;
             }
@@ -568,13 +567,11 @@ namespace guWhiteboard {
             ss << ", ";
             bool bools_first = true;
             ss << "bools={";
-            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++)
-            {
+            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) {
                 ss << (bools_first ? "" : ",") << bools(i);
                 bools_first = false;
             }
             ss << "}";
-
             return ss.str();
 #endif /// USE_WB_OLD_C_CONVERSION
         }
