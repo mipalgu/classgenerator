@@ -67,6 +67,7 @@
 #include <sstream>
 #endif
 
+#include "gu_util.h"
 #include "wb_old.h"
 
 namespace guWhiteboard {
@@ -82,7 +83,7 @@ namespace guWhiteboard {
          * Create a new `Old`.
          */
         Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', int i = 1, signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, short s = 1, short int si_2 = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, int i2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, short s2 = 0, short int si_22 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, struct somestruct strct = somestruct(), int16_t[4] array16 = {1,2,3,4}, bool[3] bools = {true, true, true}) {
-            set_str(str);
+            gu_strlcpy(this->str, str, 6);
             set_b(b);
             set_c(c);
             set_sc(sc);
@@ -125,7 +126,7 @@ namespace guWhiteboard {
             set_dt(dt);
             set_ld(ld);
             set_dd(dd);
-            set_str2(str2);
+            gu_strlcpy(this->str2, str2, 6);
             set_b2(b2);
             set_c2(c2);
             set_sc2(sc2);
@@ -170,15 +171,19 @@ namespace guWhiteboard {
             set_dd2(dd2);
             set_p(p);
             set_strct(strct);
-            set_array16(array16);
-            set_bools(bools);
+            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) {
+                set_array16(i, array16[i]);
+            }
+            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) {
+                set_bools(i, bools[i]);
+            }
         }
 
         /**
          * Copy Constructor.
          */
         Old(const Old &other): wb_old() {
-            set_str(other.str());
+            gu_strlcpy(this->str, str, 6);
             set_b(other.b());
             set_c(other.c());
             set_sc(other.sc());
@@ -221,7 +226,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
-            set_str2(other.str2());
+            gu_strlcpy(this->str2, str2, 6);
             set_b2(other.b2());
             set_c2(other.c2());
             set_sc2(other.sc2());
@@ -274,7 +279,7 @@ namespace guWhiteboard {
          * Copy Assignment Operator.
          */
         Old &operator = (const Old &other) {
-            set_str(other.str());
+            gu_strlcpy(this->str, str, 6);
             set_b(other.b());
             set_c(other.c());
             set_sc(other.sc());
@@ -317,7 +322,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
-            set_str2(other.str2());
+            gu_strlcpy(this->str2, str2, 6);
             set_b2(other.b2());
             set_c2(other.c2());
             set_sc2(other.sc2());

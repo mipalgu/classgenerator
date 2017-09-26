@@ -264,8 +264,8 @@ public final class CFromStringCreator {
                 let sizeLabel = label + levelStr + "_smallest"
                 let countLabel = label + levelStr + "_count"
                 let countDef = self.creatorHelpers.createArrayCountDef(
-                    forVariable: label,
                     inClass: className,
+                    forVariable: label,
                     level: level
                 )
                 let def = "size_t \(sizeLabel) = \(countLabel) < \(countDef) ? \(countLabel) : \(countDef);"

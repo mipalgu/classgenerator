@@ -126,6 +126,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             #include <sstream>
             #endif
 
+            #include "gu_util.h"
             #include "\(structName).h"
             """
         return comment + "\n\n" + define
@@ -208,7 +209,10 @@ public final class CPPHeaderCreator: ErrorContainer {
             "\(self.calculateCppType(forVariable: $0)) \($0.label) = \($0.defaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let def = startdef + list + ") {"
-        let setters = self.createSetters(forVariables: variables)
+        let setters = self.createSetters(
+            forVariables: variables,
+            self.creatorHelpers.createArrayCountDef(inClass: name)
+        )
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
 
@@ -248,7 +252,10 @@ public final class CPPHeaderCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Constructor.")
         let def = "\(className)(const \(className) &other): \(structName)() {"
-        let setters = self.createSetters(forVariables: variables) { "other.\($0.label)()" }
+        let setters = self.createSetters(
+            forVariables: variables,
+            self.creatorHelpers.createArrayCountDef(inClass: className)
+        ) { "other.\($0.label)()" }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
 
@@ -259,7 +266,10 @@ public final class CPPHeaderCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
         let def = "\(className) &operator = (const \(className) &other) {"
-        let setters = self.createSetters(forVariables: variables) { "other.\($0.label)()" }
+        let setters = self.createSetters(
+            forVariables: variables,
+            self.creatorHelpers.createArrayCountDef(inClass: className)
+        ) { "other.\($0.label)()" }
         let ret = "return *this;"
         let content = setters + "\n" + ret
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(content) + "\n}"
@@ -267,10 +277,11 @@ public final class CPPHeaderCreator: ErrorContainer {
 
     fileprivate func createSetters(
         forVariables variables: [Variable],
+        _ arrayDefGetter: (String) -> (Int) -> String,
         _ transformGetter: (Variable) -> String = { "\($0.label)"}
     ) -> String {
         return variables.map {
-            self.createSetter(forVariable: $0, transformGetter)
+            self.createSetter(forVariable: $0, arrayDefGetter, transformGetter)
         }.combine("") {
             $0 + "\n" + $1
         }
@@ -278,9 +289,23 @@ public final class CPPHeaderCreator: ErrorContainer {
 
     fileprivate func createSetter(
         forVariable variable: Variable,
+        _ arrayDefGetter: (String) -> (Int) -> String,
         _ transformGetter: (Variable) -> String = { "\($0.label)" }
     ) -> String {
-        return "set_\(variable.label)(\(transformGetter(variable)));"
+        let label = transformGetter(variable)
+        switch variable.type {
+            case .array:
+                let index = "\(variable.label)_index"
+                return """
+                    for (int \(index) = 0; i < \(arrayDefGetter(variable.label)(0)); \(index)++) {
+                        set_\(variable.label)(\(index), \(label)[\(index)]);
+                    }
+                    """
+            case .string(let length):
+                return "gu_strlcpy(this->\(variable.label), \(label), \(length));"
+            default:
+                return "set_\(variable.label)(\(label));"
+        }
     }
 
     fileprivate func createFromStringConstructor(

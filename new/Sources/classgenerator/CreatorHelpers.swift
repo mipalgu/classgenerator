@@ -86,9 +86,18 @@ public final class CreatorHelpers {
         return formatter.string(from: self.date)
     }()
 
-    public func createArrayCountDef(forVariable label: String, inClass className: String, level: Int) -> String {
+    public func createArrayCountDef(inClass className: String, forVariable label: String, level: Int) -> String {
         let levelStr = 0 == level ? "" : "_\(level)"
         return "\(className.uppercased())_\(label.uppercased())\(levelStr)_ARRAY_SIZE"
+    }
+
+    public func createArrayCountDef(inClass className: String) -> (String) -> (Int) -> String {
+        //swiftlint:disable:next opening_brace
+        return { variable in
+            return { level in
+                self.createArrayCountDef(inClass: className, forVariable: variable, level: level)
+            }
+        }
     }
 
     public func createClassName(forClassNamed className: String) -> String {
