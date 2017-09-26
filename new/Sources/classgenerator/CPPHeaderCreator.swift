@@ -302,7 +302,7 @@ public final class CPPHeaderCreator: ErrorContainer {
                     }
                     """
             case .string(let length):
-                return "gu_strlcpy(this->\(variable.label), \(label), \(length));"
+                return "gu_strlcpy((char *) this->\(variable.label)(), \(label).c_str(), \(length));"
             default:
                 return "set_\(variable.label)(\(label));"
         }
