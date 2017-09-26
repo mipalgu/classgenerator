@@ -183,7 +183,7 @@ namespace guWhiteboard {
          * Copy Constructor.
          */
         Old(const Old &other): wb_old() {
-            gu_strlcpy((char *) this->str(), other.str().c_str(), 6);
+            gu_strlcpy((char *) this->str(), other.str(), 6);
             set_b(other.b());
             set_c(other.c());
             set_sc(other.sc());
@@ -226,7 +226,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
-            gu_strlcpy((char *) this->str2(), other.str2().c_str(), 6);
+            gu_strlcpy((char *) this->str2(), other.str2(), 6);
             set_b2(other.b2());
             set_c2(other.c2());
             set_sc2(other.sc2());
@@ -283,7 +283,7 @@ namespace guWhiteboard {
          * Copy Assignment Operator.
          */
         Old &operator = (const Old &other) {
-            gu_strlcpy((char *) this->str(), other.str().c_str(), 6);
+            gu_strlcpy((char *) this->str(), other.str(), 6);
             set_b(other.b());
             set_c(other.c());
             set_sc(other.sc());
@@ -326,7 +326,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
-            gu_strlcpy((char *) this->str2(), other.str2().c_str(), 6);
+            gu_strlcpy((char *) this->str2(), other.str2(), 6);
             set_b2(other.b2());
             set_c2(other.c2());
             set_sc2(other.sc2());
