@@ -195,13 +195,13 @@ public final class CPPStringFunctionsCreator {
                         bool \($0.label)_first = true;
                         ss << \(true == includeLabel ? "\"\($0.label)={\";" : "\"{\";")
                         for (int i = 0; i < \(className.uppercased())_\($0.label.uppercased())_ARRAY_SIZE; i++) {
-                            ss << (\($0.label)_first ? "" : ",") << \($0.label)(i);
+                            ss << (\($0.label)_first ? "" : ",") << this->\($0.label)(i);
                             \($0.label)_first = false;
                         }
                         ss << "}";
                         """
                 default:
-                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")\($0.label)();"
+                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();"
             }
         }.combine("") { $0 + "\nss << \", \";\n" + $1 }
     }
