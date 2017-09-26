@@ -297,8 +297,8 @@ public final class CPPHeaderCreator: ErrorContainer {
             case .array:
                 let index = "\(variable.label)_index"
                 return """
-                    for (int \(index) = 0; i < \(arrayDefGetter(variable.label)(0)); \(index)++) {
-                        set_\(variable.label)(\(index), \(label)[\(index)]);
+                    for (int \(index) = 0; \(index) < \(arrayDefGetter(variable.label)(0)); \(index)++) {
+                        set_\(variable.label)(\(label)[\(index)], \(index));
                     }
                     """
             case .string(let length):

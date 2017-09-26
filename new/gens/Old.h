@@ -171,11 +171,11 @@ namespace guWhiteboard {
             set_dd2(dd2);
             set_p(p);
             set_strct(strct);
-            for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) {
-                set_array16(i, array16[i]);
+            for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                set_array16(array16[array16_index], array16_index);
             }
-            for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) {
-                set_bools(i, bools[i]);
+            for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                set_bools(bools[bools_index], bools_index);
             }
         }
 
@@ -183,7 +183,7 @@ namespace guWhiteboard {
          * Copy Constructor.
          */
         Old(const Old &other): wb_old() {
-            gu_strlcpy(this->str, str, 6);
+            gu_strlcpy(this->str, other.str(), 6);
             set_b(other.b());
             set_c(other.c());
             set_sc(other.sc());
@@ -226,7 +226,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
-            gu_strlcpy(this->str2, str2, 6);
+            gu_strlcpy(this->str2, other.str2(), 6);
             set_b2(other.b2());
             set_c2(other.c2());
             set_sc2(other.sc2());
@@ -271,15 +271,19 @@ namespace guWhiteboard {
             set_dd2(other.dd2());
             set_p(other.p());
             set_strct(other.strct());
-            set_array16(other.array16());
-            set_bools(other.bools());
+            for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                set_array16(other.array16()[array16_index], array16_index);
+            }
+            for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                set_bools(other.bools()[bools_index], bools_index);
+            }
         }
 
         /**
          * Copy Assignment Operator.
          */
         Old &operator = (const Old &other) {
-            gu_strlcpy(this->str, str, 6);
+            gu_strlcpy(this->str, other.str(), 6);
             set_b(other.b());
             set_c(other.c());
             set_sc(other.sc());
@@ -322,7 +326,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
-            gu_strlcpy(this->str2, str2, 6);
+            gu_strlcpy(this->str2, other.str2(), 6);
             set_b2(other.b2());
             set_c2(other.c2());
             set_sc2(other.sc2());
@@ -367,8 +371,12 @@ namespace guWhiteboard {
             set_dd2(other.dd2());
             set_p(other.p());
             set_strct(other.strct());
-            set_array16(other.array16());
-            set_bools(other.bools());
+            for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                set_array16(other.array16()[array16_index], array16_index);
+            }
+            for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                set_bools(other.bools()[bools_index], bools_index);
+            }
             return *this;
         }
 
