@@ -172,11 +172,15 @@ namespace guWhiteboard {
             const int * _p = p;
             set_p(_p);
             set_strct(strct);
-            for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
-                set_array16(array16[array16_index], array16_index);
+            if (array16 != NULL) {
+                for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                    set_array16(array16[array16_index], array16_index);
+                }
             }
-            for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-                set_bools(bools[bools_index], bools_index);
+            if (bools != NULL) {
+                for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                    set_bools(bools[bools_index], bools_index);
+                }
             }
         }
 
@@ -272,11 +276,15 @@ namespace guWhiteboard {
             set_dd2(other.dd2());
             set_p(other.p());
             set_strct(other.strct());
-            for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
-                set_array16(other.array16()[array16_index], array16_index);
+            if (other.array16() != NULL) {
+                for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                    set_array16(other.array16()[array16_index], array16_index);
+                }
             }
-            for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-                set_bools(other.bools()[bools_index], bools_index);
+            if (other.bools() != NULL) {
+                for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                    set_bools(other.bools()[bools_index], bools_index);
+                }
             }
         }
 
@@ -372,11 +380,15 @@ namespace guWhiteboard {
             set_dd2(other.dd2());
             set_p(other.p());
             set_strct(other.strct());
-            for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
-                set_array16(other.array16()[array16_index], array16_index);
+            if (other.array16() != NULL) {
+                for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                    set_array16(other.array16()[array16_index], array16_index);
+                }
             }
-            for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-                set_bools(other.bools()[bools_index], bools_index);
+            if (other.bools() != NULL) {
+                for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                    set_bools(other.bools()[bools_index], bools_index);
+                }
             }
             return *this;
         }
