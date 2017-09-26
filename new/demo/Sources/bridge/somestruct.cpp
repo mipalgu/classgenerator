@@ -1,8 +1,8 @@
 /*
- * somestruct.h 
+ * somestruct.cpp 
  * bridge 
  *
- * Created by Callum McColl on 11/09/2017.
+ * Created by Callum McColl on 26/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,25 +56,9 @@
  *
  */
 
-#ifndef SOMESTRUCT_H
-#define SOMESTRUCT_H
+#include "somestruct.h"
 
-#ifdef __cplusplus
-#include <iostream>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-struct somestruct {};
-
-#ifdef __cplusplus
+std::ostream& operator<<(std::ostream& os, const struct somestruct& s) {
+    os << "{}";
+    return os;
 }
-#endif
-
-#ifdef __cplusplus
-std::ostream& operator<<(std::ostream&, const struct somestruct&);
-#endif
-
-#endif  /* SOMESTRUCT_H */
