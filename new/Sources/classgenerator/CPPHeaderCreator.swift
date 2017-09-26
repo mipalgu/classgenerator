@@ -206,7 +206,9 @@ public final class CPPHeaderCreator: ErrorContainer {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
         let startdef = "\(name)("
         let list = variables.map {
-            "\(self.calculateCppType(forVariable: $0)) \($0.label) = \($0.defaultValue)"
+            let type = self.calculateCppType(forVariable: $0)
+            let label = self.calculateCppLabel(forVariable: $0)
+            return "\(type) \(label) = \($0.defaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let def = startdef + list + ") {"
         let setters = self.createSetters(
@@ -225,6 +227,10 @@ public final class CPPHeaderCreator: ErrorContainer {
         }
     }
 
+    fileprivate func calculateCppLabel(forVariable variable: Variable) -> String {
+        return variable.label + self.calculateLabelExtras(forType: variable.type)
+    }
+
     fileprivate func calculateSignatureExtras(forType type: VariableTypes) -> String {
         switch type {
             case .pointer:
@@ -236,10 +242,17 @@ public final class CPPHeaderCreator: ErrorContainer {
 
     fileprivate func _calculateSignatureExtras(forType type: VariableTypes) -> String {
         switch type {
-            case .array(let subtype, let length):
-                return "[\(length)]" + self._calculateSignatureExtras(forType: subtype)
             case .pointer(let subtype):
                 return "*" + self._calculateSignatureExtras(forType: subtype)
+            default:
+                return ""
+        }
+    }
+
+    fileprivate func calculateLabelExtras(forType type: VariableTypes) -> String {
+        switch type {
+            case .array(let subtype, let length):
+                return "[\(length)]" + self.calculateLabelExtras(forType: subtype)
             default:
                 return ""
         }
