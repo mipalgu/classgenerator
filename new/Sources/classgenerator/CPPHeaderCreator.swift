@@ -212,7 +212,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             self.creatorHelpers.createArrayCountDef(inClass: name)
-        )
+        ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
 
@@ -302,7 +302,7 @@ public final class CPPHeaderCreator: ErrorContainer {
                     }
                     """
             case .string(let length):
-                return "gu_strlcpy((char *) this->\(variable.label)(), \(label).c_str(), \(length));"
+                return "gu_strlcpy((char *) this->\(variable.label)(), \(label), \(length));"
             default:
                 return "set_\(variable.label)(\(label));"
         }
