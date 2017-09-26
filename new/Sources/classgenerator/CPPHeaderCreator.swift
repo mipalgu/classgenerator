@@ -208,7 +208,12 @@ public final class CPPHeaderCreator: ErrorContainer {
         let list = variables.map {
             let type = self.calculateCppType(forVariable: $0)
             let label = self.calculateCppLabel(forVariable: $0)
-            return "\(type) \(label) = \($0.defaultValue)"
+            switch $0.type {
+                case .array:
+                    return "\(type) \(label) = NULL"
+                default:
+                    return "\(type) \(label) = \($0.defaultValue)"
+            }
         }.combine("") { $0 + ", " + $1 }
         let def = startdef + list + ") {"
         let setters = self.createSetters(
