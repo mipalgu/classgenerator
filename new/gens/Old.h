@@ -169,7 +169,8 @@ namespace guWhiteboard {
             set_dt2(dt2);
             set_ld2(ld2);
             set_dd2(dd2);
-            set_p(p);
+            const int * _p = p;
+            set_p(_p);
             set_strct(strct);
             for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
                 set_array16(array16[array16_index], array16_index);
