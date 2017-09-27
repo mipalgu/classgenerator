@@ -112,14 +112,69 @@ public final class CPPFromStringCreator {
         withStructNamed structName: String,
         forVariable variable: Variable
     ) -> String? {
-        switch variable.type {
+        let index = "\(variable.label)_index"
+        let setup = """
+            unsigned long \(index) = str.find("\(variable.label)");
+            if (\(index) != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(\(index), str.length()).c_str(), "\(variable.label) = %[^,]", var) == 1) {
+            """
+        guard let setter = self.calculateSetter(
+            forVariable: variable.label,
+            withType: variable.type,
+            andCType: variable.cType
+        ) else {
+            return nil
+        }
+        let finish = """
+                }
+            }
+            """
+        return setup + "\n" + self.stringHelpers.indent(setter, 2) + "\n" + finish
+    }
+
+    fileprivate func calculateSetter(
+        forVariable label: String,
+        withType type: VariableTypes,
+        andCType cType: String
+    ) -> String? {
+        let getValue = "std::string value = std::string(var);"
+        switch type {
             case .array:
                 return nil
+            case .bool:
+                return getValue + "\n"
+                    + "set_\(label)(value.compare(\"true\") == 0 || value.compare(\"1\") == 0 ? true : false);"
+            case .char:
+                return getValue + "\n" + "set_\(label)((\(cType)) (atoi(value.c_str())));"
+            case .numeric(let numericType):
+                let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
+                return getValue + "\n" + "set_\(label)((\(cType)) (\(conversionFunction)(value.c_str())));"
+            case .string(let length):
+                return getValue + "\n" + "gu_strlcpy((char *) this->\(label)(), value.c_str(), \(length));"
+            case .pointer:
+                let typeExtras = self.creatorHelpers.calculateSignatureExtras(forType: type)
+                return getValue + "\n" + "set_\(label)((\(cType)\(typeExtras))) (atoi(value.c_str())));"
             case .unknown:
                 return nil
-            default:
-                return """
-                    """
+        }
+    }
+
+    fileprivate func calculateConversionFunction(forNumericType type: NumericTypes) -> String {
+        switch type {
+            case .float, .double:
+                return "atof"
+            case .signed, .unsigned:
+                return "atoi"
+            case .long(let subtype):
+                switch subtype {
+                    case .float, .double:
+                        return "atof"
+                    case .long:
+                        return "atoll"
+                    default:
+                        return "atol"
+                }
         }
     }
 
