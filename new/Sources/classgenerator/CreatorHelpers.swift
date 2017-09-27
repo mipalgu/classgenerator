@@ -86,6 +86,33 @@ public final class CreatorHelpers {
         return formatter.string(from: self.date)
     }()
 
+    public func calculateSignatureExtras(forType type: VariableTypes) -> String {
+        switch type {
+            case .pointer:
+                return " " + self._calculateSignatureExtras(forType: type)
+            default:
+                return self._calculateSignatureExtras(forType: type)
+        }
+    }
+
+    fileprivate func _calculateSignatureExtras(forType type: VariableTypes) -> String {
+        switch type {
+            case .pointer(let subtype):
+                return "*" + self._calculateSignatureExtras(forType: subtype)
+            default:
+                return ""
+        }
+    }
+
+    public func calculateLabelExtras(forType type: VariableTypes) -> String {
+        switch type {
+            case .array(let subtype, let length):
+                return "[\(length)]" + self.calculateLabelExtras(forType: subtype)
+            default:
+                return ""
+        }
+    }
+
     public func createArrayCountDef(inClass className: String, forVariable label: String, level: Int) -> String {
         let levelStr = 0 == level ? "" : "_\(level)"
         return "\(className.uppercased())_\(label.uppercased())\(levelStr)_ARRAY_SIZE"

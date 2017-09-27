@@ -237,39 +237,12 @@ public final class CPPHeaderCreator: ErrorContainer {
             case .string:
                 return "std::string"
             default:
-                return variable.cType + self.calculateSignatureExtras(forType: variable.type)
+                return variable.cType + self.creatorHelpers.calculateSignatureExtras(forType: variable.type)
         }
     }
 
     fileprivate func calculateCppLabel(forVariable variable: Variable) -> String {
-        return variable.label + self.calculateLabelExtras(forType: variable.type)
-    }
-
-    fileprivate func calculateSignatureExtras(forType type: VariableTypes) -> String {
-        switch type {
-            case .pointer:
-                return " " + self._calculateSignatureExtras(forType: type)
-            default:
-                return self._calculateSignatureExtras(forType: type)
-        }
-    }
-
-    fileprivate func _calculateSignatureExtras(forType type: VariableTypes) -> String {
-        switch type {
-            case .pointer(let subtype):
-                return "*" + self._calculateSignatureExtras(forType: subtype)
-            default:
-                return ""
-        }
-    }
-
-    fileprivate func calculateLabelExtras(forType type: VariableTypes) -> String {
-        switch type {
-            case .array(let subtype, let length):
-                return "[\(length)]" + self.calculateLabelExtras(forType: subtype)
-            default:
-                return ""
-        }
+        return variable.label + self.creatorHelpers.calculateLabelExtras(forType: variable.type)
     }
 
     fileprivate func createCopyConstructor(
@@ -340,7 +313,8 @@ public final class CPPHeaderCreator: ErrorContainer {
                 if false == addConstOnPointers {
                     return "set_\(variable.label)(\(label));"
                 }
-                let type = "const " + variable.cType + self.calculateSignatureExtras(forType: variable.type)
+                let type = "const " + variable.cType
+                    + self.creatorHelpers.calculateSignatureExtras(forType: variable.type)
                 return """
                     \(type) _\(variable.label) = \(label);
                     set_\(variable.label)(_\(variable.label));
