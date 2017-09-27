@@ -154,7 +154,9 @@ public final class CPPFromStringCreator {
                 return getValue + "\n" + "gu_strlcpy((char *) this->\(label)(), value.c_str(), \(length));"
             case .pointer:
                 let typeExtras = self.creatorHelpers.calculateSignatureExtras(forType: type)
-                return getValue + "\n" + "set_\(label)((\(cType)\(typeExtras))) (atoi(value.c_str())));"
+                //swiftlint:disable:next line_length
+                let cast = "const \(cType)\(typeExtras) \(label)_cast = (\(cType)\(typeExtras)) (atol(value.c_str()));"
+                return getValue + "\n" + cast + "\n" + "set_\(label)(\(label)_cast);"
             case .unknown:
                 return nil
         }
