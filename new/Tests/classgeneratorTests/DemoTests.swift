@@ -108,7 +108,7 @@ public class DemoTests: ClassGeneratorTestCase {
             "./Sources/bridge",
             "--swift-file",
             "./Sources/demo",
-            "./Sources/bridge/typeClassDefs/demo.gen"
+            "./demo.gen"
         ])
         let p = Process()
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
