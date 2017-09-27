@@ -96,7 +96,7 @@ public final class CPPFromStringCreator {
         withStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
-        let varDef = "char var[\(variables.count)];"
+        let varDef = "char var[255];"
         let conversionList = variables.flatMap {
             self.createCPPImplementation(
                 forClassNamed: className,
