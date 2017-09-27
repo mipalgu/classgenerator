@@ -68,15 +68,18 @@ public final class CPPHeaderCreator: ErrorContainer {
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
     fileprivate let stringFunctionsCreator: CPPStringFunctionsCreator
+    fileprivate let fromStringCreator: CPPFromStringCreator
 
     public init(
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         stringHelpers: StringHelpers = StringHelpers(),
-        stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator()
+        stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator(),
+        fromStringCreator: CPPFromStringCreator = CPPFromStringCreator()
     ) {
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
         self.stringFunctionsCreator = stringFunctionsCreator
+        self.fromStringCreator = fromStringCreator
     }
 
     public func createCPPHeader(
@@ -188,10 +191,15 @@ public final class CPPHeaderCreator: ErrorContainer {
             andStructNamed: extendName,
             withVariables: variables
         )
+        let fromString = self.fromStringCreator.createFromStringFunction(
+            forClassNamed: name,
+            withStructNamed: extendName,
+            withVariables: variables
+        )
         return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
             + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
-            + description + "\n\n" + toString
+            + description + "\n\n" + toString + "\n\n" + fromString
             + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
             + self.stringHelpers.indent("};")
     }
