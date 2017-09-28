@@ -1507,32 +1507,9 @@ namespace guWhiteboard {
                     set_p(p_cast);
                 }
             }
-            unsigned long strct_index = str.find("strct");
-            if (strct_index != std::string::npos) {
-                memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(strct_index, str.length()).c_str(), "strct = %[^,]", var) == 1) {
-                    std::string value = std::string(var);
-                }
-            }
-            unsigned long array16_index = str.find("array16");
-            if (array16_index != std::string::npos) {
-                memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(array16_index, str.length()).c_str(), "array16 = %[^,]", var) == 1) {
-                    std::string value = std::string(var);
-                    set_array16((int16_t) (atoi(value.c_str())));
-                }
-            }
-            unsigned long bools_index = str.find("bools");
-            if (bools_index != std::string::npos) {
-                memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(bools_index, str.length()).c_str(), "bools = %[^,]", var) == 1) {
-                    std::string value = std::string(var);
-                    set_bools(value.compare("true") == 0  || value.compare("1") == 0 ? true : false);
-                }
-            }
 #endif /// USE_WB_OLD_C_CONVERSION
         }
-#endif ///   WHITEBOARD_POSTER_STRING_CONVERSION
+#endif /// WHITEBOARD_POSTER_STRING_CONVERSION
     };
 
 } /// namespace guWhiteboard

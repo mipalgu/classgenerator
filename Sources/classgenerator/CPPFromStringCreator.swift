@@ -74,7 +74,7 @@ public final class CPPFromStringCreator {
         let def = "void from_string(const std::string &str) {"
         let ifDef = "#ifdef USE_WB_OLD_C_CONVERSION"
         let elseDef = "#else"
-        let endifDef = "#endif"
+        let endifDef = "#endif /// USE_WB_OLD_C_CONVERSION"
         let cImplementation = structName + "_from_string(this, str);"
         let cppImplementation = self.createCPPImplementation(
             forClassNamed: className,

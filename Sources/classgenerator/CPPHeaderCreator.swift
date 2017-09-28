@@ -104,7 +104,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             andPostCpp: cls.postCpp
         )
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
-        return head + pre + "\n\n" + content + "\n\n" + "#endif // \(className)_DEFINED\n"
+        return head + pre + "\n\n" + content + "\n" + "#endif /// \(className)_DEFINED\n"
     }
 
     fileprivate func createHead(
@@ -150,7 +150,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             andEmbeddedCpp: embeddedCpp
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.indent(postCpp!)
-        let endNamespace = "};"
+        let endNamespace = "} /// namespace guWhiteboard"
         return namespace + "\n\n"
             + content + postCpp + "\n\n"
             + endNamespace
@@ -179,7 +179,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
-        let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
+        let endif = "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name, andStructNamed: extendName)
         let description = self.stringFunctionsCreator.createDescriptionFunction(
             forClassNamed: name,
@@ -200,7 +200,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             + ifdef + "\n"
             + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
             + description + "\n\n" + toString + "\n\n" + fromString
-            + self.stringHelpers.indent(cpp) + "\n" + endif + "\n\n"
+            + self.stringHelpers.indent(cpp) + "\n" + endif + "\n"
             + self.stringHelpers.indent("};")
     }
 
