@@ -1,7 +1,9 @@
 SWIFT=swift
 DIR!=pwd
 
-all:	swift-test
+all:	all-real
+
+all-real:	swift-test
 
 .include "../../mk/prefs.mk"
 
@@ -22,4 +24,6 @@ host:	swift-build
 test:	swift-test
 
 clean:
-	rm -r .build
+	rm -rf .build
+
+.include "../../mk/jenkins.mk"
