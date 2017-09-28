@@ -27,3 +27,5 @@ clean:
 	rm -rf .build
 
 .include "../../mk/jenkins.mk"
+
+xc-clean:	clean
