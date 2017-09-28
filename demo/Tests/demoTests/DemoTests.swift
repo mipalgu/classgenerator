@@ -496,7 +496,7 @@ public class DemoTests: XCTestCase {
             "ft2": self.demo.ft2,
             "d2": self.demo.d2,
             "dt2": self.demo.dt2,
-            "p": self.demo.p,
+            //"p": self.demo.p,
             "strct": self.demo.strct,
             "array16": self.demo.array16,
             "bools": self.demo.bools

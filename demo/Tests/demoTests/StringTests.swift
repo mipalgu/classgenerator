@@ -68,7 +68,7 @@ public class StringTests: XCTestCase {
     public static var allTests: [(String, (StringTests) -> () throws -> Void)] {
         return [
             ("test_cDescriptionEqualsExpectedDescription", test_cDescriptionEqualsExpectedDescription),
-            ("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
+            //("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription)
         ]
@@ -96,10 +96,10 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(self.expectedDemoDescription, self.cDescription)
     }
 
-    public func test_cppDescriptionEqualsExpectedDescription() {
+    /*public func test_cppDescriptionEqualsExpectedDescription() {
         var demo = self.demo
         XCTAssertEqual(self.expectedDemoDescription, String(cString: cpp_description(&demo)))
-    }
+    }*/
 
     public func test_cFromStringCreatesStruct() {
         var target: wb_demo = wb_demo()
