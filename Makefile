@@ -1,13 +1,25 @@
-#
-#	$Id$
-#
-# GU swift whiteboard Makefile
-#
-ALL_TARGETS=host xc
+SWIFT=swift
+DIR!=pwd
 
-all: all-real
+all:	swift-test
 
-install:
-	install -m 0555 ${OUTPATH:Q} ${DESTDIR:Q}${PREFIX:Q}/bin
+.include "../../mk/prefs.mk"
 
-.include "../../mk/mipal.mk"		# comes last!
+swift-build:
+	if [ ! -f "Sources/classgenerator/main.swift" ]; then \
+		cp main.in Sources/classgenerator/main.swift ;\
+	elif [ ! $(cmp -s "main.in" "Sources/classgenerator/main.swift") ]; then \
+		cp main.in Sources/classgenerator/main.swift ; \
+	fi;
+	$Eenv ${BUILD_ENV} ${SWIFT} build ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
+
+swift-test:
+	rm -f Sources/classgenerator/main.swift
+	$Eenv ${BUILD_ENV} ${SWIFT} test ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
+
+host:	swift-build
+
+test:	swift-test
+
+clean:
+	rm -r .build

@@ -8,6 +8,6 @@ all:	all-real
 generate-classes:
 	../.build/debug/classgenerator -cs --c-header ./Sources/bridge --swift-file ./Sources/demo ./demo.gen
 
-.include "../../../../mk/mipal.mk"
+.include "../../../mk/mipal.mk"
 
 CFLAGS=-DWHITEBOARD_POSTER_STRING_CONVERSION=1
