@@ -200,7 +200,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             + ifdef + "\n"
             + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
             + description + "\n\n" + toString + "\n\n" + fromString
-            + self.stringHelpers.indent(cpp) + "\n" + endif + "\n"
+            + "\n" + endif + self.stringHelpers.indent(cpp) + "\n"
             + self.stringHelpers.indent("};")
     }
 
