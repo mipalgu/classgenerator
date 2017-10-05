@@ -90,32 +90,28 @@ public final class VariableParser: ErrorContainer {
         self.typeConverter = typeConverter
     }
 
-    public func parseVariable(fromLine line: String) -> Variable? {
+    public func parseVariable(fromLine line: String) throws -> Variable {
         self.errors = []
-        guard
-            let (remaining, comment) = self.parseComment(fromLine: line)
-        else {
-            return nil
-        }
-        return self.parseVar(fromSegment: remaining, withComment: comment)
+        let (remaining, comment) = try self.parseComment(fromLine: line)
+        return try self.parseVar(fromSegment: remaining, withComment: comment)
     }
 
-    fileprivate func parseComment(fromLine line: String) -> (String, String)? {
+    fileprivate func parseComment(fromLine line: String) throws -> (String, String) {
         let split = line.components(separatedBy: "//")
         guard split.count <= 2 else {
-            self.errors.append("Found multiple comments for line: \(line)")
-            return nil
+            throw ParsingErrors.parsingError(
+                split[0].count + split[1].count + split[2].count,
+                "Found multiple comments for variable."
+            )
         }
         guard let first = split.first else {
-            self.errors.append("Line is empty")
-            return nil
+            throw ParsingErrors.parsingError(0, "Empty line in variables table detected.")
         }
         let tabbed = first.components(separatedBy: "\t").lazy.map {
             $0.trimmingCharacters(in: CharacterSet.whitespaces)
         }
         if 1 == split.count && tabbed.count < 3 {
-            self.errors.append("You must supply a comment for line: \(line)")
-            return nil
+            throw ParsingErrors.parsingError(line.count, "You must supply a comment.")
         }
         if 2 == split.count {
             return (
@@ -130,34 +126,38 @@ public final class VariableParser: ErrorContainer {
     }
 
     //swiftlint:disable large_tuple
-    fileprivate func parseVar(fromSegment segment: String, withComment comment: String?) -> Variable? {
+    fileprivate func parseVar(fromSegment segment: String, withComment comment: String?) throws -> Variable {
         let split = segment.components(separatedBy: "=")
         guard split.count <= 2 else {
-            self.errors.append("You can only specify one default value.")
-            return nil
+            throw ParsingErrors.parsingError(split.first?.count ?? 0, "You can only specify one default value.")
         }
         let words = split[0].trimmingCharacters(in: .whitespaces).components(separatedBy: CharacterSet.whitespaces)
         guard let label = words.last else {
-            self.errors.append("You must specify a label for the variable")
-            return nil
+            throw ParsingErrors.parsingError(split[0].count, "You must specify a label for the variable")
         }
         let trimmedLabel = label.trimmingCharacters(in: .whitespaces)
-        guard let arrCounts = self.parseArrayCount(fromLabel: trimmedLabel) else {
-            return nil
+        let arrCounts: [String]
+        do {
+            arrCounts = try self.parseArrayCount(fromLabel: trimmedLabel)
+        } catch ParsingErrors.parsingError(let offset, let message) {
+            throw ParsingErrors.parsingError(split[0].count + offset, message)
         }
         let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
-        guard let defaultValues = self.parseDefaultValues(
+        let defaultValues: (String, String)
+        do {
+            defaultValues = try self.parseDefaultValues(
                 fromSplit: split,
                 forType: type,
                 withArrayCounts: arrCounts
             )
-        else {
-            self.errors.append("Please specify a default value for variable: \(label)")
-            return nil
+        } catch ParsingErrors.parsingError(let offset, let message) {
+            throw ParsingErrors.parsingError(0 + offset, message)
         }
-        guard let swiftType = self.typeConverter.convert(type: type) else {
-            self.errors.append("Malformed type signature.  Unable to convert to swift equivalent: \(type)")
-            return nil
+        let swiftType: String
+        do {
+            swiftType = try self.typeConverter.convert(type: type)
+        } catch ParsingErrors.parsingError(let offset, let message) {
+            throw ParsingErrors.parsingError(type.count + offset, message)
         }
         let cType = self.cTypeConverter.convert(
             type: type.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces)
@@ -173,13 +173,12 @@ public final class VariableParser: ErrorContainer {
         )
     }
 
-    fileprivate func parseArrayCount(fromLabel label: String) -> [String]? {
+    fileprivate func parseArrayCount(fromLabel label: String) throws -> [String] {
         let split = label.components(separatedBy: "[")
-        return split.dropFirst().failMap {
+        return try split.dropFirst().map {
             let trimmed = $0.trimmingCharacters(in: .whitespaces)
             guard "]" == trimmed.last else {
-                self.errors.append("Unable to parse array count for: \(trimmed)")
-                return nil
+                throw ParsingErrors.parsingError(0, "Malformed array size specifier: \(trimmed)")
             }
             return String(trimmed.dropLast())
         }
@@ -189,22 +188,31 @@ public final class VariableParser: ErrorContainer {
         fromSplit split: [String],
         forType type: String,
         withArrayCounts arrCounts: [String]
-    ) -> (String, String)? {
+    ) throws -> (String, String) {
         if split.count > 1 {
-            return self.parseDefaultValues(fromSegment: split[1], forType: type, isArray: false == arrCounts.isEmpty)
+            return try self.parseDefaultValues(
+                fromSegment: split[1],
+                forType: type,
+                isArray: false == arrCounts.isEmpty
+            )
         }
-        return self.defaultValuesCalculator.calculateDefaultValues(forTypeSignature: type, withArrayCounts: arrCounts)
+        guard let defaultValues = self.defaultValuesCalculator.calculateDefaultValues(
+            forTypeSignature: type,
+            withArrayCounts: arrCounts
+        ) else {
+            throw ParsingErrors.parsingError(0, "Unable to calculate default value for type: \(type)")
+        }
+        return defaultValues
     }
 
     fileprivate func parseDefaultValues(
         fromSegment segment: String,
         forType type: String,
         isArray: Bool
-    ) -> (String, String)? {
+    ) throws -> (String, String) {
         let split = segment.components(separatedBy: "|")
         guard split.count <= 2 else {
-            self.errors.append("Unable to parse default values of: \(segment)")
-            return nil
+            throw ParsingErrors.parsingError(0, "Unable to parse default value of: \(segment)")
         }
         if 1 == split.count {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
@@ -212,8 +220,7 @@ public final class VariableParser: ErrorContainer {
         }
         let values = split[1].components(separatedBy: ",")
         guard 2 == values.count else {
-            self.errors.append("Malformed default value list: \(split[1])")
-            return nil
+            throw ParsingErrors.parsingError(split[0].count, "Malformed default value list: \(split[1])")
         }
         return (
             values[0].trimmingCharacters(in: CharacterSet.whitespaces),

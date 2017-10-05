@@ -1,8 +1,8 @@
 /*
- * TypeConverter.swift 
+ * ParsingErrors.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 04/08/2017.
+ * Created by Callum McColl on 28/09/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,73 +56,8 @@
  *
  */
 
-import Foundation
+public enum ParsingErrors: Error {
 
-public final class TypeConverter {
-
-    fileprivate let values: [String: String] = [
-        "string": "String",
-        "bool": "Bool",
-        "char": "UnicodeScalar",
-        "signed char": "UnicodeScalar",
-        "unsigned char": "UnicodeScalar",
-        "int": "Int32",
-        "signed": "Int32",
-        "signed int": "Int32",
-        "unsigned": "UInt32",
-        "unsigned int": "UInt32",
-        "uint8_t": "UInt8",
-        "uint16_t": "UInt16",
-        "uint32_t": "UInt32",
-        "uint64_t": "UInt64",
-        "int8_t": "Int8",
-        "int16_t": "Int16",
-        "int32_t": "Int32",
-        "int64_t": "Int64",
-        "short": "Int16",
-        "short int": "Int16",
-        "signed short": "Int16",
-        "signed short int": "Int16",
-        "unsigned short": "UInt16",
-        "unsigned short int": "UInt16",
-        "long": "Int",
-        "long int": "Int",
-        "signed long": "Int",
-        "signed long int": "Int",
-        "unsigned long": "UInt",
-        "unsigned long int": "UInt",
-        "long long": "Int64",
-        "long long int": "Int64",
-        "signed long long": "Int64",
-        "signed long long int": "Int64",
-        "unsigned long long": "UInt64",
-        "unsigned long long int": "UInt64",
-        "long64_t": "Int64",
-        "float": "Float",
-        "float_t": "Float",
-        "double": "Double",
-        "double_t": "Double",
-        "long double": "Float80",
-        "double double": "Float80"
-    ]
-
-    public init() {}
-
-    func convert(type: String) throws -> String {
-        if type.last != "*" {
-            //swiftlint:disable:next line_length
-            guard let v = self.values[type] ?? type.components(separatedBy: CharacterSet.whitespaces).last else {
-                throw ParsingErrors.parsingError(0, "Unable to parse type.")
-            }
-            return v
-        }
-        let words = String(type.dropLast()).trimmingCharacters(in: .whitespaces)
-            .components(separatedBy: CharacterSet.whitespaces)
-        guard let last = words.last else {
-            throw ParsingErrors.parsingError(0, "Unable to parse type.")
-        }
-        let newType = try self.convert(type: last)
-        return "UnsafeMutablePointer<\(newType)>!"
-    }
+    case parsingError(Int, String)
 
 }
