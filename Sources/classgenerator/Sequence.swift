@@ -72,13 +72,16 @@ extension Sequence where Self.SubSequence: Sequence, Self.SubSequence.Iterator.E
      *  - Parameter shouldGroup: A function that returns true when two
      *    elements should be grouped together into a sub-array.
      */
-    func grouped(by shouldGroup: (Self.Iterator.Element, Self.Iterator.Element) -> Bool) -> [[Self.Iterator.Element]] {
+    func grouped(
+        by shouldGroup: (Self.Iterator.Element, Self.Iterator.Element) throws -> Bool
+    ) rethrows -> [[Self.Iterator.Element]] {
         guard let first = self.first(where: { _ in true }) else {
             return []
         }
         var groups: [[Self.Iterator.Element]] = [[first]]
-        let _: Self.Iterator.Element = self.dropFirst().reduce(first) {
-            if false == shouldGroup($0, $1) {
+        let _: Self.Iterator.Element = try self.dropFirst().reduce(first) {
+            let result = try shouldGroup($0, $1)
+            if false == result {
                 groups.append([$1])
                 return $1
             }
@@ -117,10 +120,10 @@ extension Sequence where
 extension Sequence where Self.SubSequence: Sequence, Self.SubSequence.Iterator.Element == Self.Iterator.Element {
 
     public func trim(
-        _ shouldTrim: (Self.Iterator.Element) -> Bool
-    ) -> RandomAccessSlice<ReversedRandomAccessCollection<ArraySlice<Self.Element>>> {
-        let droppedReversed = self.reversed().drop(while: shouldTrim)
-        return droppedReversed.reversed().drop(while: shouldTrim)
+        _ shouldTrim: (Self.Iterator.Element) throws -> Bool
+    ) rethrows -> RandomAccessSlice<ReversedRandomAccessCollection<ArraySlice<Self.Element>>> {
+        let droppedReversed = try self.reversed().drop(while: shouldTrim)
+        return try droppedReversed.reversed().drop(while: shouldTrim)
     }
 
 }
@@ -141,10 +144,10 @@ extension Sequence where
 
 extension Sequence {
 
-    public func failMap<T>(_ transform: (Self.Iterator.Element) -> T?) -> [T]? {
+    public func failMap<T>(_ transform: (Self.Iterator.Element) throws -> T?) rethrows -> [T]? {
         var arr: [T] = []
         for e in self {
-            guard let r = transform(e) else {
+            guard let r = try transform(e) else {
                 return nil
             }
             arr.append(r)
@@ -163,15 +166,16 @@ extension Sequence where
 
     public func combine(
         _ failSafe: Self.Iterator.Element,
-        _ transform: (Self.Iterator.Element, Self.Iterator.Element) -> Self.Iterator.Element
-    ) -> Self.Iterator.Element {
+        _ transform: (Self.Iterator.Element, Self.Iterator.Element) throws -> Self.Iterator.Element
+    ) rethrows -> Self.Iterator.Element {
         guard let first = self.first(where: { _ in true }) else {
             return failSafe
         }
         guard let second = self.dropFirst().first(where: { _ in true }) else {
             return first
         }
-        return self.dropFirst().dropFirst().reduce(transform(first, second), transform)
+        let firstResult = try transform(first, second)
+        return try self.dropFirst().dropFirst().reduce(firstResult, transform)
     }
 
 }
