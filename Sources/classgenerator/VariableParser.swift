@@ -58,13 +58,7 @@
 
 import Foundation
 
-public final class VariableParser: ErrorContainer {
-
-    public fileprivate(set) var errors: [String] = []
-
-    public var lastError: String? {
-        return self.errors.first
-    }
+public final class VariableParser {
 
     fileprivate let cTypeConverter: CTypeConverter
 
@@ -91,7 +85,6 @@ public final class VariableParser: ErrorContainer {
     }
 
     public func parseVariable(fromLine line: String) throws -> Variable {
-        self.errors = []
         let (remaining, comment) = try self.parseComment(fromLine: line)
         return try self.parseVar(fromSegment: remaining, withComment: comment)
     }

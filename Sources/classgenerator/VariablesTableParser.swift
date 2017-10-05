@@ -76,12 +76,16 @@ public final class VariablesTableParser: ErrorContainer {
         let lines = section.components(separatedBy: CharacterSet.newlines).filter {
             $0.trimmingCharacters(in: .whitespaces) != ""
         }
-        return lines.failMap {
-            guard let v = try? self.parser.parseVariable(fromLine: $0) else {
-                self.errors.append(contentsOf: self.parser.errors)
+        return lines.enumerated().failMap { (index: Int, line: String) in
+            do {
+                return try self.parser.parseVariable(fromLine: line)
+            } catch ParsingErrors.parsingError(let offset, let message) {
+                self.errors.append("\(index), \(offset): \(message)")
+                return nil
+            } catch {
+                self.errors.append("\(index): Unable to parse variables")
                 return nil
             }
-            return v
         }
     }
 
