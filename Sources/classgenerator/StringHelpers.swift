@@ -118,18 +118,22 @@ public final class StringHelpers {
         var chars = String()
         chars.reserveCapacity(str.count)
         let _: Character = str.reduce("_") {
-            let isWhitespace = true == self.isWhitespace($1)
-            guard true == self.isUpperCase($1) || true == self.isNumeric($1) || true == isWhitespace else {
+            if false == self.isAlphaNumeric($1) {
+                if $0 != "_" {
+                    chars.append("_")
+                }
+                return "_"
+            }
+            if $0 != "_" && (self.isNumeric($1) || (!self.isNumeric($0) && self.isUpperCase($1))) {
+                chars.append("_")
+            }
+            if self.isNumeric($0) && self.isUpperCase($1) {
                 chars.append($1)
                 return $1
             }
-            if $0 != "_" && false == self.isWhitespace($0) {
-                chars.append("_")
-            }
-            if false == isWhitespace {
-                chars.append(self.toLower($1))
-            }
-            return $1
+            let lower = self.toLower($1)
+            chars.append(lower)
+            return lower
         }
         return String(chars)
     }

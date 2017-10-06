@@ -75,9 +75,11 @@ public class StringHelpersTests: ClassGeneratorTestCase {
             ("test_toUpperSucceeds", test_toUpperSucceeds),
             ("test_toUpperDoesNothingWithNumbersOrUpperLetters", test_toUpperDoesNothingWithNumbersOrUpperLetters),
             ("test_toCamelCaseWorksWithASentence", test_toCamelCaseWorksWithASentence),
+            ("test_toCamelCaseWorksWithACapitalAfterANumber", test_toCamelCaseWorksWithACapitalAfterANumber),
             ("test_toCamelCaseWorksWithSnakeCase", test_toCamelCaseWorksWithSnakeCase),
             ("test_toCamelCaseDoesNotModifyCamelCase", test_toCamelCaseDoesNotModifyCamelCase),
             ("test_toSnakeCaseWorksWithASentence", test_toSnakeCaseWorksWithASentence),
+            ("test_toSnakeCaseWorksWithACapitalAfterANumber", test_toSnakeCaseWorksWithACapitalAfterANumber),
             ("test_toSnakeCaseDoesNotModifySnakeCase", test_toSnakeCaseDoesNotModifySnakeCase),
             ("test_toSnakeCaseWorksWithCamelCase", test_toSnakeCaseWorksWithCamelCase)
         ]
@@ -150,6 +152,11 @@ public class StringHelpersTests: ClassGeneratorTestCase {
         XCTAssertEqual("ThisIsASentence", self.helpers.toCamelCase(sentence))
     }
 
+    public func test_toCamelCaseWorksWithACapitalAfterANumber() {
+        let text = "point_2D"
+        XCTAssertEqual("Point2D", self.helpers.toCamelCase(text))
+    }
+
     public func test_toCamelCaseWorksWithSnakeCase() {
         let snake = "this_is_1a_test123"
         XCTAssertEqual("ThisIs1aTest123", self.helpers.toCamelCase(snake))
@@ -165,6 +172,11 @@ public class StringHelpersTests: ClassGeneratorTestCase {
         XCTAssertEqual("this_is_1a_sentence", self.helpers.toSnakeCase(sentence))
     }
 
+    public func test_toSnakeCaseWorksWithACapitalAfterANumber() {
+        let text = "Point 2D"
+        XCTAssertEqual("point_2D", self.helpers.toSnakeCase(text))
+    }
+
     public func test_toSnakeCaseDoesNotModifySnakeCase() {
         let camelCase = "this_is_1a_test"
         XCTAssertEqual("this_is_1a_test", self.helpers.toSnakeCase(camelCase))
@@ -172,7 +184,7 @@ public class StringHelpersTests: ClassGeneratorTestCase {
 
     public func test_toSnakeCaseWorksWithCamelCase() {
         let snake = "ThisIs1ATest"
-        XCTAssertEqual("this_is_1_a_test", self.helpers.toSnakeCase(snake))
+        XCTAssertEqual("this_is_1A_test", self.helpers.toSnakeCase(snake))
     }
 
 }
