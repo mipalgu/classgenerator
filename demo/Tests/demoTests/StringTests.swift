@@ -69,7 +69,8 @@ public class StringTests: XCTestCase {
         return [
             ("test_cDescriptionEqualsExpectedDescription", test_cDescriptionEqualsExpectedDescription),
             ("test_cToStringEqualsExpectedToString", test_cToStringEqualsExpectedToString),
-            //("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
+            ("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
+            ("test_cppToStringEqualsExpectedToString", test_cppToStringEqualsExpectedToString),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription)
         ]
@@ -112,10 +113,23 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(self.expectedToString, self.cToString)
     }
 
-    /*public func test_cppDescriptionEqualsExpectedDescription() {
+    public func test_cppDescriptionEqualsExpectedDescription() {
         var demo = self.demo
-        XCTAssertEqual(self.expectedDemoDescription, String(cString: cpp_description(&demo)))
-    }*/
+        guard let p = cpp_description(&demo) else {
+            XCTFail("cpp_description returns nil.")
+            return
+        }
+        XCTAssertEqual(self.expectedDemoDescription, String(cString: p))
+    }
+
+    public func test_cppToStringEqualsExpectedToString() {
+        var demo = self.demo
+        guard let p = cpp_to_string(&demo) else {
+            XCTFail("cpp_to_string returns nil.")
+            return
+        }
+        XCTAssertEqual(self.expectedToString, String(cString: p))
+    }
 
     public func test_cFromStringCreatesStruct() {
         var target: wb_demo = wb_demo()
