@@ -195,6 +195,11 @@ public final class CHeaderCreator: ErrorContainer {
         let name = String(name.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         return """
             #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
+
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
+
             /**
              * Convert to a description string.
              */
@@ -209,6 +214,11 @@ public final class CHeaderCreator: ErrorContainer {
              * Convert from a string.
              */
             struct \(name)* \(name)_from_string(struct \(name)* self, const char* str);
+
+            #ifdef __cplusplus
+            }
+            #endif
+
             #endif /// WHITEBOARD_POSTER_STRING_CONVERSION\(postC)
 
             #endif /// \(name)_h

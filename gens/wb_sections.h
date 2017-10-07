@@ -86,6 +86,11 @@ struct wb_sections
 };
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Convert to a description string.
  */
@@ -100,6 +105,11 @@ const char* wb_sections_to_string(const struct wb_sections* self, char* toString
  * Convert from a string.
  */
 struct wb_sections* wb_sections_from_string(struct wb_sections* self, const char* str);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
 int f() {

@@ -532,6 +532,11 @@ struct wb_old
 };
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Convert to a description string.
  */
@@ -546,6 +551,11 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
  * Convert from a string.
  */
 struct wb_old* wb_old_from_string(struct wb_old* self, const char* str);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
 #endif /// wb_old_h
