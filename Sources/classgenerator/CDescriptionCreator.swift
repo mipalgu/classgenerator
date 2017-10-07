@@ -66,12 +66,14 @@ public final class CDescriptionCreator {
         self.stringHelpers = stringHelpers
     }
 
+    //swiftlint:disable function_parameter_count
     public func createFunction(
         creating fLabel: String,
         withComment comment: String,
         forClass cls: Class,
         withStructNamed structName: String,
-        forStrVariable strLabel: String
+        forStrVariable strLabel: String,
+        includeLabels: Bool
     ) -> String {
         //swiftlint:disable:next line_length
         let definition = "const char* \(structName)_\(fLabel)(const struct \(structName)* self, char* \(strLabel), size_t bufferSize)\n{"
@@ -81,7 +83,12 @@ public final class CDescriptionCreator {
                 size_t len = 0;
             """
         let descriptions = cls.variables.flatMap {
-            self.createDescription(forVariable: $0, forClassNamed: cls.name, appendingTo: strLabel)
+            self.createDescription(
+                forVariable: $0,
+                forClassNamed: cls.name,
+                appendingTo: strLabel,
+                includeLabels: includeLabels
+            )
         }
         let guardedDescriptions = descriptions.map {
             self.createGuard(forStrVariable: strLabel) + "\n" + $0
@@ -113,13 +120,15 @@ public final class CDescriptionCreator {
     fileprivate func createDescription(
         forVariable variable: Variable,
         forClassNamed className: String,
-        appendingTo strLabel: String
+        appendingTo strLabel: String,
+        includeLabels: Bool
     ) -> String? {
         return self.createDescription(
             forType: variable.type,
             withLabel: variable.label,
             andClassName: className,
-            appendingTo: strLabel
+            appendingTo: strLabel,
+            includeLabels: includeLabels
         )
     }
 
@@ -128,6 +137,7 @@ public final class CDescriptionCreator {
         withLabel label: String,
         andClassName className: String,
         appendingTo strLabel: String,
+        includeLabels: Bool,
         _ level: Int = 0
     ) -> String? {
         switch type {
@@ -141,6 +151,7 @@ public final class CDescriptionCreator {
                             withLabel: label,
                             andClassName: className,
                             appendingTo: strLabel,
+                            includeLabels: includeLabels,
                             level + 1
                         )
                     default:
@@ -148,7 +159,8 @@ public final class CDescriptionCreator {
                             forType: subtype,
                             withLabel: self.createIndexes(forLabel: label, level),
                             andClassName: className,
-                            appendingTo: strLabel
+                            appendingTo: strLabel,
+                            includeLabels: includeLabels
                         )
                 }
                 guard let value = temp else {
@@ -156,7 +168,7 @@ public final class CDescriptionCreator {
                 }
                 //swiftlint:disable line_length
                 return """
-                    len = gu_strlcat(\(strLabel), "\(arrLabel)={", bufferSize);
+                    len = gu_strlcat(\(strLabel), "\(includeLabels ? arrLabel + "=" : ""){", bufferSize);
                     int \(arrLabel)_first = 0;
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
                     \(self.stringHelpers.indent(self.createGuard(forStrVariable: strLabel)))
@@ -174,7 +186,8 @@ public final class CDescriptionCreator {
                     forType: type,
                     withLabel: label,
                     andClassName: className,
-                    appendingTo: strLabel
+                    appendingTo: strLabel,
+                    includeLabels: includeLabels
                 )
         }
     }
@@ -187,32 +200,39 @@ public final class CDescriptionCreator {
         forType type: VariableTypes,
         withLabel label: String,
         andClassName className: String,
-        appendingTo strLabel: String
+        appendingTo strLabel: String,
+        includeLabels: Bool
     ) -> String? {
+        let pre = includeLabels ? label + "=" : ""
         switch type {
             case .array:
                 return self.createArrayDescription(
                     forType: type,
                     withLabel: label,
                     andClassName: className,
-                    appendingTo: strLabel
+                    appendingTo: strLabel,
+                    includeLabels: includeLabels
                 )
             case .bool:
-                return """
-                    len = gu_strlcat(\(strLabel), "\(label)=", bufferSize);
-                    \(self.createGuard(forStrVariable: strLabel))
-                    len = gu_strlcat(\(strLabel), self->\(label) ? "true" : "false", bufferSize);
-                    """
+                let value = "len = gu_strlcat(\(strLabel), self->\(label) ? \"true\" : \"false\", bufferSize);"
+                if true == includeLabels {
+                    return """
+                        len = gu_strlcat(\(strLabel), "\(pre)", bufferSize);
+                        \(self.createGuard(forStrVariable: strLabel))
+                        \(value)
+                        """
+                }
+                return value
             case .char:
-                return self.createSNPrintf("\(label)=%c", "self->\(label)", appendingTo: strLabel)
+                return self.createSNPrintf("\(pre)%c", "self->\(label)", appendingTo: strLabel)
             case .numeric(let numericType):
                 return self.createSNPrintf(
-                    "\(label)=%\(self.createFormat(forNumericType: numericType))",
+                    "\(pre)%\(self.createFormat(forNumericType: numericType))",
                     "self->\(label)",
                     appendingTo: strLabel
                 )
             case .string:
-                return self.createSNPrintf("\(label)=%s", "self->\(label)", appendingTo: strLabel)
+                return self.createSNPrintf("\(pre)%s", "self->\(label)", appendingTo: strLabel)
             default:
                 return nil
         }
@@ -222,7 +242,8 @@ public final class CDescriptionCreator {
         forType type: VariableTypes,
         withLabel label: String,
         andClassName className: String,
-        appendingTo strLabel: String
+        appendingTo strLabel: String,
+        includeLabels: Bool
     ) -> String? {
         switch type {
             case .array:
@@ -230,7 +251,8 @@ public final class CDescriptionCreator {
                     forType: type,
                     withLabel: label,
                     andClassName: className,
-                    appendingTo: strLabel
+                    appendingTo: strLabel,
+                    includeLabels: includeLabels
                 )
             case .bool:
                 return "len = gu_strlcat(\(strLabel), self->\(label) ? \"true\" : \"false\", bufferSize);"

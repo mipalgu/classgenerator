@@ -99,7 +99,8 @@ public final class CFileCreator: ErrorContainer {
                 """,
             forClass: cls,
             withStructNamed: structName,
-            forStrVariable: "descString"
+            forStrVariable: "descString",
+            includeLabels: true
         )
         let toStringFunc = self.descriptionCreator.createFunction(
             creating: "to_string",
@@ -110,7 +111,8 @@ public final class CFileCreator: ErrorContainer {
                 """,
             forClass: cls,
             withStructNamed: structName,
-            forStrVariable: "toString"
+            forStrVariable: "toString",
+            includeLabels: false
         )
         let fromStringFunc = self.fromStringCreator.createFunction(
             creating: "from_string",
