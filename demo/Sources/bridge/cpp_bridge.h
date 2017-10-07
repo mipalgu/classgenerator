@@ -1,5 +1,5 @@
 /*
- * cpp_bridge.cpp 
+ * cpp_bridge.h 
  * bridge 
  *
  * Created by Callum McColl on 21/09/2017.
@@ -56,27 +56,21 @@
  *
  */
 
-#include "Demo.h"
-#include "include/bridge/cpp_bridge.h"
+#ifndef CPP_BRIDGE_H
+#define CPP_BRIDGE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-const char * cpp_to_string(struct wb_demo * demo) {
-    guWhiteboard::Demo * d = static_cast<guWhiteboard::Demo *>(demo);
-    return d->to_string().c_str();
-}
+#include "wb_demo.h"
 
-const char * cpp_description(struct wb_demo * demo) {
-    guWhiteboard::Demo * d = static_cast<guWhiteboard::Demo *>(demo);
-    return d->description().c_str();
-}
-
-struct wb_demo * cpp_from_string(char *) {
-    return NULL;
-}
+const char * cpp_to_string(struct wb_demo *);
+const char * cpp_description(struct wb_demo *);
+struct wb_demo * cpp_from_string(char *);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif  /* CPP_BRIDGE_H */

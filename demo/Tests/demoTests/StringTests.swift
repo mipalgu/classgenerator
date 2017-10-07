@@ -115,16 +115,18 @@ public class StringTests: XCTestCase {
 
     public func test_cppDescriptionEqualsExpectedDescription() {
         var demo = self.demo
-        guard let p = cpp_description(&demo) else {
-            XCTFail("cpp_description returns nil.")
+        let str = withUnsafeMutablePointer(to: &demo) { cpp_description($0) }
+        guard let p = str else {
+            XCTFail("cpp_description nil.")
             return
         }
-        XCTAssertEqual(self.expectedDemoDescription, String(cString: p))
+        XCTAssertEqual(self.expectedToString, String(cString: p))
     }
 
     public func test_cppToStringEqualsExpectedToString() {
         var demo = self.demo
-        guard let p = cpp_to_string(&demo) else {
+        let str = withUnsafeMutablePointer(to: &demo) { cpp_to_string($0) }
+        guard let p = str else {
             XCTFail("cpp_to_string returns nil.")
             return
         }
