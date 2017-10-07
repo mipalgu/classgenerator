@@ -101,6 +101,20 @@ public class StringTests: XCTestCase {
         })
     }
 
+    var cppDescription: String {
+        let buffer = ContiguousArray<CChar>(repeating: 0, count: Int(DEMO_DESC_BUFFER_SIZE))
+        return String(cString: buffer.withUnsafeBufferPointer {
+            cpp_description(&self.demo, UnsafeMutablePointer(mutating: $0.baseAddress), Int(DEMO_DESC_BUFFER_SIZE))
+        })
+    }
+
+    var cppToString: String {
+        let buffer = ContiguousArray<CChar>(repeating: 0, count: Int(DEMO_DESC_BUFFER_SIZE))
+        return String(cString: buffer.withUnsafeBufferPointer {
+            cpp_to_string(&self.demo, UnsafeMutablePointer(mutating: $0.baseAddress), Int(DEMO_DESC_BUFFER_SIZE))
+        })
+    }
+
     public override func setUp() {
         self.demo = wb_demo(str: "hi")
     }
@@ -114,23 +128,11 @@ public class StringTests: XCTestCase {
     }
 
     public func test_cppDescriptionEqualsExpectedDescription() {
-        var demo = self.demo
-        let str = withUnsafeMutablePointer(to: &demo) { cpp_description($0) }
-        guard let p = str else {
-            XCTFail("cpp_description nil.")
-            return
-        }
-        XCTAssertEqual(self.expectedToString, String(cString: p))
+        XCTAssertEqual(self.expectedDemoDescription, self.cppDescription)
     }
 
     public func test_cppToStringEqualsExpectedToString() {
-        var demo = self.demo
-        let str = withUnsafeMutablePointer(to: &demo) { cpp_to_string($0) }
-        guard let p = str else {
-            XCTFail("cpp_to_string returns nil.")
-            return
-        }
-        XCTAssertEqual(self.expectedToString, String(cString: p))
+        XCTAssertEqual(self.expectedToString, self.cppToString)
     }
 
     public func test_cFromStringCreatesStruct() {

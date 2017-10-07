@@ -56,6 +56,8 @@
  *
  */
 
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
+
 #include "Demo.h"
 #include "include/bridge/cpp_bridge.h"
 
@@ -63,14 +65,18 @@
 extern "C" {
 #endif
 
-const char * cpp_to_string(struct wb_demo * demo) {
+const char * cpp_to_string(struct wb_demo * demo, char * buffer, size_t bufferSize) {
     guWhiteboard::Demo * d = static_cast<guWhiteboard::Demo *>(demo);
-    return d->to_string().c_str();
+    std::string str = d->to_string();
+    snprintf(buffer, bufferSize, "%s", str.c_str());
+    return buffer;
 }
 
-const char * cpp_description(struct wb_demo * demo) {
+const char * cpp_description(struct wb_demo * demo, char * buffer, size_t bufferSize) {
     guWhiteboard::Demo * d = static_cast<guWhiteboard::Demo *>(demo);
-    return d->description().c_str();
+    std::string str = d->description();
+    snprintf(buffer, bufferSize, "%s", str.c_str());
+    return buffer;
 }
 
 struct wb_demo * cpp_from_string(char *) {
@@ -80,3 +86,5 @@ struct wb_demo * cpp_from_string(char *) {
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* WHITEBOARD_POSTER_STRING_CONVERSION */

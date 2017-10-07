@@ -59,14 +59,16 @@
 #ifndef CPP_BRIDGE_H
 #define CPP_BRIDGE_H
 
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "wb_demo.h"
 
-const char * cpp_to_string(struct wb_demo *);
-const char * cpp_description(struct wb_demo *);
+const char * cpp_to_string(struct wb_demo *, char *, size_t);
+const char * cpp_description(struct wb_demo *, char *, size_t);
 struct wb_demo * cpp_from_string(char *);
 
 #ifdef __cplusplus
@@ -74,3 +76,5 @@ struct wb_demo * cpp_from_string(char *);
 #endif
 
 #endif  /* CPP_BRIDGE_H */
+
+#endif /* WHITEBOARD_POSTER_STRING_CONVERSION */
