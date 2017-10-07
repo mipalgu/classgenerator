@@ -64,7 +64,8 @@ public class DemoTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (DemoTests) -> () throws -> Void)] {
         return [
-            ("test_demo", test_demo)
+            ("test_demo", test_demo),
+            ("test_demoWithCConversion", test_demoWithCConversion)
         ]
     }
 
@@ -114,6 +115,36 @@ public class DemoTests: ClassGeneratorTestCase {
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
         p.launchPath = "/usr/bin/env"
         p.arguments = ["swift", "test", "-Xcc", "-DWHITEBOARD_POSTER_STRING_CONVERSION=1"]
+        p.launch()
+        p.waitUntilExit()
+        XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
+    }
+
+    public func test_demoWithCConversion() {
+        guard true == self.filemanager.changeCurrentDirectoryPath("demo") else {
+            XCTFail("Unable to change into demo directory.")
+            return
+        }
+        self.generator.run([
+            "classgenerator",
+            "-cs",
+            "--c-header",
+            "./Sources/bridge",
+            "--swift-file",
+            "./Sources/demo",
+            "./demo.gen"
+        ])
+        let p = Process()
+        p.currentDirectoryPath = self.filemanager.currentDirectoryPath
+        p.launchPath = "/usr/bin/env"
+        p.arguments = [
+            "swift",
+            "test",
+            "-Xcc",
+            "-DWHITEBOARD_POSTER_STRING_CONVERSION=1",
+            "-Xcc",
+            "-DUSE_WB_DEMO_C_CONVERSION=1"
+        ]
         p.launch()
         p.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
