@@ -200,6 +200,33 @@ public final class CPPStringFunctionsCreator {
                         }
                         ss << "}";
                         """
+                case.bool:
+                    //swiftlint:disable:next line_length
+                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")(this->\($0.label)() ? \"true\" : \"false\");"
+                case .char:
+                    return """
+                        if (this->\($0.label)() == 0) {
+                            ss << \(true == includeLabel ? "\"\($0.label)=\"" : "\"\"");
+                        } else {
+                            ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();
+                        }
+                        """
+                case .numeric(.signed):
+                    return """
+                        ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")signed(this->\($0.label)());
+                        """
+                case .numeric(.unsigned):
+                    return """
+                        ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")unsigned(this->\($0.label)());
+                        """
+                case .string:
+                    return """
+                        if (strncmp("", this->\($0.label)(), 1)) {
+                            ss << \(true == includeLabel ? "\"\($0.label)=\"" : "\"\"");
+                        } else {
+                            ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();
+                        }
+                        """
                 default:
                     return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();"
             }
