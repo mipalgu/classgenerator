@@ -79,8 +79,11 @@ const char * cpp_description(struct wb_demo * demo, char * buffer, size_t buffer
     return buffer;
 }
 
-struct wb_demo * cpp_from_string(char *) {
-    return NULL;
+struct wb_demo * cpp_from_string(struct wb_demo * demo, char * str) {
+    std::string temp = str;
+    guWhiteboard::Demo * d = static_cast<guWhiteboard::Demo *>(demo);
+    d->from_string(temp);
+    return d;
 }
 
 #ifdef __cplusplus

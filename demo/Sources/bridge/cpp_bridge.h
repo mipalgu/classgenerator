@@ -69,7 +69,7 @@ extern "C" {
 
 const char * cpp_to_string(struct wb_demo *, char *, size_t);
 const char * cpp_description(struct wb_demo *, char *, size_t);
-struct wb_demo * cpp_from_string(char *);
+struct wb_demo * cpp_from_string(struct wb_demo *, char *);
 
 #ifdef __cplusplus
 }

@@ -69,10 +69,12 @@ public class StringTests: XCTestCase {
         return [
             ("test_cDescriptionEqualsExpectedDescription", test_cDescriptionEqualsExpectedDescription),
             ("test_cToStringEqualsExpectedToString", test_cToStringEqualsExpectedToString),
+            ("test_cFromStringCreatesStruct", test_cFromStringCreatesStruct),
             ("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
             ("test_cppToStringEqualsExpectedToString", test_cppToStringEqualsExpectedToString),
+            ("test_cppFromStringCreatesStruct", test_cppFromStringCreatesStruct),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
-            ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription)
+            ("test_swiftDescriptionCanBeConvertedToStruct", test_swiftDescriptionCanBeConvertedToStruct)
         ]
     }
 
@@ -127,6 +129,18 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(self.expectedToString, self.cToString)
     }
 
+    public func test_cFromStringCreatesStruct() {
+        var target: wb_demo = wb_demo()
+        let result = self.expectedDemoDescription.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(self.demo, r.pointee)
+    }
+
     public func test_cppDescriptionEqualsExpectedDescription() {
         let expected = self.expectedDemoDescription
             .replacingOccurrences(of: "0.000000", with: "0")
@@ -141,16 +155,16 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(expected, self.cppToString)
     }
 
-    public func test_cFromStringCreatesStruct() {
+    public func test_cppFromStringCreatesStruct() {
         var target: wb_demo = wb_demo()
         let result = self.expectedDemoDescription.utf8CString.withUnsafeBufferPointer {
-            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+            cpp_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
         }
         XCTAssertNotNil(result)
         guard let r = result else {
             return
         }
-        XCTAssertEqual(r.pointee, self.demo)
+        XCTAssertEqual(self.demo, r.pointee)
     }
 
     public func test_swiftDescriptionEqualsExpectedDescription() {
