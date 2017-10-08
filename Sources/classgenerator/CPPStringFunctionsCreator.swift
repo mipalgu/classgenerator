@@ -277,6 +277,8 @@ public final class CPPStringFunctionsCreator {
                         \(pre)\(getter);
                     }
                     """
+            case .unknown:
+                return nil
             default:
                 return "\(pre)\(getter);"
         }
