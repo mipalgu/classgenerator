@@ -13,15 +13,18 @@ swift-build:
 	elif [ ! $(cmp -s "main.in" "Sources/classgenerator/main.swift") ]; then \
 		cp main.in Sources/classgenerator/main.swift ; \
 	fi;
-	$Eenv ${BUILD_ENV} ${SWIFT} build ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
+	$Eenv ${BUILD_ENV} ${SWIFT} build -c ${SWIFT_BUILD_CONFIG} ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
 
 swift-test:
 	rm -f Sources/classgenerator/main.swift
-	$Eenv ${BUILD_ENV} ${SWIFT} test ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
+	$Eenv ${BUILD_ENV} ${SWIFT} test -c ${SWIFT_BUILD_CONFIG} ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
 
 host:	swift-build
 
 test:	swift-test
+
+install:
+	cp .build/${SWIFT_BUILD_CONFIG}/classgenerator /usr/local/bin
 
 clean:
 	rm -rf .build
