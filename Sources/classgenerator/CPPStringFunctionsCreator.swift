@@ -212,7 +212,7 @@ public final class CPPStringFunctionsCreator {
                     forType: subtype,
                     withLabel: label,
                     includeLabel: includeLabel,
-                    appendingTo: "ss << (\(label)_first ? \"\" : \",\") << ",
+                    appendingTo: "ss << (\(label)_first ? \"\" : \", \") << ",
                     createGetter
                 ) else {
                     return nil
