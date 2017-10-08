@@ -180,57 +180,106 @@ public final class CPPStringFunctionsCreator {
     fileprivate func createConcatString(
         forClassNamed className: String,
         withVariables variables: [Variable],
-        andIncludeLabels includeLabel: Bool
+        andIncludeLabels includeLabels: Bool
     ) -> String {
         return variables.flatMap {
-            switch $0.type {
-                case .array(let subtype, _):
-                    switch subtype {
-                        case .array:
-                            return nil
-                        default:
-                            break
-                    }
-                    return """
-                        bool \($0.label)_first = true;
-                        ss << \(true == includeLabel ? "\"\($0.label)={\";" : "\"{\";")
-                        for (int i = 0; i < \(className.uppercased())_\($0.label.uppercased())_ARRAY_SIZE; i++) {
-                            ss << (\($0.label)_first ? "" : ",") << this->\($0.label)(i);
-                            \($0.label)_first = false;
-                        }
-                        ss << "}";
-                        """
-                case.bool:
-                    //swiftlint:disable:next line_length
-                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")(this->\($0.label)() ? \"true\" : \"false\");"
-                case .char:
-                    return """
-                        if (this->\($0.label)() == 0) {
-                            ss << \(true == includeLabel ? "\"\($0.label)=\"" : "\"\"");
-                        } else {
-                            ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();
-                        }
-                        """
-                case .numeric(.signed):
-                    return """
-                        ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")signed(this->\($0.label)());
-                        """
-                case .numeric(.unsigned):
-                    return """
-                        ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")unsigned(this->\($0.label)());
-                        """
-                case .string:
-                    return """
-                        if (strncmp("", this->\($0.label)(), 1)) {
-                            ss << \(true == includeLabel ? "\"\($0.label)=\"" : "\"\"");
-                        } else {
-                            ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();
-                        }
-                        """
-                default:
-                    return "ss << \(true == includeLabel ? "\"\($0.label)=\" << " : "")this->\($0.label)();"
-            }
+            self.createConcatString(
+                forClassNamed: className,
+                forType: $0.type,
+                withLabel: $0.label,
+                andIncludeLabel: includeLabels
+            )
         }.combine("") { $0 + "\nss << \", \";\n" + $1 }
+    }
+
+    fileprivate func createConcatString(
+        forClassNamed className: String,
+        forType type: VariableTypes,
+        withLabel label: String,
+        andIncludeLabel includeLabel: Bool
+    ) -> String? {
+        switch type {
+            case .array(let subtype, _):
+                switch subtype {
+                    case .array:
+                        return nil
+                    default:
+                        break
+                }
+                let createGetter: (String) -> String = { "this->" + $0 + "(i)" }
+                guard let value = self.createStringValue(
+                    forClassNamed: className,
+                    forType: subtype,
+                    withLabel: label,
+                    includeLabel: includeLabel,
+                    appendingTo: "ss << (\(label)_first ? \"\" : \",\") << ",
+                    createGetter
+                ) else {
+                    return nil
+                }
+                return """
+                    bool \(label)_first = true;
+                    ss << \(true == includeLabel ? "\"\(label)={\";" : "\"{\";")
+                    for (int i = 0; i < \(className.uppercased())_\(label.uppercased())_ARRAY_SIZE; i++) {
+                    \(self.stringHelpers.indent(value))
+                        \(label)_first = false;
+                    }
+                    ss << "}";
+                    """
+            default:
+                let pre = "ss << \(true == includeLabel ? "\"\(label)=\" << " : "")"
+                return self.createStringValue(
+                    forClassNamed: className,
+                    forType: type,
+                    withLabel: label,
+                    includeLabel: includeLabel,
+                    appendingTo: pre
+                )
+        }
+    }
+
+    fileprivate func createStringValue(
+        forClassNamed className: String,
+        forType type: VariableTypes,
+        withLabel label: String,
+        includeLabel: Bool,
+        appendingTo pre: String,
+        _ createGetter: (String) -> String = { "this->" + $0 + "()" }
+    ) -> String? {
+        let getter = createGetter(label)
+        switch type {
+            case .array:
+                return self.createConcatString(
+                    forClassNamed: className,
+                    forType: type,
+                    withLabel: label,
+                    andIncludeLabel: includeLabel
+                )
+            case .bool:
+                return "\(pre)(\(getter) ? \"true\" : \"false\");"
+            case .char:
+                return """
+                    if (\(getter) == 0) {
+                        \(pre)"";
+                    } else {
+                        \(pre)\(getter);
+                    }
+                    """
+            case .numeric(.signed):
+                return "\(pre)signed(\(getter));"
+            case .numeric(.unsigned):
+                return "\(pre)unsigned(\(getter));"
+            case .string:
+                return """
+                    if (0 == strncmp("", \(getter), 1)) {
+                        \(pre)"";
+                    } else {
+                        \(pre)\(getter);
+                    }
+                    """
+            default:
+                return "\(pre)\(getter);"
+        }
     }
 
 }
