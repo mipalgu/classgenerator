@@ -211,13 +211,12 @@ public final class VariableParser {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
             return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type, isArray: isArray) ?? trimmed)
         }
-        let values = split[1].components(separatedBy: ",")
-        guard 2 == values.count else {
+        guard 2 == split.count else {
             throw ParsingErrors.parsingError(split[0].count, "Malformed default value list: \(split[1])")
         }
         return (
-            values[0].trimmingCharacters(in: CharacterSet.whitespaces),
-            self.trimDefaultValueListSeparators(values[1]).trimmingCharacters(in: CharacterSet.whitespaces)
+            split[0].trimmingCharacters(in: CharacterSet.whitespaces),
+            self.trimDefaultValueListSeparators(split[1]).trimmingCharacters(in: CharacterSet.whitespaces)
         )
     }
 
