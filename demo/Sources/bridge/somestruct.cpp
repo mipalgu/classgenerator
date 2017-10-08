@@ -59,6 +59,8 @@
 #include "somestruct.h"
 
 std::ostream& operator<<(std::ostream& os, const struct somestruct& s) {
-    os << "{}";
+    os << "{";
+    os << (s.b() ? "true" : "false");
+    os << "}";
     return os;
 }

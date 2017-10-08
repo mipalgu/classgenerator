@@ -59,6 +59,9 @@
 #ifndef SOMESTRUCT_H
 #define SOMESTRUCT_H
 
+#include "gu_util.h"
+
+
 #ifdef __cplusplus
 #include <iostream>
 #endif
@@ -67,7 +70,14 @@
 extern "C" {
 #endif
 
-struct somestruct {};
+struct somestruct {
+
+    /**
+     * A boolean.
+     */
+    PROPERTY(bool, b)
+
+};
 
 #ifdef __cplusplus
 }
