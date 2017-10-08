@@ -117,7 +117,7 @@ namespace guWhiteboard {
             return descr;
 #else
             std::ostringstream ss;
-            ss << "c=" << this->c();
+            ss << "c=" << signed(this->c());
             return ss.str();
 #endif /// USE_WB_SECTIONS_C_CONVERSION
         }
@@ -130,14 +130,14 @@ namespace guWhiteboard {
             return toString;
 #else
             std::ostringstream ss;
-            ss << this->c();
+            ss << signed(this->c());
             return ss.str();
 #endif /// USE_WB_SECTIONS_C_CONVERSION
         }
 
         void from_string(const std::string &str) {
-#ifdef USE_WB_OLD_C_CONVERSION
-            wb_sections_from_string(this, str);
+#ifdef USE_WB_SECTIONS_C_CONVERSION
+            wb_sections_from_string(this, str.c_str());
 #else
             char var[255];
             unsigned long c_index = str.find("c");
@@ -148,7 +148,7 @@ namespace guWhiteboard {
                     set_c((int) (atoi(value.c_str())));
                 }
             }
-#endif /// USE_WB_OLD_C_CONVERSION
+#endif /// USE_WB_SECTIONS_C_CONVERSION
         }
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
