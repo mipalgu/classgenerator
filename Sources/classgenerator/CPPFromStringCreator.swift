@@ -151,11 +151,11 @@ public final class CPPFromStringCreator {
                 let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
                 return getValue + "\n" + "set_\(label)(static_cast<\(cType)>(\(conversionFunction)(value.c_str())));"
             case .string(let length):
-                return getValue + "\n" + "gu_strlcpy((char *) this->\(label)(), value.c_str(), \(length));"
+                return getValue + "\n" + "gu_strlcpy(const_cast<char *>(this->\(label)()), value.c_str(), \(length));"
             case .pointer:
                 let typeExtras = self.creatorHelpers.calculateSignatureExtras(forType: type)
                 //swiftlint:disable:next line_length
-                let cast = "const \(cType)\(typeExtras) \(label)_cast = (\(cType)\(typeExtras)) (atol(value.c_str()));"
+                let cast = "const \(cType)\(typeExtras) \(label)_cast = static_cast<\(cType)\(typeExtras)>(atol(value.c_str()));"
                 return getValue + "\n" + cast + "\n" + "set_\(label)(\(label)_cast);"
             case .unknown:
                 return nil
