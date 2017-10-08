@@ -407,53 +407,69 @@ namespace guWhiteboard {
             return descr;
 #else
             std::ostringstream ss;
-            ss << "str=" << this->str();
+            if (0 == strncmp("", this->str(), 1)) {
+                ss << "str=" << "";
+            } else {
+                ss << "str=" << this->str();
+            }
             ss << ", ";
-            ss << "b=" << this->b();
+            ss << "b=" << (this->b() ? "true" : "false");
             ss << ", ";
-            ss << "c=" << this->c();
+            if (this->c() == 0) {
+                ss << "c=" << "";
+            } else {
+                ss << "c=" << this->c();
+            }
             ss << ", ";
-            ss << "sc=" << this->sc();
+            if (this->sc() == 0) {
+                ss << "sc=" << "";
+            } else {
+                ss << "sc=" << this->sc();
+            }
             ss << ", ";
-            ss << "uc=" << this->uc();
+            if (this->uc() == 0) {
+                ss << "uc=" << "";
+            } else {
+                ss << "uc=" << this->uc();
+            }
             ss << ", ";
-            ss << "i=" << this->i();
+            ss << "i=" << signed(this->i());
             ss << ", ";
-            ss << "si=" << this->si();
+            ss << "si=" << signed(this->si());
             ss << ", ";
-            ss << "sii=" << this->sii();
+            ss << "sii=" << signed(this->sii());
             ss << ", ";
-            ss << "u=" << this->u();
+            ss << "u=" << unsigned(this->u());
             ss << ", ";
-            ss << "ui=" << this->ui();
+            ss << "ui=" << unsigned(this->ui());
             ss << ", ";
-            ss << "u8=" << this->u8();
+            ss << "u8=" << unsigned(this->u8());
             ss << ", ";
-            ss << "u16=" << this->u16();
+            ss << "u16=" << unsigned(this->u16());
             ss << ", ";
-            ss << "u32=" << this->u32();
+            ss << "u32=" << unsigned(this->u32());
             ss << ", ";
             ss << "u64=" << this->u64();
             ss << ", ";
-            ss << "i8=" << this->i8();
+            ss << "i8=" << signed(this->i8());
             ss << ", ";
-            ss << "i16=" << this->i16();
+            ss << "i16=" << signed(this->i16());
             ss << ", ";
-            ss << "i32=" << this->i32();
+            ss << "i32=" << signed(this->i32());
             ss << ", ";
             ss << "i64=" << this->i64();
             ss << ", ";
-            ss << "s=" << this->s();
+            ss << "s=" << signed(this->s());
             ss << ", ";
-            ss << "si_2=" << this->si_2();
+            ss << "si_2=" << signed(this->si_2());
             ss << ", ";
-            ss << "ss=" << this->ss();
+            ss << "ss=" << signed(this->ss());
             ss << ", ";
-            ss << "ssi=" << this->ssi();
+            ss << "ssi=" << signed(this->ssi());
             ss << ", ";
-            ss << "us=" << this->us();
+            ss << "us=" << unsigned(this->us());
             ss << ", ";
-            ss << "usi=" << this->usi();
+            ss << "usi=" << unsigned(this->usi());
             ss << ", ";
             ss << "l=" << this->l();
             ss << ", ";
@@ -493,53 +509,69 @@ namespace guWhiteboard {
             ss << ", ";
             ss << "dd=" << this->dd();
             ss << ", ";
-            ss << "str2=" << this->str2();
+            if (0 == strncmp("", this->str2(), 1)) {
+                ss << "str2=" << "";
+            } else {
+                ss << "str2=" << this->str2();
+            }
             ss << ", ";
-            ss << "b2=" << this->b2();
+            ss << "b2=" << (this->b2() ? "true" : "false");
             ss << ", ";
-            ss << "c2=" << this->c2();
+            if (this->c2() == 0) {
+                ss << "c2=" << "";
+            } else {
+                ss << "c2=" << this->c2();
+            }
             ss << ", ";
-            ss << "sc2=" << this->sc2();
+            if (this->sc2() == 0) {
+                ss << "sc2=" << "";
+            } else {
+                ss << "sc2=" << this->sc2();
+            }
             ss << ", ";
-            ss << "uc2=" << this->uc2();
+            if (this->uc2() == 0) {
+                ss << "uc2=" << "";
+            } else {
+                ss << "uc2=" << this->uc2();
+            }
             ss << ", ";
-            ss << "i2=" << this->i2();
+            ss << "i2=" << signed(this->i2());
             ss << ", ";
-            ss << "si2=" << this->si2();
+            ss << "si2=" << signed(this->si2());
             ss << ", ";
-            ss << "sii2=" << this->sii2();
+            ss << "sii2=" << signed(this->sii2());
             ss << ", ";
-            ss << "u2=" << this->u2();
+            ss << "u2=" << unsigned(this->u2());
             ss << ", ";
-            ss << "ui2=" << this->ui2();
+            ss << "ui2=" << unsigned(this->ui2());
             ss << ", ";
-            ss << "u82=" << this->u82();
+            ss << "u82=" << unsigned(this->u82());
             ss << ", ";
-            ss << "u162=" << this->u162();
+            ss << "u162=" << unsigned(this->u162());
             ss << ", ";
-            ss << "u322=" << this->u322();
+            ss << "u322=" << unsigned(this->u322());
             ss << ", ";
             ss << "u642=" << this->u642();
             ss << ", ";
-            ss << "i82=" << this->i82();
+            ss << "i82=" << signed(this->i82());
             ss << ", ";
-            ss << "i162=" << this->i162();
+            ss << "i162=" << signed(this->i162());
             ss << ", ";
-            ss << "i322=" << this->i322();
+            ss << "i322=" << signed(this->i322());
             ss << ", ";
             ss << "i642=" << this->i642();
             ss << ", ";
-            ss << "s2=" << this->s2();
+            ss << "s2=" << signed(this->s2());
             ss << ", ";
-            ss << "si_22=" << this->si_22();
+            ss << "si_22=" << signed(this->si_22());
             ss << ", ";
-            ss << "ss2=" << this->ss2();
+            ss << "ss2=" << signed(this->ss2());
             ss << ", ";
-            ss << "ssi2=" << this->ssi2();
+            ss << "ssi2=" << signed(this->ssi2());
             ss << ", ";
-            ss << "us2=" << this->us2();
+            ss << "us2=" << unsigned(this->us2());
             ss << ", ";
-            ss << "usi2=" << this->usi2();
+            ss << "usi2=" << unsigned(this->usi2());
             ss << ", ";
             ss << "l2=" << this->l2();
             ss << ", ";
@@ -581,12 +613,10 @@ namespace guWhiteboard {
             ss << ", ";
             ss << "p=" << this->p();
             ss << ", ";
-            ss << "strct=" << this->strct();
-            ss << ", ";
             bool array16_first = true;
             ss << "array16={";
             for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) {
-                ss << (array16_first ? "" : ",") << this->array16(i);
+                ss << (array16_first ? "" : ", ") << signed(this->array16(i));
                 array16_first = false;
             }
             ss << "}";
@@ -594,7 +624,7 @@ namespace guWhiteboard {
             bool bools_first = true;
             ss << "bools={";
             for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) {
-                ss << (bools_first ? "" : ",") << this->bools(i);
+                ss << (bools_first ? "" : ", ") << (this->bools(i) ? "true" : "false");
                 bools_first = false;
             }
             ss << "}";
@@ -610,53 +640,69 @@ namespace guWhiteboard {
             return toString;
 #else
             std::ostringstream ss;
-            ss << this->str();
+            if (0 == strncmp("", this->str(), 1)) {
+                ss << "";
+            } else {
+                ss << this->str();
+            }
             ss << ", ";
-            ss << this->b();
+            ss << (this->b() ? "true" : "false");
             ss << ", ";
-            ss << this->c();
+            if (this->c() == 0) {
+                ss << "";
+            } else {
+                ss << this->c();
+            }
             ss << ", ";
-            ss << this->sc();
+            if (this->sc() == 0) {
+                ss << "";
+            } else {
+                ss << this->sc();
+            }
             ss << ", ";
-            ss << this->uc();
+            if (this->uc() == 0) {
+                ss << "";
+            } else {
+                ss << this->uc();
+            }
             ss << ", ";
-            ss << this->i();
+            ss << signed(this->i());
             ss << ", ";
-            ss << this->si();
+            ss << signed(this->si());
             ss << ", ";
-            ss << this->sii();
+            ss << signed(this->sii());
             ss << ", ";
-            ss << this->u();
+            ss << unsigned(this->u());
             ss << ", ";
-            ss << this->ui();
+            ss << unsigned(this->ui());
             ss << ", ";
-            ss << this->u8();
+            ss << unsigned(this->u8());
             ss << ", ";
-            ss << this->u16();
+            ss << unsigned(this->u16());
             ss << ", ";
-            ss << this->u32();
+            ss << unsigned(this->u32());
             ss << ", ";
             ss << this->u64();
             ss << ", ";
-            ss << this->i8();
+            ss << signed(this->i8());
             ss << ", ";
-            ss << this->i16();
+            ss << signed(this->i16());
             ss << ", ";
-            ss << this->i32();
+            ss << signed(this->i32());
             ss << ", ";
             ss << this->i64();
             ss << ", ";
-            ss << this->s();
+            ss << signed(this->s());
             ss << ", ";
-            ss << this->si_2();
+            ss << signed(this->si_2());
             ss << ", ";
-            ss << this->ss();
+            ss << signed(this->ss());
             ss << ", ";
-            ss << this->ssi();
+            ss << signed(this->ssi());
             ss << ", ";
-            ss << this->us();
+            ss << unsigned(this->us());
             ss << ", ";
-            ss << this->usi();
+            ss << unsigned(this->usi());
             ss << ", ";
             ss << this->l();
             ss << ", ";
@@ -696,53 +742,69 @@ namespace guWhiteboard {
             ss << ", ";
             ss << this->dd();
             ss << ", ";
-            ss << this->str2();
+            if (0 == strncmp("", this->str2(), 1)) {
+                ss << "";
+            } else {
+                ss << this->str2();
+            }
             ss << ", ";
-            ss << this->b2();
+            ss << (this->b2() ? "true" : "false");
             ss << ", ";
-            ss << this->c2();
+            if (this->c2() == 0) {
+                ss << "";
+            } else {
+                ss << this->c2();
+            }
             ss << ", ";
-            ss << this->sc2();
+            if (this->sc2() == 0) {
+                ss << "";
+            } else {
+                ss << this->sc2();
+            }
             ss << ", ";
-            ss << this->uc2();
+            if (this->uc2() == 0) {
+                ss << "";
+            } else {
+                ss << this->uc2();
+            }
             ss << ", ";
-            ss << this->i2();
+            ss << signed(this->i2());
             ss << ", ";
-            ss << this->si2();
+            ss << signed(this->si2());
             ss << ", ";
-            ss << this->sii2();
+            ss << signed(this->sii2());
             ss << ", ";
-            ss << this->u2();
+            ss << unsigned(this->u2());
             ss << ", ";
-            ss << this->ui2();
+            ss << unsigned(this->ui2());
             ss << ", ";
-            ss << this->u82();
+            ss << unsigned(this->u82());
             ss << ", ";
-            ss << this->u162();
+            ss << unsigned(this->u162());
             ss << ", ";
-            ss << this->u322();
+            ss << unsigned(this->u322());
             ss << ", ";
             ss << this->u642();
             ss << ", ";
-            ss << this->i82();
+            ss << signed(this->i82());
             ss << ", ";
-            ss << this->i162();
+            ss << signed(this->i162());
             ss << ", ";
-            ss << this->i322();
+            ss << signed(this->i322());
             ss << ", ";
             ss << this->i642();
             ss << ", ";
-            ss << this->s2();
+            ss << signed(this->s2());
             ss << ", ";
-            ss << this->si_22();
+            ss << signed(this->si_22());
             ss << ", ";
-            ss << this->ss2();
+            ss << signed(this->ss2());
             ss << ", ";
-            ss << this->ssi2();
+            ss << signed(this->ssi2());
             ss << ", ";
-            ss << this->us2();
+            ss << unsigned(this->us2());
             ss << ", ";
-            ss << this->usi2();
+            ss << unsigned(this->usi2());
             ss << ", ";
             ss << this->l2();
             ss << ", ";
@@ -784,12 +846,10 @@ namespace guWhiteboard {
             ss << ", ";
             ss << this->p();
             ss << ", ";
-            ss << this->strct();
-            ss << ", ";
             bool array16_first = true;
             ss << "{";
             for (int i = 0; i < OLD_ARRAY16_ARRAY_SIZE; i++) {
-                ss << (array16_first ? "" : ",") << this->array16(i);
+                ss << (array16_first ? "" : ", ") << signed(this->array16(i));
                 array16_first = false;
             }
             ss << "}";
@@ -797,7 +857,7 @@ namespace guWhiteboard {
             bool bools_first = true;
             ss << "{";
             for (int i = 0; i < OLD_BOOLS_ARRAY_SIZE; i++) {
-                ss << (bools_first ? "" : ",") << this->bools(i);
+                ss << (bools_first ? "" : ", ") << (this->bools(i) ? "true" : "false");
                 bools_first = false;
             }
             ss << "}";
@@ -807,7 +867,7 @@ namespace guWhiteboard {
 
         void from_string(const std::string &str) {
 #ifdef USE_WB_OLD_C_CONVERSION
-            wb_old_from_string(this, str);
+            wb_old_from_string(this, str.c_str());
 #else
             char var[255];
             unsigned long str_index = str.find("str");
@@ -831,7 +891,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(c_index, str.length()).c_str(), "c = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_c((char) (atoi(value.c_str())));
+                    set_c((char) (value[0]));
                 }
             }
             unsigned long sc_index = str.find("sc");
@@ -839,7 +899,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(sc_index, str.length()).c_str(), "sc = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_sc((signed char) (atoi(value.c_str())));
+                    set_sc((signed char) (value[0]));
                 }
             }
             unsigned long uc_index = str.find("uc");
@@ -847,7 +907,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(uc_index, str.length()).c_str(), "uc = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_uc((unsigned char) (atoi(value.c_str())));
+                    set_uc((unsigned char) (value[0]));
                 }
             }
             unsigned long i_index = str.find("i");
@@ -1175,7 +1235,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(c2_index, str.length()).c_str(), "c2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_c2((char) (atoi(value.c_str())));
+                    set_c2((char) (value[0]));
                 }
             }
             unsigned long sc2_index = str.find("sc2");
@@ -1183,7 +1243,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(sc2_index, str.length()).c_str(), "sc2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_sc2((signed char) (atoi(value.c_str())));
+                    set_sc2((signed char) (value[0]));
                 }
             }
             unsigned long uc2_index = str.find("uc2");
@@ -1191,7 +1251,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(uc2_index, str.length()).c_str(), "uc2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_uc2((unsigned char) (atoi(value.c_str())));
+                    set_uc2((unsigned char) (value[0]));
                 }
             }
             unsigned long i2_index = str.find("i2");
