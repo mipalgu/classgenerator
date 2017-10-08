@@ -145,14 +145,20 @@ public class StringTests: XCTestCase {
         let expected = self.expectedDemoDescription
             .replacingOccurrences(of: "0.000000", with: "0")
             .replacingOccurrences(of: "1.000000", with: "1")
-        XCTAssertEqual(expected, self.cppDescription)
+        let result = self.cppDescription
+            .replacingOccurrences(of: "0.000000", with: "0")
+            .replacingOccurrences(of: "1.000000", with: "1")
+        XCTAssertEqual(expected, result)
     }
 
     public func test_cppToStringEqualsExpectedToString() {
         let expected = self.expectedToString
             .replacingOccurrences(of: "0.000000", with: "0")
             .replacingOccurrences(of: "1.000000", with: "1")
-        XCTAssertEqual(expected, self.cppToString)
+        let result = self.cppToString
+            .replacingOccurrences(of: "0.000000", with: "0")
+            .replacingOccurrences(of: "1.000000", with: "1")
+        XCTAssertEqual(expected, result)
     }
 
     public func test_cppFromStringCreatesStruct() {
