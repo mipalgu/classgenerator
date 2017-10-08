@@ -146,10 +146,10 @@ public final class CPPFromStringCreator {
                 return getValue + "\n"
                     + "set_\(label)(value.compare(\"true\") == 0 || value.compare(\"1\") == 0 ? true : false);"
             case .char:
-                return getValue + "\n" + "set_\(label)((\(cType)) (value[0]));"
+                return getValue + "\n" + "set_\(label)(static_cast<\(cType)>((value[0])));"
             case .numeric(let numericType):
                 let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
-                return getValue + "\n" + "set_\(label)((\(cType)) (\(conversionFunction)(value.c_str())));"
+                return getValue + "\n" + "set_\(label)(static_cast<\(cType)>(\(conversionFunction)(value.c_str())));"
             case .string(let length):
                 return getValue + "\n" + "gu_strlcpy((char *) this->\(label)(), value.c_str(), \(length));"
             case .pointer:
