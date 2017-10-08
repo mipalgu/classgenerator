@@ -266,9 +266,9 @@ public final class CPPStringFunctionsCreator {
                     }
                     """
             case .numeric(.signed):
-                return "\(pre)signed(\(getter));"
+                return "\(pre)static_cast<signed>(\(getter));"
             case .numeric(.unsigned):
-                return "\(pre)unsigned(\(getter));"
+                return "\(pre)static_cast<unsigned>(\(getter));"
             case .string:
                 return """
                     if (0 == strncmp("", \(getter), 1)) {

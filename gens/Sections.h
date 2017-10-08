@@ -117,7 +117,7 @@ namespace guWhiteboard {
             return descr;
 #else
             std::ostringstream ss;
-            ss << "c=" << signed(this->c());
+            ss << "c=" << static_cast<signed>(this->c());
             return ss.str();
 #endif /// USE_WB_SECTIONS_C_CONVERSION
         }
@@ -130,7 +130,7 @@ namespace guWhiteboard {
             return toString;
 #else
             std::ostringstream ss;
-            ss << signed(this->c());
+            ss << static_cast<signed>(this->c());
             return ss.str();
 #endif /// USE_WB_SECTIONS_C_CONVERSION
         }
