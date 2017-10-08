@@ -308,7 +308,7 @@ public final class CPPHeaderCreator: ErrorContainer {
                     }
                     """
             case .string(let length):
-                return "gu_strlcpy((char *) this->\(variable.label)(), \(label), \(length));"
+                return "gu_strlcpy(const_cast<char *>(this->\(variable.label)()), \(label), \(length));"
             case .pointer:
                 if false == addConstOnPointers {
                     return "set_\(variable.label)(\(label));"
