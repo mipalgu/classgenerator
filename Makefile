@@ -23,7 +23,7 @@ host:	swift-build
 
 test:	swift-test
 
-install:
+install: host
 	cp .build/${SWIFT_BUILD_CONFIG}/classgenerator /usr/local/bin
 
 clean:
