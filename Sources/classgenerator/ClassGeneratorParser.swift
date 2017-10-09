@@ -65,11 +65,11 @@ public class ClassGeneratorParser {
         return """
             OVERVIEW: Generates gusimplewhiteboard classes.
 
-            USAGE: classgenerator [options] <classname.gen>
+            USAGE: classgenerator [options] <class_name.gen>
 
             OPTIONS:
-                    -c              Generate a C++ wrapper.
-                    -s              Generate a Swift wrapper.
+                    -c              Do Not Generate a C++ wrapper.
+                    -s              Do Not Generate a Swift wrapper.
                     --c-header <directory=./>
                                     Place the generated C header into <directory>.
                     --c-file <directory=<c-header>>
@@ -118,13 +118,13 @@ public class ClassGeneratorParser {
 
     fileprivate func handleCFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
-        temp.generateCppWrapper = true
+        temp.generateCppWrapper = false
         return temp
     }
 
     fileprivate func handleSFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
-        temp.generateSwiftWrapper = true
+        temp.generateSwiftWrapper = false
         return temp
     }
 

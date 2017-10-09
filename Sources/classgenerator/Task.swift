@@ -58,9 +58,9 @@
 
 public struct Task {
 
-    var generateCppWrapper: Bool = false
+    var generateCppWrapper: Bool = true
 
-    var generateSwiftWrapper: Bool = false
+    var generateSwiftWrapper: Bool = true
 
     var path: String?
 

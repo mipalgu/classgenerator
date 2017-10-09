@@ -104,7 +104,6 @@ public class DemoTests: ClassGeneratorTestCase {
         }
         self.generator.run([
             "classgenerator",
-            "-cs",
             "--c-header",
             "./Sources/bridge",
             "--swift-file",
@@ -127,7 +126,6 @@ public class DemoTests: ClassGeneratorTestCase {
         }
         self.generator.run([
             "classgenerator",
-            "-cs",
             "--c-header",
             "./Sources/bridge",
             "--swift-file",
