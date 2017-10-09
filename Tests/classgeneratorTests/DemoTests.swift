@@ -91,6 +91,10 @@ public class DemoTests: ClassGeneratorTestCase {
                 warningStream: StdoutOutputStream()
             )
         )
+        _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/wb_demo.h")
+        _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/wb_demo.c")
+        _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/Demo.h")
+        _ = try? self.filemanager.removeItem(atPath: "demo/Sources/demo/Demo.swift")
     }
 
     public override func tearDown() {
