@@ -124,7 +124,7 @@ public final class StringHelpers {
                 }
                 return "_"
             }
-            if $0 != "_" && (self.isNumeric($1) || (!self.isNumeric($0) && self.isUpperCase($1))) {
+            if $0 != "_" && (!self.isNumeric($0) && self.isUpperCase($1)) {
                 chars.append("_")
             }
             if self.isNumeric($0) && self.isUpperCase($1) {

@@ -81,7 +81,8 @@ public class StringHelpersTests: ClassGeneratorTestCase {
             ("test_toSnakeCaseWorksWithASentence", test_toSnakeCaseWorksWithASentence),
             ("test_toSnakeCaseWorksWithACapitalAfterANumber", test_toSnakeCaseWorksWithACapitalAfterANumber),
             ("test_toSnakeCaseDoesNotModifySnakeCase", test_toSnakeCaseDoesNotModifySnakeCase),
-            ("test_toSnakeCaseWorksWithCamelCase", test_toSnakeCaseWorksWithCamelCase)
+            ("test_toSnakeCaseWorksWithCamelCase", test_toSnakeCaseWorksWithCamelCase),
+            ("test_toSnakeCaseWorksWithMultipleNumbers", test_toSnakeCaseWorksWithMultipleNumbers)
         ]
     }
 
@@ -184,7 +185,12 @@ public class StringHelpersTests: ClassGeneratorTestCase {
 
     public func test_toSnakeCaseWorksWithCamelCase() {
         let snake = "ThisIs1ATest"
-        XCTAssertEqual("this_is_1A_test", self.helpers.toSnakeCase(snake))
+        XCTAssertEqual("this_is1A_test", self.helpers.toSnakeCase(snake))
+    }
+
+    public func test_toSnakeCaseWorksWithMultipleNumbers() {
+        let snake = "esp8266_pin_toggle"
+        XCTAssertEqual("esp8266_pin_toggle", self.helpers.toSnakeCase(snake))
     }
 
 }
