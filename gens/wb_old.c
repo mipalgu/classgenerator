@@ -119,14 +119,6 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i=%d", self->i);
-    if (len >= bufferSize) {
-        return descString;
-    }
-    len = gu_strlcat(descString, ", ", bufferSize);
-    if (len >= bufferSize) {
-        return descString;
-    }
     len += snprintf(descString + len, bufferSize - len, "si=%d", self->si);
     if (len >= bufferSize) {
         return descString;
@@ -216,6 +208,22 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
         return descString;
     }
     len += snprintf(descString + len, bufferSize - len, "i64=%lld", self->i64);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i=%d", self->i);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "uui=%u", self->uui);
     if (len >= bufferSize) {
         return descString;
     }
@@ -467,14 +475,6 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i2=%d", self->i2);
-    if (len >= bufferSize) {
-        return descString;
-    }
-    len = gu_strlcat(descString, ", ", bufferSize);
-    if (len >= bufferSize) {
-        return descString;
-    }
     len += snprintf(descString + len, bufferSize - len, "si2=%d", self->si2);
     if (len >= bufferSize) {
         return descString;
@@ -564,6 +564,22 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
         return descString;
     }
     len += snprintf(descString + len, bufferSize - len, "i642=%lld", self->i642);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "i2=%d", self->i2);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "uui2=%u", self->uui2);
     if (len >= bufferSize) {
         return descString;
     }
@@ -864,14 +880,6 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%d", self->i);
-    if (len >= bufferSize) {
-        return toString;
-    }
-    len = gu_strlcat(toString, ", ", bufferSize);
-    if (len >= bufferSize) {
-        return toString;
-    }
     len += snprintf(toString + len, bufferSize - len, "%d", self->si);
     if (len >= bufferSize) {
         return toString;
@@ -961,6 +969,22 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
         return toString;
     }
     len += snprintf(toString + len, bufferSize - len, "%lld", self->i64);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len = gu_strlcat(toString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len += snprintf(toString + len, bufferSize - len, "%d", self->i);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len = gu_strlcat(toString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len += snprintf(toString + len, bufferSize - len, "%u", self->uui);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1208,14 +1232,6 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%d", self->i2);
-    if (len >= bufferSize) {
-        return toString;
-    }
-    len = gu_strlcat(toString, ", ", bufferSize);
-    if (len >= bufferSize) {
-        return toString;
-    }
     len += snprintf(toString + len, bufferSize - len, "%d", self->si2);
     if (len >= bufferSize) {
         return toString;
@@ -1305,6 +1321,22 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
         return toString;
     }
     len += snprintf(toString + len, bufferSize - len, "%lld", self->i642);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len = gu_strlcat(toString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len += snprintf(toString + len, bufferSize - len, "%d", self->i2);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len = gu_strlcat(toString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return toString;
+    }
+    len += snprintf(toString + len, bufferSize - len, "%u", self->uui2);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1636,99 +1668,99 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
         self->uc = (unsigned char) (*strncpy(&uc_temp, strings[4], 1));
     }
     if (strings[5] != NULL)
-        self->i = (int)atoi(strings[5]);
+        self->si = (signed)atoi(strings[5]);
     if (strings[6] != NULL)
-        self->si = (signed)atoi(strings[6]);
+        self->sii = (signed int)atoi(strings[6]);
     if (strings[7] != NULL)
-        self->sii = (signed int)atoi(strings[7]);
+        self->u = (unsigned)atoi(strings[7]);
     if (strings[8] != NULL)
-        self->u = (unsigned)atoi(strings[8]);
+        self->ui = (unsigned int)atoi(strings[8]);
     if (strings[9] != NULL)
-        self->ui = (unsigned int)atoi(strings[9]);
+        self->u8 = (uint8_t)atoi(strings[9]);
     if (strings[10] != NULL)
-        self->u8 = (uint8_t)atoi(strings[10]);
+        self->u16 = (uint16_t)atoi(strings[10]);
     if (strings[11] != NULL)
-        self->u16 = (uint16_t)atoi(strings[11]);
+        self->u32 = (uint32_t)atoi(strings[11]);
     if (strings[12] != NULL)
-        self->u32 = (uint32_t)atoi(strings[12]);
+        self->u64 = (uint64_t)atoll(strings[12]);
     if (strings[13] != NULL)
-        self->u64 = (uint64_t)atoll(strings[13]);
+        self->i8 = (int8_t)atoi(strings[13]);
     if (strings[14] != NULL)
-        self->i8 = (int8_t)atoi(strings[14]);
+        self->i16 = (int16_t)atoi(strings[14]);
     if (strings[15] != NULL)
-        self->i16 = (int16_t)atoi(strings[15]);
+        self->i32 = (int32_t)atoi(strings[15]);
     if (strings[16] != NULL)
-        self->i32 = (int32_t)atoi(strings[16]);
+        self->i64 = (int64_t)atoll(strings[16]);
     if (strings[17] != NULL)
-        self->i64 = (int64_t)atoll(strings[17]);
+        self->i = (int)atoi(strings[17]);
     if (strings[18] != NULL)
-        self->s = (short)atoi(strings[18]);
+        self->uui = (uint)atoi(strings[18]);
     if (strings[19] != NULL)
-        self->si_2 = (short int)atoi(strings[19]);
+        self->s = (short)atoi(strings[19]);
     if (strings[20] != NULL)
-        self->ss = (signed short)atoi(strings[20]);
+        self->si_2 = (short int)atoi(strings[20]);
     if (strings[21] != NULL)
-        self->ssi = (signed short int)atoi(strings[21]);
+        self->ss = (signed short)atoi(strings[21]);
     if (strings[22] != NULL)
-        self->us = (unsigned short)atoi(strings[22]);
+        self->ssi = (signed short int)atoi(strings[22]);
     if (strings[23] != NULL)
-        self->usi = (unsigned short int)atoi(strings[23]);
+        self->us = (unsigned short)atoi(strings[23]);
     if (strings[24] != NULL)
-        self->l = (long)atol(strings[24]);
+        self->usi = (unsigned short int)atoi(strings[24]);
     if (strings[25] != NULL)
-        self->li = (long int)atol(strings[25]);
+        self->l = (long)atol(strings[25]);
     if (strings[26] != NULL)
-        self->sl = (signed long)atol(strings[26]);
+        self->li = (long int)atol(strings[26]);
     if (strings[27] != NULL)
-        self->sli = (signed long int)atol(strings[27]);
+        self->sl = (signed long)atol(strings[27]);
     if (strings[28] != NULL)
-        self->ul = (unsigned long)atol(strings[28]);
+        self->sli = (signed long int)atol(strings[28]);
     if (strings[29] != NULL)
-        self->uli = (unsigned long int)atol(strings[29]);
+        self->ul = (unsigned long)atol(strings[29]);
     if (strings[30] != NULL)
-        self->ll = (long long)atoll(strings[30]);
+        self->uli = (unsigned long int)atol(strings[30]);
     if (strings[31] != NULL)
-        self->lli = (long long int)atoll(strings[31]);
+        self->ll = (long long)atoll(strings[31]);
     if (strings[32] != NULL)
-        self->sll = (signed long long)atoll(strings[32]);
+        self->lli = (long long int)atoll(strings[32]);
     if (strings[33] != NULL)
-        self->slli = (signed long long int)atoll(strings[33]);
+        self->sll = (signed long long)atoll(strings[33]);
     if (strings[34] != NULL)
-        self->ull = (unsigned long long)atoll(strings[34]);
+        self->slli = (signed long long int)atoll(strings[34]);
     if (strings[35] != NULL)
-        self->ulli = (unsigned long long int)atoll(strings[35]);
+        self->ull = (unsigned long long)atoll(strings[35]);
     if (strings[36] != NULL)
-        self->l64 = (long64_t)atoll(strings[36]);
+        self->ulli = (unsigned long long int)atoll(strings[36]);
     if (strings[37] != NULL)
-        self->f = (float)atof(strings[37]);
+        self->l64 = (long64_t)atoll(strings[37]);
     if (strings[38] != NULL)
-        self->ft = (float_t)atof(strings[38]);
+        self->f = (float)atof(strings[38]);
     if (strings[39] != NULL)
-        self->d = (double)atof(strings[39]);
+        self->ft = (float_t)atof(strings[39]);
     if (strings[40] != NULL)
-        self->dt = (double_t)atof(strings[40]);
+        self->d = (double)atof(strings[40]);
     if (strings[41] != NULL)
-        self->ld = (long double)atof(strings[41]);
+        self->dt = (double_t)atof(strings[41]);
     if (strings[42] != NULL)
-        self->dd = (double double)atof(strings[42]);
+        self->ld = (long double)atof(strings[42]);
     if (strings[43] != NULL)
-        strncpy(&self->str2[0], strings[43], 6);
+        self->dd = (double double)atof(strings[43]);
     if (strings[44] != NULL)
-        self->b2 = strcmp(strings[44], "true") == 0 || strcmp(strings[44], "1") == 0 ? true : false;
-    if (strings[45] != NULL) {
-        char c2_temp;
-        self->c2 = (*strncpy(&c2_temp, strings[45], 1));
-    }
+        strncpy(&self->str2[0], strings[44], 6);
+    if (strings[45] != NULL)
+        self->b2 = strcmp(strings[45], "true") == 0 || strcmp(strings[45], "1") == 0 ? true : false;
     if (strings[46] != NULL) {
-        char sc2_temp;
-        self->sc2 = (signed char) (*strncpy(&sc2_temp, strings[46], 1));
+        char c2_temp;
+        self->c2 = (*strncpy(&c2_temp, strings[46], 1));
     }
     if (strings[47] != NULL) {
-        char uc2_temp;
-        self->uc2 = (unsigned char) (*strncpy(&uc2_temp, strings[47], 1));
+        char sc2_temp;
+        self->sc2 = (signed char) (*strncpy(&sc2_temp, strings[47], 1));
     }
-    if (strings[48] != NULL)
-        self->i2 = (int)atoi(strings[48]);
+    if (strings[48] != NULL) {
+        char uc2_temp;
+        self->uc2 = (unsigned char) (*strncpy(&uc2_temp, strings[48], 1));
+    }
     if (strings[49] != NULL)
         self->si2 = (signed)atoi(strings[49]);
     if (strings[50] != NULL)
@@ -1754,55 +1786,59 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[60] != NULL)
         self->i642 = (int64_t)atoll(strings[60]);
     if (strings[61] != NULL)
-        self->s2 = (short)atoi(strings[61]);
+        self->i2 = (int)atoi(strings[61]);
     if (strings[62] != NULL)
-        self->si_22 = (short int)atoi(strings[62]);
+        self->uui2 = (uint)atoi(strings[62]);
     if (strings[63] != NULL)
-        self->ss2 = (signed short)atoi(strings[63]);
+        self->s2 = (short)atoi(strings[63]);
     if (strings[64] != NULL)
-        self->ssi2 = (signed short int)atoi(strings[64]);
+        self->si_22 = (short int)atoi(strings[64]);
     if (strings[65] != NULL)
-        self->us2 = (unsigned short)atoi(strings[65]);
+        self->ss2 = (signed short)atoi(strings[65]);
     if (strings[66] != NULL)
-        self->usi2 = (unsigned short int)atoi(strings[66]);
+        self->ssi2 = (signed short int)atoi(strings[66]);
     if (strings[67] != NULL)
-        self->l2 = (long)atol(strings[67]);
+        self->us2 = (unsigned short)atoi(strings[67]);
     if (strings[68] != NULL)
-        self->li2 = (long int)atol(strings[68]);
+        self->usi2 = (unsigned short int)atoi(strings[68]);
     if (strings[69] != NULL)
-        self->sl2 = (signed long)atol(strings[69]);
+        self->l2 = (long)atol(strings[69]);
     if (strings[70] != NULL)
-        self->sli2 = (signed long int)atol(strings[70]);
+        self->li2 = (long int)atol(strings[70]);
     if (strings[71] != NULL)
-        self->ul2 = (unsigned long)atol(strings[71]);
+        self->sl2 = (signed long)atol(strings[71]);
     if (strings[72] != NULL)
-        self->uli2 = (unsigned long int)atol(strings[72]);
+        self->sli2 = (signed long int)atol(strings[72]);
     if (strings[73] != NULL)
-        self->ll2 = (long long)atoll(strings[73]);
+        self->ul2 = (unsigned long)atol(strings[73]);
     if (strings[74] != NULL)
-        self->lli2 = (long long int)atoll(strings[74]);
+        self->uli2 = (unsigned long int)atol(strings[74]);
     if (strings[75] != NULL)
-        self->sll2 = (signed long long)atoll(strings[75]);
+        self->ll2 = (long long)atoll(strings[75]);
     if (strings[76] != NULL)
-        self->slli2 = (signed long long int)atoll(strings[76]);
+        self->lli2 = (long long int)atoll(strings[76]);
     if (strings[77] != NULL)
-        self->ull2 = (unsigned long long)atoll(strings[77]);
+        self->sll2 = (signed long long)atoll(strings[77]);
     if (strings[78] != NULL)
-        self->ulli2 = (unsigned long long int)atoll(strings[78]);
+        self->slli2 = (signed long long int)atoll(strings[78]);
     if (strings[79] != NULL)
-        self->l642 = (long64_t)atoll(strings[79]);
+        self->ull2 = (unsigned long long)atoll(strings[79]);
     if (strings[80] != NULL)
-        self->f2 = (float)atof(strings[80]);
+        self->ulli2 = (unsigned long long int)atoll(strings[80]);
     if (strings[81] != NULL)
-        self->ft2 = (float_t)atof(strings[81]);
+        self->l642 = (long64_t)atoll(strings[81]);
     if (strings[82] != NULL)
-        self->d2 = (double)atof(strings[82]);
+        self->f2 = (float)atof(strings[82]);
     if (strings[83] != NULL)
-        self->dt2 = (double_t)atof(strings[83]);
+        self->ft2 = (float_t)atof(strings[83]);
     if (strings[84] != NULL)
-        self->ld2 = (long double)atof(strings[84]);
+        self->d2 = (double)atof(strings[84]);
     if (strings[85] != NULL)
-        self->dd2 = (double double)atof(strings[85]);
+        self->dt2 = (double_t)atof(strings[85]);
+    if (strings[86] != NULL)
+        self->ld2 = (long double)atof(strings[86]);
+    if (strings[87] != NULL)
+        self->dd2 = (double double)atof(strings[87]);
     size_t array16_smallest = array16_count < OLD_ARRAY16_ARRAY_SIZE ? array16_count : OLD_ARRAY16_ARRAY_SIZE;
     for (int array16_index = 0; array16_index < array16_smallest; array16_index++) {
         self->array16[array16_index] = (int16_t)atoi(array16_values[array16_index]);

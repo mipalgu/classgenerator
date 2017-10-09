@@ -119,15 +119,6 @@ public class ClassGeneratorTestCase: XCTestCase {
                     comment: "An unsigned char."
                 ),
                 Variable(
-                    label: "i",
-                    type: .numeric(.signed),
-                    cType: "int",
-                    swiftType: "Int32",
-                    defaultValue: "1",
-                    swiftDefaultValue: "1",
-                    comment: "An int."
-                ),
-                Variable(
                     label: "si",
                     type: .numeric(.signed),
                     cType: "signed",
@@ -234,6 +225,24 @@ public class ClassGeneratorTestCase: XCTestCase {
                     defaultValue: "1",
                     swiftDefaultValue: "1",
                     comment: "An int64."
+                ),
+                Variable(
+                    label: "i",
+                    type: .numeric(.signed),
+                    cType: "int",
+                    swiftType: "Int32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "An int."
+                ),
+                Variable(
+                    label: "uui",
+                    type: .numeric(.unsigned),
+                    cType: "uint",
+                    swiftType: "UInt32",
+                    defaultValue: "1",
+                    swiftDefaultValue: "1",
+                    comment: "A uint."
                 ),
                 Variable(
                     label: "s",
@@ -506,15 +515,6 @@ public class ClassGeneratorTestCase: XCTestCase {
                     comment: "An unsigned char."
                 ),
                 Variable(
-                    label: "i2",
-                    type: .numeric(.signed),
-                    cType: "int",
-                    swiftType: "Int32",
-                    defaultValue: "0",
-                    swiftDefaultValue: "0",
-                    comment: "An int."
-                ),
-                Variable(
                     label: "si2",
                     type: .numeric(.signed),
                     cType: "signed",
@@ -621,6 +621,24 @@ public class ClassGeneratorTestCase: XCTestCase {
                     defaultValue: "0",
                     swiftDefaultValue: "0",
                     comment: "An int64."
+                ),
+                Variable(
+                    label: "i2",
+                    type: .numeric(.signed),
+                    cType: "int",
+                    swiftType: "Int32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "An int."
+                ),
+                Variable(
+                    label: "uui2",
+                    type: .numeric(.unsigned),
+                    cType: "uint",
+                    swiftType: "UInt32",
+                    defaultValue: "0",
+                    swiftDefaultValue: "0",
+                    comment: "A uint."
                 ),
                 Variable(
                     label: "s2",

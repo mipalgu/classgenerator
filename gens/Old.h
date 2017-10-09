@@ -82,13 +82,12 @@ namespace guWhiteboard {
         /**
          * Create a new `Old`.
          */
-        Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', int i = 1, signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, short s = 1, short int si_2 = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, int i2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, short s2 = 0, short int si_22 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, struct somestruct strct = somestruct(), int16_t array16[4] = NULL, bool bools[3] = NULL) {
+        Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, int i = 1, uint uui = 1, short s = 1, short int si_2 = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, int i2 = 0, uint uui2 = 0, short s2 = 0, short int si_22 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, struct somestruct strct = somestruct(), int16_t array16[4] = NULL, bool bools[3] = NULL) {
             gu_strlcpy(const_cast<char *>(this->str()), str.c_str(), 6);
             set_b(b);
             set_c(c);
             set_sc(sc);
             set_uc(uc);
-            set_i(i);
             set_si(si);
             set_sii(sii);
             set_u(u);
@@ -101,6 +100,8 @@ namespace guWhiteboard {
             set_i16(i16);
             set_i32(i32);
             set_i64(i64);
+            set_i(i);
+            set_uui(uui);
             set_s(s);
             set_si_2(si_2);
             set_ss(ss);
@@ -131,7 +132,6 @@ namespace guWhiteboard {
             set_c2(c2);
             set_sc2(sc2);
             set_uc2(uc2);
-            set_i2(i2);
             set_si2(si2);
             set_sii2(sii2);
             set_u2(u2);
@@ -144,6 +144,8 @@ namespace guWhiteboard {
             set_i162(i162);
             set_i322(i322);
             set_i642(i642);
+            set_i2(i2);
+            set_uui2(uui2);
             set_s2(s2);
             set_si_22(si_22);
             set_ss2(ss2);
@@ -193,7 +195,6 @@ namespace guWhiteboard {
             set_c(other.c());
             set_sc(other.sc());
             set_uc(other.uc());
-            set_i(other.i());
             set_si(other.si());
             set_sii(other.sii());
             set_u(other.u());
@@ -206,6 +207,8 @@ namespace guWhiteboard {
             set_i16(other.i16());
             set_i32(other.i32());
             set_i64(other.i64());
+            set_i(other.i());
+            set_uui(other.uui());
             set_s(other.s());
             set_si_2(other.si_2());
             set_ss(other.ss());
@@ -236,7 +239,6 @@ namespace guWhiteboard {
             set_c2(other.c2());
             set_sc2(other.sc2());
             set_uc2(other.uc2());
-            set_i2(other.i2());
             set_si2(other.si2());
             set_sii2(other.sii2());
             set_u2(other.u2());
@@ -249,6 +251,8 @@ namespace guWhiteboard {
             set_i162(other.i162());
             set_i322(other.i322());
             set_i642(other.i642());
+            set_i2(other.i2());
+            set_uui2(other.uui2());
             set_s2(other.s2());
             set_si_22(other.si_22());
             set_ss2(other.ss2());
@@ -297,7 +301,6 @@ namespace guWhiteboard {
             set_c(other.c());
             set_sc(other.sc());
             set_uc(other.uc());
-            set_i(other.i());
             set_si(other.si());
             set_sii(other.sii());
             set_u(other.u());
@@ -310,6 +313,8 @@ namespace guWhiteboard {
             set_i16(other.i16());
             set_i32(other.i32());
             set_i64(other.i64());
+            set_i(other.i());
+            set_uui(other.uui());
             set_s(other.s());
             set_si_2(other.si_2());
             set_ss(other.ss());
@@ -340,7 +345,6 @@ namespace guWhiteboard {
             set_c2(other.c2());
             set_sc2(other.sc2());
             set_uc2(other.uc2());
-            set_i2(other.i2());
             set_si2(other.si2());
             set_sii2(other.sii2());
             set_u2(other.u2());
@@ -353,6 +357,8 @@ namespace guWhiteboard {
             set_i162(other.i162());
             set_i322(other.i322());
             set_i642(other.i642());
+            set_i2(other.i2());
+            set_uui2(other.uui2());
             set_s2(other.s2());
             set_si_22(other.si_22());
             set_ss2(other.ss2());
@@ -433,8 +439,6 @@ namespace guWhiteboard {
                 ss << "uc=" << this->uc();
             }
             ss << ", ";
-            ss << "i=" << static_cast<signed>(this->i());
-            ss << ", ";
             ss << "si=" << static_cast<signed>(this->si());
             ss << ", ";
             ss << "sii=" << static_cast<signed>(this->sii());
@@ -458,6 +462,10 @@ namespace guWhiteboard {
             ss << "i32=" << static_cast<signed>(this->i32());
             ss << ", ";
             ss << "i64=" << this->i64();
+            ss << ", ";
+            ss << "i=" << static_cast<signed>(this->i());
+            ss << ", ";
+            ss << "uui=" << static_cast<unsigned>(this->uui());
             ss << ", ";
             ss << "s=" << static_cast<signed>(this->s());
             ss << ", ";
@@ -535,8 +543,6 @@ namespace guWhiteboard {
                 ss << "uc2=" << this->uc2();
             }
             ss << ", ";
-            ss << "i2=" << static_cast<signed>(this->i2());
-            ss << ", ";
             ss << "si2=" << static_cast<signed>(this->si2());
             ss << ", ";
             ss << "sii2=" << static_cast<signed>(this->sii2());
@@ -560,6 +566,10 @@ namespace guWhiteboard {
             ss << "i322=" << static_cast<signed>(this->i322());
             ss << ", ";
             ss << "i642=" << this->i642();
+            ss << ", ";
+            ss << "i2=" << static_cast<signed>(this->i2());
+            ss << ", ";
+            ss << "uui2=" << static_cast<unsigned>(this->uui2());
             ss << ", ";
             ss << "s2=" << static_cast<signed>(this->s2());
             ss << ", ";
@@ -666,8 +676,6 @@ namespace guWhiteboard {
                 ss << this->uc();
             }
             ss << ", ";
-            ss << static_cast<signed>(this->i());
-            ss << ", ";
             ss << static_cast<signed>(this->si());
             ss << ", ";
             ss << static_cast<signed>(this->sii());
@@ -691,6 +699,10 @@ namespace guWhiteboard {
             ss << static_cast<signed>(this->i32());
             ss << ", ";
             ss << this->i64();
+            ss << ", ";
+            ss << static_cast<signed>(this->i());
+            ss << ", ";
+            ss << static_cast<unsigned>(this->uui());
             ss << ", ";
             ss << static_cast<signed>(this->s());
             ss << ", ";
@@ -768,8 +780,6 @@ namespace guWhiteboard {
                 ss << this->uc2();
             }
             ss << ", ";
-            ss << static_cast<signed>(this->i2());
-            ss << ", ";
             ss << static_cast<signed>(this->si2());
             ss << ", ";
             ss << static_cast<signed>(this->sii2());
@@ -793,6 +803,10 @@ namespace guWhiteboard {
             ss << static_cast<signed>(this->i322());
             ss << ", ";
             ss << this->i642();
+            ss << ", ";
+            ss << static_cast<signed>(this->i2());
+            ss << ", ";
+            ss << static_cast<unsigned>(this->uui2());
             ss << ", ";
             ss << static_cast<signed>(this->s2());
             ss << ", ";
@@ -910,14 +924,6 @@ namespace guWhiteboard {
                     set_uc(static_cast<unsigned char>((value[0])));
                 }
             }
-            unsigned long i_index = str.find("i");
-            if (i_index != std::string::npos) {
-                memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i_index, str.length()).c_str(), "i = %[^,]", var) == 1) {
-                    std::string value = std::string(var);
-                    set_i(static_cast<int>(atoi(value.c_str())));
-                }
-            }
             unsigned long si_index = str.find("si");
             if (si_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
@@ -1012,6 +1018,22 @@ namespace guWhiteboard {
                 if (sscanf(str.substr(i64_index, str.length()).c_str(), "i64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i64(static_cast<int64_t>(atoll(value.c_str())));
+                }
+            }
+            unsigned long i_index = str.find("i");
+            if (i_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(i_index, str.length()).c_str(), "i = %[^,]", var) == 1) {
+                    std::string value = std::string(var);
+                    set_i(static_cast<int>(atoi(value.c_str())));
+                }
+            }
+            unsigned long uui_index = str.find("uui");
+            if (uui_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(uui_index, str.length()).c_str(), "uui = %[^,]", var) == 1) {
+                    std::string value = std::string(var);
+                    set_uui(static_cast<uint>(atoi(value.c_str())));
                 }
             }
             unsigned long s_index = str.find("s");
@@ -1254,14 +1276,6 @@ namespace guWhiteboard {
                     set_uc2(static_cast<unsigned char>((value[0])));
                 }
             }
-            unsigned long i2_index = str.find("i2");
-            if (i2_index != std::string::npos) {
-                memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i2_index, str.length()).c_str(), "i2 = %[^,]", var) == 1) {
-                    std::string value = std::string(var);
-                    set_i2(static_cast<int>(atoi(value.c_str())));
-                }
-            }
             unsigned long si2_index = str.find("si2");
             if (si2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
@@ -1356,6 +1370,22 @@ namespace guWhiteboard {
                 if (sscanf(str.substr(i642_index, str.length()).c_str(), "i642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i642(static_cast<int64_t>(atoll(value.c_str())));
+                }
+            }
+            unsigned long i2_index = str.find("i2");
+            if (i2_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(i2_index, str.length()).c_str(), "i2 = %[^,]", var) == 1) {
+                    std::string value = std::string(var);
+                    set_i2(static_cast<int>(atoi(value.c_str())));
+                }
+            }
+            unsigned long uui2_index = str.find("uui2");
+            if (uui2_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(uui2_index, str.length()).c_str(), "uui2 = %[^,]", var) == 1) {
+                    std::string value = std::string(var);
+                    set_uui2(static_cast<uint>(atoi(value.c_str())));
                 }
             }
             unsigned long s2_index = str.find("s2");

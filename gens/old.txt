@@ -4,7 +4,6 @@ bool	b = false	A boolean.
 char	c = 'c'	A char.
 signed char	sc = 'c'	A signed char.
 unsigned char	uc = 'c'	An unsigned char.
-int	i=1	An int.
 signed	si=1	A signed.
 signed int	sii=1	A signed int.
 unsigned	u=1	An unsigned.
@@ -17,6 +16,8 @@ int8_t	i8=1	An int8.
 int16_t	i16=1	An int16.
 int32_t	i32=1	An int32.
 int64_t	i64=1	An int64.
+int	i=1	An int.
+uint	uui=1	A uint.
 short	s=1	A short.
 short int	si_2=1	A short int.
 signed short	ss=1	A signed short.
@@ -47,7 +48,6 @@ bool	b2	A boolean.
 char	c2	A char.
 signed char	sc2	A signed char.
 unsigned char	uc2	An unsigned char.
-int	i2	An int.
 signed	si2	A signed.
 signed int	sii2	A signed int.
 unsigned	u2	An unsigned.
@@ -60,6 +60,8 @@ int8_t	i82	An int8.
 int16_t	i162	An int16.
 int32_t	i322	An int32.
 int64_t	i642	An int64.
+int	i2	An int.
+uint	uui2	A uint.
 short	s2	A short.
 short int	si_22	A short int.
 signed short	ss2	A signed short.

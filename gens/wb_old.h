@@ -63,11 +63,11 @@
 
 #include "gu_util.h"
 
-#define OLD_NUMBER_OF_VARIABLES 90
+#define OLD_NUMBER_OF_VARIABLES 92
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
-#define OLD_DESC_BUFFER_SIZE 3160
-#define OLD_TO_STRING_BUFFER_SIZE 2809
+#define OLD_DESC_BUFFER_SIZE 3193
+#define OLD_TO_STRING_BUFFER_SIZE 2833
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
 #define OLD_ARRAY16_ARRAY_SIZE 4
@@ -103,11 +103,6 @@ struct wb_old
      * An unsigned char.
      */
     PROPERTY(unsigned char, uc)
-
-    /**
-     * An int.
-     */
-    PROPERTY(int, i)
 
     /**
      * A signed.
@@ -168,6 +163,16 @@ struct wb_old
      * An int64.
      */
     PROPERTY(int64_t, i64)
+
+    /**
+     * An int.
+     */
+    PROPERTY(int, i)
+
+    /**
+     * A uint.
+     */
+    PROPERTY(uint, uui)
 
     /**
      * A short.
@@ -320,11 +325,6 @@ struct wb_old
     PROPERTY(unsigned char, uc2)
 
     /**
-     * An int.
-     */
-    PROPERTY(int, i2)
-
-    /**
      * A signed.
      */
     PROPERTY(signed, si2)
@@ -383,6 +383,16 @@ struct wb_old
      * An int64.
      */
     PROPERTY(int64_t, i642)
+
+    /**
+     * An int.
+     */
+    PROPERTY(int, i2)
+
+    /**
+     * A uint.
+     */
+    PROPERTY(uint, uui2)
 
     /**
      * A short.
