@@ -2,6 +2,7 @@ import XCTest
 @testable import classgeneratorTests
 
 XCTMain([
+    testCase(CFileCreatorTests.allTests),
     testCase(CHeaderCreatorTests.allTests),
     testCase(CPPHeaderCreatorTests.allTests),
     testCase(DemoTests.allTests),
