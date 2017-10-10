@@ -30,7 +30,6 @@ char c = 'c' // A char.
 signed char sc = 'c' // A signed char.
 unsigned char uc = 'c' // An unsigned char.
 int i=1 // An int.
-uint uui=1 // A uint.
 signed si=1 // A signed.
 signed int sii=1 // A signed int.
 unsigned u=1 // An unsigned.
@@ -71,7 +70,6 @@ char c2 // A char.
 signed char sc2 // A signed char.
 unsigned char uc2 // An unsigned char.
 int i2 // An int.
-uint uui2 // A uint.
 signed si2 // A signed.
 signed int sii2 // A signed int.
 unsigned u2 // An unsigned.
