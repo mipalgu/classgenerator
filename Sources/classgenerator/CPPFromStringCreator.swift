@@ -113,13 +113,15 @@ public final class CPPFromStringCreator {
         forVariable variable: Variable
     ) -> String? {
         let index = "\(variable.label)_index"
+        let parseValue = self.createParseValue(forType: variable.type, withLabel: variable.label, andIndex: index)
         let setup = """
             unsigned long \(index) = str.find("\(variable.label)");
             if (\(index) != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(\(index), str.length()).c_str(), "\(variable.label) = %[^,]", var) == 1) {
+                if (\(parseValue) == 1) {
             """
         guard let setter = self.calculateSetter(
+            forClassNamed: className,
             forVariable: variable.label,
             withType: variable.type,
             andCType: variable.cType
@@ -133,32 +135,130 @@ public final class CPPFromStringCreator {
         return setup + "\n" + self.stringHelpers.indent(setter, 2) + "\n" + finish
     }
 
+    fileprivate func createParseValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andIndex index: String
+    ) -> String {
+        let token: String
+        switch type {
+            case  .array:
+                token = "{ %[^}]"
+            default:
+                token = "%[^,]"
+        }
+        return "sscanf(str.substr(\(index), str.length()).c_str(), \"\(label) = \(token)\", var)"
+    }
+
     fileprivate func calculateSetter(
+        forClassNamed className: String,
         forVariable label: String,
         withType type: VariableTypes,
         andCType cType: String
     ) -> String? {
         let getValue = "std::string value = std::string(var);"
+        guard let setter = self.calculateSetterValue(
+            forClassNamed: className,
+            forVariable: label,
+            withType: type,
+            andCType: cType,
+            withGetter: "value",
+            andSetter: { "set_\(label)(\($0))" }
+        ) else {
+            return nil
+        }
+        return getValue + "\n" + setter
+    }
+
+    fileprivate func calculateSetterValue(
+        forClassNamed className: String,
+        forVariable label: String,
+        withType type: VariableTypes,
+        andCType cType: String,
+        withGetter getter: String,
+        andSetter setter: (String) -> String
+    ) -> String? {
         switch type {
             case .array:
-                return nil
+                return self.calculateArraySetterValue(
+                    forClassNamed: className,
+                    forVariable: label,
+                    withType: type,
+                    andCType: cType,
+                    withGetter: getter,
+                    andSetter: setter
+                )
             case .bool:
-                return getValue + "\n"
-                    + "set_\(label)(value.compare(\"true\") == 0 || value.compare(\"1\") == 0 ? true : false);"
+                return setter("\(getter).compare(\"true\") == 0 || \(getter).compare(\"1\") == 0 ? true : false") + ";"
             case .char:
-                return getValue + "\n" + "set_\(label)(static_cast<\(cType)>((value[0])));"
+                return setter("static_cast<\(cType)>((\(getter)[0]))") + ";"
             case .numeric(let numericType):
                 let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
-                return getValue + "\n" + "set_\(label)(static_cast<\(cType)>(\(conversionFunction)(value.c_str())));"
+                return setter("static_cast<\(cType)>(\(conversionFunction)(\(getter).c_str()))") + ";"
             case .string(let length):
-                return getValue + "\n" + "gu_strlcpy(const_cast<char *>(this->\(label)()), value.c_str(), \(length));"
+                return "gu_strlcpy(const_cast<char *>(this->\(label)()), \(getter).c_str(), \(length));"
             case .pointer:
                 let typeExtras = self.creatorHelpers.calculateSignatureExtras(forType: type)
                 //swiftlint:disable:next line_length
-                let cast = "const \(cType)\(typeExtras) \(label)_cast = static_cast<\(cType)\(typeExtras)>(atol(value.c_str()));"
-                return getValue + "\n" + cast + "\n" + "set_\(label)(\(label)_cast);"
+                let cast = "const \(cType)\(typeExtras) \(label)_cast = static_cast<\(cType)\(typeExtras)>(atol(\(getter).c_str()));"
+                return cast + "\n" + setter("\(label)_cast") + ";"
             case .unknown:
                 return nil
+        }
+    }
+
+    fileprivate func calculateArraySetterValue(
+        forClassNamed className: String,
+        forVariable label: String,
+        withType type: VariableTypes,
+        andCType cType: String,
+        withGetter getter: String,
+        andSetter setter: (String) -> String
+    ) -> String? {
+        switch type {
+            case .array(let subtype, _):
+                switch subtype {
+                    case .array:
+                        return nil
+                    default:
+                        break
+                }
+                let index = "\(label)_index"
+                let length = self.creatorHelpers.createArrayCountDef(
+                    inClass: className,
+                    forVariable: label,
+                    level: 0
+                )
+                guard let setter = self.calculateSetterValue(
+                    forClassNamed: className,
+                    forVariable: label,
+                    withType: subtype,
+                    andCType: cType,
+                    withGetter: "\(getter).substr(0, pos)",
+                    andSetter: { "set_\(label)(\($0), \(index))" }
+                ) else {
+                    return nil
+                }
+                return """
+                    std::cout << \(getter) << std::endl;
+                    for (\(index) = 0; \(index) < \(length); \(index)++) {
+                        size_t pos = \(getter).find(",");
+                    \(self.stringHelpers.indent(setter))
+                        \(getter) = \(getter).substr(pos + 2);
+                        if (pos == std::string::npos) {
+                            break;
+                        }
+                    }
+                    """
+            default:
+                return self.calculateSetterValue(
+                    forClassNamed: className,
+                    forVariable: label,
+                    withType: type,
+                    andCType: cType,
+                    withGetter: getter,
+                    andSetter: setter
+                )
         }
     }
 
