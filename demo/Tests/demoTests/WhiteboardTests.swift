@@ -75,7 +75,7 @@ public class WhiteboardTests: XCTestCase {
     public override func setUp() {
         self.wbd = GenericWhiteboard<wb_demo>(
             msgType: kDemo_v,
-            wbd: Whiteboard(wbd: gsw_new_whiteboard("custom_whiteboard"))
+            wbd: Whiteboard(wbd: bridge.gsw_new_whiteboard("custom_whiteboard"))
         )
     }
 
