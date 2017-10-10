@@ -97,11 +97,12 @@ public final class CPPFromStringCreator {
         withVariables variables: [Variable]
     ) -> String {
         let varDef = "char var[255];"
-        let conversionList = variables.flatMap {
+        let conversionList = variables.enumerated().flatMap {
             self.createCPPImplementation(
                 forClassNamed: className,
                 withStructNamed: structName,
-                forVariable: $0
+                forVariable: $1,
+                isFirst: $0 == 0
             )
         }.combine("") { $0 + "\n" + $1 }
         return varDef + "\n" + conversionList
@@ -110,12 +111,19 @@ public final class CPPFromStringCreator {
     fileprivate func createCPPImplementation(
         forClassNamed className: String,
         withStructNamed structName: String,
-        forVariable variable: Variable
+        forVariable variable: Variable,
+        isFirst: Bool
     ) -> String? {
         let index = "\(variable.label)_index"
-        let parseValue = self.createParseValue(forType: variable.type, withLabel: variable.label, andIndex: index)
+        let parseValue = self.createParseValue(
+            forType: variable.type,
+            withLabel: variable.label,
+            andIndex: index,
+            isFirst: isFirst
+        )
+        let pre = true == isFirst ? "" : " "
         let setup = """
-            unsigned long \(index) = str.find("\(variable.label)");
+            unsigned long \(index) = str.find("\(pre)\(variable.label)=");
             if (\(index) != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
                 if (\(parseValue) == 1) {
@@ -138,9 +146,11 @@ public final class CPPFromStringCreator {
     fileprivate func createParseValue(
         forType type: VariableTypes,
         withLabel label: String,
-        andIndex index: String
+        andIndex index: String,
+        isFirst: Bool
     ) -> String {
         let token: String
+        let index = index + (true == isFirst ? "" : " + 1")
         switch type {
             case  .array:
                 token = "{ %[^}]"
@@ -240,7 +250,6 @@ public final class CPPFromStringCreator {
                     return nil
                 }
                 return """
-                    std::cout << \(getter) << std::endl;
                     for (\(index) = 0; \(index) < \(length); \(index)++) {
                         size_t pos = \(getter).find(",");
                     \(self.stringHelpers.indent(setter))
