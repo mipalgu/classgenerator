@@ -68,7 +68,40 @@ public class ClassGeneratorTestCase: XCTestCase {
         print("set up class generator")
     }
 
-    public let oldClass = Class(
+    fileprivate var int64l: String {
+        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+        return "ll"
+        #else
+        return "l"
+        #endif
+    }
+
+    fileprivate var uint64l: String {
+        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+        return "ll"
+        #else
+        return "l"
+        #endif
+    }
+
+    fileprivate var int64Type: VariableTypes {
+        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+        return .numeric(.long(.long(.signed)))
+        #else
+        return .numeric(.long(.signed))
+        #endif
+    }
+
+    fileprivate var uint64Type: VariableTypes {
+        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+        return .numeric(.long(.long(.unsigned)))
+        #else
+        return .numeric(.long(.unsigned))
+        #endif
+    }
+
+    public var oldClass: Class {
+        return Class(
             name: "old",
             author: "Callum McColl",
             comment: "This is a test of all of the supported types.",
@@ -183,7 +216,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "u64",
-                    type: .numeric(.long(.long(.unsigned))),
+                    type: self.uint64Type,
                     cType: "uint64_t",
                     swiftType: "UInt64",
                     defaultValue: "1",
@@ -219,7 +252,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "i64",
-                    type: .numeric(.long(.long(.signed))),
+                    type: self.int64Type,
                     cType: "int64_t",
                     swiftType: "Int64",
                     defaultValue: "1",
@@ -579,7 +612,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "u642",
-                    type: .numeric(.long(.long(.unsigned))),
+                    type: self.uint64Type,
                     cType: "uint64_t",
                     swiftType: "UInt64",
                     defaultValue: "0",
@@ -615,7 +648,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 ),
                 Variable(
                     label: "i642",
-                    type: .numeric(.long(.long(.signed))),
+                    type: self.int64Type,
                     cType: "int64_t",
                     swiftType: "Int64",
                     defaultValue: "0",
@@ -911,66 +944,69 @@ public class ClassGeneratorTestCase: XCTestCase {
             embeddedSwift: nil,
             postSwift: nil
         )
+    }
 
-        func createSectionsClass(_ name: String) -> Class {
-            return Class(
-                name: name,
-                author: "Callum McColl",
-                comment: "This is a global comment.",
-                variables: [
-                    Variable(
-                        label: "c",
-                        type: .numeric(.signed),
-                        cType: "int",
-                        swiftType: "Int32",
-                        defaultValue: "2",
-                        swiftDefaultValue: "2",
-                        comment: "A counter."
-                    )
-                ],
-                preC: "#include <stdint.h>",
-                postC: "int f() {\n    return 1;\n}",
-                preCpp: "#include <iostream>",
-                embeddedCpp: "int g() {\n    return c() + 2;\n}",
-                postCpp: "int h() {\n    return 3;\n}",
-                preSwift: "import FSM",
-                embeddedSwift: "var temp: String {\n    return \"c: \\(self.c)\"\n}",
-                postSwift: "extension wb_sections: ExternalVariables {}"
-            )
-        }
+    func createSectionsClass(_ name: String) -> Class {
+        return Class(
+            name: name,
+            author: "Callum McColl",
+            comment: "This is a global comment.",
+            variables: [
+                Variable(
+                    label: "c",
+                    type: .numeric(.signed),
+                    cType: "int",
+                    swiftType: "Int32",
+                    defaultValue: "2",
+                    swiftDefaultValue: "2",
+                    comment: "A counter."
+                )
+            ],
+            preC: "#include <stdint.h>",
+            postC: "int f() {\n    return 1;\n}",
+            preCpp: "#include <iostream>",
+            embeddedCpp: "int g() {\n    return c() + 2;\n}",
+            postCpp: "int h() {\n    return 3;\n}",
+            preSwift: "import FSM",
+            embeddedSwift: "var temp: String {\n    return \"c: \\(self.c)\"\n}",
+            postSwift: "extension wb_sections: ExternalVariables {}"
+        )
+    }
 
-        func replaceTokens(_ str: String, withDate date: Date = Date()) -> String {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd/MM/yyyy"
-            let temp = str.replacingOccurrences(of: "%date%", with: formatter.string(from: date))
-            formatter.dateFormat = "HH:mm"
-            let temp2 = temp.replacingOccurrences(of: "%time%", with: formatter.string(from: date))
-            formatter.dateFormat = "yyyy"
-            let replaced = temp2.replacingOccurrences(of: "%year%", with: formatter.string(from: date))
-            return replaced
-        }
+    func replaceTokens(_ str: String, withDate date: Date = Date()) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        let temp = str.replacingOccurrences(of: "%date%", with: formatter.string(from: date))
+        formatter.dateFormat = "HH:mm"
+        let temp2 = temp.replacingOccurrences(of: "%time%", with: formatter.string(from: date))
+        formatter.dateFormat = "yyyy"
+        let temp3 = temp2.replacingOccurrences(of: "%uint64l%", with: self.uint64l)
+        let temp4 = temp3.replacingOccurrences(of: "%int64l%", with: self.int64l)
+        let replaced = temp4.replacingOccurrences(of: "%year%", with: formatter.string(from: date))
+        return replaced
+    }
 
-        func compareStrings(_ lhs: String, _ rhs: String) {
-            if lhs == rhs {
-                return
-            }
-            let llines = lhs.components(separatedBy: CharacterSet.newlines)
-            let rlines = rhs.components(separatedBy: CharacterSet.newlines)
-            guard let badLine = zip(llines, rlines).lazy.enumerated().filter({ $0.1.0 != $0.1.1 }).first else {
-                XCTAssertEqual(lhs, rhs)
-                return
-            }
-            XCTFail("\nline \(badLine.0):\n|" + badLine.1.0 + "| vs\n" + "|" + badLine.1.1 + "|")
+    func compareStrings(_ lhs: String, _ rhs: String) {
+        if lhs == rhs {
+            return
         }
+        let llines = lhs.components(separatedBy: CharacterSet.newlines)
+        let rlines = rhs.components(separatedBy: CharacterSet.newlines)
+        guard let badLine = zip(llines, rlines).lazy.enumerated().filter({ $0.1.0 != $0.1.1 }).first else {
+            XCTAssertEqual(lhs, rhs)
+            return
+        }
+        XCTFail("\nline \(badLine.0):\n|" + badLine.1.0 + "| vs\n" + "|" + badLine.1.1 + "|")
+    }
 
-        func read(_ file: String) -> String {
-            guard let contents = (try? Data(contentsOf: URL(fileURLWithPath: file))).flatMap({
-                String(data: $0, encoding: .utf8)
-            }) else {
-                XCTFail("Unable to read \(file)")
-                return ""
-            }
-            return contents
+    func read(_ file: String) -> String {
+        guard let contents = (try? Data(contentsOf: URL(fileURLWithPath: file))).flatMap({
+            String(data: $0, encoding: .utf8)
+        }) else {
+            XCTFail("Unable to read \(file)")
+            return ""
         }
+        return contents
+    }
 
 }

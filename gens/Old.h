@@ -985,7 +985,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(u64_index, str.length()).c_str(), "u64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_u64(static_cast<uint64_t>(atoll(value.c_str())));
+                    set_u64(static_cast<uint64_t>(ato%uint64l%(value.c_str())));
                 }
             }
             unsigned long i8_index = str.find("i8");
@@ -1017,7 +1017,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(i64_index, str.length()).c_str(), "i64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_i64(static_cast<int64_t>(atoll(value.c_str())));
+                    set_i64(static_cast<int64_t>(ato%int64l%(value.c_str())));
                 }
             }
             unsigned long i_index = str.find("i");
@@ -1337,7 +1337,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(u642_index, str.length()).c_str(), "u642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_u642(static_cast<uint64_t>(atoll(value.c_str())));
+                    set_u642(static_cast<uint64_t>(ato%uint64l%(value.c_str())));
                 }
             }
             unsigned long i82_index = str.find("i82");
@@ -1369,7 +1369,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(i642_index, str.length()).c_str(), "i642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_i642(static_cast<int64_t>(atoll(value.c_str())));
+                    set_i642(static_cast<int64_t>(ato%int64l%(value.c_str())));
                 }
             }
             unsigned long i2_index = str.find("i2");

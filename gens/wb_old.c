@@ -175,7 +175,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "u64=%llu", self->u64);
+    len += snprintf(descString + len, bufferSize - len, "u64=%%uint64l%u", self->u64);
     if (len >= bufferSize) {
         return descString;
     }
@@ -207,7 +207,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i64=%lld", self->i64);
+    len += snprintf(descString + len, bufferSize - len, "i64=%%int64l%d", self->i64);
     if (len >= bufferSize) {
         return descString;
     }
@@ -531,7 +531,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "u642=%llu", self->u642);
+    len += snprintf(descString + len, bufferSize - len, "u642=%%uint64l%u", self->u642);
     if (len >= bufferSize) {
         return descString;
     }
@@ -563,7 +563,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i642=%lld", self->i642);
+    len += snprintf(descString + len, bufferSize - len, "i642=%%int64l%d", self->i642);
     if (len >= bufferSize) {
         return descString;
     }
@@ -936,7 +936,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%llu", self->u64);
+    len += snprintf(toString + len, bufferSize - len, "%%uint64l%u", self->u64);
     if (len >= bufferSize) {
         return toString;
     }
@@ -968,7 +968,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%lld", self->i64);
+    len += snprintf(toString + len, bufferSize - len, "%%int64l%d", self->i64);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1288,7 +1288,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%llu", self->u642);
+    len += snprintf(toString + len, bufferSize - len, "%%uint64l%u", self->u642);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1320,7 +1320,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%lld", self->i642);
+    len += snprintf(toString + len, bufferSize - len, "%%int64l%d", self->i642);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1682,7 +1682,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[11] != NULL)
         self->u32 = (uint32_t)atoi(strings[11]);
     if (strings[12] != NULL)
-        self->u64 = (uint64_t)atoll(strings[12]);
+        self->u64 = (uint64_t)ato%uint64l%(strings[12]);
     if (strings[13] != NULL)
         self->i8 = (int8_t)atoi(strings[13]);
     if (strings[14] != NULL)
@@ -1690,7 +1690,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[15] != NULL)
         self->i32 = (int32_t)atoi(strings[15]);
     if (strings[16] != NULL)
-        self->i64 = (int64_t)atoll(strings[16]);
+        self->i64 = (int64_t)ato%int64l%(strings[16]);
     if (strings[17] != NULL)
         self->i = (int)atoi(strings[17]);
     if (strings[18] != NULL)
@@ -1776,7 +1776,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[55] != NULL)
         self->u322 = (uint32_t)atoi(strings[55]);
     if (strings[56] != NULL)
-        self->u642 = (uint64_t)atoll(strings[56]);
+        self->u642 = (uint64_t)ato%uint64l%(strings[56]);
     if (strings[57] != NULL)
         self->i82 = (int8_t)atoi(strings[57]);
     if (strings[58] != NULL)
@@ -1784,7 +1784,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[59] != NULL)
         self->i322 = (int32_t)atoi(strings[59]);
     if (strings[60] != NULL)
-        self->i642 = (int64_t)atoll(strings[60]);
+        self->i642 = (int64_t)ato%int64l%(strings[60]);
     if (strings[61] != NULL)
         self->i2 = (int)atoi(strings[61]);
     if (strings[62] != NULL)

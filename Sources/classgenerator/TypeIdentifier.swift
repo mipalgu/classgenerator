@@ -104,6 +104,13 @@ public final class TypeIdentifier {
         "double double": .numeric(.double)
     ]
 
+    fileprivate var linuxValues: [String: VariableTypes] {
+        var values = self.values
+        values["int64_t"] = .numeric(.long(.signed))
+        values["uint64_t"] = .numeric(.long(.unsigned))
+        return values
+    }
+
     public init() {}
 
     public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String]) -> VariableTypes {
@@ -116,7 +123,11 @@ public final class TypeIdentifier {
         if "string" == type {
             return .string("0")
         }
+        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
         return self.values[type] ?? .unknown
+        #else
+        return self.linuxValues[type] ?? .unknown
+        #endif
     }
 
     fileprivate func identifyPointer(fromType type: String) -> VariableTypes {
