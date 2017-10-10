@@ -140,7 +140,7 @@ namespace guWhiteboard {
             wb_sections_from_string(this, str.c_str());
 #else
             char var[255];
-            unsigned long c_index = str.find("c");
+            unsigned long c_index = str.find("c=");
             if (c_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(c_index, str.length()).c_str(), "c = %[^,]", var) == 1) {

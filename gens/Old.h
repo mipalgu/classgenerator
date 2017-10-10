@@ -884,7 +884,7 @@ namespace guWhiteboard {
             wb_old_from_string(this, str.c_str());
 #else
             char var[255];
-            unsigned long str_index = str.find("str");
+            unsigned long str_index = str.find("str=");
             if (str_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(str_index, str.length()).c_str(), "str = %[^,]", var) == 1) {
@@ -892,709 +892,739 @@ namespace guWhiteboard {
                     gu_strlcpy(const_cast<char *>(this->str()), value.c_str(), 6);
                 }
             }
-            unsigned long b_index = str.find("b");
+            unsigned long b_index = str.find(" b=");
             if (b_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(b_index, str.length()).c_str(), "b = %[^,]", var) == 1) {
+                if (sscanf(str.substr(b_index + 1, str.length()).c_str(), "b = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_b(value.compare("true") == 0 || value.compare("1") == 0 ? true : false);
                 }
             }
-            unsigned long c_index = str.find("c");
+            unsigned long c_index = str.find(" c=");
             if (c_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(c_index, str.length()).c_str(), "c = %[^,]", var) == 1) {
+                if (sscanf(str.substr(c_index + 1, str.length()).c_str(), "c = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_c(static_cast<char>((value[0])));
                 }
             }
-            unsigned long sc_index = str.find("sc");
+            unsigned long sc_index = str.find(" sc=");
             if (sc_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sc_index, str.length()).c_str(), "sc = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sc_index + 1, str.length()).c_str(), "sc = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sc(static_cast<signed char>((value[0])));
                 }
             }
-            unsigned long uc_index = str.find("uc");
+            unsigned long uc_index = str.find(" uc=");
             if (uc_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(uc_index, str.length()).c_str(), "uc = %[^,]", var) == 1) {
+                if (sscanf(str.substr(uc_index + 1, str.length()).c_str(), "uc = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_uc(static_cast<unsigned char>((value[0])));
                 }
             }
-            unsigned long si_index = str.find("si");
+            unsigned long si_index = str.find(" si=");
             if (si_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(si_index, str.length()).c_str(), "si = %[^,]", var) == 1) {
+                if (sscanf(str.substr(si_index + 1, str.length()).c_str(), "si = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_si(static_cast<signed>(atoi(value.c_str())));
                 }
             }
-            unsigned long sii_index = str.find("sii");
+            unsigned long sii_index = str.find(" sii=");
             if (sii_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sii_index, str.length()).c_str(), "sii = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sii_index + 1, str.length()).c_str(), "sii = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sii(static_cast<signed int>(atoi(value.c_str())));
                 }
             }
-            unsigned long u_index = str.find("u");
+            unsigned long u_index = str.find(" u=");
             if (u_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u_index, str.length()).c_str(), "u = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u_index + 1, str.length()).c_str(), "u = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u(static_cast<unsigned>(atoi(value.c_str())));
                 }
             }
-            unsigned long ui_index = str.find("ui");
+            unsigned long ui_index = str.find(" ui=");
             if (ui_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ui_index, str.length()).c_str(), "ui = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ui_index + 1, str.length()).c_str(), "ui = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ui(static_cast<unsigned int>(atoi(value.c_str())));
                 }
             }
-            unsigned long u8_index = str.find("u8");
+            unsigned long u8_index = str.find(" u8=");
             if (u8_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u8_index, str.length()).c_str(), "u8 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u8_index + 1, str.length()).c_str(), "u8 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u8(static_cast<uint8_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long u16_index = str.find("u16");
+            unsigned long u16_index = str.find(" u16=");
             if (u16_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u16_index, str.length()).c_str(), "u16 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u16_index + 1, str.length()).c_str(), "u16 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u16(static_cast<uint16_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long u32_index = str.find("u32");
+            unsigned long u32_index = str.find(" u32=");
             if (u32_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u32_index, str.length()).c_str(), "u32 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u32_index + 1, str.length()).c_str(), "u32 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u32(static_cast<uint32_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long u64_index = str.find("u64");
+            unsigned long u64_index = str.find(" u64=");
             if (u64_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u64_index, str.length()).c_str(), "u64 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u64_index + 1, str.length()).c_str(), "u64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u64(static_cast<uint64_t>(ato%uint64l%(value.c_str())));
                 }
             }
-            unsigned long i8_index = str.find("i8");
+            unsigned long i8_index = str.find(" i8=");
             if (i8_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i8_index, str.length()).c_str(), "i8 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i8_index + 1, str.length()).c_str(), "i8 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i8(static_cast<int8_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long i16_index = str.find("i16");
+            unsigned long i16_index = str.find(" i16=");
             if (i16_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i16_index, str.length()).c_str(), "i16 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i16_index + 1, str.length()).c_str(), "i16 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i16(static_cast<int16_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long i32_index = str.find("i32");
+            unsigned long i32_index = str.find(" i32=");
             if (i32_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i32_index, str.length()).c_str(), "i32 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i32_index + 1, str.length()).c_str(), "i32 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i32(static_cast<int32_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long i64_index = str.find("i64");
+            unsigned long i64_index = str.find(" i64=");
             if (i64_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i64_index, str.length()).c_str(), "i64 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i64_index + 1, str.length()).c_str(), "i64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i64(static_cast<int64_t>(ato%int64l%(value.c_str())));
                 }
             }
-            unsigned long i_index = str.find("i");
+            unsigned long i_index = str.find(" i=");
             if (i_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i_index, str.length()).c_str(), "i = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i_index + 1, str.length()).c_str(), "i = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i(static_cast<int>(atoi(value.c_str())));
                 }
             }
-            unsigned long uui_index = str.find("uui");
+            unsigned long uui_index = str.find(" uui=");
             if (uui_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(uui_index, str.length()).c_str(), "uui = %[^,]", var) == 1) {
+                if (sscanf(str.substr(uui_index + 1, str.length()).c_str(), "uui = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_uui(static_cast<uint>(atoi(value.c_str())));
                 }
             }
-            unsigned long s_index = str.find("s");
+            unsigned long s_index = str.find(" s=");
             if (s_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(s_index, str.length()).c_str(), "s = %[^,]", var) == 1) {
+                if (sscanf(str.substr(s_index + 1, str.length()).c_str(), "s = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_s(static_cast<short>(atoi(value.c_str())));
                 }
             }
-            unsigned long si_2_index = str.find("si_2");
+            unsigned long si_2_index = str.find(" si_2=");
             if (si_2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(si_2_index, str.length()).c_str(), "si_2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(si_2_index + 1, str.length()).c_str(), "si_2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_si_2(static_cast<short int>(atoi(value.c_str())));
                 }
             }
-            unsigned long ss_index = str.find("ss");
+            unsigned long ss_index = str.find(" ss=");
             if (ss_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ss_index, str.length()).c_str(), "ss = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ss_index + 1, str.length()).c_str(), "ss = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ss(static_cast<signed short>(atoi(value.c_str())));
                 }
             }
-            unsigned long ssi_index = str.find("ssi");
+            unsigned long ssi_index = str.find(" ssi=");
             if (ssi_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ssi_index, str.length()).c_str(), "ssi = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ssi_index + 1, str.length()).c_str(), "ssi = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ssi(static_cast<signed short int>(atoi(value.c_str())));
                 }
             }
-            unsigned long us_index = str.find("us");
+            unsigned long us_index = str.find(" us=");
             if (us_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(us_index, str.length()).c_str(), "us = %[^,]", var) == 1) {
+                if (sscanf(str.substr(us_index + 1, str.length()).c_str(), "us = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_us(static_cast<unsigned short>(atoi(value.c_str())));
                 }
             }
-            unsigned long usi_index = str.find("usi");
+            unsigned long usi_index = str.find(" usi=");
             if (usi_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(usi_index, str.length()).c_str(), "usi = %[^,]", var) == 1) {
+                if (sscanf(str.substr(usi_index + 1, str.length()).c_str(), "usi = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_usi(static_cast<unsigned short int>(atoi(value.c_str())));
                 }
             }
-            unsigned long l_index = str.find("l");
+            unsigned long l_index = str.find(" l=");
             if (l_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(l_index, str.length()).c_str(), "l = %[^,]", var) == 1) {
+                if (sscanf(str.substr(l_index + 1, str.length()).c_str(), "l = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_l(static_cast<long>(atol(value.c_str())));
                 }
             }
-            unsigned long li_index = str.find("li");
+            unsigned long li_index = str.find(" li=");
             if (li_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(li_index, str.length()).c_str(), "li = %[^,]", var) == 1) {
+                if (sscanf(str.substr(li_index + 1, str.length()).c_str(), "li = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_li(static_cast<long int>(atol(value.c_str())));
                 }
             }
-            unsigned long sl_index = str.find("sl");
+            unsigned long sl_index = str.find(" sl=");
             if (sl_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sl_index, str.length()).c_str(), "sl = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sl_index + 1, str.length()).c_str(), "sl = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sl(static_cast<signed long>(atol(value.c_str())));
                 }
             }
-            unsigned long sli_index = str.find("sli");
+            unsigned long sli_index = str.find(" sli=");
             if (sli_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sli_index, str.length()).c_str(), "sli = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sli_index + 1, str.length()).c_str(), "sli = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sli(static_cast<signed long int>(atol(value.c_str())));
                 }
             }
-            unsigned long ul_index = str.find("ul");
+            unsigned long ul_index = str.find(" ul=");
             if (ul_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ul_index, str.length()).c_str(), "ul = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ul_index + 1, str.length()).c_str(), "ul = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ul(static_cast<unsigned long>(atol(value.c_str())));
                 }
             }
-            unsigned long uli_index = str.find("uli");
+            unsigned long uli_index = str.find(" uli=");
             if (uli_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(uli_index, str.length()).c_str(), "uli = %[^,]", var) == 1) {
+                if (sscanf(str.substr(uli_index + 1, str.length()).c_str(), "uli = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_uli(static_cast<unsigned long int>(atol(value.c_str())));
                 }
             }
-            unsigned long ll_index = str.find("ll");
+            unsigned long ll_index = str.find(" ll=");
             if (ll_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ll_index, str.length()).c_str(), "ll = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ll_index + 1, str.length()).c_str(), "ll = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ll(static_cast<long long>(atoll(value.c_str())));
                 }
             }
-            unsigned long lli_index = str.find("lli");
+            unsigned long lli_index = str.find(" lli=");
             if (lli_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(lli_index, str.length()).c_str(), "lli = %[^,]", var) == 1) {
+                if (sscanf(str.substr(lli_index + 1, str.length()).c_str(), "lli = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_lli(static_cast<long long int>(atoll(value.c_str())));
                 }
             }
-            unsigned long sll_index = str.find("sll");
+            unsigned long sll_index = str.find(" sll=");
             if (sll_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sll_index, str.length()).c_str(), "sll = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sll_index + 1, str.length()).c_str(), "sll = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sll(static_cast<signed long long>(atoll(value.c_str())));
                 }
             }
-            unsigned long slli_index = str.find("slli");
+            unsigned long slli_index = str.find(" slli=");
             if (slli_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(slli_index, str.length()).c_str(), "slli = %[^,]", var) == 1) {
+                if (sscanf(str.substr(slli_index + 1, str.length()).c_str(), "slli = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_slli(static_cast<signed long long int>(atoll(value.c_str())));
                 }
             }
-            unsigned long ull_index = str.find("ull");
+            unsigned long ull_index = str.find(" ull=");
             if (ull_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ull_index, str.length()).c_str(), "ull = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ull_index + 1, str.length()).c_str(), "ull = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ull(static_cast<unsigned long long>(atoll(value.c_str())));
                 }
             }
-            unsigned long ulli_index = str.find("ulli");
+            unsigned long ulli_index = str.find(" ulli=");
             if (ulli_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ulli_index, str.length()).c_str(), "ulli = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ulli_index + 1, str.length()).c_str(), "ulli = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ulli(static_cast<unsigned long long int>(atoll(value.c_str())));
                 }
             }
-            unsigned long l64_index = str.find("l64");
+            unsigned long l64_index = str.find(" l64=");
             if (l64_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(l64_index, str.length()).c_str(), "l64 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(l64_index + 1, str.length()).c_str(), "l64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_l64(static_cast<long64_t>(atoll(value.c_str())));
                 }
             }
-            unsigned long f_index = str.find("f");
+            unsigned long f_index = str.find(" f=");
             if (f_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(f_index, str.length()).c_str(), "f = %[^,]", var) == 1) {
+                if (sscanf(str.substr(f_index + 1, str.length()).c_str(), "f = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_f(static_cast<float>(atof(value.c_str())));
                 }
             }
-            unsigned long ft_index = str.find("ft");
+            unsigned long ft_index = str.find(" ft=");
             if (ft_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ft_index, str.length()).c_str(), "ft = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ft_index + 1, str.length()).c_str(), "ft = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ft(static_cast<float_t>(atof(value.c_str())));
                 }
             }
-            unsigned long d_index = str.find("d");
+            unsigned long d_index = str.find(" d=");
             if (d_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(d_index, str.length()).c_str(), "d = %[^,]", var) == 1) {
+                if (sscanf(str.substr(d_index + 1, str.length()).c_str(), "d = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_d(static_cast<double>(atof(value.c_str())));
                 }
             }
-            unsigned long dt_index = str.find("dt");
+            unsigned long dt_index = str.find(" dt=");
             if (dt_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(dt_index, str.length()).c_str(), "dt = %[^,]", var) == 1) {
+                if (sscanf(str.substr(dt_index + 1, str.length()).c_str(), "dt = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_dt(static_cast<double_t>(atof(value.c_str())));
                 }
             }
-            unsigned long ld_index = str.find("ld");
+            unsigned long ld_index = str.find(" ld=");
             if (ld_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ld_index, str.length()).c_str(), "ld = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ld_index + 1, str.length()).c_str(), "ld = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ld(static_cast<long double>(atof(value.c_str())));
                 }
             }
-            unsigned long dd_index = str.find("dd");
+            unsigned long dd_index = str.find(" dd=");
             if (dd_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(dd_index, str.length()).c_str(), "dd = %[^,]", var) == 1) {
+                if (sscanf(str.substr(dd_index + 1, str.length()).c_str(), "dd = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_dd(static_cast<double double>(atof(value.c_str())));
                 }
             }
-            unsigned long str2_index = str.find("str2");
+            unsigned long str2_index = str.find(" str2=");
             if (str2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(str2_index, str.length()).c_str(), "str2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(str2_index + 1, str.length()).c_str(), "str2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     gu_strlcpy(const_cast<char *>(this->str2()), value.c_str(), 6);
                 }
             }
-            unsigned long b2_index = str.find("b2");
+            unsigned long b2_index = str.find(" b2=");
             if (b2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(b2_index, str.length()).c_str(), "b2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(b2_index + 1, str.length()).c_str(), "b2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_b2(value.compare("true") == 0 || value.compare("1") == 0 ? true : false);
                 }
             }
-            unsigned long c2_index = str.find("c2");
+            unsigned long c2_index = str.find(" c2=");
             if (c2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(c2_index, str.length()).c_str(), "c2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(c2_index + 1, str.length()).c_str(), "c2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_c2(static_cast<char>((value[0])));
                 }
             }
-            unsigned long sc2_index = str.find("sc2");
+            unsigned long sc2_index = str.find(" sc2=");
             if (sc2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sc2_index, str.length()).c_str(), "sc2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sc2_index + 1, str.length()).c_str(), "sc2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sc2(static_cast<signed char>((value[0])));
                 }
             }
-            unsigned long uc2_index = str.find("uc2");
+            unsigned long uc2_index = str.find(" uc2=");
             if (uc2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(uc2_index, str.length()).c_str(), "uc2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(uc2_index + 1, str.length()).c_str(), "uc2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_uc2(static_cast<unsigned char>((value[0])));
                 }
             }
-            unsigned long si2_index = str.find("si2");
+            unsigned long si2_index = str.find(" si2=");
             if (si2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(si2_index, str.length()).c_str(), "si2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(si2_index + 1, str.length()).c_str(), "si2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_si2(static_cast<signed>(atoi(value.c_str())));
                 }
             }
-            unsigned long sii2_index = str.find("sii2");
+            unsigned long sii2_index = str.find(" sii2=");
             if (sii2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sii2_index, str.length()).c_str(), "sii2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sii2_index + 1, str.length()).c_str(), "sii2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sii2(static_cast<signed int>(atoi(value.c_str())));
                 }
             }
-            unsigned long u2_index = str.find("u2");
+            unsigned long u2_index = str.find(" u2=");
             if (u2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u2_index, str.length()).c_str(), "u2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u2_index + 1, str.length()).c_str(), "u2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u2(static_cast<unsigned>(atoi(value.c_str())));
                 }
             }
-            unsigned long ui2_index = str.find("ui2");
+            unsigned long ui2_index = str.find(" ui2=");
             if (ui2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ui2_index, str.length()).c_str(), "ui2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ui2_index + 1, str.length()).c_str(), "ui2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ui2(static_cast<unsigned int>(atoi(value.c_str())));
                 }
             }
-            unsigned long u82_index = str.find("u82");
+            unsigned long u82_index = str.find(" u82=");
             if (u82_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u82_index, str.length()).c_str(), "u82 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u82_index + 1, str.length()).c_str(), "u82 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u82(static_cast<uint8_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long u162_index = str.find("u162");
+            unsigned long u162_index = str.find(" u162=");
             if (u162_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u162_index, str.length()).c_str(), "u162 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u162_index + 1, str.length()).c_str(), "u162 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u162(static_cast<uint16_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long u322_index = str.find("u322");
+            unsigned long u322_index = str.find(" u322=");
             if (u322_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u322_index, str.length()).c_str(), "u322 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u322_index + 1, str.length()).c_str(), "u322 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u322(static_cast<uint32_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long u642_index = str.find("u642");
+            unsigned long u642_index = str.find(" u642=");
             if (u642_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(u642_index, str.length()).c_str(), "u642 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(u642_index + 1, str.length()).c_str(), "u642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_u642(static_cast<uint64_t>(ato%uint64l%(value.c_str())));
                 }
             }
-            unsigned long i82_index = str.find("i82");
+            unsigned long i82_index = str.find(" i82=");
             if (i82_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i82_index, str.length()).c_str(), "i82 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i82_index + 1, str.length()).c_str(), "i82 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i82(static_cast<int8_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long i162_index = str.find("i162");
+            unsigned long i162_index = str.find(" i162=");
             if (i162_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i162_index, str.length()).c_str(), "i162 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i162_index + 1, str.length()).c_str(), "i162 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i162(static_cast<int16_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long i322_index = str.find("i322");
+            unsigned long i322_index = str.find(" i322=");
             if (i322_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i322_index, str.length()).c_str(), "i322 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i322_index + 1, str.length()).c_str(), "i322 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i322(static_cast<int32_t>(atoi(value.c_str())));
                 }
             }
-            unsigned long i642_index = str.find("i642");
+            unsigned long i642_index = str.find(" i642=");
             if (i642_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i642_index, str.length()).c_str(), "i642 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i642_index + 1, str.length()).c_str(), "i642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i642(static_cast<int64_t>(ato%int64l%(value.c_str())));
                 }
             }
-            unsigned long i2_index = str.find("i2");
+            unsigned long i2_index = str.find(" i2=");
             if (i2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(i2_index, str.length()).c_str(), "i2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(i2_index + 1, str.length()).c_str(), "i2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_i2(static_cast<int>(atoi(value.c_str())));
                 }
             }
-            unsigned long uui2_index = str.find("uui2");
+            unsigned long uui2_index = str.find(" uui2=");
             if (uui2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(uui2_index, str.length()).c_str(), "uui2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(uui2_index + 1, str.length()).c_str(), "uui2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_uui2(static_cast<uint>(atoi(value.c_str())));
                 }
             }
-            unsigned long s2_index = str.find("s2");
+            unsigned long s2_index = str.find(" s2=");
             if (s2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(s2_index, str.length()).c_str(), "s2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(s2_index + 1, str.length()).c_str(), "s2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_s2(static_cast<short>(atoi(value.c_str())));
                 }
             }
-            unsigned long si_22_index = str.find("si_22");
+            unsigned long si_22_index = str.find(" si_22=");
             if (si_22_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(si_22_index, str.length()).c_str(), "si_22 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(si_22_index + 1, str.length()).c_str(), "si_22 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_si_22(static_cast<short int>(atoi(value.c_str())));
                 }
             }
-            unsigned long ss2_index = str.find("ss2");
+            unsigned long ss2_index = str.find(" ss2=");
             if (ss2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ss2_index, str.length()).c_str(), "ss2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ss2_index + 1, str.length()).c_str(), "ss2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ss2(static_cast<signed short>(atoi(value.c_str())));
                 }
             }
-            unsigned long ssi2_index = str.find("ssi2");
+            unsigned long ssi2_index = str.find(" ssi2=");
             if (ssi2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ssi2_index, str.length()).c_str(), "ssi2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ssi2_index + 1, str.length()).c_str(), "ssi2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ssi2(static_cast<signed short int>(atoi(value.c_str())));
                 }
             }
-            unsigned long us2_index = str.find("us2");
+            unsigned long us2_index = str.find(" us2=");
             if (us2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(us2_index, str.length()).c_str(), "us2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(us2_index + 1, str.length()).c_str(), "us2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_us2(static_cast<unsigned short>(atoi(value.c_str())));
                 }
             }
-            unsigned long usi2_index = str.find("usi2");
+            unsigned long usi2_index = str.find(" usi2=");
             if (usi2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(usi2_index, str.length()).c_str(), "usi2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(usi2_index + 1, str.length()).c_str(), "usi2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_usi2(static_cast<unsigned short int>(atoi(value.c_str())));
                 }
             }
-            unsigned long l2_index = str.find("l2");
+            unsigned long l2_index = str.find(" l2=");
             if (l2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(l2_index, str.length()).c_str(), "l2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(l2_index + 1, str.length()).c_str(), "l2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_l2(static_cast<long>(atol(value.c_str())));
                 }
             }
-            unsigned long li2_index = str.find("li2");
+            unsigned long li2_index = str.find(" li2=");
             if (li2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(li2_index, str.length()).c_str(), "li2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(li2_index + 1, str.length()).c_str(), "li2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_li2(static_cast<long int>(atol(value.c_str())));
                 }
             }
-            unsigned long sl2_index = str.find("sl2");
+            unsigned long sl2_index = str.find(" sl2=");
             if (sl2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sl2_index, str.length()).c_str(), "sl2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sl2_index + 1, str.length()).c_str(), "sl2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sl2(static_cast<signed long>(atol(value.c_str())));
                 }
             }
-            unsigned long sli2_index = str.find("sli2");
+            unsigned long sli2_index = str.find(" sli2=");
             if (sli2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sli2_index, str.length()).c_str(), "sli2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sli2_index + 1, str.length()).c_str(), "sli2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sli2(static_cast<signed long int>(atol(value.c_str())));
                 }
             }
-            unsigned long ul2_index = str.find("ul2");
+            unsigned long ul2_index = str.find(" ul2=");
             if (ul2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ul2_index, str.length()).c_str(), "ul2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ul2_index + 1, str.length()).c_str(), "ul2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ul2(static_cast<unsigned long>(atol(value.c_str())));
                 }
             }
-            unsigned long uli2_index = str.find("uli2");
+            unsigned long uli2_index = str.find(" uli2=");
             if (uli2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(uli2_index, str.length()).c_str(), "uli2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(uli2_index + 1, str.length()).c_str(), "uli2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_uli2(static_cast<unsigned long int>(atol(value.c_str())));
                 }
             }
-            unsigned long ll2_index = str.find("ll2");
+            unsigned long ll2_index = str.find(" ll2=");
             if (ll2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ll2_index, str.length()).c_str(), "ll2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ll2_index + 1, str.length()).c_str(), "ll2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ll2(static_cast<long long>(atoll(value.c_str())));
                 }
             }
-            unsigned long lli2_index = str.find("lli2");
+            unsigned long lli2_index = str.find(" lli2=");
             if (lli2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(lli2_index, str.length()).c_str(), "lli2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(lli2_index + 1, str.length()).c_str(), "lli2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_lli2(static_cast<long long int>(atoll(value.c_str())));
                 }
             }
-            unsigned long sll2_index = str.find("sll2");
+            unsigned long sll2_index = str.find(" sll2=");
             if (sll2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(sll2_index, str.length()).c_str(), "sll2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(sll2_index + 1, str.length()).c_str(), "sll2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_sll2(static_cast<signed long long>(atoll(value.c_str())));
                 }
             }
-            unsigned long slli2_index = str.find("slli2");
+            unsigned long slli2_index = str.find(" slli2=");
             if (slli2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(slli2_index, str.length()).c_str(), "slli2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(slli2_index + 1, str.length()).c_str(), "slli2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_slli2(static_cast<signed long long int>(atoll(value.c_str())));
                 }
             }
-            unsigned long ull2_index = str.find("ull2");
+            unsigned long ull2_index = str.find(" ull2=");
             if (ull2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ull2_index, str.length()).c_str(), "ull2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ull2_index + 1, str.length()).c_str(), "ull2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ull2(static_cast<unsigned long long>(atoll(value.c_str())));
                 }
             }
-            unsigned long ulli2_index = str.find("ulli2");
+            unsigned long ulli2_index = str.find(" ulli2=");
             if (ulli2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ulli2_index, str.length()).c_str(), "ulli2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ulli2_index + 1, str.length()).c_str(), "ulli2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ulli2(static_cast<unsigned long long int>(atoll(value.c_str())));
                 }
             }
-            unsigned long l642_index = str.find("l642");
+            unsigned long l642_index = str.find(" l642=");
             if (l642_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(l642_index, str.length()).c_str(), "l642 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(l642_index + 1, str.length()).c_str(), "l642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_l642(static_cast<long64_t>(atoll(value.c_str())));
                 }
             }
-            unsigned long f2_index = str.find("f2");
+            unsigned long f2_index = str.find(" f2=");
             if (f2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(f2_index, str.length()).c_str(), "f2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(f2_index + 1, str.length()).c_str(), "f2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_f2(static_cast<float>(atof(value.c_str())));
                 }
             }
-            unsigned long ft2_index = str.find("ft2");
+            unsigned long ft2_index = str.find(" ft2=");
             if (ft2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ft2_index, str.length()).c_str(), "ft2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ft2_index + 1, str.length()).c_str(), "ft2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ft2(static_cast<float_t>(atof(value.c_str())));
                 }
             }
-            unsigned long d2_index = str.find("d2");
+            unsigned long d2_index = str.find(" d2=");
             if (d2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(d2_index, str.length()).c_str(), "d2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(d2_index + 1, str.length()).c_str(), "d2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_d2(static_cast<double>(atof(value.c_str())));
                 }
             }
-            unsigned long dt2_index = str.find("dt2");
+            unsigned long dt2_index = str.find(" dt2=");
             if (dt2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(dt2_index, str.length()).c_str(), "dt2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(dt2_index + 1, str.length()).c_str(), "dt2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_dt2(static_cast<double_t>(atof(value.c_str())));
                 }
             }
-            unsigned long ld2_index = str.find("ld2");
+            unsigned long ld2_index = str.find(" ld2=");
             if (ld2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(ld2_index, str.length()).c_str(), "ld2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(ld2_index + 1, str.length()).c_str(), "ld2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_ld2(static_cast<long double>(atof(value.c_str())));
                 }
             }
-            unsigned long dd2_index = str.find("dd2");
+            unsigned long dd2_index = str.find(" dd2=");
             if (dd2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(dd2_index, str.length()).c_str(), "dd2 = %[^,]", var) == 1) {
+                if (sscanf(str.substr(dd2_index + 1, str.length()).c_str(), "dd2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_dd2(static_cast<double double>(atof(value.c_str())));
                 }
             }
-            unsigned long p_index = str.find("p");
+            unsigned long p_index = str.find(" p=");
             if (p_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (sscanf(str.substr(p_index, str.length()).c_str(), "p = %[^,]", var) == 1) {
+                if (sscanf(str.substr(p_index + 1, str.length()).c_str(), "p = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     const int * p_cast = static_cast<int *>(atol(value.c_str()));
                     set_p(p_cast);
+                }
+            }
+            unsigned long array16_index = str.find(" array16=");
+            if (array16_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(array16_index + 1, str.length()).c_str(), "array16 = { %[^}]", var) == 1) {
+                    std::string value = std::string(var);
+                    for (array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
+                        size_t pos = value.find(",");
+                        set_array16(static_cast<int16_t>(atoi(value.substr(0, pos).c_str())), array16_index);
+                        value = value.substr(pos + 2);
+                        if (pos == std::string::npos) {
+                            break;
+                        }
+                    }
+                }
+            }
+            unsigned long bools_index = str.find(" bools=");
+            if (bools_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(bools_index + 1, str.length()).c_str(), "bools = { %[^}]", var) == 1) {
+                    std::string value = std::string(var);
+                    for (bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
+                        size_t pos = value.find(",");
+                        set_bools(value.substr(0, pos).compare("true") == 0 || value.substr(0, pos).compare("1") == 0 ? true : false, bools_index);
+                        value = value.substr(pos + 2);
+                        if (pos == std::string::npos) {
+                            break;
+                        }
+                    }
                 }
             }
 #endif /// USE_WB_OLD_C_CONVERSION
