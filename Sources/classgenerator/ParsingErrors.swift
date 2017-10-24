@@ -59,5 +59,6 @@
 public enum ParsingErrors: Error {
 
     case parsingError(Int, String)
+    case sectionError(Int, Int, String)
 
 }

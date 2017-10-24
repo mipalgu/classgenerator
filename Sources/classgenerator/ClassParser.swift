@@ -91,42 +91,47 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
     public func parse(_ contents: String, withName file: String) -> Class? {
         self.errors = []
         self.warnings = []
-        //swiftlint:disable opening_brace
-        guard
-            let name = self.parseClassName(from: file),
-            let sections = self.delegate(
-                { self.sectionsParser.parseSections(fromContents: contents) },
-                self.sectionsParser
-            ),
-            let variables = self.delegate(
-                { self.variablesParser.parseVariables(fromSection: sections.variables) },
-                self.variablesParser
+        do {
+            //swiftlint:disable opening_brace
+            guard
+                let name = self.parseClassName(from: file),
+                let sections = self.delegate(
+                    { self.sectionsParser.parseSections(fromContents: contents) },
+                    self.sectionsParser
+                )
+            else {
+                return nil
+            }
+            let variables = try self.variablesParser.parseVariables(fromSection: sections.variables)
+            guard let author: String = self.parseAuthor(fromSection: sections.author) else {
+                self.errors.append("You must specify the author of the class.")
+                return nil
+            }
+            guard let comment = sections.comments else {
+                self.errors.append("You must specify a comment for the class.")
+                return nil
+            }
+            return Class(
+                name: name,
+                author: author,
+                comment: comment,
+                variables: variables,
+                preC: sections.preC,
+                postC: sections.postC,
+                preCpp: sections.preCpp,
+                embeddedCpp: sections.embeddedCpp,
+                postCpp: sections.postCpp,
+                preSwift: sections.preSwift,
+                embeddedSwift: sections.embeddedSwift,
+                postSwift: sections.postSwift
             )
-        else {
+        } catch ParsingErrors.sectionError(let line, let offset, let message) {
+            self.errors.append("\(line + 1), \(offset): \(message)")
+            return nil
+        } catch {
+            self.errors.append("Unable to parse \(file)")
             return nil
         }
-        guard let author: String = self.parseAuthor(fromSection: sections.author) else {
-            self.errors.append("You must specify the author of the class.")
-            return nil
-        }
-        guard let comment = sections.comments else {
-            self.errors.append("You must specify a comment for the class.")
-            return nil
-        }
-        return Class(
-            name: name,
-            author: author,
-            comment: comment,
-            variables: variables,
-            preC: sections.preC,
-            postC: sections.postC,
-            preCpp: sections.preCpp,
-            embeddedCpp: sections.embeddedCpp,
-            postCpp: sections.postCpp,
-            preSwift: sections.preSwift,
-            embeddedSwift: sections.embeddedSwift,
-            postSwift: sections.postSwift
-        )
     }
 
     fileprivate func parseClassName(from str: String) -> String? {

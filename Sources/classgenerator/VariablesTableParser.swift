@@ -58,13 +58,7 @@
 
 import Foundation
 
-public final class VariablesTableParser: ErrorContainer {
-
-    public fileprivate(set) var errors: [String] = []
-
-    public var lastError: String? {
-        return self.errors.last
-    }
+public final class VariablesTableParser {
 
     fileprivate var parser: VariableParser
 
@@ -72,19 +66,17 @@ public final class VariablesTableParser: ErrorContainer {
         self.parser = parser
     }
 
-    public func parseVariables(fromSection section: String) -> [Variable]? {
+    public func parseVariables(fromSection section: String) throws -> [Variable] {
         let lines = section.components(separatedBy: CharacterSet.newlines)
-        return lines.enumerated().filter {
+        return try lines.enumerated().filter {
             false == $1.trimmingCharacters(in: .whitespaces).isEmpty
-        }.failMap { (index: Int, line: String) in
+        }.map { (index: Int, line: String) in
             do {
                 return try self.parser.parseVariable(fromLine: line)
             } catch ParsingErrors.parsingError(let offset, let message) {
-                self.errors.append("\(index + 1), \(offset): \(message)")
-                return nil
+                throw ParsingErrors.sectionError(index, offset, message)
             } catch {
-                self.errors.append("\(index + 1): Unable to parse variables")
-                return nil
+                throw ParsingErrors.sectionError(index, 0, "Unable to parse variables")
             }
         }
     }
