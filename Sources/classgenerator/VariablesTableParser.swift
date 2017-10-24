@@ -80,10 +80,10 @@ public final class VariablesTableParser: ErrorContainer {
             do {
                 return try self.parser.parseVariable(fromLine: line)
             } catch ParsingErrors.parsingError(let offset, let message) {
-                self.errors.append("\(index), \(offset): \(message)")
+                self.errors.append("\(index + 1), \(offset): \(message)")
                 return nil
             } catch {
-                self.errors.append("\(index): Unable to parse variables")
+                self.errors.append("\(index + 1): Unable to parse variables")
                 return nil
             }
         }
