@@ -88,19 +88,6 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             "%swift\nsome embedded swift code",
             "+swift\nsome appended swift code"
         ]
-        let expected = Sections(
-            author: "-author Callum McColl",
-            preC: "some prepended c code",
-            variables: "int count = 2 // A simple counter.",
-            comments: "some comments.",
-            postC: "some appended c code",
-            preCpp: "some prepended c++ code",
-            embeddedCpp: "some embedded c++ code",
-            postCpp: "some appended c++ code",
-            preSwift: "some prepended swift code",
-            embeddedSwift: "some embedded swift code",
-            postSwift: "some appended swift code"
-        )
         for i in 0..<sections.count {
             var str: String = ""
             for j in 0..<sections.count {
@@ -111,7 +98,25 @@ public class SectionsParserTests: ClassGeneratorTestCase {
                 XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
                 return
             }
-            XCTAssertEqual(expected, result)
+            XCTAssertEqual(self.createExpectedSection(str), result)
         }
     }
+
+    fileprivate func createExpectedSection(_ str: String) -> Sections {
+        let ss = str.components(separatedBy: .newlines).enumerated()
+        return Sections(
+            author: (ss.first { $1.contains("-author") }!.0, "-author Callum McColl"),
+            preC: (ss.first { $1.contains("-c") }!.0, "some prepended c code"),
+            variables: (ss.first { $1.contains("-properties") }!.0, "int count = 2 // A simple counter."),
+            comments: (ss.first { $1.contains("-comment") }!.0, "some comments."),
+            postC: (ss.first { $1.contains("+c") }!.0, "some appended c code"),
+            preCpp: (ss.first { $1.contains("-c++") }!.0, "some prepended c++ code"),
+            embeddedCpp: (ss.first { $1.contains("%c++") }!.0, "some embedded c++ code"),
+            postCpp: (ss.first { $1.contains("+c++") }!.0, "some appended c++ code"),
+            preSwift: (ss.first { $1.contains("-swift") }!.0, "some prepended swift code"),
+            embeddedSwift: (ss.first { $1.contains("%swift") }!.0, "some embedded swift code"),
+            postSwift: (ss.first { $1.contains("+swift") }!.0, "some appended swift code")
+        )
+    }
+
 }

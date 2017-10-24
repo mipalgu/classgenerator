@@ -102,12 +102,12 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             else {
                 return nil
             }
-            let variables = try self.variablesParser.parseVariables(fromSection: sections.variables)
-            guard let author: String = self.parseAuthor(fromSection: sections.author) else {
+            let variables = try self.variablesParser.parseVariables(fromSection: sections.variables.1)
+            guard let author: String = self.parseAuthor(fromSection: sections.author.1) else {
                 self.errors.append("You must specify the author of the class.")
                 return nil
             }
-            guard let comment = sections.comments else {
+            guard let comment = sections.comments?.1 else {
                 self.errors.append("You must specify a comment for the class.")
                 return nil
             }
@@ -116,14 +116,14 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
                 author: author,
                 comment: comment,
                 variables: variables,
-                preC: sections.preC,
-                postC: sections.postC,
-                preCpp: sections.preCpp,
-                embeddedCpp: sections.embeddedCpp,
-                postCpp: sections.postCpp,
-                preSwift: sections.preSwift,
-                embeddedSwift: sections.embeddedSwift,
-                postSwift: sections.postSwift
+                preC: sections.preC?.1,
+                postC: sections.postC?.1,
+                preCpp: sections.preCpp?.1,
+                embeddedCpp: sections.embeddedCpp?.1,
+                postCpp: sections.postCpp?.1,
+                preSwift: sections.preSwift?.1,
+                embeddedSwift: sections.embeddedSwift?.1,
+                postSwift: sections.postSwift?.1
             )
         } catch ParsingErrors.sectionError(let line, let offset, let message) {
             self.errors.append("\(line + 1), \(offset): \(message)")

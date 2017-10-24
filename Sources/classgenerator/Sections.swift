@@ -58,27 +58,27 @@
 
 public struct Sections {
 
-    let author: String
+    let author: (Int, String)
 
-    let preC: String?
+    let preC: (Int, String)?
 
-    let variables: String
+    let variables: (Int, String)
 
-    let comments: String?
+    let comments: (Int, String)?
 
-    let postC: String?
+    let postC: (Int, String)?
 
-    let preCpp: String?
+    let preCpp: (Int, String)?
 
-    let embeddedCpp: String?
+    let embeddedCpp: (Int, String)?
 
-    let postCpp: String?
+    let postCpp: (Int, String)?
 
-    let preSwift: String?
+    let preSwift: (Int, String)?
 
-    let embeddedSwift: String?
+    let embeddedSwift: (Int, String)?
 
-    let postSwift: String?
+    let postSwift: (Int, String)?
 
 }
 
@@ -86,14 +86,15 @@ extension Sections: Equatable {}
 
 public func == (lhs: Sections, rhs: Sections) -> Bool {
     return lhs.author == rhs.author
-        && lhs.preC == rhs.preC
+        && lhs.preC?.0 == rhs.preC?.0 && lhs.preC?.1 == rhs.preC?.1
         && lhs.variables == rhs.variables
-        && lhs.comments == rhs.comments
-        && lhs.postC == rhs.postC
-        && lhs.preCpp == rhs.preCpp
-        && lhs.embeddedCpp == rhs.embeddedCpp
-        && lhs.postCpp == rhs.postCpp
-        && lhs.preSwift == rhs.preSwift
-        && lhs.embeddedSwift == rhs.embeddedSwift
-        && lhs.postSwift == rhs.postSwift
+        && lhs.comments?.0 == rhs.comments?.0
+        && lhs.comments?.1 == rhs.comments?.1
+        && lhs.postC?.0 == rhs.postC?.0 && lhs.postC?.1 == rhs.postC?.1
+        && lhs.preCpp?.0 == rhs.preCpp?.0 && lhs.preCpp?.1 == rhs.preCpp?.1
+        && lhs.embeddedCpp?.0 == rhs.embeddedCpp?.0 && lhs.embeddedCpp?.1 == rhs.embeddedCpp?.1
+        && lhs.postCpp?.0 == rhs.postCpp?.0 && lhs.postCpp?.1 == rhs.postCpp?.1
+        && lhs.preSwift?.0 == rhs.preSwift?.0 && lhs.preSwift?.1 == rhs.preSwift?.1
+        && lhs.embeddedSwift?.0 == rhs.embeddedSwift?.0 && lhs.embeddedSwift?.1 == rhs.embeddedSwift?.1
+        && lhs.postSwift?.0 == rhs.postSwift?.0 && lhs.postSwift?.1 == rhs.postSwift?.1
 }
