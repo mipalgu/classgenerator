@@ -1,0 +1,20 @@
+# To Do - in no particular order
+
+1. Identify and treat enums as signed integers.
+
+2. Identify struct and union types.
+  - Uses a user defined description/toString/fromString function to work with these.
+    Format will be wb_<class_name>_<property_name>_description etc.
+  - If used in C++ then the user should also define a C++ wrapper with description/toString/fromString functions.
+  - If used in swift then the user should define the description/toString properties and a string constructor in a swift extension.
+
+3. Add #defs for foo() and setFoo(x) in generated c headers.
+  - This requires the PROPERTY #defs in gu_util.h to change to the new _foo format.
+
+4. Drop backwards compatability - this will need to happen to avoid over complicating 2.
+
+5. Add a bit type.
+
+6. Doxy commenting on the C++ string functions.
+
+7. Add pragma pop where there is pragma push.
