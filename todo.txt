@@ -18,3 +18,7 @@
 6. Doxy commenting on the C++ string functions.
 
 7. Add pragma pop where there is pragma push.
+
+8. Parse enums so that the names can be included in string functions.
+
+9. Remove PROPERTY macros.
