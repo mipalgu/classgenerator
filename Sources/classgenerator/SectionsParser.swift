@@ -102,49 +102,47 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
         S.Iterator.Element == C,
         C.Iterator.Element == String
     {
-        var author: (Int, String)?
-        var prec: (Int, String)?
-        var vars: (Int, String)?
-        var comments: (Int, String)?
-        var postc: (Int, String)?
-        var precpp: (Int, String)?
-        var cpp: (Int, String)?
-        var postcpp: (Int, String)?
-        var preswift: (Int, String)?
-        var swift: (Int, String)?
-        var postswift: (Int, String)?
+        var author: String?
+        var prec: String?
+        var vars: String?
+        var comments: String?
+        var postc: String?
+        var precpp: String?
+        var cpp: String?
+        var postcpp: String?
+        var preswift: String?
+        var swift: String?
+        var postswift: String?
         var usingOldFormat: Bool = false
-        let assignIfValid: (inout (Int, String)?, Int, String, Bool) -> Bool = {
-            if true == $3 { $0 = ($1, $2) }; return $3
+        let assignIfValid: (inout String?, String, Bool) -> Bool = {
+            if true == $2 { $0 = $1 }; return $2
         }
-        let _: Int = seq.reduce(0) {
-            guard let first = $1.first?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
-                return $0 + Int($1.count)
+        seq.forEach {
+            guard let first = $0.first?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
+                return
             }
-            let combined = $1.dropFirst().reduce("") { $0 + "\n" + $1 }.trimmingCharacters(in: CharacterSet.newlines)
+            let combined = $0.dropFirst().reduce("") { $0 + "\n" + $1 }.trimmingCharacters(in: CharacterSet.newlines)
             //swiftlint:disable opening_brace
-            if true == (assignIfValid(&author, $0, first, self.isAuthorLine(first))
-                || assignIfValid(&prec, $0, combined, self.isPreCMarker(first))
-                || assignIfValid(&vars, $0, combined, self.isPropertiesMarker(first))
-                || assignIfValid(&comments, $0, combined, self.isCommentMarker(first))
-                || assignIfValid(&postc, $0, combined, self.isPostCMarker(first))
-                || assignIfValid(&precpp, $0, combined, self.isPreCppMarker(first))
-                || assignIfValid(&cpp, $0, combined, self.isCppMarker(first))
-                || assignIfValid(&postcpp, $0, combined, self.isPostCppMarker(first))
-                || assignIfValid(&preswift, $0, combined, self.isPreSwiftMarker(first))
-                || assignIfValid(&swift, $0, combined, self.isSwiftMarker(first))
-                || assignIfValid(&postswift, $0, combined, self.isPostSwiftMarker(first))
+            if true == (assignIfValid(&author, first, self.isAuthorLine(first))
+                || assignIfValid(&prec, combined, self.isPreCMarker(first))
+                || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
+                || assignIfValid(&comments, combined, self.isCommentMarker(first))
+                || assignIfValid(&postc, combined, self.isPostCMarker(first))
+                || assignIfValid(&precpp, combined, self.isPreCppMarker(first))
+                || assignIfValid(&cpp, combined, self.isCppMarker(first))
+                || assignIfValid(&postcpp, combined, self.isPostCppMarker(first))
+                || assignIfValid(&preswift, combined, self.isPreSwiftMarker(first))
+                || assignIfValid(&swift, combined, self.isSwiftMarker(first))
+                || assignIfValid(&postswift, combined, self.isPostSwiftMarker(first))
             ) {
-                return $0 + Int($1.count)
+                return
             }
-            guard let (tempVars, tempComments) = self.parseWithoutMarkers(section: $1) else {
-                return $0 + Int($1.count)
+            guard let (tempVars, tempComments) = self.parseWithoutMarkers(section: $0) else {
+                return
             }
-            let offset = $0
             usingOldFormat = true
-            vars = true == tempVars.1.isEmpty ? vars : (tempVars.0 + offset, tempVars.1)
-            comments = tempComments.map { ($0.0 + offset, $0.1) } ?? comments
-            return $0 + Int($1.count)
+            vars = true == tempVars.isEmpty ? vars : tempVars
+            comments = tempComments ?? comments
         }
         if true == usingOldFormat {
             self.warnings.append("The old format is depracated. Please convert this class to the new format.")
@@ -174,7 +172,7 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
 
     fileprivate func parseWithoutMarkers<C: Collection>(
         section: C
-    ) -> ((Int, String), (Int, String)?)? where C.Iterator.Element == String {
+    ) -> (String, String?)? where C.Iterator.Element == String {
         let varsGrouped = section.lazy.grouped { (first, _) in
             return first != ""
         }
@@ -184,19 +182,18 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
             }
             return group.dropFirst().reduce(first) { $0 + "\n" + $1}
         }
-        guard let vars = varsCombined.first(where: { _ in true }) else {
+        guard let vars = varsCombined.first(where: { _ in true })?.trimmingCharacters(in: CharacterSet.newlines) else {
             return nil
         }
-        let trimmedVars = vars.trimmingCharacters(in: CharacterSet.newlines)
-        if true == trimmedVars.isEmpty {
+        if true == vars.isEmpty {
             return nil
         }
         let comments = varsCombined.dropFirst().reduce("") { $0 + "\n" + $1 }
             .trimmingCharacters(in: CharacterSet.newlines)
         if true == comments.isEmpty {
-            return ((0, trimmedVars), nil)
+            return (vars, nil)
         }
-        return ((0, trimmedVars), (vars.count, comments))
+        return (vars, comments)
     }
 
     fileprivate func isMarker(_ str: String) -> Bool {
