@@ -66,7 +66,8 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (TypeIdentifierTests) -> () throws -> Void)] {
         return [
-            ("test_identiferSignedIntegerPointerWithSpace", test_identiferSignedIntegerPointerWithSpace)
+            ("test_identifiesPrimitiveTypes", test_identifiesPrimitiveTypes),
+            ("test_identifiesSignedIntegerPointerWithSpace", test_identifiesSignedIntegerPointerWithSpace)
         ]
     }
 
@@ -76,7 +77,62 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         self.identifier = TypeIdentifier()
     }
 
-    public func test_identiferSignedIntegerPointerWithSpace() {
+    //swiftlint:disable:next function_body_length
+    public func test_identifiesPrimitiveTypes() {
+        let types: [String: VariableTypes] = [
+            "bool": .bool,
+            "char": .char(.signed),
+            "signed char": .char(.signed),
+            "unsigned char": .char(.unsigned),
+            "signed": .numeric(.signed),
+            "signed int": .numeric(.signed),
+            "unsigned": .numeric(.unsigned),
+            "unsigned int": .numeric(.unsigned),
+            "uint8_t": .numeric(.unsigned),
+            "uint16_t": .numeric(.unsigned),
+            "uint32_t": .numeric(.unsigned),
+            "uint64_t": .numeric(.long(.long(.unsigned))),
+            "int8_t": .numeric(.signed),
+            "int16_t": .numeric(.signed),
+            "int32_t": .numeric(.signed),
+            "int64_t": .numeric(.long(.long(.signed))),
+            "int": .numeric(.signed),
+            "uint": .numeric(.unsigned),
+            "short": .numeric(.signed),
+            "short int": .numeric(.signed),
+            "signed short": .numeric(.signed),
+            "signed short int": .numeric(.signed),
+            "unsigned short": .numeric(.unsigned),
+            "unsigned short int": .numeric(.unsigned),
+            "long": .numeric(.long(.signed)),
+            "long int": .numeric(.long(.signed)),
+            "signed long": .numeric(.long(.signed)),
+            "signed long int": .numeric(.long(.signed)),
+            "unsigned long": .numeric(.long(.unsigned)),
+            "unsigned long int": .numeric(.long(.unsigned)),
+            "long long": .numeric(.long(.long(.signed))),
+            "long long int": .numeric(.long(.long(.signed))),
+            "signed long long": .numeric(.long(.long(.signed))),
+            "signed long long int": .numeric(.long(.long(.signed))),
+            "unsigned long long": .numeric(.long(.long(.unsigned))),
+            "unsigned long long int": .numeric(.long(.long(.unsigned))),
+            "long64_t": .numeric(.long(.long(.signed))),
+            "float": .numeric(.float),
+            "float_t": .numeric(.float),
+            "double": .numeric(.double),
+            "double_t": .numeric(.double),
+            "long double": .numeric(.long(.double)),
+            "double double": .numeric(.double)
+        ]
+        for (type, expected) in types {
+            XCTAssertEqual(
+                expected,
+                self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+            )
+        }
+    }
+
+    public func test_identifiesSignedIntegerPointerWithSpace() {
         let type = "int *"
         XCTAssertEqual(
             .pointer(.numeric(.signed)),
