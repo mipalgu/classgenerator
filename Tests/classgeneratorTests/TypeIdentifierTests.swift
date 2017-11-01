@@ -67,7 +67,10 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
     public static var allTests: [(String, (TypeIdentifierTests) -> () throws -> Void)] {
         return [
             ("test_identifiesPrimitiveTypes", test_identifiesPrimitiveTypes),
-            ("test_identifiesSignedIntegerPointerWithSpace", test_identifiesSignedIntegerPointerWithSpace)
+            ("test_identifiesSignedIntegerPointerWithSpace", test_identifiesSignedIntegerPointerWithSpace),
+            ("test_identifiesSignedIntegerPointerWithoutSpace", test_identifiesSignedIntegerPointerWithoutSpace),
+            ("test_identifiesAnArrayType", test_identifiesAnArrayType),
+            ("test_identifiesMultiDimensionalArray", test_identifiesMultiDimensionalArray)
         ]
     }
 
@@ -137,6 +140,32 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         XCTAssertEqual(
             .pointer(.numeric(.signed)),
             self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+        )
+    }
+
+    public func test_identifiesSignedIntegerPointerWithoutSpace() {
+        let type = "int*"
+        XCTAssertEqual(
+            .pointer(.numeric(.signed)),
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+        )
+    }
+
+    public func test_identifiesAnArrayType() {
+        let type = "int"
+        let length = "SOME_LENGTH_MACRO"
+        XCTAssertEqual(
+            .array(.numeric(.signed), length),
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [length])
+        )
+    }
+
+    public func test_identifiesMultiDimensionalArray() {
+        let type = "int"
+        let lengths = ["L1", "L2", "L3"]
+        XCTAssertEqual(
+            .array(.array(.array(.numeric(.signed), lengths[2]), lengths[1]), lengths[0]),
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: lengths)
         )
     }
 
