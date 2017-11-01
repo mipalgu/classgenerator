@@ -120,6 +120,9 @@ public final class TypeIdentifier {
         if type.last == "*" {
             return self.identifyPointer(fromType: type)
         }
+        if nil != type.components(separatedBy: .whitespaces).first(where: { $0.hasPrefix("enum") }) {
+            return self.identifyEnum(fromType: type)
+        }
         if "string" == type {
             return .string("0")
         }
@@ -128,6 +131,10 @@ public final class TypeIdentifier {
         #else
         return self.linuxValues[type] ?? .unknown
         #endif
+    }
+
+    fileprivate func identifyEnum(fromType type: String) -> VariableTypes {
+        return .numeric(.signed)
     }
 
     fileprivate func identifyPointer(fromType type: String) -> VariableTypes {

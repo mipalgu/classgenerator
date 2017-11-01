@@ -178,4 +178,12 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         )
     }
 
+    public func test_identifiesEnumsAsSignedIntegers() {
+        let type = "enum myEnum"
+        XCTAssertEqual(
+            .numeric(.signed),
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+        )
+    }
+
 }
