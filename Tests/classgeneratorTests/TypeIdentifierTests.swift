@@ -78,12 +78,10 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
 
     public func test_identiferSignedIntegerPointerWithSpace() {
         let type = "int *"
-        switch self.identifier.identify(fromTypeSignature: type, andArrayCounts: []) {
-            case .pointer(.numeric(.signed)):
-                break
-            default:
-                XCTFail("Incorrect type")
-        }
+        XCTAssertEqual(
+            .pointer(.numeric(.signed)),
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+        )
     }
 
 }
