@@ -5,6 +5,7 @@ XCTMain([
     testCase(CFileCreatorTests.allTests),
     testCase(CHeaderCreatorTests.allTests),
     testCase(CPPHeaderCreatorTests.allTests),
+    testCase(DefaultValuesCalculatorTests.allTests),
     testCase(DemoTests.allTests),
     testCase(ParserTests.allTests),
     testCase(SectionsParserTests.allTests),
