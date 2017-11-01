@@ -90,7 +90,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
         for (type, expected) in types {
             XCTAssertEqual(
                 expected,
-                self.calculator.calculateDefaultValues(forTypeSignature: type, withArrayCounts: [])
+                self.calculator.calculateDefaultValues(forType: type)
             )
         }
     }
