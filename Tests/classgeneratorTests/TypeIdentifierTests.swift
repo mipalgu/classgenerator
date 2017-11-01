@@ -70,7 +70,8 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
             ("test_identifiesSignedIntegerPointerWithSpace", test_identifiesSignedIntegerPointerWithSpace),
             ("test_identifiesSignedIntegerPointerWithoutSpace", test_identifiesSignedIntegerPointerWithoutSpace),
             ("test_identifiesAnArrayType", test_identifiesAnArrayType),
-            ("test_identifiesMultiDimensionalArray", test_identifiesMultiDimensionalArray)
+            ("test_identifiesMultiDimensionalArray", test_identifiesMultiDimensionalArray),
+            ("test_doesNotIdentifyUnknownTypes", test_doesNotIdentifyUnknownTypes)
         ]
     }
 
@@ -166,6 +167,14 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         XCTAssertEqual(
             .array(.array(.array(.numeric(.signed), lengths[2]), lengths[1]), lengths[0]),
             self.identifier.identify(fromTypeSignature: type, andArrayCounts: lengths)
+        )
+    }
+
+    public func test_doesNotIdentifyUnknownTypes() {
+        let type = "some unknown type"
+        XCTAssertEqual(
+            .unknown,
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
         )
     }
 
