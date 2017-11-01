@@ -66,6 +66,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (DefaultValuesCalculatorTests) -> () throws -> Void)] {
         return [
+            ("test_calculatesDefaultValuesForPrimitiveTypes", test_calculatesDefaultValuesForPrimitiveTypes)
         ]
     }
 
@@ -73,6 +74,25 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public override func setUp() {
         self.calculator = DefaultValuesCalculator()
+    }
+
+    public func test_calculatesDefaultValuesForPrimitiveTypes() {
+        let types: [(VariableTypes, (String, String))] = [
+            (.bool, ("true", "true")),
+            (.char(.signed), ("0", "UnicodeScalar(0)")),
+            (.char(.unsigned), ("0", "UnicodeScalar(0)")),
+            (.numeric(.double), ("0.0", "0.0")),
+            (.numeric(.float), ("0.0f", "0.0")),
+            (.numeric(.signed), ("0", "0")),
+            (.numeric(.unsigned), ("0", "0")),
+            (.string("5"), ("\"\"", "\"\""))
+        ]
+        for (type, expected) in types {
+            XCTAssertEqual(
+                expected,
+                self.calculator.calculateDefaultValues(forTypeSignature: type, withArrayCounts: [])
+            )
+        }
     }
 
 }
