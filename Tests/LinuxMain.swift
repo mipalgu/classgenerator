@@ -8,6 +8,7 @@ XCTMain([
     testCase(DefaultValuesCalculatorTests.allTests),
     testCase(DemoTests.allTests),
     testCase(ParserTests.allTests),
+    testCase(SanitiserTests.allTests),
     testCase(SectionsParserTests.allTests),
     testCase(StringHelpersTests.allTests),
     testCase(SwiftFileCreatorTests.allTests),
