@@ -90,8 +90,8 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
     public func test_calculatesDefaultValuesForPrimitiveTypes() {
         let types: [(VariableTypes, (String, String))] = [
             (.bool, ("true", "true")),
-            (.char(.signed), ("0", "UnicodeScalar(0)")),
-            (.char(.unsigned), ("0", "UnicodeScalar(0)")),
+            (.char(.signed), ("0", "UnicodeScalar(UInt8.min)")),
+            (.char(.unsigned), ("0", "UnicodeScalar(UInt8.min)")),
             (.numeric(.double), ("0.0", "0.0")),
             (.numeric(.float), ("0.0f", "0.0")),
             (.numeric(.signed), ("0", "0")),
@@ -99,42 +99,62 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
             (.string("5"), ("\"\"", "\"\""))
         ]
         for (type, expected) in types {
-            XCTAssertEqual(
-                expected,
-                self.calculator.calculateDefaultValues(forType: type)
-            )
+            guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+                XCTFail("Unable to calculate default value of: \(type)")
+                return
+            }
+            self.assertEqual(expected, result)
         }
     }
 
     public func test_calculatesDefaultValueForPointers() {
         let type: VariableTypes = .pointer(.bool)
-        XCTAssertEqual(("NULL", "nil"), self.calculator.calculateDefaultValues(forType: type))
+        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+            XCTFail("Unable to calculate default value of: \(type)")
+            return
+        }
+        self.assertEqual(("NULL", "nil"), result)
     }
 
     public func test_calculatesDefaultValueForMultiplePointerTypes() {
         let type: VariableTypes = .pointer(.pointer(.pointer(.bool)))
-        XCTAssertEqual(("NULL", "nil"), self.calculator.calculateDefaultValues(forType: type))
+        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+            XCTFail("Unable to calculate default value of: \(type)")
+            return
+        }
+        self.assertEqual(("NULL", "nil"), result)
     }
 
     public func test_calculatesDefaultValueForArrayWithIntegerLength() {
         let type: VariableTypes = .array(.numeric(.float), "3")
-        XCTAssertEqual(
-            ("{0.0f. 0.0f, 0.0f}", "[0.0, 0.0, 0.0]"),
-            self.calculator.calculateDefaultValues(forType: type)
-        )
+        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+            XCTFail("Unable to calculate default value of: \(type)")
+            return
+        }
+        self.assertEqual(("{0.0f, 0.0f, 0.0f}", "[0.0, 0.0, 0.0]"), result)
     }
 
     public func test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength() {
         let type: VariableTypes = .array(.array(.array(.numeric(.float), "3"), "1"), "1")
-        XCTAssertEqual(
-            ("{{{0.0f. 0.0f, 0.0f}}}", "[[[0.0, 0.0, 0.0]]]"),
-            self.calculator.calculateDefaultValues(forType: type)
-        )
+        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+            XCTFail("Unable to calculate default value of: \(type)")
+            return
+        }
+        self.assertEqual(("{{{0.0f, 0.0f, 0.0f}}}", "[[[0.0, 0.0, 0.0]]]"), result)
     }
 
     public func test_calculatesDefaultValueForArrayWithMacroLength() {
         let type: VariableTypes = .array(.numeric(.float), "SOME_LENGTH")
-        XCTAssertEqual(("{}", "[]"), self.calculator.calculateDefaultValues(forType: type))
+        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+            XCTFail("Unable to calculate default value of: \(type)")
+            return
+        }
+        self.assertEqual(("{}", "[]"), result)
+    }
+
+    fileprivate func assertEqual<T: Equatable, U: Equatable>(_ lhs: (T, U), _ rhs: (T, U)) {
+        XCTAssertEqual(lhs.0, rhs.0)
+        XCTAssertEqual(lhs.1, rhs.1)
     }
 
 }
