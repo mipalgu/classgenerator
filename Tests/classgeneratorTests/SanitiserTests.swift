@@ -66,6 +66,19 @@ public class SanitiserTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (SanitiserTests) -> () throws -> Void)] {
         return [
+            ("test_sanitisesCharIntoStringLiteralForSignedChar", test_sanitisesCharIntoStringLiteralForSignedChar),
+            ("test_sanitisesCharIntoStringLiteralForUnSignedChar", test_sanitisesCharIntoStringLiteralForUnSignedChar),
+            (
+                "test_sanitisesCharIntegerLiteralIntoUnicodeScalarForSignedChar",
+                test_sanitisesCharIntegerLiteralIntoUnicodeScalarForSignedChar
+            ),
+            (
+                "test_sanitisesCharIntegerLiteralIntoUnicodeScalarForUnSignedChar",
+                test_sanitisesCharIntegerLiteralIntoUnicodeScalarForUnSignedChar
+            ),
+            ("test_sanitisesFloatsWithFLiteral", test_sanitisesFloatsWithFLiteral),
+            ("test_doesNotModifyFloatWithoutFLiteral", test_doesNotModifyFloatWithoutFLiteral),
+            ("test_sanitisesLongFloats", test_sanitisesLongFloats)
         ]
     }
 
@@ -73,6 +86,41 @@ public class SanitiserTests: ClassGeneratorTestCase {
 
     public override func setUp() {
         self.sanitiser = Sanitiser()
+    }
+
+    public func test_sanitisesCharIntoStringLiteralForSignedChar() {
+        let value = "'c'"
+        XCTAssertEqual("\"c\"", self.sanitiser.sanitise(value: value, forType: .char(.signed)))
+    }
+
+    public func test_sanitisesCharIntoStringLiteralForUnSignedChar() {
+        let value = "'c'"
+        XCTAssertEqual("\"c\"", self.sanitiser.sanitise(value: value, forType: .char(.unsigned)))
+    }
+
+    public func test_sanitisesCharIntegerLiteralIntoUnicodeScalarForSignedChar() {
+        let value = "50"
+        XCTAssertEqual("UnicodeScalar(50)", self.sanitiser.sanitise(value: value, forType: .char(.signed)))
+    }
+
+    public func test_sanitisesCharIntegerLiteralIntoUnicodeScalarForUnSignedChar() {
+        let value = "50"
+        XCTAssertEqual("UnicodeScalar(50)", self.sanitiser.sanitise(value: value, forType: .char(.unsigned)))
+    }
+
+    public func test_sanitisesFloatsWithFLiteral() {
+        let value = "0.1f"
+        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.float)))
+    }
+
+    public func test_doesNotModifyFloatWithoutFLiteral() {
+        let value = "0.1"
+        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.float)))
+    }
+
+    public func test_sanitisesLongFloats() {
+        let value = "0.1f"
+        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.long(.long(.long(.float))))))
     }
 
 }
