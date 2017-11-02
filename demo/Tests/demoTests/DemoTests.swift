@@ -411,10 +411,6 @@ public class DemoTests: XCTestCase {
         XCTAssertNotEqual(lhs, rhs)
         rhs.dt2 = lhs.dt2
         XCTAssertEqual(lhs, rhs)
-        rhs.horizonType = HorizonOptions(rawValue: 2)
-        XCTAssertNotEqual(lhs, rhs)
-        rhs.horizonType = lhs.horizonType
-        XCTAssertEqual(lhs, rhs)
     }
 
     //swiftlint:disable:next function_body_length
@@ -503,8 +499,7 @@ public class DemoTests: XCTestCase {
             //"p": self.demo.p,
             "strct": self.demo.strct,
             "array16": self.demo.array16,
-            "bools": self.demo.bools,
-            "horizonType": self.demo.horizonType
+            "bools": self.demo.bools
         ]
         let result = wb_demo(fromDictionary: d)
         XCTAssertEqual(self.demo, result)
