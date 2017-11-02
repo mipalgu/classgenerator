@@ -142,6 +142,11 @@ public class SanitiserTests: ClassGeneratorTestCase {
             "[[1, 2], [3, 4]]",
             self.sanitiser.sanitise(value: value, forType: .array(.array(.numeric(.signed), "2"), "2"))
         )
+        let value2 = "{{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}"
+        XCTAssertEqual(
+            "[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]",
+            self.sanitiser.sanitise(value: value2, forType: .array(.array(.array(.numeric(.signed), "2"), "2"), "2"))
+        )
     }
 
 }
