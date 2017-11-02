@@ -66,7 +66,9 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (DefaultValuesCalculatorTests) -> () throws -> Void)] {
         return [
-            ("test_calculatesDefaultValuesForPrimitiveTypes", test_calculatesDefaultValuesForPrimitiveTypes)
+            ("test_calculatesDefaultValuesForPrimitiveTypes", test_calculatesDefaultValuesForPrimitiveTypes),
+            ("test_calculatesDefaultValueForPointers", test_calculatesDefaultValueForPointers),
+            ("test_calculatesDefaultValueForMultiplePointerTypes", test_calculatesDefaultValueForMultiplePointerTypes)
         ]
     }
 
@@ -93,6 +95,16 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
                 self.calculator.calculateDefaultValues(forType: type)
             )
         }
+    }
+
+    public func test_calculatesDefaultValueForPointers() {
+        let type: VariableTypes = .pointer(.bool)
+        XCTAssertEqual(("NULL", "nil"), self.calculator.calculateDefaultValues(forType: type))
+    }
+
+    public func test_calculatesDefaultValueForMultiplePointerTypes() {
+        let type: VariableTypes = .pointer(.pointer(.pointer(.bool)))
+        XCTAssertEqual(("NULL", "nil"), self.calculator.calculateDefaultValues(forType: type))
     }
 
 }
