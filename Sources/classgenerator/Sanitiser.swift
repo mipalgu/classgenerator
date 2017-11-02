@@ -56,6 +56,8 @@
  *
  */
 
+import Foundation
+
 public final class Sanitiser {
 
     public init() {}
@@ -79,25 +81,32 @@ public final class Sanitiser {
     }
 
     fileprivate func sanitiseArray(value: String, forType type: VariableTypes) -> String? {
-        guard
-            let first = value.first,
-            let last = value.last,
-            first == "{",
-            last == "}"
-        else {
-            return nil
+        switch type {
+            case .array(let subtype, _):
+                return self.sanitiseArray(value: value, forType: subtype)
+            default:
+                break
         }
-        let values = String(value.dropFirst().dropLast())
-        guard nil != values.first else {
+        let value = value.replacingOccurrences(of: "{", with: "[").replacingOccurrences(of: "}", with: "]")
+        guard nil != value.first else {
             return "[]"
         }
-        guard let list = values.components(separatedBy: ",").failMap({
-                self.sanitise(value: $0.trimmingCharacters(in: .whitespaces), forType: type)
+        let values = value.components(separatedBy: ",")
+        guard let list = values.failMap({ (value: String) -> String? in
+                let value = value.trimmingCharacters(in: .whitespaces)
+                let prefix = String(value.prefix { $0 == "[" || $0 == "]" })
+                let temp = String(value.reversed()).prefix { $0 == "[" || $0 == "]" }
+                let suffix = String(String(temp).reversed())
+                let trimmedValue = String(value.dropFirst(prefix.count).dropLast(suffix.count))
+                guard let sanitisedValue = self.sanitise(value: trimmedValue, forType: type) else {
+                    return nil
+                }
+                return prefix + sanitisedValue + suffix
             })
         else {
             return nil
         }
-        return "[" + list.combine("") { $0 + ", " + $1 } + "]"
+        return list.combine("") { $0 + ", " + $1 }
     }
 
     fileprivate func sanitiseChar(value: String) -> String? {
