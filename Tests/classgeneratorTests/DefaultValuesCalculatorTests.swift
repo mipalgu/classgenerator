@@ -68,7 +68,16 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
         return [
             ("test_calculatesDefaultValuesForPrimitiveTypes", test_calculatesDefaultValuesForPrimitiveTypes),
             ("test_calculatesDefaultValueForPointers", test_calculatesDefaultValueForPointers),
-            ("test_calculatesDefaultValueForMultiplePointerTypes", test_calculatesDefaultValueForMultiplePointerTypes)
+            ("test_calculatesDefaultValueForMultiplePointerTypes", test_calculatesDefaultValueForMultiplePointerTypes),
+            (
+                "test_calculatesDefaultValueForArrayWithIntegerLength",
+                test_calculatesDefaultValueForArrayWithIntegerLength
+            ),
+            (
+                "test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength",
+                test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength
+            ),
+            ("test_calculatesDefaultValueForArrayWithMacroLength", test_calculatesDefaultValueForArrayWithMacroLength)
         ]
     }
 
@@ -105,6 +114,27 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
     public func test_calculatesDefaultValueForMultiplePointerTypes() {
         let type: VariableTypes = .pointer(.pointer(.pointer(.bool)))
         XCTAssertEqual(("NULL", "nil"), self.calculator.calculateDefaultValues(forType: type))
+    }
+
+    public func test_calculatesDefaultValueForArrayWithIntegerLength() {
+        let type: VariableTypes = .array(.numeric(.float), "3")
+        XCTAssertEqual(
+            ("{0.0f. 0.0f, 0.0f}", "[0.0, 0.0, 0.0]"),
+            self.calculator.calculateDefaultValues(forType: type)
+        )
+    }
+
+    public func test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength() {
+        let type: VariableTypes = .array(.array(.array(.numeric(.float), "3"), "1"), "1")
+        XCTAssertEqual(
+            ("{{{0.0f. 0.0f, 0.0f}}}", "[[[0.0, 0.0, 0.0]]]"),
+            self.calculator.calculateDefaultValues(forType: type)
+        )
+    }
+
+    public func test_calculatesDefaultValueForArrayWithMacroLength() {
+        let type: VariableTypes = .array(.numeric(.float), "SOME_LENGTH")
+        XCTAssertEqual(("{}", "[]"), self.calculator.calculateDefaultValues(forType: type))
     }
 
 }
