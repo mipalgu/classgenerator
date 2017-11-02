@@ -60,24 +60,25 @@ public final class Sanitiser {
 
     public init() {}
 
-    public func sanitise(value: String, forType type: String, isArray: Bool) -> String? {
-        if true == isArray {
-            return self.sanitiseArray(value: value, forType: type)
-        }
+    public func sanitise(value: String, forType type: VariableTypes) -> String? {
         switch type {
-            case "char", "signed char", "unsigned char":
+            case .array(let subtype, _):
+                return self.sanitiseArray(value: value, forType: subtype)
+            case .char:
                 return self.sanitiseChar(value: value)
-            case "float", "float_t":
-                return self.sanitiseFloat(value: value)
-            default:
-                if type.last == "*" && value == "NULL" {
+            case .numeric(let subtype):
+                return self.sanitiseNumericType(value: value, forNumericType: subtype)
+            case .pointer:
+                if "NULL" == value {
                     return "nil"
                 }
+                return value
+            default:
                 return value
         }
     }
 
-    fileprivate func sanitiseArray(value: String, forType type: String) -> String? {
+    fileprivate func sanitiseArray(value: String, forType type: VariableTypes) -> String? {
         guard
             let first = value.first,
             let last = value.last,
@@ -90,17 +91,13 @@ public final class Sanitiser {
         guard let firstChar = values.first else {
             return "[]"
         }
-        let isArray = firstChar == "{"
         guard let list = values.components(separatedBy: ",").failMap({
-                self.sanitise(value: $0.trimmingCharacters(in: .whitespaces), forType: type, isArray: isArray)
+                self.sanitise(value: $0.trimmingCharacters(in: .whitespaces), forType: type)
             })
         else {
             return nil
         }
-        guard let firstValue = list.first else {
-            return "[]"
-        }
-        return "[" + list.dropFirst().reduce(firstValue) { $0 + ", " + $1 } + "]"
+        return "[" + list.combine("") { $0 + ", " + $1 } + "]"
     }
 
     fileprivate func sanitiseChar(value: String) -> String? {
@@ -111,10 +108,17 @@ public final class Sanitiser {
         }
     }
 
-    fileprivate func sanitiseFloat(value: String) -> String? {
-        if value.last == "f" {
-            return String(value.dropLast())
+    fileprivate func sanitiseNumericType(value: String, forNumericType type: NumericTypes) -> String {
+        switch type {
+            case .long(let subtype):
+                return self.sanitiseNumericType(value: value, forNumericType: type)
+            case .float:
+                if value.last == "f" {
+                    return String(value.dropLast())
+                }
+                return value
+            default:
+                return value
         }
-        return nil
     }
 }
