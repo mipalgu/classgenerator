@@ -135,29 +135,26 @@ public final class VariableParser {
         } catch ParsingErrors.parsingError(let offset, let message) {
             throw ParsingErrors.parsingError(split[0].count + offset, message)
         }
-        let type = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
+        let signature = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
+        let type = self.identifier.identify(fromTypeSignature: signature, andArrayCounts: arrCounts)
         let defaultValues: (String, String)
         do {
-            defaultValues = try self.parseDefaultValues(
-                fromSplit: split,
-                forType: type,
-                withArrayCounts: arrCounts
-            )
+            defaultValues = try self.parseDefaultValues(fromSplit: split, forType: type)
         } catch ParsingErrors.parsingError(let offset, let message) {
             throw ParsingErrors.parsingError(0 + offset, message)
         }
         let swiftType: String
         do {
-            swiftType = try self.typeConverter.convert(type: type)
+            swiftType = try self.typeConverter.convert(type: signature)
         } catch ParsingErrors.parsingError(let offset, let message) {
-            throw ParsingErrors.parsingError(type.count + offset, message)
+            throw ParsingErrors.parsingError(signature.count + offset, message)
         }
         let cType = self.cTypeConverter.convert(
-            type: type.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces)
+            type: signature.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces)
         )
         return Variable(
             label: trimmedLabel.components(separatedBy: "[")[0].trimmingCharacters(in: .whitespaces),
-            type: self.identifier.identify(fromTypeSignature: type, andArrayCounts: arrCounts),
+            type: type,
             cType: cType,
             swiftType: swiftType,
             defaultValue: defaultValues.0,
@@ -179,20 +176,12 @@ public final class VariableParser {
 
     fileprivate func parseDefaultValues(
         fromSplit split: [String],
-        forType type: String,
-        withArrayCounts arrCounts: [String]
+        forType type: VariableTypes
     ) throws -> (String, String) {
         if split.count > 1 {
-            return try self.parseDefaultValues(
-                fromSegment: split[1],
-                forType: type,
-                isArray: false == arrCounts.isEmpty
-            )
+            return try self.parseDefaultValues(fromSegment: split[1], forType: type)
         }
-        guard let defaultValues = self.defaultValuesCalculator.calculateDefaultValues(
-            forTypeSignature: type,
-            withArrayCounts: arrCounts
-        ) else {
+        guard let defaultValues = self.defaultValuesCalculator.calculateDefaultValues(forType: type) else {
             throw ParsingErrors.parsingError(0, "Unable to calculate default value for type: \(type)")
         }
         return defaultValues
@@ -200,8 +189,7 @@ public final class VariableParser {
 
     fileprivate func parseDefaultValues(
         fromSegment segment: String,
-        forType type: String,
-        isArray: Bool
+        forType type: VariableTypes
     ) throws -> (String, String) {
         let split = segment.components(separatedBy: "|")
         guard split.count <= 2 else {
@@ -209,7 +197,7 @@ public final class VariableParser {
         }
         if 1 == split.count {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
-            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type, isArray: isArray) ?? trimmed)
+            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type) ?? trimmed)
         }
         guard 2 == split.count else {
             throw ParsingErrors.parsingError(split[0].count, "Malformed default value list: \(split[1])")
