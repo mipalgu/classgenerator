@@ -111,7 +111,7 @@ public final class Sanitiser {
     fileprivate func sanitiseNumericType(value: String, forNumericType type: NumericTypes) -> String {
         switch type {
             case .long(let subtype):
-                return self.sanitiseNumericType(value: value, forNumericType: type)
+                return self.sanitiseNumericType(value: value, forNumericType: subtype)
             case .float:
                 if value.last == "f" {
                     return String(value.dropLast())
