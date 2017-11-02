@@ -58,86 +58,53 @@
 
 public final class DefaultValuesCalculator {
 
-    fileprivate let values: [String: (String, String)] = [
-        "string": ("\"\"", "\"\""),
-        "bool": ("true", "true"),
-        "char": ("0", "UnicodeScalar(UInt8.min)"),
-        "signed char": ("0", "UnicodeScalar(UInt8.min)"),
-        "unsigned char": ("0", "UnicodeScalar(UInt8.min)"),
-        "signed": ("0", "0"),
-        "signed int": ("0", "0"),
-        "unsigned": ("0", "0"),
-        "unsigned int": ("0", "0"),
-        "uint8_t": ("0", "0"),
-        "uint16_t": ("0", "0"),
-        "uint32_t": ("0", "0"),
-        "uint64_t": ("0", "0"),
-        "int8_t": ("0", "0"),
-        "int16_t": ("0", "0"),
-        "int32_t": ("0", "0"),
-        "int64_t": ("0", "0"),
-        "int": ("0", "0"),
-        "uint": ("0", "0"),
-        "short": ("0", "0"),
-        "short int": ("0", "0"),
-        "signed short": ("0", "0"),
-        "signed short int": ("0", "0"),
-        "unsigned short": ("0", "0"),
-        "unsigned short int": ("0", "0"),
-        "long": ("0", "0"),
-        "long int": ("0", "0"),
-        "signed long": ("0", "0"),
-        "signed long int": ("0", "0"),
-        "unsigned long": ("0", "0"),
-        "unsigned long int": ("0", "0"),
-        "long long": ("0", "0"),
-        "long long int": ("0", "0"),
-        "signed long long": ("0", "0"),
-        "signed long long int": ("0", "0"),
-        "unsigned long long": ("0", "0"),
-        "unsigned long long int": ("0", "0"),
-        "long64_t": ("0", "0"),
-        "float": ("0.0f", "0.0"),
-        "float_t": ("0.0f", "0.0"),
-        "double": ("0.0", "0.0"),
-        "double_t": ("0.0", "0.0"),
-        "long double": ("0.0", "0.0"),
-        "double double": ("0.0", "0.0")
-    ]
-
     public init() {}
 
-    func calculateDefaultValues(forTypeSignature type: String, withArrayCounts counts: [String]) -> (String, String)? {
-        if type != "string" && nil != counts.first(where: { _ in true }) {
-            return self.calculateArrayDefaultValues(forType: type, withCounts: counts)
+    func calculateDefaultValues(forType type: VariableTypes) -> (String, String)? {
+        switch type {
+            case .array(let subtype, let length):
+                return self.calculateArrayDefaultValues(forType: subtype, withLength: length)
+            case .bool:
+                return ("true", "true")
+            case .char:
+                return ("0", "UnicodeScalar(UInt8.min)")
+            case .numeric(let subtype):
+                return self.calculateNumericDefaultValue(forNumericType: subtype)
+            case .pointer:
+                return ("NULL", "nil")
+            case .string:
+                return ("\"\"", "\"\"")
+            case .unknown:
+                return nil
         }
-        return self.values[type]
+    }
+
+    fileprivate func calculateNumericDefaultValue(forNumericType type: NumericTypes) -> (String, String) {
+        switch type {
+            case .double:
+                return ("0.0", "0.0")
+            case .float:
+                return ("0.0f", "0.0")
+            case .long(let subtype):
+                return self.calculateNumericDefaultValue(forNumericType: subtype)
+            case .signed, .unsigned:
+                return ("0", "0")
+        }
     }
 
     fileprivate func calculateArrayDefaultValues(
-        forType type: String,
-        withCounts counts: [String]
+        forType type: VariableTypes,
+        withLength length: String
     ) -> (String, String)? {
-        guard
-            let c = counts.first(where: { _ in true }),
-            let num = Int(c),
-            num >= 1
-        else {
+        guard let count = Int(length) else {
             return ("{}", "[]")
         }
-        guard
-            let values = self.calculateDefaultValues(forTypeSignature: type, withArrayCounts: Array(counts.dropFirst()))
-        else {
+        guard let value = self.calculateDefaultValues(forType: type) else {
             return nil
         }
-        let arr = Array(repeating: values, count: num)
-        guard let first = arr.first else {
-            return ("{}", "[]")
-        }
-        return (
-            "{" + arr.dropFirst().reduce(first.0) { $0 + ", " + $1.0 } + "}",
-            "[" + arr.dropFirst().reduce(first.1) { $0 + ", " + $1.1 } + "]"
-        )
+        let cValues = Array(repeating: value.0, count: count).combine("") { $0 + ", " + $1 }
+        let swiftValues = Array(repeating: value.1, count: count).combine("") { $0 + ", " + $1 }
+        return ("{" + cValues + "}", "[" + swiftValues + "]")
     }
 
 }
