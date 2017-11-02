@@ -88,7 +88,7 @@ public final class Sanitiser {
             return nil
         }
         let values = String(value.dropFirst().dropLast())
-        guard let firstChar = values.first else {
+        guard nil != values.first else {
             return "[]"
         }
         guard let list = values.components(separatedBy: ",").failMap({
