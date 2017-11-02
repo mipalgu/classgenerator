@@ -79,7 +79,9 @@ public class SanitiserTests: ClassGeneratorTestCase {
             ("test_sanitisesFloatsWithFLiteral", test_sanitisesFloatsWithFLiteral),
             ("test_doesNotModifyFloatWithoutFLiteral", test_doesNotModifyFloatWithoutFLiteral),
             ("test_sanitisesLongFloats", test_sanitisesLongFloats),
-            ("test_sanitisesPointersWithNullValues", test_sanitisesPointersWithNullValues)
+            ("test_sanitisesPointersWithNullValues", test_sanitisesPointersWithNullValues),
+            ("test_sanitisesArrayLiterals", test_sanitisesArrayLiterals),
+            ("test_sanitisesMultiDimensionalArrayLiterals", test_sanitisesMultiDimensionalArrayLiterals)
         ]
     }
 
@@ -127,6 +129,19 @@ public class SanitiserTests: ClassGeneratorTestCase {
     public func test_sanitisesPointersWithNullValues() {
         let value = "NULL"
         XCTAssertEqual("nil", self.sanitiser.sanitise(value: value, forType: .pointer(.bool)))
+    }
+
+    public func test_sanitisesArrayLiterals() {
+        let value = "{1, 2, 3, 4}"
+        XCTAssertEqual("[1, 2, 3, 4]", self.sanitiser.sanitise(value: value, forType: .array(.numeric(.signed), "4")))
+    }
+
+    public func test_sanitisesMultiDimensionalArrayLiterals() {
+        let value = "{{1, 2}, {3, 4}}"
+        XCTAssertEqual(
+            "[[1, 2], [3, 4]]",
+            self.sanitiser.sanitise(value: value, forType: .array(.array(.numeric(.signed), "2"), "2"))
+        )
     }
 
 }
