@@ -78,7 +78,8 @@ public class SanitiserTests: ClassGeneratorTestCase {
             ),
             ("test_sanitisesFloatsWithFLiteral", test_sanitisesFloatsWithFLiteral),
             ("test_doesNotModifyFloatWithoutFLiteral", test_doesNotModifyFloatWithoutFLiteral),
-            ("test_sanitisesLongFloats", test_sanitisesLongFloats)
+            ("test_sanitisesLongFloats", test_sanitisesLongFloats),
+            ("test_sanitisesPointersWithNullValues", test_sanitisesPointersWithNullValues)
         ]
     }
 
@@ -121,6 +122,11 @@ public class SanitiserTests: ClassGeneratorTestCase {
     public func test_sanitisesLongFloats() {
         let value = "0.1f"
         XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.long(.long(.long(.float))))))
+    }
+
+    public func test_sanitisesPointersWithNullValues() {
+        let value = "NULL"
+        XCTAssertEqual("nil", self.sanitiser.sanitise(value: value, forType: .pointer(.bool)))
     }
 
 }
