@@ -6,7 +6,7 @@ ALL_TARGETS=generate-classes host
 all:	all-real
 
 generate-classes:
-	../.build/debug/classgenerator -cs --c-header ./Sources/bridge --swift-file ./Sources/demo ./demo.gen
+	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./demo.gen
 
 .include "../../../mk/mipal.mk"
 
