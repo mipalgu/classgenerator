@@ -62,6 +62,7 @@
 #include <termios.h> 
 #include "WBFunctor_types_generated.h"
 #include "gusimplewhiteboard.h"
+#include "guwhiteboard_c_types.h"
 #include "guwhiteboardtypelist_c_generated.h"
 #include "gu_util.h"
 #include "somestruct.h"

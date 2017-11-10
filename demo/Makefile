@@ -10,4 +10,4 @@ generate-classes:
 
 .include "../../../mk/mipal.mk"
 
-CFLAGS=-DWHITEBOARD_POSTER_STRING_CONVERSION=1
+CFLAGS=-DWHITEBOARD_POSTER_STRING_CONVERSION=1 -I${SRCDIR}/bridge
