@@ -1,5 +1,5 @@
 /*
- * WarningsContainerRef.swift 
+ * MutableWarningsContainer.swift 
  * classgenerator 
  *
  * Created by Callum McColl on 12/11/2017.
@@ -56,22 +56,8 @@
  *
  */
 
-public final class WarningsContainerRef: Ref<[String]>, LastWarningAccessor, MutableWarningsContainer {
+public protocol MutableWarningsContainer: WarningsContainer {
 
-    public var warnings: [String] {
-        get {
-            return super.value
-        } set {
-            super.value = newValue
-        }
-    }
-
-    public var lastWarning: String? {
-        return self.warnings.last
-    }
-
-    public override init(_ warnings: [String] = []) {
-        super.init(warnings)
-    }
+    var warnings: [String] { get set }
 
 }

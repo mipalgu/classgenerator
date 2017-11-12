@@ -60,6 +60,4 @@ public protocol WarningsContainer {
 
     var warnings: [String] { get }
 
-    var lastWarning: String? { get }
-
 }
