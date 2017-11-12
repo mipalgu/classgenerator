@@ -117,7 +117,14 @@ public class DemoTests: ClassGeneratorTestCase {
         let p = Process()
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
         p.launchPath = "/usr/bin/env"
-        p.arguments = ["swift", "test", "-Xcc", "-DWHITEBOARD_POSTER_STRING_CONVERSION=1"]
+        p.arguments = [
+            "swift",
+            "test",
+            "-Xcc",
+            "-DWHITEBOARD_POSTER_STRING_CONVERSION=1",
+            "-Xcc",
+            "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
+            ]
         p.launch()
         p.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
@@ -145,7 +152,9 @@ public class DemoTests: ClassGeneratorTestCase {
             "-Xcc",
             "-DWHITEBOARD_POSTER_STRING_CONVERSION=1",
             "-Xcc",
-            "-DUSE_WB_DEMO_C_CONVERSION=1"
+            "-DUSE_WB_DEMO_C_CONVERSION=1",
+            "-Xcc",
+            "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
         ]
         p.launch()
         p.waitUntilExit()
