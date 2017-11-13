@@ -125,7 +125,8 @@ public final class CHeaderCreator: ErrorContainer {
         for v in cls.variables {
             switch v.type {
                 case .array(_, let count):
-                    defs += "\n#define \(cls.name.uppercased())_\(v.label.uppercased())_ARRAY_SIZE \(count)"
+                    let def = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: v.label, level: 0)
+                    defs += "\n#define \(def) \(count)"
                 default:
                     continue
             }
