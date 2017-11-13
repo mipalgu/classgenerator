@@ -241,6 +241,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: true,
+            assignDefaults: true,
             self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
@@ -270,6 +271,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: false,
+            assignDefaults: false,
             self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { "other.\($0.label)()" }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
@@ -286,6 +288,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: false,
+            assignDefaults: false,
             self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { "other.\($0.label)()" }
         let ret = "return *this;"
@@ -296,11 +299,18 @@ public final class CPPHeaderCreator: ErrorContainer {
     fileprivate func createSetters(
         forVariables variables: [Variable],
         addConstOnPointers: Bool,
+        assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
         _ transformGetter: (Variable) -> String = { "\($0.label)"}
     ) -> String {
         return variables.map {
-            self.createSetter(forVariable: $0, addConstOnPointers: addConstOnPointers, arrayDefGetter, transformGetter)
+            self.createSetter(
+                forVariable: $0,
+                addConstOnPointers: addConstOnPointers,
+                assignDefaults: assignDefaults,
+                arrayDefGetter,
+                transformGetter
+            )
         }.combine("") {
             $0 + "\n" + $1
         }
@@ -309,6 +319,7 @@ public final class CPPHeaderCreator: ErrorContainer {
     fileprivate func createSetter(
         forVariable variable: Variable,
         addConstOnPointers: Bool,
+        assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
         _ transformGetter: (Variable) -> String = { "\($0.label)" }
     ) -> String {
@@ -316,11 +327,21 @@ public final class CPPHeaderCreator: ErrorContainer {
         switch variable.type {
             case .array:
                 let index = "\(variable.label)_index"
-                return """
+                let def = arrayDefGetter(variable.label)(0)
+                let temp = """
                     if (\(label) != NULL) {
-                        for (int \(index) = 0; \(index) < \(arrayDefGetter(variable.label)(0)); \(index)++) {
+                        for (int \(index) = 0; \(index) < \(def); \(index)++) {
                             set_\(variable.label)(\(label)[\(index)], \(index));
                         }
+                    }
+                    """
+                if false == assignDefaults {
+                    return temp
+                }
+                return temp + """
+                     else {
+                        \(variable.cType) \(variable.label)_temp[\(def)] = \(variable.defaultValue);
+                        std::memcpy(this->_\(variable.label), \(variable.label)_temp, \(def));
                     }
                     """
             case .string(let length):
