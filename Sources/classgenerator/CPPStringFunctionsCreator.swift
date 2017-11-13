@@ -58,19 +58,24 @@
 
 public final class CPPStringFunctionsCreator {
 
+    fileprivate let creatorHelpers: CreatorHelpers
+
     fileprivate let stringHelpers: StringHelpers
 
-    public init(stringHelpers: StringHelpers = StringHelpers()) {
+    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), stringHelpers: StringHelpers = StringHelpers()) {
+        self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
     }
 
     public func createDescriptionFunction(
+        forClass cls: Class,
         forClassNamed className: String,
         andStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
         let startDescription = self.createDescriptionDef()
         let cConversionDescription = self.createCConversionDescription(
+            forClass: cls,
             forClassNamed: className,
             withStructNamed: structName
         )
@@ -87,12 +92,14 @@ public final class CPPStringFunctionsCreator {
     }
 
     public func createToStringFunction(
+        forClass cls: Class,
         forClassNamed className: String,
         andStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
         let startDescription = self.createToStringDef()
         let cConversionToString = self.createCConversionToString(
+            forClass: cls,
             forClassNamed: className,
             withStructNamed: structName
         )
@@ -139,11 +146,12 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createCConversionDescription(
+        forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String
     ) -> String {
         return """
-            char buffer[\(className.uppercased())_DESC_BUFFER_SIZE];
+            char buffer[\(cls.name.uppercased())_DESC_BUFFER_SIZE];
             \(structName)_description(this, buffer, sizeof(buffer));
             std::string descr = buffer;
             return descr;
@@ -151,11 +159,12 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createCConversionToString(
+        forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String
     ) -> String {
         return """
-            char buffer[\(className.uppercased())_TO_STRING_BUFFER_SIZE];
+            char buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE];
             \(structName)_to_string(this, buffer, sizeof(buffer));
             std::string toString = buffer;
             return toString;
