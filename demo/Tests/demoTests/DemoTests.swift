@@ -71,6 +71,7 @@ public class DemoTests: XCTestCase {
         return [
             ("test_equality", test_equality),
             ("test_constructorUsesDefaultValues", test_constructorUsesDefaultValues),
+            ("test_cppConstructorUsesDefaultValues", test_cppConstructorUsesDefaultValues),
             ("test_fromDictionaryConstructorWorks", test_fromDictionaryConstructorWorks)
         ]
     }
@@ -84,6 +85,15 @@ public class DemoTests: XCTestCase {
     public func test_constructorUsesDefaultValues() {
         let expected = wb_demo.make()
         XCTAssertEqual(self.demo, expected)
+    }
+
+    public func test_cppConstructorUsesDefaultValues() {
+        guard let result = cpp_create() else {
+            XCTFail("Unable to create wb_demo from c++ constructor")
+            return
+        }
+        XCTAssertEqual(self.demo, result.pointee)
+        result.deallocate(capacity: 1)
     }
 
     //swiftlint:disable:next function_body_length

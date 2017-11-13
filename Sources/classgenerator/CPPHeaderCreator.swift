@@ -326,13 +326,10 @@ public final class CPPHeaderCreator: ErrorContainer {
         let label = transformGetter(variable)
         switch variable.type {
             case .array:
-                let index = "\(variable.label)_index"
                 let def = arrayDefGetter(variable.label)(0)
                 let temp = """
                     if (\(label) != NULL) {
-                        for (int \(index) = 0; \(index) < \(def); \(index)++) {
-                            set_\(variable.label)(\(label)[\(index)], \(index));
-                        }
+                        std::memcpy(this->_\(variable.label), \(label), \(def) * sizeof (\(variable.cType)));
                     }
                     """
                 if false == assignDefaults {
@@ -341,7 +338,7 @@ public final class CPPHeaderCreator: ErrorContainer {
                 return temp + """
                      else {
                         \(variable.cType) \(variable.label)_temp[\(def)] = \(variable.defaultValue);
-                        std::memcpy(this->_\(variable.label), \(variable.label)_temp, \(def));
+                        std::memcpy(this->_\(variable.label), \(variable.label)_temp, \(def) * sizeof (\(variable.cType)));
                     }
                     """
             case .string(let length):

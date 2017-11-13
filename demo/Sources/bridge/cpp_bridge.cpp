@@ -65,6 +65,11 @@
 extern "C" {
 #endif
 
+struct wb_demo * cpp_create() {
+    guWhiteboard::Demo * d = new guWhiteboard::Demo();
+    return static_cast<wb_demo *>(d);
+}
+
 const char * cpp_to_string(struct wb_demo * demo, char * buffer, size_t bufferSize) {
     guWhiteboard::Demo * d = static_cast<guWhiteboard::Demo *>(demo);
     std::string str = d->to_string();
