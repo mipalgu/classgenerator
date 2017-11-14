@@ -175,14 +175,16 @@ namespace guWhiteboard {
             set_p(_p);
             set_strct(strct);
             if (array16 != NULL) {
-                for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
-                    set_array16(array16[array16_index], array16_index);
-                }
+                std::memcpy(this->_array16, array16, OLD_ARRAY16_ARRAY_SIZE * sizeof (int16_t));
+            } else {
+                int16_t array16_temp[OLD_ARRAY16_ARRAY_SIZE] = {1,2,3,4};
+                std::memcpy(this->_array16, array16_temp, OLD_ARRAY16_ARRAY_SIZE * sizeof (int16_t));
             }
             if (bools != NULL) {
-                for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-                    set_bools(bools[bools_index], bools_index);
-                }
+                std::memcpy(this->_bools, bools, OLD_BOOLS_ARRAY_SIZE * sizeof (bool));
+            } else {
+                bool bools_temp[OLD_BOOLS_ARRAY_SIZE] = {true, true, true};
+                std::memcpy(this->_bools, bools_temp, OLD_BOOLS_ARRAY_SIZE * sizeof (bool));
             }
         }
 
@@ -281,14 +283,10 @@ namespace guWhiteboard {
             set_p(other.p());
             set_strct(other.strct());
             if (other.array16() != NULL) {
-                for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
-                    set_array16(other.array16()[array16_index], array16_index);
-                }
+                std::memcpy(this->_array16, other.array16(), OLD_ARRAY16_ARRAY_SIZE * sizeof (int16_t));
             }
             if (other.bools() != NULL) {
-                for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-                    set_bools(other.bools()[bools_index], bools_index);
-                }
+                std::memcpy(this->_bools, other.bools(), OLD_BOOLS_ARRAY_SIZE * sizeof (bool));
             }
         }
 
@@ -387,14 +385,10 @@ namespace guWhiteboard {
             set_p(other.p());
             set_strct(other.strct());
             if (other.array16() != NULL) {
-                for (int array16_index = 0; array16_index < OLD_ARRAY16_ARRAY_SIZE; array16_index++) {
-                    set_array16(other.array16()[array16_index], array16_index);
-                }
+                std::memcpy(this->_array16, other.array16(), OLD_ARRAY16_ARRAY_SIZE * sizeof (int16_t));
             }
             if (other.bools() != NULL) {
-                for (int bools_index = 0; bools_index < OLD_BOOLS_ARRAY_SIZE; bools_index++) {
-                    set_bools(other.bools()[bools_index], bools_index);
-                }
+                std::memcpy(this->_bools, other.bools(), OLD_BOOLS_ARRAY_SIZE * sizeof (bool));
             }
             return *this;
         }

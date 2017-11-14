@@ -67,14 +67,15 @@ public final class CPPFromStringCreator {
     }
 
     public func createFromStringFunction(
+        forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
         let def = "void from_string(const std::string &str) {"
-        let ifDef = "#ifdef USE_WB_\(className.uppercased())_C_CONVERSION"
+        let ifDef = "#ifdef USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let elseDef = "#else"
-        let endifDef = "#endif /// USE_WB_\(className.uppercased())_C_CONVERSION"
+        let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let cImplementation = structName + "_from_string(this, str.c_str());"
         let cppImplementation = self.createCPPImplementation(
             forClassNamed: className,

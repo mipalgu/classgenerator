@@ -87,6 +87,10 @@ public class WhiteboardTests: XCTestCase {
         let fetch = self.wbd.get()
         XCTAssertEqual(demo, fetch)
         XCTAssertNotEqual(demo2, fetch)
+        self.wbd.post(val: demo2)
+        let fetch2 = self.wbd.get()
+        XCTAssertNotEqual(demo, fetch2)
+        XCTAssertEqual(demo2, fetch2)
     }
 
 }

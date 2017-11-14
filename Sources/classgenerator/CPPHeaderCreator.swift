@@ -97,6 +97,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             generatedFrom: genfile
         )
         let content = self.createClass(
+            forClass: cls,
             named: className,
             extendingStruct: structName,
             withVariables: cls.variables,
@@ -136,6 +137,7 @@ public final class CPPHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createClass(
+        forClass cls: Class,
         named className: String,
         extendingStruct structName: String,
         withVariables variables: [Variable],
@@ -144,6 +146,7 @@ public final class CPPHeaderCreator: ErrorContainer {
     ) -> String {
         let namespace = "namespace guWhiteboard {"
         let content = self.createClassContent(
+            forClass: cls,
             forClassNamed: className,
             extending: structName,
             withVariables: variables,
@@ -157,6 +160,7 @@ public final class CPPHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createClassContent(
+        forClass cls: Class,
         forClassNamed name: String,
         extending extendName: String,
         withVariables variables: [Variable],
@@ -164,13 +168,15 @@ public final class CPPHeaderCreator: ErrorContainer {
     ) -> String {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
         let publicLabel = "public:"
-        let constructor = self.createConstructor(forClassNamed: name, forVariables: variables)
+        let constructor = self.createConstructor(forClass: cls, forClassNamed: name, forVariables: variables)
         let copyConstructor = self.createCopyConstructor(
+            forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             forVariables: variables
         )
         let copyAssignmentOperator = self.createCopyAssignmentOperator(
+            forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             forVariables: variables
@@ -182,16 +188,19 @@ public final class CPPHeaderCreator: ErrorContainer {
         let endif = "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name, andStructNamed: extendName)
         let description = self.stringFunctionsCreator.createDescriptionFunction(
+            forClass: cls,
             forClassNamed: name,
             andStructNamed: extendName,
             withVariables: variables
         )
         let toString = self.stringFunctionsCreator.createToStringFunction(
+            forClass: cls,
             forClassNamed: name,
             andStructNamed: extendName,
             withVariables: variables
         )
         let fromString = self.fromStringCreator.createFromStringFunction(
+            forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             withVariables: variables
@@ -203,6 +212,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             + "\n" + endif + self.stringHelpers.indent(cpp) + "\n"
             + self.stringHelpers.indent("};")
     }
+        
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
         let comment = self.creatorHelpers.createComment(from: "Provides a C++ wrapper around `\(extendName)`.")
@@ -210,7 +220,11 @@ public final class CPPHeaderCreator: ErrorContainer {
         return comment + "\n" + def
     }
 
-    fileprivate func createConstructor(forClassNamed name: String, forVariables variables: [Variable]) -> String {
+    fileprivate func createConstructor(
+        forClass cls: Class,
+        forClassNamed name: String,
+        forVariables variables: [Variable]
+    ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
         let startdef = "\(name)("
         let list = variables.map {
@@ -227,7 +241,8 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: true,
-            self.creatorHelpers.createArrayCountDef(inClass: name)
+            assignDefaults: true,
+            self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
@@ -246,6 +261,7 @@ public final class CPPHeaderCreator: ErrorContainer {
     }
 
     fileprivate func createCopyConstructor(
+        forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
         forVariables variables: [Variable]
@@ -255,12 +271,14 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: false,
-            self.creatorHelpers.createArrayCountDef(inClass: className)
+            assignDefaults: false,
+            self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { "other.\($0.label)()" }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
     }
 
     fileprivate func createCopyAssignmentOperator(
+        forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
         forVariables variables: [Variable]
@@ -270,7 +288,8 @@ public final class CPPHeaderCreator: ErrorContainer {
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: false,
-            self.creatorHelpers.createArrayCountDef(inClass: className)
+            assignDefaults: false,
+            self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { "other.\($0.label)()" }
         let ret = "return *this;"
         let content = setters + "\n" + ret
@@ -280,11 +299,18 @@ public final class CPPHeaderCreator: ErrorContainer {
     fileprivate func createSetters(
         forVariables variables: [Variable],
         addConstOnPointers: Bool,
+        assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
         _ transformGetter: (Variable) -> String = { "\($0.label)"}
     ) -> String {
         return variables.map {
-            self.createSetter(forVariable: $0, addConstOnPointers: addConstOnPointers, arrayDefGetter, transformGetter)
+            self.createSetter(
+                forVariable: $0,
+                addConstOnPointers: addConstOnPointers,
+                assignDefaults: assignDefaults,
+                arrayDefGetter,
+                transformGetter
+            )
         }.combine("") {
             $0 + "\n" + $1
         }
@@ -293,18 +319,26 @@ public final class CPPHeaderCreator: ErrorContainer {
     fileprivate func createSetter(
         forVariable variable: Variable,
         addConstOnPointers: Bool,
+        assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
         _ transformGetter: (Variable) -> String = { "\($0.label)" }
     ) -> String {
         let label = transformGetter(variable)
         switch variable.type {
             case .array:
-                let index = "\(variable.label)_index"
-                return """
+                let def = arrayDefGetter(variable.label)(0)
+                let temp = """
                     if (\(label) != NULL) {
-                        for (int \(index) = 0; \(index) < \(arrayDefGetter(variable.label)(0)); \(index)++) {
-                            set_\(variable.label)(\(label)[\(index)], \(index));
-                        }
+                        std::memcpy(this->_\(variable.label), \(label), \(def) * sizeof (\(variable.cType)));
+                    }
+                    """
+                if false == assignDefaults {
+                    return temp
+                }
+                return temp + """
+                     else {
+                        \(variable.cType) \(variable.label)_temp[\(def)] = \(variable.defaultValue);
+                        std::memcpy(this->_\(variable.label), \(variable.label)_temp, \(def) * sizeof (\(variable.cType)));
                     }
                     """
             case .string(let length):
