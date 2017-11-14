@@ -76,6 +76,7 @@ public class DemoTests: ClassGeneratorTestCase {
     public var generator: ClassGenerator<
         WarningsContainerRef,
         WarningsContainerRef,
+        WarningsContainerRef,
         CommandLinePrinter<
             StderrOutputStream,
             StdoutOutputStream,
@@ -88,7 +89,11 @@ public class DemoTests: ClassGeneratorTestCase {
         self.startingDirectory = self.filemanager.currentDirectoryPath
         let container = WarningsContainerRef()
         self.generator = ClassGenerator(
-            parser: ClassParser(container: container, sectionsParser: SectionsParser(container: container)),
+            parser: ClassParser(
+                container: container,
+                sectionsParser: SectionsParser(container: container),
+                variablesParser: VariablesTableParser(container: container)
+            ),
             printer: CommandLinePrinter(
                 errorStream: StderrOutputStream(),
                 messageStream: StdoutOutputStream(),

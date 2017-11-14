@@ -58,11 +58,19 @@
 
 import Foundation
 
-public final class VariablesTableParser {
+//swiftlint:disable opening_brace
+public final class VariablesTableParser<Container: ParserWarningsContainer>:
+    WarningsContainerDelegator,
+    WarningsContainer,
+    LastWarningAccessor
+{
+
+    public fileprivate(set) var container: Container
 
     fileprivate var parser: VariableParser
 
-    public init(parser: VariableParser = VariableParser()) {
+    public init(container: Container, parser: VariableParser = VariableParser()) {
+        self.container = container
         self.parser = parser
     }
 

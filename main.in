@@ -3,7 +3,11 @@ import Foundation
 let container = WarningsContainerRef()
 
 let generator = ClassGenerator(
-    parser: ClassParser(container: container, sectionsParser: SectionsParser(container: container)),
+    parser: ClassParser(
+        container: container,
+        sectionsParser: SectionsParser(container: container),
+        variablesParser: VariablesTableParser(container: container)
+    ),
     printer: CommandLinePrinter(
         errorStream: StderrOutputStream(),
         messageStream: StdoutOutputStream(),

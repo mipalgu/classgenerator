@@ -61,7 +61,8 @@ import Foundation
 //swiftlint:disable opening_brace
 public final class ClassParser<
     Container: ParserWarningsContainer,
-    SectionsContainer: ParserWarningsContainer
+    SectionsContainer: ParserWarningsContainer,
+    VariablesContainer: ParserWarningsContainer
 >:
     ErrorContainer,
     LastWarningAccessor,
@@ -81,13 +82,13 @@ public final class ClassParser<
 
     fileprivate let sectionsParser: SectionsParser<SectionsContainer>
 
-    fileprivate let variablesParser: VariablesTableParser
+    fileprivate let variablesParser: VariablesTableParser<VariablesContainer>
 
     public init(
         container: Container,
         sectionsParser: SectionsParser<SectionsContainer>,
-        helpers: StringHelpers = StringHelpers(),
-        variablesParser: VariablesTableParser = VariablesTableParser()
+        variablesParser: VariablesTableParser<VariablesContainer>,
+        helpers: StringHelpers = StringHelpers()
     ) {
         self.container = container
         self.helpers = helpers

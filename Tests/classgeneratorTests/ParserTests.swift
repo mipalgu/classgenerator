@@ -73,7 +73,7 @@ public class ParserTests: ClassGeneratorTestCase {
         ]
     }
 
-    public var parser: Parser<WarningsContainerRef, WarningsContainerRef, WarningsContainerRef>!
+    public var parser: Parser<WarningsContainerRef, WarningsContainerRef, WarningsContainerRef, WarningsContainerRef>!
 
     public override func setUp() {
         let container = WarningsContainerRef()
@@ -81,7 +81,8 @@ public class ParserTests: ClassGeneratorTestCase {
             container: container,
             parser: ClassParser(
                 container: container,
-                sectionsParser: SectionsParser(container: container)
+                sectionsParser: SectionsParser(container: container),
+                variablesParser: VariablesTableParser(container: container)
             )
         )
     }
