@@ -56,7 +56,7 @@
  *
  */
 
-public final class WarningsContainerRef: Ref<[String]>, LastWarningAccessor, MutableWarningsContainer {
+public final class WarningsContainerRef: Ref<[String]>, ParserWarningsContainer {
 
     public var warnings: [String] {
         get {

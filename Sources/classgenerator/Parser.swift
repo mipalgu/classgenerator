@@ -58,41 +58,44 @@
 
 import Foundation
 
-public final class Parser: ErrorContainer, WarningsContainer {
+public final class Parser<
+    Container: ParserWarningsContainer,
+    ClassParserContainer: ParserWarningsContainer
+>: ErrorContainer, WarningsContainerDelegator, WarningsContainer, LastWarningAccessor {
 
     public fileprivate(set) var errors: [String] = []
-
-    public fileprivate(set) var warnings: [String] = []
 
     public var lastError: String? {
         return self.errors.last
     }
 
-    public var lastWarning: String? {
-        return self.warnings.last
-    }
+    public fileprivate(set) var container: Container
 
-    fileprivate let parser: ClassParser
+    fileprivate let parser: ClassParser<ClassParserContainer>
+
     fileprivate let fileHelpers: FileHelpers
 
-    public init(parser: ClassParser = ClassParser(), fileHelpers: FileHelpers = FileHelpers()) {
+    public init(
+        container: Container,
+        parser: ClassParser<ClassParserContainer>,
+        fileHelpers: FileHelpers = FileHelpers()
+    ) {
+        self.container = container
         self.parser = parser
         self.fileHelpers = fileHelpers
     }
 
     public func parse(file: URL) -> Class? {
         self.errors = []
-        self.warnings = []
+        self.container.warnings = []
         guard let contents = self.fileHelpers.read(file) else {
             self.errors.append("Unable to read contents of file: \(file.path)")
             return nil
         }
         guard let c = self.parser.parse(contents, withName: file.lastPathComponent) else {
             self.errors.append(contentsOf: self.parser.errors)
-            self.warnings.append(contentsOf: self.parser.warnings)
             return nil
         }
-        self.warnings.append(contentsOf: self.parser.warnings)
         return c
     }
 

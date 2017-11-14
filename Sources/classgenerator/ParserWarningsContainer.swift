@@ -1,5 +1,5 @@
 /*
- * WarningsContainerDelegator.swift 
+ * ParserWarningsContainer.swift 
  * classgenerator 
  *
  * Created by Callum McColl on 14/11/2017.
@@ -56,25 +56,4 @@
  *
  */
 
-public protocol WarningsContainerDelegator {
-
-    associatedtype Container: WarningsContainer
-
-    var container: Container { get }
-
-}
-
-extension WarningsContainerDelegator where Self: WarningsContainer {
-
-    public var warnings: [String] {
-        return self.container.warnings
-    }
-
-}
-
-extension WarningsContainerDelegator where Self: LastWarningAccessor, Self.Container: LastWarningAccessor {
-
-    public var lastWarning: String? {
-        return self.container.lastWarning
-    }
-}
+public protocol ParserWarningsContainer: MutableWarningsContainer, LastWarningAccessor {}

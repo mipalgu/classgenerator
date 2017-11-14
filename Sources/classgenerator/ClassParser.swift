@@ -58,19 +58,21 @@
 
 import Foundation
 
-public final class ClassParser: ErrorContainer, WarningsContainer {
+//swiftlint:disable opening_brace
+public final class ClassParser<Container: ParserWarningsContainer>:
+    ErrorContainer,
+    LastWarningAccessor,
+    WarningsContainer,
+    WarningsContainerDelegator
+{
 
     public fileprivate(set) var errors: [String] = []
-
-    public fileprivate(set) var warnings: [String] = []
 
     public var lastError: String? {
         return self.errors.last
     }
 
-    public var lastWarning: String? {
-        return self.warnings.last
-    }
+    public fileprivate(set) var container: Container
 
     fileprivate let helpers: StringHelpers
 
@@ -79,10 +81,12 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
     fileprivate let variablesParser: VariablesTableParser
 
     public init(
+        container: Container,
         helpers: StringHelpers = StringHelpers(),
         sectionsParser: SectionsParser = SectionsParser(),
         variablesParser: VariablesTableParser = VariablesTableParser()
     ) {
+        self.container = container
         self.helpers = helpers
         self.sectionsParser = sectionsParser
         self.variablesParser = variablesParser
@@ -90,7 +94,6 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
 
     public func parse(_ contents: String, withName file: String) -> Class? {
         self.errors = []
-        self.warnings = []
         do {
             //swiftlint:disable opening_brace
             guard
@@ -149,13 +152,13 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             return nil
         }
         if false == str.hasSuffix(".gen") {
-            self.warnings.append("\(str) should have a '.gen' extension.")
+            self.container.warnings.append("\(str) should have a '.gen' extension.")
         }
         if  nil != name.lazy.filter({ $0 == "_" }).first &&
             nil != name.lazy.filter({ self.helpers.isUpperCase($0) }).first
         {
             //swiftlint:disable:next line_length
-            self.warnings.append("Detected using underscores with capital letters in the class name.  This may result in undesirable names of the generated files.")
+            self.container.warnings.append("Detected using underscores with capital letters in the class name.  This may result in undesirable names of the generated files.")
         }
         guard nil == name.lazy.filter({ false == self.helpers.isAlphaNumeric($0) && $0 != "_" }).first else {
             self.errors.append("The filename can only contain alphanumeric characters and underscores.")
@@ -191,7 +194,7 @@ public final class ClassParser: ErrorContainer, WarningsContainer {
             self.errors.append(contentsOf: cont.errors)
             return nil
         }
-        self.warnings.append(contentsOf: cont.warnings)
+        self.container.warnings.append(contentsOf: cont.warnings)
         return result
     }
 

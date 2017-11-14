@@ -1,10 +1,13 @@
 import Foundation
 
-let generator = ClassGenerator(printer: CommandLinePrinter(
-    errorStream: StderrOutputStream(),
-    messageStream: StdoutOutputStream(),
-    warningStream: StdoutOutputStream()
-))
+let generator = ClassGenerator(
+    parser: ClassParser(container: WarningsContainerRef()),
+    printer: CommandLinePrinter(
+        errorStream: StderrOutputStream(),
+        messageStream: StdoutOutputStream(),
+        warningStream: StdoutOutputStream()
+    )
+)
 
 generator.run(CommandLine.arguments)
 

@@ -74,6 +74,7 @@ public class DemoTests: ClassGeneratorTestCase {
     public var filemanager: FileManager!
 
     public var generator: ClassGenerator<
+        WarningsContainerRef,
         CommandLinePrinter<
             StderrOutputStream,
             StdoutOutputStream,
@@ -85,6 +86,7 @@ public class DemoTests: ClassGeneratorTestCase {
         self.filemanager = FileManager.default
         self.startingDirectory = self.filemanager.currentDirectoryPath
         self.generator = ClassGenerator(
+            parser: ClassParser(container: WarningsContainerRef()),
             printer: CommandLinePrinter(
                 errorStream: StderrOutputStream(),
                 messageStream: StdoutOutputStream(),

@@ -73,10 +73,11 @@ public class ParserTests: ClassGeneratorTestCase {
         ]
     }
 
-    public var parser: Parser!
+    public var parser: Parser<WarningsContainerRef, WarningsContainerRef>!
 
     public override func setUp() {
-        self.parser = Parser()
+        let container = WarningsContainerRef()
+        self.parser = Parser(container: container, parser: ClassParser(container: container))
     }
 
     public func test_doesntParseNonExistingFile() {
