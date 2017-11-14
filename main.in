@@ -1,7 +1,9 @@
 import Foundation
 
+let container = WarningsContainerRef()
+
 let generator = ClassGenerator(
-    parser: ClassParser(container: WarningsContainerRef()),
+    parser: ClassParser(container: container, sectionsParser: SectionsParser(container: container)),
     printer: CommandLinePrinter(
         errorStream: StderrOutputStream(),
         messageStream: StdoutOutputStream(),

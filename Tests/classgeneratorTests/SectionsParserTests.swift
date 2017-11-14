@@ -68,10 +68,10 @@ public class SectionsParserTests: ClassGeneratorTestCase {
         ]
     }
 
-    public var parser: SectionsParser!
+    public var parser: SectionsParser<WarningsContainerRef>!
 
     public override func setUp() {
-        self.parser = SectionsParser()
+        self.parser = SectionsParser(container: WarningsContainerRef())
     }
 
     public func test_sectionsInAnyOrder() {

@@ -58,21 +58,25 @@
 
 import Foundation
 
-public final class SectionsParser: ErrorContainer, WarningsContainer {
+//swiftlint:disable opening_brace
+public final class SectionsParser<Container: ParserWarningsContainer>:
+    ErrorContainer,
+    WarningsContainerDelegator,
+    WarningsContainer,
+    LastWarningAccessor
+{
 
     public fileprivate(set) var errors: [String] = []
-
-    public fileprivate(set) var warnings: [String] = []
 
     public var lastError: String? {
         return self.errors.last
     }
 
-    public var lastWarning: String? {
-        return self.warnings.last
-    }
+    public fileprivate(set) var container: Container
 
-    public init() {}
+    public init(container: Container) {
+        self.container = container
+    }
 
     public func parseSections(fromContents contents: String) -> Sections? {
         self.errors = []
@@ -145,7 +149,7 @@ public final class SectionsParser: ErrorContainer, WarningsContainer {
             comments = tempComments ?? comments
         }
         if true == usingOldFormat {
-            self.warnings.append("The old format is depracated. Please convert this class to the new format.")
+            self.container.warnings.append("The old format is depracated. Please convert this class to the new format.")
         }
         guard let variables = vars else {
             self.errors.append("Please specify a property list section (-properties).")

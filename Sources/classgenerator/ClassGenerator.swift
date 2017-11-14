@@ -58,10 +58,14 @@
 
 import Foundation
 
-public final class ClassGenerator<Container: ParserWarningsContainer, P: Printer> {
+public final class ClassGenerator<
+    Container: ParserWarningsContainer,
+    SectionsContainer: ParserWarningsContainer,
+    P: Printer
+> {
 
     fileprivate let argumentsParser: ClassGeneratorParser
-    fileprivate let parser: ClassParser<Container>
+    fileprivate let parser: ClassParser<Container, SectionsContainer>
     fileprivate let fileHelpers: FileHelpers
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let cHeaderCreator: CHeaderCreator
@@ -72,7 +76,7 @@ public final class ClassGenerator<Container: ParserWarningsContainer, P: Printer
 
     public init(
         argumentsParser: ClassGeneratorParser = ClassGeneratorParser(),
-        parser: ClassParser<Container>,
+        parser: ClassParser<Container, SectionsContainer>,
         fileHelpers: FileHelpers = FileHelpers(),
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         cHeaderCreator: CHeaderCreator = CHeaderCreator(),
