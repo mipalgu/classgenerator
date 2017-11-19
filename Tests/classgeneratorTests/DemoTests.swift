@@ -74,9 +74,11 @@ public class DemoTests: ClassGeneratorTestCase {
     public var filemanager: FileManager!
 
     public var generator: ClassGenerator<
-        WarningsContainerRef,
-        WarningsContainerRef,
-        WarningsContainerRef,
+        ClassParser<
+            WarningsContainerRef,
+            WarningsContainerRef,
+            WarningsContainerRef
+        >,
         CommandLinePrinter<
             StderrOutputStream,
             StdoutOutputStream,
