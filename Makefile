@@ -1,6 +1,8 @@
 SWIFT=swift
 DIR!=pwd
 
+ALL_TARGETS=swift-test
+
 all:	all-real
 
 all-real:	swift-test
