@@ -61,6 +61,7 @@ import Foundation
 public final class TypeConverter {
 
     fileprivate let values: [String: String] = [
+        "bit": "Bool",
         "string": "String",
         "bool": "Bool",
         "char": "UnicodeScalar",

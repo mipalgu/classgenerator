@@ -131,6 +131,9 @@ public final class SwiftFileCreator: ErrorContainer {
                         withLabel: $0.label,
                         andSwiftType: $0.swiftType
                     )
+                case .bit:
+                    getterSetup = ""
+                    getterAssign = self.createBitGetter(withLabel: $0.label)
                 case .char(let sign):
                     getterSetup = ""
                     getterAssign = self.createCharGetter(withLabel: $0.label, andSign: sign)
@@ -150,6 +153,10 @@ public final class SwiftFileCreator: ErrorContainer {
             let setter = setterDef + "\n" + self.stringHelpers.indent(setterContent) + "\n" + endSetterDef
             return def + "\n" + self.stringHelpers.indent(getter + " " + setter) + "\n" + endDef
         }.combine("") { $0 + "\n\n" + $1 }
+    }
+
+    fileprivate func createBitGetter(withLabel label: String) -> String {
+        return "self.\(label) == 1"
     }
 
     fileprivate func createCharGetter(withLabel label: String, andSign sign: CharSigns) -> String {
@@ -212,7 +219,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let startDef = "public init("
         let containsArrays = nil != variables.lazy.filter {
             switch $0.type {
-                case .array, .string, .char:
+                case .array, .bit, .char, .string:
                     return true
                 default:
                     return false
@@ -227,7 +234,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = startDef + params + endDef
         let setters = copy + variables.map {
             switch $0.type {
-                case .array, .string, .char:
+                case .array, .bit, .char, .string:
                     return "self._\($0.label) = \($0.label)"
                 default:
                     return "self.\($0.label) = \($0.label)"
@@ -241,10 +248,10 @@ public final class SwiftFileCreator: ErrorContainer {
         switch variable.type {
             case .array:
                 return "_ = \(value)"
+            case .bit, .char:
+                return value
             case .string(let length):
                 return self.createSetString(withLabel: variable.label, with: accessor, andLength: length)
-            case .char:
-                return value
             default:
                 return "self.\(variable.label) = \(value)"
         }
@@ -277,6 +284,8 @@ public final class SwiftFileCreator: ErrorContainer {
                     }
                     """
                 return start + "\n" + self.stringHelpers.indent(content, level)
+            case .bit:
+                return "self.\(label) = true == \(accessor) ? 1 : 0"
             case .char(let sign):
                 let intType: String
                 switch sign {
@@ -321,7 +330,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
         let shouldCopy = nil != variables.lazy.filter {
             switch $0.type {
-                case .array, .string, .char:
+                case .array, .bit, .char, .string:
                     return true
                 default:
                     return false
@@ -333,6 +342,8 @@ public final class SwiftFileCreator: ErrorContainer {
             switch $0.type {
                 case .array, .string:
                     return "var \($0.label) = dictionary[\"\($0.label)\"]"
+                case .bit:
+                    return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt32"
                 case .char(let sign):
                     switch sign {
                         case .signed:
