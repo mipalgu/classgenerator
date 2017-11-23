@@ -63,7 +63,7 @@ public final class CTypeConverter {
     public func convert(signature: String, withType type: VariableTypes) -> String {
         switch type {
             case .bit:
-                return "unsigned int : 1"
+                return "unsigned int"
             default:
                 return signature
         }
