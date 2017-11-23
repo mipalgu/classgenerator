@@ -22,3 +22,8 @@
 8. Parse enums so that the names can be included in string functions.
 
 9. Remove PROPERTY macros.
+
+10. Add endianess function to convert all the structs ints to a particular endian.
+  - toBigEndian
+  - toLittleEndian
+  - toNetworkEndian - alias for toBigEndian
