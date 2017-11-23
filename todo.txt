@@ -1,29 +1,33 @@
 # To Do - in no particular order
 
-1. Identify and treat enums as signed integers.
-
-2. Identify struct and union types.
+1. Identify struct and union types.
   - Uses a user defined description/toString/fromString function to work with these.
     Format will be wb_<class_name>_<property_name>_description etc.
   - If used in C++ then the user should also define a C++ wrapper with description/toString/fromString functions.
   - If used in swift then the user should define the description/toString properties and a string constructor in a swift extension.
+  - This allows generating classes that use other generated classes as properties as all of these functions are generated anyway.
 
-3. Add #defs for foo() and setFoo(x) in generated c headers.
-  - This requires the PROPERTY #defs in gu_util.h to change to the new _foo format.
+2. Drop backwards compatability - this will need to happen to avoid over complicating 1.
 
-4. Drop backwards compatability - this will need to happen to avoid over complicating 2.
+3. Doxy commenting on the C++ string functions.
 
-5. Add a bit type.
+4. Add pragma pop where there is pragma push.
 
-6. Doxy commenting on the C++ string functions.
+5. Parse enums so that the names can be included in string functions.
 
-7. Add pragma pop where there is pragma push.
+6. Remove PROPERTY macros.
+  - Add #defs for foo() and setFoo(x) in generated c headers.
+  - something like this:
+      # if !defined(__cplusplus) && !defined(SKIP_C_CONVENIENCE_MACROS)
+      # ifndef foo
+      # define foo() _foo
+      # endif
+      # ifndef setFoo
+      # define setFoo(x) _foo = (x)
+      # endif
+      # endif
 
-8. Parse enums so that the names can be included in string functions.
-
-9. Remove PROPERTY macros.
-
-10. Add endianess function to convert all the structs ints to a particular endian.
+7. Add endianess functions to convert all the structs ints to a particular endian.
   - toBigEndian
   - toLittleEndian
   - toNetworkEndian - alias for toBigEndian
