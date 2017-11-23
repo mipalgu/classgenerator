@@ -59,6 +59,7 @@
 public final class BufferSizeCalculator {
 
     fileprivate let lengths: [String: Int] = [
+        "bit": 1,
         "bool": 5,
         "char": 1,
         "signed char": 2,
