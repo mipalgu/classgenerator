@@ -60,8 +60,13 @@ public final class CTypeConverter {
 
     public init() {}
 
-    public func convert(type: String) -> String {
-        return type
+    public func convert(signature: String, withType type: VariableTypes) -> String {
+        switch type {
+            case .bit:
+                return "unsigned int : 1"
+            default:
+                return signature
+        }
     }
 
 }
