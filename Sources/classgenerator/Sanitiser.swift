@@ -112,10 +112,13 @@ public final class Sanitiser {
     }
 
     fileprivate func sanitiseBit(value: String) -> String? {
-        if value == "1" {
+        if "1" == value {
             return "true"
         }
-        return "false"
+        if "0" == value {
+            return "false"
+        }
+        return nil
     }
 
     fileprivate func sanitiseChar(value: String) -> String? {
