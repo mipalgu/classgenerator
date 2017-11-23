@@ -59,12 +59,7 @@
 import Foundation
 
 //swiftlint:disable opening_brace
-public final class SectionsParser<Container: ParserWarningsContainer>:
-    ErrorContainer,
-    WarningsContainerDelegator,
-    WarningsContainer,
-    LastWarningAccessor
-{
+public final class SectionsParser<Container: ParserWarningsContainer>: SectionsParserType {
 
     public fileprivate(set) var errors: [String] = []
 

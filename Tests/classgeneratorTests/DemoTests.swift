@@ -76,7 +76,7 @@ public class DemoTests: ClassGeneratorTestCase {
     public var generator: ClassGenerator<
         ClassParser<
             WarningsContainerRef,
-            WarningsContainerRef,
+            SectionsParser<WarningsContainerRef>,
             WarningsContainerRef
         >,
         CommandLinePrinter<

@@ -1,8 +1,8 @@
 /*
- * Parser.swift 
+ * SectionsParserType.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 06/08/2017.
+ * Created by Callum McColl on 19/11/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,47 +56,8 @@
  *
  */
 
-import Foundation
+public protocol SectionsParserType: ErrorContainer, WarningsContainerDelegator, WarningsContainer, LastWarningAccessor {
 
-public final class Parser<
-    Container: ParserWarningsContainer,
-    CParser: ClassParserType
->: ErrorContainer, WarningsContainerDelegator, WarningsContainer, LastWarningAccessor {
-
-    public fileprivate(set) var errors: [String] = []
-
-    public var lastError: String? {
-        return self.errors.last
-    }
-
-    public fileprivate(set) var container: Container
-
-    fileprivate let parser: CParser
-
-    fileprivate let fileHelpers: FileHelpers
-
-    public init(
-        container: Container,
-        parser: CParser,
-        fileHelpers: FileHelpers = FileHelpers()
-    ) {
-        self.container = container
-        self.parser = parser
-        self.fileHelpers = fileHelpers
-    }
-
-    public func parse(file: URL) -> Class? {
-        self.errors = []
-        self.container.warnings = []
-        guard let contents = self.fileHelpers.read(file) else {
-            self.errors.append("Unable to read contents of file: \(file.path)")
-            return nil
-        }
-        guard let c = self.parser.parse(contents, withName: file.lastPathComponent) else {
-            self.errors.append(contentsOf: self.parser.errors)
-            return nil
-        }
-        return c
-    }
+    func parseSections(fromContents: String) -> Sections?
 
 }
