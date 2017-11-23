@@ -213,6 +213,8 @@ public final class CDescriptionCreator {
                     appendingTo: strLabel,
                     includeLabels: includeLabels
                 )
+            case .bit:
+                return self.createSNPrintf("\(pre)%u", "self->\(label)", appendingTo: strLabel)
             case .bool:
                 let value = "len = gu_strlcat(\(strLabel), self->\(label) ? \"true\" : \"false\", bufferSize);"
                 if true == includeLabels {
@@ -254,6 +256,8 @@ public final class CDescriptionCreator {
                     appendingTo: strLabel,
                     includeLabels: includeLabels
                 )
+            case .bit:
+                return self.createSNPrintf("%u", "self->\(label)", appendingTo: strLabel)
             case .bool:
                 return "len = gu_strlcat(\(strLabel), self->\(label) ? \"true\" : \"false\", bufferSize);"
             case .char:

@@ -235,7 +235,7 @@ public final class CFromStringCreator {
                     char \(label)_temp;
                     self->\(label) = \(cast)(*strncpy(&\(label)_temp, \(accessor), 1));
                     """
-            case.numeric:
+            case .bit, .numeric:
                 return self.createNumericValue(
                     forType: type,
                     withLabel: label,
@@ -316,6 +316,8 @@ public final class CFromStringCreator {
         inClassNamed className: String
     ) -> String? {
         switch type {
+            case .bit:
+                return "(\(cType))atoi(\(accessor));"
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):

@@ -174,6 +174,8 @@ public final class CHeaderCreator: ErrorContainer {
                     + ", \(label)"
                     + ", \(className.uppercased())_\(label.uppercased())_"
                     + "\(0 == level ? "" : "\(level)_")ARRAY_SIZE)"
+            case .bit:
+                return "BIT_PROPERTY(" + label + ")"
             case .pointer:
                 return "PROPERTY(" + cType + self.createPointers(forType: type) + ", " + label + ")"
             case .string(let length):
