@@ -200,7 +200,7 @@ public final class CPPFromStringCreator {
                     andSetter: setter
                 )
             case .bit:
-                return setter("static_cast<unsigned int:1>(atoi(\(getter).c_str()))") + ";"
+                return setter("static_cast<\(cType)>(atoi(\(getter).c_str()))") + ";"
             case .bool:
                 return setter("\(getter).compare(\"true\") == 0 || \(getter).compare(\"1\") == 0 ? true : false") + ";"
             case .char:
