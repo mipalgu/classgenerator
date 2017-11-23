@@ -1778,7 +1778,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[43] != NULL)
         self->dd = (double double)atof(strings[43]);
     if (strings[44] != NULL)
-        self->myBit = (unsigned int : 1)atoi(strings[44]);
+        self->myBit = (unsigned int)atoi(strings[44]);
     if (strings[45] != NULL)
         strncpy(&self->str2[0], strings[45], 6);
     if (strings[46] != NULL)
@@ -1874,7 +1874,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[88] != NULL)
         self->dd2 = (double double)atof(strings[88]);
     if (strings[89] != NULL)
-        self->myBit2 = (unsigned int : 1)atoi(strings[89]);
+        self->myBit2 = (unsigned int)atoi(strings[89]);
     size_t array16_smallest = array16_count < OLD_ARRAY16_ARRAY_SIZE ? array16_count : OLD_ARRAY16_ARRAY_SIZE;
     for (int array16_index = 0; array16_index < array16_smallest; array16_index++) {
         self->array16[array16_index] = (int16_t)atoi(array16_values[array16_index]);

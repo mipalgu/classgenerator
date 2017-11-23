@@ -82,7 +82,7 @@ namespace guWhiteboard {
         /**
          * Create a new `Old`.
          */
-        Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, int i = 1, uint uui = 1, short s = 1, short int si_2 = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, int i2 = 0, uint uui2 = 0, short s2 = 0, short int si_22 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, int * p = NULL, struct somestruct strct = somestruct(), int16_t array16[4] = NULL, bool bools[3] = NULL) {
+        Old(std::string str = "hello", bool b = false, char c = 'c', signed char sc = 'c', unsigned char uc = 'c', signed si = 1, signed int sii = 1, unsigned u = 1, unsigned int ui = 1, uint8_t u8 = 1, uint16_t u16 = 1, uint32_t u32 = 1, uint64_t u64 = 1, int8_t i8 = 1, int16_t i16 = 1, int32_t i32 = 1, int64_t i64 = 1, int i = 1, uint uui = 1, short s = 1, short int si_2 = 1, signed short ss = 1, signed short int ssi = 1, unsigned short us = 1, unsigned short int usi = 1, long l = 1, long int li = 1, signed long sl = 1, signed long int sli = 1, unsigned long ul = 1, unsigned long int uli = 1, long long ll = 1, long long int lli = 1, signed long long sll = 1, signed long long int slli = 1, unsigned long long ull = 1, unsigned long long int ulli = 1, long64_t l64 = 1, float f = 1.0f, float_t ft = 1.0f, double d = 1.0, double_t dt = 1.0, long double ld = 1.0, double double dd = 1.0, unsigned int myBit = 0, std::string str2 = "", bool b2 = true, char c2 = 0, signed char sc2 = 0, unsigned char uc2 = 0, signed si2 = 0, signed int sii2 = 0, unsigned u2 = 0, unsigned int ui2 = 0, uint8_t u82 = 0, uint16_t u162 = 0, uint32_t u322 = 0, uint64_t u642 = 0, int8_t i82 = 0, int16_t i162 = 0, int32_t i322 = 0, int64_t i642 = 0, int i2 = 0, uint uui2 = 0, short s2 = 0, short int si_22 = 0, signed short ss2 = 0, signed short int ssi2 = 0, unsigned short us2 = 0, unsigned short int usi2 = 0, long l2 = 0, long int li2 = 0, signed long sl2 = 0, signed long int sli2 = 0, unsigned long ul2 = 0, unsigned long int uli2 = 0, long long ll2 = 0, long long int lli2 = 0, signed long long sll2 = 0, signed long long int slli2 = 0, unsigned long long ull2 = 0, unsigned long long int ulli2 = 0, long64_t l642 = 0, float f2 = 0.0f, float_t ft2 = 0.0f, double d2 = 0.0, double_t dt2 = 0.0, long double ld2 = 0.0, double double dd2 = 0.0, unsigned int myBit2 = 0, int * p = NULL, struct somestruct strct = somestruct(), int16_t array16[4] = NULL, bool bools[3] = NULL) {
             gu_strlcpy(const_cast<char *>(this->str()), str.c_str(), 6);
             set_b(b);
             set_c(c);
@@ -127,6 +127,7 @@ namespace guWhiteboard {
             set_dt(dt);
             set_ld(ld);
             set_dd(dd);
+            set_myBit(myBit);
             gu_strlcpy(const_cast<char *>(this->str2()), str2.c_str(), 6);
             set_b2(b2);
             set_c2(c2);
@@ -171,6 +172,7 @@ namespace guWhiteboard {
             set_dt2(dt2);
             set_ld2(ld2);
             set_dd2(dd2);
+            set_myBit2(myBit2);
             const int * _p = p;
             set_p(_p);
             set_strct(strct);
@@ -236,6 +238,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
+            set_myBit(other.myBit());
             gu_strlcpy(const_cast<char *>(this->str2()), other.str2(), 6);
             set_b2(other.b2());
             set_c2(other.c2());
@@ -280,6 +283,7 @@ namespace guWhiteboard {
             set_dt2(other.dt2());
             set_ld2(other.ld2());
             set_dd2(other.dd2());
+            set_myBit2(other.myBit2());
             set_p(other.p());
             set_strct(other.strct());
             if (other.array16() != NULL) {
@@ -338,6 +342,7 @@ namespace guWhiteboard {
             set_dt(other.dt());
             set_ld(other.ld());
             set_dd(other.dd());
+            set_myBit(other.myBit());
             gu_strlcpy(const_cast<char *>(this->str2()), other.str2(), 6);
             set_b2(other.b2());
             set_c2(other.c2());
@@ -382,6 +387,7 @@ namespace guWhiteboard {
             set_dt2(other.dt2());
             set_ld2(other.ld2());
             set_dd2(other.dd2());
+            set_myBit2(other.myBit2());
             set_p(other.p());
             set_strct(other.strct());
             if (other.array16() != NULL) {
@@ -511,6 +517,8 @@ namespace guWhiteboard {
             ss << ", ";
             ss << "dd=" << this->dd();
             ss << ", ";
+            ss << "myBit=" << this->myBit();
+            ss << ", ";
             if (0 == strncmp("", this->str2(), 1)) {
                 ss << "str2=" << "";
             } else {
@@ -614,6 +622,8 @@ namespace guWhiteboard {
             ss << "ld2=" << this->ld2();
             ss << ", ";
             ss << "dd2=" << this->dd2();
+            ss << ", ";
+            ss << "myBit2=" << this->myBit2();
             ss << ", ";
             ss << "p=" << this->p();
             ss << ", ";
@@ -748,6 +758,8 @@ namespace guWhiteboard {
             ss << ", ";
             ss << this->dd();
             ss << ", ";
+            ss << this->myBit();
+            ss << ", ";
             if (0 == strncmp("", this->str2(), 1)) {
                 ss << "";
             } else {
@@ -851,6 +863,8 @@ namespace guWhiteboard {
             ss << this->ld2();
             ss << ", ";
             ss << this->dd2();
+            ss << ", ";
+            ss << this->myBit2();
             ss << ", ";
             ss << this->p();
             ss << ", ";
@@ -979,7 +993,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(u64_index + 1, str.length()).c_str(), "u64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_u64(static_cast<uint64_t>(ato%uint64l%(value.c_str())));
+                    set_u64(static_cast<uint64_t>(atoll(value.c_str())));
                 }
             }
             unsigned long i8_index = str.find(" i8=");
@@ -1011,7 +1025,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(i64_index + 1, str.length()).c_str(), "i64 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_i64(static_cast<int64_t>(ato%int64l%(value.c_str())));
+                    set_i64(static_cast<int64_t>(atoll(value.c_str())));
                 }
             }
             unsigned long i_index = str.find(" i=");
@@ -1230,6 +1244,14 @@ namespace guWhiteboard {
                     set_dd(static_cast<double double>(atof(value.c_str())));
                 }
             }
+            unsigned long myBit_index = str.find(" myBit=");
+            if (myBit_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(myBit_index + 1, str.length()).c_str(), "myBit = %[^,]", var) == 1) {
+                    std::string value = std::string(var);
+                    set_myBit(static_cast<unsigned int>(atoi(value.c_str())));
+                }
+            }
             unsigned long str2_index = str.find(" str2=");
             if (str2_index != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
@@ -1331,7 +1353,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(u642_index + 1, str.length()).c_str(), "u642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_u642(static_cast<uint64_t>(ato%uint64l%(value.c_str())));
+                    set_u642(static_cast<uint64_t>(atoll(value.c_str())));
                 }
             }
             unsigned long i82_index = str.find(" i82=");
@@ -1363,7 +1385,7 @@ namespace guWhiteboard {
                 memset(&var[0], 0, sizeof(var));
                 if (sscanf(str.substr(i642_index + 1, str.length()).c_str(), "i642 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
-                    set_i642(static_cast<int64_t>(ato%int64l%(value.c_str())));
+                    set_i642(static_cast<int64_t>(atoll(value.c_str())));
                 }
             }
             unsigned long i2_index = str.find(" i2=");
@@ -1580,6 +1602,14 @@ namespace guWhiteboard {
                 if (sscanf(str.substr(dd2_index + 1, str.length()).c_str(), "dd2 = %[^,]", var) == 1) {
                     std::string value = std::string(var);
                     set_dd2(static_cast<double double>(atof(value.c_str())));
+                }
+            }
+            unsigned long myBit2_index = str.find(" myBit2=");
+            if (myBit2_index != std::string::npos) {
+                memset(&var[0], 0, sizeof(var));
+                if (sscanf(str.substr(myBit2_index + 1, str.length()).c_str(), "myBit2 = %[^,]", var) == 1) {
+                    std::string value = std::string(var);
+                    set_myBit2(static_cast<unsigned int>(atoi(value.c_str())));
                 }
             }
             unsigned long p_index = str.find(" p=");

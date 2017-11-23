@@ -115,6 +115,14 @@ extension wb_old {
         }
     }
 
+    public var _myBit: Bool {
+        get {
+            return self.myBit == 1
+        } set {
+            self.myBit = true == newValue ? 1 : 0
+        }
+    }
+
     public var _str2: String {
         get {
             var str2 = self.str2
@@ -159,6 +167,14 @@ extension wb_old {
                 fatalError("You can only assign ASCII values to uc2")
             }
             self.uc2 = UInt8(newValue.value)
+        }
+    }
+
+    public var _myBit2: Bool {
+        get {
+            return self.myBit2 == 1
+        } set {
+            self.myBit2 = true == newValue ? 1 : 0
         }
     }
 
@@ -212,7 +228,7 @@ extension wb_old {
     /**
      * Create a new `wb_old`.
      */
-    public init(str: String = "hello", b: Bool = false, c: UnicodeScalar = "c", sc: UnicodeScalar = "c", uc: UnicodeScalar = "c", si: Int32 = 1, sii: Int32 = 1, u: UInt32 = 1, ui: UInt32 = 1, u8: UInt8 = 1, u16: UInt16 = 1, u32: UInt32 = 1, u64: UInt64 = 1, i8: Int8 = 1, i16: Int16 = 1, i32: Int32 = 1, i64: Int64 = 1, i: Int32 = 1, uui: UInt32 = 1, s: Int16 = 1, si_2: Int16 = 1, ss: Int16 = 1, ssi: Int16 = 1, us: UInt16 = 1, usi: UInt16 = 1, l: Int = 1, li: Int = 1, sl: Int = 1, sli: Int = 1, ul: UInt = 1, uli: UInt = 1, ll: Int64 = 1, lli: Int64 = 1, sll: Int64 = 1, slli: Int64 = 1, ull: UInt64 = 1, ulli: UInt64 = 1, l64: Int64 = 1, f: Float = 1.0, ft: Float = 1.0, d: Double = 1.0, dt: Double = 1.0, ld: Float80 = 1.0, dd: Float80 = 1.0, str2: String = "", b2: Bool = true, c2: UnicodeScalar = UnicodeScalar(UInt8.min), sc2: UnicodeScalar = UnicodeScalar(UInt8.min), uc2: UnicodeScalar = UnicodeScalar(UInt8.min), si2: Int32 = 0, sii2: Int32 = 0, u2: UInt32 = 0, ui2: UInt32 = 0, u82: UInt8 = 0, u162: UInt16 = 0, u322: UInt32 = 0, u642: UInt64 = 0, i82: Int8 = 0, i162: Int16 = 0, i322: Int32 = 0, i642: Int64 = 0, i2: Int32 = 0, uui2: UInt32 = 0, s2: Int16 = 0, si_22: Int16 = 0, ss2: Int16 = 0, ssi2: Int16 = 0, us2: UInt16 = 0, usi2: UInt16 = 0, l2: Int = 0, li2: Int = 0, sl2: Int = 0, sli2: Int = 0, ul2: UInt = 0, uli2: UInt = 0, ll2: Int64 = 0, lli2: Int64 = 0, sll2: Int64 = 0, slli2: Int64 = 0, ull2: UInt64 = 0, ulli2: UInt64 = 0, l642: Int64 = 0, f2: Float = 0.0, ft2: Float = 0.0, d2: Double = 0.0, dt2: Double = 0.0, ld2: Float80 = 0.0, dd2: Float80 = 0.0, p: UnsafeMutablePointer<Int32>! = nil, strct: somestruct = somestruct(), array16: [Int16] = [1, 2, 3, 4], bools: [Bool] = [true, true, true]) {
+    public init(str: String = "hello", b: Bool = false, c: UnicodeScalar = "c", sc: UnicodeScalar = "c", uc: UnicodeScalar = "c", si: Int32 = 1, sii: Int32 = 1, u: UInt32 = 1, ui: UInt32 = 1, u8: UInt8 = 1, u16: UInt16 = 1, u32: UInt32 = 1, u64: UInt64 = 1, i8: Int8 = 1, i16: Int16 = 1, i32: Int32 = 1, i64: Int64 = 1, i: Int32 = 1, uui: UInt32 = 1, s: Int16 = 1, si_2: Int16 = 1, ss: Int16 = 1, ssi: Int16 = 1, us: UInt16 = 1, usi: UInt16 = 1, l: Int = 1, li: Int = 1, sl: Int = 1, sli: Int = 1, ul: UInt = 1, uli: UInt = 1, ll: Int64 = 1, lli: Int64 = 1, sll: Int64 = 1, slli: Int64 = 1, ull: UInt64 = 1, ulli: UInt64 = 1, l64: Int64 = 1, f: Float = 1.0, ft: Float = 1.0, d: Double = 1.0, dt: Double = 1.0, ld: Float80 = 1.0, dd: Float80 = 1.0, myBit: Bool = false, str2: String = "", b2: Bool = true, c2: UnicodeScalar = UnicodeScalar(UInt8.min), sc2: UnicodeScalar = UnicodeScalar(UInt8.min), uc2: UnicodeScalar = UnicodeScalar(UInt8.min), si2: Int32 = 0, sii2: Int32 = 0, u2: UInt32 = 0, ui2: UInt32 = 0, u82: UInt8 = 0, u162: UInt16 = 0, u322: UInt32 = 0, u642: UInt64 = 0, i82: Int8 = 0, i162: Int16 = 0, i322: Int32 = 0, i642: Int64 = 0, i2: Int32 = 0, uui2: UInt32 = 0, s2: Int16 = 0, si_22: Int16 = 0, ss2: Int16 = 0, ssi2: Int16 = 0, us2: UInt16 = 0, usi2: UInt16 = 0, l2: Int = 0, li2: Int = 0, sl2: Int = 0, sli2: Int = 0, ul2: UInt = 0, uli2: UInt = 0, ll2: Int64 = 0, lli2: Int64 = 0, sll2: Int64 = 0, slli2: Int64 = 0, ull2: UInt64 = 0, ulli2: UInt64 = 0, l642: Int64 = 0, f2: Float = 0.0, ft2: Float = 0.0, d2: Double = 0.0, dt2: Double = 0.0, ld2: Float80 = 0.0, dd2: Float80 = 0.0, myBit2: Bool = false, p: UnsafeMutablePointer<Int32>! = nil, strct: somestruct = somestruct(), array16: [Int16] = [1, 2, 3, 4], bools: [Bool] = [true, true, true]) {
         self = wb_old()
         self._str = str
         self.b = b
@@ -258,6 +274,7 @@ extension wb_old {
         self.dt = dt
         self.ld = ld
         self.dd = dd
+        self._myBit = myBit
         self._str2 = str2
         self.b2 = b2
         self._c2 = c2
@@ -302,6 +319,7 @@ extension wb_old {
         self.dt2 = dt2
         self.ld2 = ld2
         self.dd2 = dd2
+        self._myBit2 = myBit2
         self.p = p
         self.strct = strct
         self._array16 = array16
@@ -358,6 +376,7 @@ extension wb_old {
             let dt = dictionary["dt"] as? Double,
             let ld = dictionary["ld"] as? Float80,
             let dd = dictionary["dd"] as? Float80,
+            let myBit = dictionary["myBit"] as? UInt32,
             var str2 = dictionary["str2"],
             let b2 = dictionary["b2"] as? Bool,
             let c2 = dictionary["c2"] as? Int8,
@@ -402,6 +421,7 @@ extension wb_old {
             let dt2 = dictionary["dt2"] as? Double,
             let ld2 = dictionary["ld2"] as? Float80,
             let dd2 = dictionary["dd2"] as? Float80,
+            let myBit2 = dictionary["myBit2"] as? UInt32,
             let strct = dictionary["strct"] as? somestruct,
             var array16 = dictionary["array16"],
             var bools = dictionary["bools"]
@@ -456,6 +476,7 @@ extension wb_old {
         self.dt = dt
         self.ld = ld
         self.dd = dd
+        self.myBit = myBit
         self.str2 = withUnsafePointer(to: &str2) {
             $0.withMemoryRebound(to: type(of: wb_old().str2), capacity: 1) {
                 $0.pointee
@@ -504,6 +525,7 @@ extension wb_old {
         self.dt2 = dt2
         self.ld2 = ld2
         self.dd2 = dd2
+        self.myBit2 = myBit2
         self.p = dictionary["p"] as? UnsafeMutablePointer<Int32>!
         self.strct = strct
         self.array16 = withUnsafePointer(to: &array16) {
@@ -615,6 +637,8 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "dd=\(self.dd)"
         descString += ", "
+        descString += "myBit=\(self.myBit)"
+        descString += ", "
         descString += "str2=\(self._str2)"
         descString += ", "
         descString += "b2=\(self.b2)"
@@ -703,6 +727,8 @@ extension wb_old: CustomStringConvertible {
         descString += ", "
         descString += "dd2=\(self.dd2)"
         descString += ", "
+        descString += "myBit2=\(self.myBit2)"
+        descString += ", "
         if let first = self._array16.first {
             descString += "array16={"
             descString += self._array16.dropFirst().reduce("\(first)") { $0 + ", \($1)" }
@@ -770,6 +796,7 @@ public func == (lhs: wb_old, rhs: wb_old) -> Bool {
         && lhs.dt == rhs.dt
         && lhs.ld == rhs.ld
         && lhs.dd == rhs.dd
+        && lhs.myBit == rhs.myBit
         && lhs._str2 == rhs._str2
         && lhs.b2 == rhs.b2
         && lhs.c2 == rhs.c2
@@ -814,6 +841,7 @@ public func == (lhs: wb_old, rhs: wb_old) -> Bool {
         && lhs.dt2 == rhs.dt2
         && lhs.ld2 == rhs.ld2
         && lhs.dd2 == rhs.dd2
+        && lhs.myBit2 == rhs.myBit2
         && lhs.p == rhs.p
         && lhs._array16 == rhs._array16
         && lhs._bools == rhs._bools
