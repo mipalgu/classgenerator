@@ -300,6 +300,11 @@ struct wb_old
     PROPERTY(double double, dd)
 
     /**
+     * A bit.
+     */
+    BIT_PROPERTY(myBit)
+
+    /**
      * A string.
      */
     ARRAY_PROPERTY(char, str2, 6)
@@ -518,6 +523,11 @@ struct wb_old
      * A double double.
      */
     PROPERTY(double double, dd2)
+
+    /**
+     * A bit.
+     */
+    BIT_PROPERTY(myBit2)
 
     /**
      * A pointer.

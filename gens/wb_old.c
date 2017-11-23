@@ -431,6 +431,14 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
+    len += snprintf(descString + len, bufferSize - len, "myBit=%u", self->myBit);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
     len += snprintf(descString + len, bufferSize - len, "str2=%s", self->str2);
     if (len >= bufferSize) {
         return descString;
@@ -780,6 +788,14 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
         return descString;
     }
     len += snprintf(descString + len, bufferSize - len, "dd2=%lf", self->dd2);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "myBit2=%u", self->myBit2);
     if (len >= bufferSize) {
         return descString;
     }
@@ -1192,6 +1208,14 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
+    len += snprintf(descString + len, bufferSize - len, "%u", self->myBit);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
+    }
     len += snprintf(toString + len, bufferSize - len, "%s", self->str2);
     if (len >= bufferSize) {
         return toString;
@@ -1543,6 +1567,14 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     len = gu_strlcat(toString, ", ", bufferSize);
     if (len >= bufferSize) {
         return toString;
+    }
+    len += snprintf(descString + len, bufferSize - len, "myBit2=%u", self->myBit2);
+    if (len >= bufferSize) {
+        return descString;
+    }
+    len = gu_strlcat(descString, ", ", bufferSize);
+    if (len >= bufferSize) {
+        return descString;
     }
     len = gu_strlcat(toString, "{", bufferSize);
     int array16_first = 0;
