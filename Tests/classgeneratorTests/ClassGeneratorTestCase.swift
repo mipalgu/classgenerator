@@ -505,7 +505,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "myBit",
                     type: .bit,
-                    cType: "unsigned int : 1",
+                    cType: "unsigned int",
                     swiftType: "Bool",
                     defaultValue: "0",
                     swiftDefaultValue: "false",
@@ -910,7 +910,7 @@ public class ClassGeneratorTestCase: XCTestCase {
                 Variable(
                     label: "myBit2",
                     type: .bit,
-                    cType: "unsigned int : 1",
+                    cType: "unsigned int",
                     swiftType: "Bool",
                     defaultValue: "0",
                     swiftDefaultValue: "false",
