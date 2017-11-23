@@ -58,7 +58,7 @@
 
 import Foundation
 
-public final class VariableParser {
+public final class VariableParser<Container: ParserWarningsContainer>: VariableParserType {
 
     fileprivate let cTypeConverter: CTypeConverter
 
@@ -70,13 +70,17 @@ public final class VariableParser {
 
     fileprivate let typeConverter: TypeConverter
 
+    public fileprivate(set) var container: Container
+
     public init(
+        container: Container,
         cTypeConverter: CTypeConverter = CTypeConverter(),
         defaultValuesCalculator: DefaultValuesCalculator = DefaultValuesCalculator(),
         identifier: TypeIdentifier = TypeIdentifier(),
         sanitiser: Sanitiser = Sanitiser(),
         typeConverter: TypeConverter = TypeConverter()
     ) {
+        self.container = container
         self.cTypeConverter = cTypeConverter
         self.defaultValuesCalculator = defaultValuesCalculator
         self.identifier = identifier

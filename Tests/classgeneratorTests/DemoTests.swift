@@ -77,7 +77,7 @@ public class DemoTests: ClassGeneratorTestCase {
         ClassParser<
             WarningsContainerRef,
             SectionsParser<WarningsContainerRef>,
-            WarningsContainerRef
+            VariablesTableParser<WarningsContainerRef, VariableParser<WarningsContainerRef>>
         >,
         CommandLinePrinter<
             StderrOutputStream,
@@ -94,7 +94,10 @@ public class DemoTests: ClassGeneratorTestCase {
             parser: ClassParser(
                 container: container,
                 sectionsParser: SectionsParser(container: container),
-                variablesParser: VariablesTableParser(container: container)
+                variablesParser: VariablesTableParser(
+                    container: container,
+                    parser: VariableParser(container: container)
+                )
             ),
             printer: CommandLinePrinter(
                 errorStream: StderrOutputStream(),

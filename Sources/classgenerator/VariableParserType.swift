@@ -1,8 +1,8 @@
 /*
- * VariablesTableParser.swift 
+ * VariableParserType.swift 
  * classgenerator 
  *
- * Created by Callum McColl on 07/08/2017.
+ * Created by Callum McColl on 23/11/2017.
  * Copyright © 2017 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,35 +56,8 @@
  *
  */
 
-import Foundation
+public protocol VariableParserType: LastWarningAccessor, WarningsContainer, WarningsContainerDelegator {
 
-//swiftlint:disable opening_brace
-public final class VariablesTableParser<Container: ParserWarningsContainer, VariableParser: VariableParserType>:
-    VariablesTableParserType
-{
-
-    public fileprivate(set) var container: Container
-
-    fileprivate var parser: VariableParser
-
-    public init(container: Container, parser: VariableParser) {
-        self.container = container
-        self.parser = parser
-    }
-
-    public func parseVariables(fromSection section: String) throws -> [Variable] {
-        let lines = section.components(separatedBy: CharacterSet.newlines)
-        return try lines.enumerated().filter {
-            false == $1.trimmingCharacters(in: .whitespaces).isEmpty
-        }.map { (index: Int, line: String) in
-            do {
-                return try self.parser.parseVariable(fromLine: line)
-            } catch ParsingErrors.parsingError(let offset, let message) {
-                throw ParsingErrors.sectionError(index, offset, message)
-            } catch {
-                throw ParsingErrors.sectionError(index, 0, "Unable to parse variables")
-            }
-        }
-    }
+    func parseVariable(fromLine: String) throws -> Variable
 
 }

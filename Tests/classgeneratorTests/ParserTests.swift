@@ -78,7 +78,7 @@ public class ParserTests: ClassGeneratorTestCase {
         ClassParser<
             WarningsContainerRef,
             SectionsParser<WarningsContainerRef>,
-            WarningsContainerRef
+            VariablesTableParser<WarningsContainerRef, VariableParser<WarningsContainerRef>>
         >
     >!
 
@@ -89,7 +89,10 @@ public class ParserTests: ClassGeneratorTestCase {
             parser: ClassParser(
                 container: container,
                 sectionsParser: SectionsParser(container: container),
-                variablesParser: VariablesTableParser(container: container)
+                variablesParser: VariablesTableParser(
+                    container: container,
+                    parser: VariableParser(container: container)
+                )
             )
         )
     }

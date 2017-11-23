@@ -61,7 +61,7 @@ import Foundation
 public final class ClassParser<
     Container: ParserWarningsContainer,
     SectionsParser: SectionsParserType,
-    VariablesContainer: ParserWarningsContainer
+    VariablesTableParser: VariablesTableParserType
 >: ClassParserType {
 
     public fileprivate(set) var errors: [String] = []
@@ -76,12 +76,12 @@ public final class ClassParser<
 
     fileprivate let sectionsParser: SectionsParser
 
-    fileprivate let variablesParser: VariablesTableParser<VariablesContainer>
+    fileprivate let variablesParser: VariablesTableParser
 
     public init(
         container: Container,
         sectionsParser: SectionsParser,
-        variablesParser: VariablesTableParser<VariablesContainer>,
+        variablesParser: VariablesTableParser,
         helpers: StringHelpers = StringHelpers()
     ) {
         self.container = container
