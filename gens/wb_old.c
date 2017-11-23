@@ -175,7 +175,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "u64=%%uint64l%u", self->u64);
+    len += snprintf(descString + len, bufferSize - len, "u64=%llu", self->u64);
     if (len >= bufferSize) {
         return descString;
     }
@@ -207,7 +207,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i64=%%int64l%d", self->i64);
+    len += snprintf(descString + len, bufferSize - len, "i64=%lld", self->i64);
     if (len >= bufferSize) {
         return descString;
     }
@@ -539,7 +539,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "u642=%%uint64l%u", self->u642);
+    len += snprintf(descString + len, bufferSize - len, "u642=%llu", self->u642);
     if (len >= bufferSize) {
         return descString;
     }
@@ -571,7 +571,7 @@ const char* wb_old_description(const struct wb_old* self, char* descString, size
     if (len >= bufferSize) {
         return descString;
     }
-    len += snprintf(descString + len, bufferSize - len, "i642=%%int64l%d", self->i642);
+    len += snprintf(descString + len, bufferSize - len, "i642=%lld", self->i642);
     if (len >= bufferSize) {
         return descString;
     }
@@ -952,7 +952,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%%uint64l%u", self->u64);
+    len += snprintf(toString + len, bufferSize - len, "%llu", self->u64);
     if (len >= bufferSize) {
         return toString;
     }
@@ -984,7 +984,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%%int64l%d", self->i64);
+    len += snprintf(toString + len, bufferSize - len, "%lld", self->i64);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1208,13 +1208,13 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(descString + len, bufferSize - len, "%u", self->myBit);
+    len += snprintf(toString + len, bufferSize - len, "%u", self->myBit);
     if (len >= bufferSize) {
-        return descString;
+        return toString;
     }
-    len = gu_strlcat(descString, ", ", bufferSize);
+    len = gu_strlcat(toString, ", ", bufferSize);
     if (len >= bufferSize) {
-        return descString;
+        return toString;
     }
     len += snprintf(toString + len, bufferSize - len, "%s", self->str2);
     if (len >= bufferSize) {
@@ -1312,7 +1312,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%%uint64l%u", self->u642);
+    len += snprintf(toString + len, bufferSize - len, "%llu", self->u642);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1344,7 +1344,7 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(toString + len, bufferSize - len, "%%int64l%d", self->i642);
+    len += snprintf(toString + len, bufferSize - len, "%lld", self->i642);
     if (len >= bufferSize) {
         return toString;
     }
@@ -1568,13 +1568,13 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
     if (len >= bufferSize) {
         return toString;
     }
-    len += snprintf(descString + len, bufferSize - len, "myBit2=%u", self->myBit2);
+    len += snprintf(toString + len, bufferSize - len, "%u", self->myBit2);
     if (len >= bufferSize) {
-        return descString;
+        return toString;
     }
-    len = gu_strlcat(descString, ", ", bufferSize);
+    len = gu_strlcat(toString, ", ", bufferSize);
     if (len >= bufferSize) {
-        return descString;
+        return toString;
     }
     len = gu_strlcat(toString, "{", bufferSize);
     int array16_first = 0;
@@ -1714,7 +1714,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[11] != NULL)
         self->u32 = (uint32_t)atoi(strings[11]);
     if (strings[12] != NULL)
-        self->u64 = (uint64_t)ato%uint64l%(strings[12]);
+        self->u64 = (uint64_t)atoll(strings[12]);
     if (strings[13] != NULL)
         self->i8 = (int8_t)atoi(strings[13]);
     if (strings[14] != NULL)
@@ -1722,7 +1722,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[15] != NULL)
         self->i32 = (int32_t)atoi(strings[15]);
     if (strings[16] != NULL)
-        self->i64 = (int64_t)ato%int64l%(strings[16]);
+        self->i64 = (int64_t)atoll(strings[16]);
     if (strings[17] != NULL)
         self->i = (int)atoi(strings[17]);
     if (strings[18] != NULL)
@@ -1778,99 +1778,103 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
     if (strings[43] != NULL)
         self->dd = (double double)atof(strings[43]);
     if (strings[44] != NULL)
-        strncpy(&self->str2[0], strings[44], 6);
+        self->myBit = (unsigned int : 1)atoi(strings[44]);
     if (strings[45] != NULL)
-        self->b2 = strcmp(strings[45], "true") == 0 || strcmp(strings[45], "1") == 0 ? true : false;
-    if (strings[46] != NULL) {
-        char c2_temp;
-        self->c2 = (*strncpy(&c2_temp, strings[46], 1));
-    }
+        strncpy(&self->str2[0], strings[45], 6);
+    if (strings[46] != NULL)
+        self->b2 = strcmp(strings[46], "true") == 0 || strcmp(strings[46], "1") == 0 ? true : false;
     if (strings[47] != NULL) {
-        char sc2_temp;
-        self->sc2 = (signed char) (*strncpy(&sc2_temp, strings[47], 1));
+        char c2_temp;
+        self->c2 = (*strncpy(&c2_temp, strings[47], 1));
     }
     if (strings[48] != NULL) {
-        char uc2_temp;
-        self->uc2 = (unsigned char) (*strncpy(&uc2_temp, strings[48], 1));
+        char sc2_temp;
+        self->sc2 = (signed char) (*strncpy(&sc2_temp, strings[48], 1));
     }
-    if (strings[49] != NULL)
-        self->si2 = (signed)atoi(strings[49]);
+    if (strings[49] != NULL) {
+        char uc2_temp;
+        self->uc2 = (unsigned char) (*strncpy(&uc2_temp, strings[49], 1));
+    }
     if (strings[50] != NULL)
-        self->sii2 = (signed int)atoi(strings[50]);
+        self->si2 = (signed)atoi(strings[50]);
     if (strings[51] != NULL)
-        self->u2 = (unsigned)atoi(strings[51]);
+        self->sii2 = (signed int)atoi(strings[51]);
     if (strings[52] != NULL)
-        self->ui2 = (unsigned int)atoi(strings[52]);
+        self->u2 = (unsigned)atoi(strings[52]);
     if (strings[53] != NULL)
-        self->u82 = (uint8_t)atoi(strings[53]);
+        self->ui2 = (unsigned int)atoi(strings[53]);
     if (strings[54] != NULL)
-        self->u162 = (uint16_t)atoi(strings[54]);
+        self->u82 = (uint8_t)atoi(strings[54]);
     if (strings[55] != NULL)
-        self->u322 = (uint32_t)atoi(strings[55]);
+        self->u162 = (uint16_t)atoi(strings[55]);
     if (strings[56] != NULL)
-        self->u642 = (uint64_t)ato%uint64l%(strings[56]);
+        self->u322 = (uint32_t)atoi(strings[56]);
     if (strings[57] != NULL)
-        self->i82 = (int8_t)atoi(strings[57]);
+        self->u642 = (uint64_t)atoll(strings[57]);
     if (strings[58] != NULL)
-        self->i162 = (int16_t)atoi(strings[58]);
+        self->i82 = (int8_t)atoi(strings[58]);
     if (strings[59] != NULL)
-        self->i322 = (int32_t)atoi(strings[59]);
+        self->i162 = (int16_t)atoi(strings[59]);
     if (strings[60] != NULL)
-        self->i642 = (int64_t)ato%int64l%(strings[60]);
+        self->i322 = (int32_t)atoi(strings[60]);
     if (strings[61] != NULL)
-        self->i2 = (int)atoi(strings[61]);
+        self->i642 = (int64_t)atoll(strings[61]);
     if (strings[62] != NULL)
-        self->uui2 = (uint)atoi(strings[62]);
+        self->i2 = (int)atoi(strings[62]);
     if (strings[63] != NULL)
-        self->s2 = (short)atoi(strings[63]);
+        self->uui2 = (uint)atoi(strings[63]);
     if (strings[64] != NULL)
-        self->si_22 = (short int)atoi(strings[64]);
+        self->s2 = (short)atoi(strings[64]);
     if (strings[65] != NULL)
-        self->ss2 = (signed short)atoi(strings[65]);
+        self->si_22 = (short int)atoi(strings[65]);
     if (strings[66] != NULL)
-        self->ssi2 = (signed short int)atoi(strings[66]);
+        self->ss2 = (signed short)atoi(strings[66]);
     if (strings[67] != NULL)
-        self->us2 = (unsigned short)atoi(strings[67]);
+        self->ssi2 = (signed short int)atoi(strings[67]);
     if (strings[68] != NULL)
-        self->usi2 = (unsigned short int)atoi(strings[68]);
+        self->us2 = (unsigned short)atoi(strings[68]);
     if (strings[69] != NULL)
-        self->l2 = (long)atol(strings[69]);
+        self->usi2 = (unsigned short int)atoi(strings[69]);
     if (strings[70] != NULL)
-        self->li2 = (long int)atol(strings[70]);
+        self->l2 = (long)atol(strings[70]);
     if (strings[71] != NULL)
-        self->sl2 = (signed long)atol(strings[71]);
+        self->li2 = (long int)atol(strings[71]);
     if (strings[72] != NULL)
-        self->sli2 = (signed long int)atol(strings[72]);
+        self->sl2 = (signed long)atol(strings[72]);
     if (strings[73] != NULL)
-        self->ul2 = (unsigned long)atol(strings[73]);
+        self->sli2 = (signed long int)atol(strings[73]);
     if (strings[74] != NULL)
-        self->uli2 = (unsigned long int)atol(strings[74]);
+        self->ul2 = (unsigned long)atol(strings[74]);
     if (strings[75] != NULL)
-        self->ll2 = (long long)atoll(strings[75]);
+        self->uli2 = (unsigned long int)atol(strings[75]);
     if (strings[76] != NULL)
-        self->lli2 = (long long int)atoll(strings[76]);
+        self->ll2 = (long long)atoll(strings[76]);
     if (strings[77] != NULL)
-        self->sll2 = (signed long long)atoll(strings[77]);
+        self->lli2 = (long long int)atoll(strings[77]);
     if (strings[78] != NULL)
-        self->slli2 = (signed long long int)atoll(strings[78]);
+        self->sll2 = (signed long long)atoll(strings[78]);
     if (strings[79] != NULL)
-        self->ull2 = (unsigned long long)atoll(strings[79]);
+        self->slli2 = (signed long long int)atoll(strings[79]);
     if (strings[80] != NULL)
-        self->ulli2 = (unsigned long long int)atoll(strings[80]);
+        self->ull2 = (unsigned long long)atoll(strings[80]);
     if (strings[81] != NULL)
-        self->l642 = (long64_t)atoll(strings[81]);
+        self->ulli2 = (unsigned long long int)atoll(strings[81]);
     if (strings[82] != NULL)
-        self->f2 = (float)atof(strings[82]);
+        self->l642 = (long64_t)atoll(strings[82]);
     if (strings[83] != NULL)
-        self->ft2 = (float_t)atof(strings[83]);
+        self->f2 = (float)atof(strings[83]);
     if (strings[84] != NULL)
-        self->d2 = (double)atof(strings[84]);
+        self->ft2 = (float_t)atof(strings[84]);
     if (strings[85] != NULL)
-        self->dt2 = (double_t)atof(strings[85]);
+        self->d2 = (double)atof(strings[85]);
     if (strings[86] != NULL)
-        self->ld2 = (long double)atof(strings[86]);
+        self->dt2 = (double_t)atof(strings[86]);
     if (strings[87] != NULL)
-        self->dd2 = (double double)atof(strings[87]);
+        self->ld2 = (long double)atof(strings[87]);
+    if (strings[88] != NULL)
+        self->dd2 = (double double)atof(strings[88]);
+    if (strings[89] != NULL)
+        self->myBit2 = (unsigned int : 1)atoi(strings[89]);
     size_t array16_smallest = array16_count < OLD_ARRAY16_ARRAY_SIZE ? array16_count : OLD_ARRAY16_ARRAY_SIZE;
     for (int array16_index = 0; array16_index < array16_smallest; array16_index++) {
         self->array16[array16_index] = (int16_t)atoi(array16_values[array16_index]);
