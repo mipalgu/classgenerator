@@ -71,7 +71,8 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
             ("test_identifiesSignedIntegerPointerWithoutSpace", test_identifiesSignedIntegerPointerWithoutSpace),
             ("test_identifiesAnArrayType", test_identifiesAnArrayType),
             ("test_identifiesMultiDimensionalArray", test_identifiesMultiDimensionalArray),
-            ("test_doesNotIdentifyUnknownTypes", test_doesNotIdentifyUnknownTypes)
+            ("test_doesNotIdentifyUnknownTypes", test_doesNotIdentifyUnknownTypes),
+            ("test_identifiesBit", test_identifiesBit)
         ]
     }
 
@@ -189,6 +190,11 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
             .numeric(.signed),
             self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
         )
+    }
+
+    public func test_identifiesBit() {
+        let type = "bit"
+        XCTAssertEqual(.bit, self.identifier.identify(fromTypeSignature: type, andArrayCounts: []))
     }
 
 }

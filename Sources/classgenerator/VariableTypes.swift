@@ -59,6 +59,7 @@
 public enum VariableTypes {
 
     indirect case array(VariableTypes, String)
+    case bit
     case bool
     case char(CharSigns)
     case numeric(NumericTypes)
