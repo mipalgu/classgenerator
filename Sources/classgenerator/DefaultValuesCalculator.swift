@@ -64,6 +64,8 @@ public final class DefaultValuesCalculator {
         switch type {
             case .array(let subtype, let length):
                 return self.calculateArrayDefaultValues(forType: subtype, withLength: length)
+            case .bit:
+                return ("0", "false")
             case .bool:
                 return ("true", "true")
             case .char:

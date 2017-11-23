@@ -63,11 +63,11 @@
 
 #include "gu_util.h"
 
-#define OLD_NUMBER_OF_VARIABLES 92
+#define OLD_NUMBER_OF_VARIABLES 94
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
-#define OLD_DESC_BUFFER_SIZE 3193
-#define OLD_TO_STRING_BUFFER_SIZE 2833
+#define OLD_DESC_BUFFER_SIZE 3232
+#define OLD_TO_STRING_BUFFER_SIZE 2859
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
 #define OLD_ARRAY16_ARRAY_SIZE 4
@@ -300,6 +300,11 @@ struct wb_old
     PROPERTY(double double, dd)
 
     /**
+     * A bit.
+     */
+    BIT_PROPERTY(myBit)
+
+    /**
      * A string.
      */
     ARRAY_PROPERTY(char, str2, 6)
@@ -518,6 +523,11 @@ struct wb_old
      * A double double.
      */
     PROPERTY(double double, dd2)
+
+    /**
+     * A bit.
+     */
+    BIT_PROPERTY(myBit2)
 
     /**
      * A pointer.

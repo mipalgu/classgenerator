@@ -154,7 +154,8 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
             throw ParsingErrors.parsingError(signature.count + offset, message)
         }
         let cType = self.cTypeConverter.convert(
-            type: signature.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces)
+            signature: signature.components(separatedBy: "*")[0].trimmingCharacters(in: .whitespaces),
+            withType: type
         )
         return Variable(
             label: trimmedLabel.components(separatedBy: "[")[0].trimmingCharacters(in: .whitespaces),

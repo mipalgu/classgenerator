@@ -182,7 +182,14 @@ public final class CFromStringCreator {
     }
 
     fileprivate func assignVars(_ variables: [Variable], forClassNamed className: String) -> String {
-        return variables.enumerated().flatMap { (index: Int, variable: Variable) -> String? in
+        return variables.lazy.filter {
+            switch $0.type {
+                case .unknown:
+                    return false
+                default:
+                    return true
+            }
+        }.enumerated().flatMap { (index: Int, variable: Variable) -> String? in
             let accessor = "strings[\(index)]"
             guard let value = self.createValue(
                 forType: variable.type,
@@ -235,7 +242,7 @@ public final class CFromStringCreator {
                     char \(label)_temp;
                     self->\(label) = \(cast)(*strncpy(&\(label)_temp, \(accessor), 1));
                     """
-            case.numeric:
+            case .bit, .numeric:
                 return self.createNumericValue(
                     forType: type,
                     withLabel: label,
@@ -316,6 +323,8 @@ public final class CFromStringCreator {
         inClassNamed className: String
     ) -> String? {
         switch type {
+            case .bit:
+                return "(\(cType))atoi(\(accessor));"
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):

@@ -107,3 +107,5 @@ double_t dt2 // A double_t.
 struct somestruct strct=somestruct() // A struct.
 int16_t array16[4]={1,2,3,4} // a comment about array16
 bool bools[3] // a comment about bools
+bit myBit // A comment about myBit.
+bit myBit2=1 // A comment about myBit.

@@ -503,6 +503,15 @@ public class ClassGeneratorTestCase: XCTestCase {
                     comment: "A double double."
                 ),
                 Variable(
+                    label: "myBit",
+                    type: .bit,
+                    cType: "unsigned int",
+                    swiftType: "Bool",
+                    defaultValue: "0",
+                    swiftDefaultValue: "false",
+                    comment: "A bit."
+                ),
+                Variable(
                     label: "str2",
                     type: .string("6"),
                     cType: "string",
@@ -897,6 +906,15 @@ public class ClassGeneratorTestCase: XCTestCase {
                     defaultValue: "0.0",
                     swiftDefaultValue: "0.0",
                     comment: "A double double."
+                ),
+                Variable(
+                    label: "myBit2",
+                    type: .bit,
+                    cType: "unsigned int",
+                    swiftType: "Bool",
+                    defaultValue: "0",
+                    swiftDefaultValue: "false",
+                    comment: "A bit."
                 ),
                 Variable(
                     label: "p",

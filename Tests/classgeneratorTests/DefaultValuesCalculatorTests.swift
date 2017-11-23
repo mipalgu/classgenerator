@@ -89,6 +89,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public func test_calculatesDefaultValuesForPrimitiveTypes() {
         let types: [(VariableTypes, (String, String))] = [
+            (.bit, ("0", "false")),
             (.bool, ("true", "true")),
             (.char(.signed), ("0", "UnicodeScalar(UInt8.min)")),
             (.char(.unsigned), ("0", "UnicodeScalar(UInt8.min)")),

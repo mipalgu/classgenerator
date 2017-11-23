@@ -421,6 +421,14 @@ public class DemoTests: XCTestCase {
         XCTAssertNotEqual(lhs, rhs)
         rhs.dt2 = lhs.dt2
         XCTAssertEqual(lhs, rhs)
+        rhs.myBit = 1
+        XCTAssertNotEqual(lhs, rhs)
+        rhs.myBit = lhs.myBit
+        XCTAssertEqual(lhs, rhs)
+        rhs.myBit2 = 0
+        XCTAssertNotEqual(lhs, rhs)
+        rhs.myBit2 = lhs.myBit2
+        XCTAssertEqual(lhs, rhs)
     }
 
     //swiftlint:disable:next function_body_length
@@ -509,7 +517,9 @@ public class DemoTests: XCTestCase {
             //"p": self.demo.p,
             "strct": self.demo.strct,
             "array16": self.demo.array16,
-            "bools": self.demo.bools
+            "bools": self.demo.bools,
+            "myBit": self.demo.myBit,
+            "myBit2": self.demo.myBit2
         ]
         let result = wb_demo(fromDictionary: d)
         XCTAssertEqual(self.demo, result)

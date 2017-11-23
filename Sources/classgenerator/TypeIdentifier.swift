@@ -120,11 +120,15 @@ public final class TypeIdentifier {
         if type.last == "*" {
             return self.identifyPointer(fromType: type)
         }
-        if nil != type.components(separatedBy: .whitespaces).first(where: { $0.hasPrefix("enum") }) {
+        let words = type.components(separatedBy:.whitespaces)
+        if nil != words.first(where: { $0.hasPrefix("enum") }) {
             return self.identifyEnum(fromType: type)
         }
         if "string" == type {
             return .string("0")
+        }
+        if "bit" == type {
+            return .bit
         }
         #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
         return self.values[type] ?? .unknown

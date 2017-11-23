@@ -43,6 +43,7 @@ double	d=1.0	A double.
 double_t	dt=1.0	A double_t.
 long double	ld=1.0	A long double.
 double double	dd=1.0	A double double.
+bit	myBit	A bit.
 string	str2[6]	A string.
 bool	b2	A boolean.
 char	c2	A char.
@@ -87,6 +88,7 @@ double	d2	A double.
 double_t	dt2	A double_t.
 long double	ld2	A long double.
 double double	dd2	A double double.
+bit	myBit2	A bit.
 int *	p=NULL	A pointer.
 struct somestruct	strct=somestruct()	A struct.
 int16_t	array16[4]={1,2,3,4}	// a comment about array16

@@ -66,6 +66,8 @@ public final class Sanitiser {
         switch type {
             case .array(let subtype, _):
                 return self.sanitiseArray(value: value, forType: subtype)
+            case .bit:
+                return self.sanitiseBit(value: value)
             case .char:
                 return self.sanitiseChar(value: value)
             case .numeric(let subtype):
@@ -107,6 +109,16 @@ public final class Sanitiser {
             return nil
         }
         return list.combine("") { $0 + ", " + $1 }
+    }
+
+    fileprivate func sanitiseBit(value: String) -> String? {
+        if "1" == value {
+            return "true"
+        }
+        if "0" == value {
+            return "false"
+        }
+        return nil
     }
 
     fileprivate func sanitiseChar(value: String) -> String? {
