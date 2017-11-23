@@ -6,7 +6,10 @@ let generator = ClassGenerator(
     parser: ClassParser(
         container: container,
         sectionsParser: SectionsParser(container: container),
-        variablesParser: VariablesTableParser(container: container)
+        variablesParser: VariablesTableParser(
+            container: container,
+            parser: VariableParser(container: container)
+        )
     ),
     printer: CommandLinePrinter(
         errorStream: StderrOutputStream(),
