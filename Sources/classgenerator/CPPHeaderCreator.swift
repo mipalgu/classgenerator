@@ -136,6 +136,7 @@ public final class CPPHeaderCreator: ErrorContainer {
         return comment + "\n\n" + define
     }
 
+    //swiftlint:disable:next function_parameter_count
     fileprivate func createClass(
         forClass cls: Class,
         named className: String,
@@ -212,7 +213,6 @@ public final class CPPHeaderCreator: ErrorContainer {
             + "\n" + endif + self.stringHelpers.indent(cpp) + "\n"
             + self.stringHelpers.indent("};")
     }
-        
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
         let comment = self.creatorHelpers.createComment(from: "Provides a C++ wrapper around `\(extendName)`.")
@@ -335,6 +335,7 @@ public final class CPPHeaderCreator: ErrorContainer {
                 if false == assignDefaults {
                     return temp
                 }
+                //swiftlint:disable line_length
                 return temp + """
                      else {
                         \(variable.cType) \(variable.label)_temp[\(def)] = \(variable.defaultValue);

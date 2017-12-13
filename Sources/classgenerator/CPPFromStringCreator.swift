@@ -181,6 +181,7 @@ public final class CPPFromStringCreator {
         return getValue + "\n" + setter
     }
 
+    //swiftlint:disable:next function_parameter_count
     fileprivate func calculateSetterValue(
         forClassNamed className: String,
         forVariable label: String,
@@ -220,6 +221,7 @@ public final class CPPFromStringCreator {
         }
     }
 
+    //swiftlint:disable:next function_parameter_count
     fileprivate func calculateArraySetterValue(
         forClassNamed className: String,
         forVariable label: String,

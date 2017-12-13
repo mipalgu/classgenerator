@@ -132,6 +132,7 @@ public final class CDescriptionCreator {
         )
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createArrayDescription(
         forType type: VariableTypes,
         withLabel label: String,

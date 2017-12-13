@@ -66,11 +66,11 @@
  *  A `TextOutputStream` that is capable of writing to files.
  */
 public class FileOutputStream: TextOutputStream {
-    
+
     private let close: Bool
 
     private let file: UnsafeMutablePointer<FILE>
-    
+
     /**
      *  Create a new `FileOutputStream`.
      *
@@ -82,7 +82,7 @@ public class FileOutputStream: TextOutputStream {
      */
     public init(file: UnsafeMutablePointer<FILE>, close: Bool = false) {
         self.file = file
-        self.close = close 
+        self.close = close
     }
 
     /**
@@ -97,17 +97,17 @@ public class FileOutputStream: TextOutputStream {
         errorStream: T? = nil
     ) {
         let fp: UnsafeMutablePointer<FILE>? = fopen(path, "w")
-        if (nil != fp) {
+        if nil != fp {
             self.init(file: fp!, close: true)
             return
         }
-        if (nil != errorStream) {
+        if nil != errorStream {
             var stream: T = errorStream!
             print(strerror(errno), terminator: "\n", to: &stream)
         }
         exit(EXIT_FAILURE)
     }
-    
+
     /**
      *  Write to the file.
      *
@@ -121,9 +121,9 @@ public class FileOutputStream: TextOutputStream {
      *  Will call `fclose` if `close` is true.
      */
     deinit {
-        if (true == self.close) {
+        if true == self.close {
             fclose(self.file)
         }
     }
-    
+
 }

@@ -321,7 +321,7 @@ public final class SwiftFileCreator: ErrorContainer {
             """
     }
 
-    //swiftlint:disable:next function_body_length
+    //swiftlint:disable:next function_body_length swiftlint:disable:next cyclomatic_complexity
     fileprivate func createFromDictionaryConstructor(
         on structName: String,
         withVariables variables: [Variable]

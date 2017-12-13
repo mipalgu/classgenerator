@@ -66,11 +66,11 @@
  *  A `TextOutputStream` that represents `stdout`.
  */
 public struct StdoutOutputStream: TextOutputStream {
-    
+
     private var stream: FileOutputStream = FileOutputStream(file: stdout)
 
     public init() {}
-    
+
     /**
      *  Print to `stdout`.
      *
@@ -79,5 +79,5 @@ public struct StdoutOutputStream: TextOutputStream {
     public mutating func write(_ string: String) {
         return stream.write(string)
     }
-    
+
 }

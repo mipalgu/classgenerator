@@ -78,6 +78,7 @@ public final class CFileCreator: ErrorContainer {
         self.fromStringCreator = fromStringCreator
     }
 
+    //swiftlint:disable:next function_body_length
     public func createCFile(
         forClass cls: Class,
         forFileNamed fileName: String,

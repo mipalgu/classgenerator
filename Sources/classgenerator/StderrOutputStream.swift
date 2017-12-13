@@ -66,11 +66,11 @@
  *  A `TextOutputStream` that represents `stderr`.
  */
 public struct StderrOutputStream: TextOutputStream {
-    
+
     private var stream: FileOutputStream = FileOutputStream(file: stderr)
 
     public init() {}
-    
+
     /**
      *  Write to `stderr`.
      *
@@ -79,5 +79,5 @@ public struct StderrOutputStream: TextOutputStream {
     public mutating func write(_ string: String) {
         return stream.write(string)
     }
-    
+
 }
