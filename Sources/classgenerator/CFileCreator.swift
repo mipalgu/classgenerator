@@ -66,15 +66,18 @@ public final class CFileCreator: ErrorContainer {
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let descriptionCreator: CDescriptionCreator
+    fileprivate let networkCompressionCreator: CNetworkCompressionCreator
     fileprivate let fromStringCreator: CFromStringCreator
 
     public init(
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         descriptionCreator: CDescriptionCreator = CDescriptionCreator(),
+        networkCompressionCreator: CNetworkCompressionCreator = CNetworkCompressionCreator(),
         fromStringCreator: CFromStringCreator = CFromStringCreator()
     ) {
         self.creatorHelpers = creatorHelpers
         self.descriptionCreator = descriptionCreator
+        self.networkCompressionCreator = networkCompressionCreator
         self.fromStringCreator = fromStringCreator
     }
 
@@ -115,6 +118,16 @@ public final class CFileCreator: ErrorContainer {
             forStrVariable: "toString",
             includeLabels: false
         )
+        let toNetworkCompressed = self.networkCompressionCreator.createFunction(
+            creating: "to_network_compressed",
+            withComment: """
+                /**
+                 * Convert to a compressed, network byte order byte stream.
+                 */
+                """,
+            forClass: cls,
+            withStructNamed: structName
+        ) 
         let fromStringFunc = self.fromStringCreator.createFunction(
             creating: "from_string",
             withComment: """
@@ -129,6 +142,7 @@ public final class CFileCreator: ErrorContainer {
         let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         return comment + "\n\n" + head
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
+            + "\n\n" + toNetworkCompressed
             + "\n\n" + fromStringFunc + "\n" + endif + "\n"
     }
 
