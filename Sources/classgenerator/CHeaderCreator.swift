@@ -89,7 +89,7 @@ public final class CHeaderCreator: ErrorContainer {
         guard let strct = self.createStruct(forClass: cls, withStructName: structName) else {
             return nil
         }
-        let head = self.createHead(forFileNamed: fileName, withClass: cls, andGenFile: genfile)
+        let head = self.createHead(forFileNamed: fileName, withClass: cls, withStructName: structName, andGenFile: genfile)
         let postC = nil == cls.postC ? "" : "\n\n" + cls.postC!
         let tail = self.createTail(withClassNamed: structName, andPostC: postC)
         return head + "\n\n" + strct + "\n\n" + tail + "\n"
@@ -98,6 +98,7 @@ public final class CHeaderCreator: ErrorContainer {
     fileprivate func createHead(
         forFileNamed fileName: String,
         withClass cls: Class,
+        withStructName structName: String,
         andGenFile genfile: String
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(
@@ -117,7 +118,13 @@ public final class CHeaderCreator: ErrorContainer {
             fromVariables: cls.variables,
             withToStringBufferSize: toStringSize
         )
-        var defs = "#define \(cls.name.uppercased())_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
+
+        //Getting the whiteboard generator and the class generator to agree on a naming format is annoying... Using the ClassName for now.
+        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
+        var defs = ""
+        defs += "#define \(className.uppercased())_GENERATED \n"
+        defs += "#define \(className.uppercased())_C_STRUCT \(structName) \n"
+        defs += "#define \(cls.name.uppercased())_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
         defs += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION\n"
         defs += "#define \(cls.name.uppercased())_DESC_BUFFER_SIZE \(descBufferSize)\n"
         defs += "#define \(cls.name.uppercased())_TO_STRING_BUFFER_SIZE \(toStringSize)\n"
