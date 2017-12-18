@@ -280,8 +280,8 @@ public final class CNetworkCompressionCreator {
         "float": 32,
         "float_t": 32,
         "double": 64,
-        "double_t": 64/*,
-        "long double": "Float80",
-        "double double": "Float80"*/
+        "double_t": 64,
+        "long double": 80,
+        "double double": 80
     ]
 }
