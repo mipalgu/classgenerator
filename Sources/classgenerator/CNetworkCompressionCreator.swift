@@ -202,17 +202,15 @@ public final class CNetworkCompressionCreator {
                   }
                   """
             case .numeric:
-                if let bitSize: UInt8 = numericBitSize[variable.cType] {
-                  return """
-                    \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
-                    for (uint8_t b = 0; b < \(bitSize); b++) {
-                      \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
-                    }
-                    """
-                }
-                else {
+                guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
                   return ""
                 }
+                return """
+                    \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
+                    for (uint8_t b = 0; b < \(bitSize); b++) {
+                        \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
+                    }
+                    """
             case .string:
                 return """
                   uint8_t len = strlen(self->\(label));
@@ -246,6 +244,10 @@ public final class CNetworkCompressionCreator {
     }
 
     fileprivate let numericBitSize: [String: UInt8] = [
+        "signed": 32,
+        "signed int": 32,
+        "unsigned": 32,
+        "unsigned int": 32,
         "uint8_t": 8,
         "uint16_t": 16,
         "uint32_t": 32,
@@ -254,7 +256,32 @@ public final class CNetworkCompressionCreator {
         "int16_t": 16,
         "int32_t": 32,
         "int64_t": 64,
+        "int": 32,
+        "uint": 32,
+        "short": 16,
+        "short int": 16,
+        "signed short": 16,
+        "signed short int": 16,
+        "unsigned short": 16,
+        "unsigned short int": 16,
+        "long": 64,
+        "long int": 64,
+        "signed long": 64,
+        "signed long int": 64,
+        "unsigned long": 64,
+        "unsigned long int": 64,
+        "long long": 64,
+        "long long int": 64,
+        "signed long long": 64,
+        "signed long long int": 64,
+        "unsigned long long": 64,
+        "unsigned long long int": 64,
+        "long64_t": 64,
         "float": 32,
-        "double": 64
+        "float_t": 32,
+        "double": 64,
+        "double_t": 64/*,
+        "long double": "Float80",
+        "double double": "Float80"*/
     ]
 }
