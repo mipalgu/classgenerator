@@ -127,7 +127,7 @@ public final class CFileCreator: ErrorContainer {
                 """,
             forClass: cls,
             withStructNamed: structName
-        ) 
+        )
         let fromStringFunc = self.fromStringCreator.createFunction(
             creating: "from_string",
             withComment: """
