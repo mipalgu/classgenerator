@@ -203,7 +203,7 @@ public final class CNetworkCompressionCreator {
                   """
             case .numeric:
                 guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
-                  return ""
+                  return "//The class generator does not support '\(variable.cType)' network conversion."
                 }
                 return """
                     \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
