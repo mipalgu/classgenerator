@@ -182,7 +182,7 @@ public final class CNetworkCompressionCreator {
       let label = variable.label
         switch variable.type {
             case .array:
-              return nil
+              return "//The class generator does not support array network conversion yet."
               /*
                 return self.createArrayDescription(
                     forType: type,
