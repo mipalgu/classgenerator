@@ -153,6 +153,7 @@ public final class CFileCreator: ErrorContainer {
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>
+            #include <arpa/inet.h> //htonl etc...
             """
     }
 
