@@ -201,16 +201,22 @@ public final class CNetworkCompressionCreator {
                     \(bitSetterGenerator(data: "(self->\(label) >> b) & 1U"))
                   }
                   """
-            case .numeric:
-                guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
-                  return "//The class generator does not support '\(variable.cType)' network conversion."
+            case .numeric(let numericType):
+                switch numericType {
+                    case .double, .float, .long(.double), .long(.float):
+                        return "//The class generator does not support float types for network conversion."
+                    default:
+                        guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
+                            return "//The class generator does not support '\(variable.cType)' network conversion."
+                        }
+                        return """
+                            \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
+                            for (uint8_t b = 0; b < \(bitSize); b++) {
+                                \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
+                            }
+                            """
                 }
-                return """
-                    \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
-                    for (uint8_t b = 0; b < \(bitSize); b++) {
-                        \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
-                    }
-                    """
+
             case .string:
                 return """
                   do { //limit declaration scope
