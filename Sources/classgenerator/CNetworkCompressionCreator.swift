@@ -89,7 +89,7 @@ public final class CNetworkCompressionCreator {
             "\n\n" +
             $1
         })
-        let returnStatement = "    return offset;"
+        let returnStatement = "    return bit_offset;"
         let endDefinition = "}"
         return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + returnStatement + "\n" + endDefinition
     }
