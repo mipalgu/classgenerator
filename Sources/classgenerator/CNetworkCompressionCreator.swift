@@ -213,15 +213,17 @@ public final class CNetworkCompressionCreator {
                     """
             case .string:
                 return """
-                  uint8_t len = strlen(self->\(label));
-                  for (uint8_t b = 0; b < 8; b++) {
-                    \(bitSetterGenerator(data: "(len >> b) & 1U"))
-                  }
-                  for (uint8_t c = 0; c < len; c++) {
+                  do { //limit declaration scope
+                    uint8_t len = strlen(self->\(label));
                     for (uint8_t b = 0; b < 8; b++) {
-                      \(bitSetterGenerator(data: "(self->\(label)[len] >> b) & 1U"))
+                      \(bitSetterGenerator(data: "(len >> b) & 1U"))
                     }
-                  }
+                    for (uint8_t c = 0; c < len; c++) {
+                      for (uint8_t b = 0; b < 8; b++) {
+                        \(bitSetterGenerator(data: "(self->\(label)[len] >> b) & 1U"))
+                      }
+                    }
+                  } while(false);
                   """
             default:
                 return nil
