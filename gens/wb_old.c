@@ -63,12 +63,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-/* Network byte order functions */
-//--------------------------------
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <endian.h>
-//--------------------------------
 
 /**
  * Convert to a description string.
