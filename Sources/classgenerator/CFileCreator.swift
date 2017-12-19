@@ -158,7 +158,19 @@ public final class CFileCreator: ErrorContainer {
             #include <arpa/inet.h>
             #include <netinet/in.h>
             #include <endian.h>
+            #include <byteswap.h>
             //--------------------------------
+
+            //Not ideal, doesn't cover all platforms
+            #if !defined(htonll) && !defined(ntohll)
+            # if __BYTE_ORDER == __LITTLE_ENDIAN
+            #   define htonll(x) bswap_64(x)
+            #   define ntohll(x) bswap_64(x)
+            # else
+            #  define htonll(x) (x)
+            #  define ntohll(x) (x)
+            # endif
+            #endif
             """
     }
 
