@@ -139,17 +139,16 @@ public final class CFileCreator: ErrorContainer {
             withStructNamed: structName,
             forStrVariable: "str"
         )
-
-        let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
-        return comment + "\n\n" + head + "\n\n" + ifdef
+        return comment + "\n\n" + head
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
-            + "\n\n" + fromStringFunc + "\n\n" + endif
-            + "\n\n" + toNetworkCompressed + "\n"
+            + "\n\n" + toNetworkCompressed
+            + "\n\n" + fromStringFunc + "\n" + endif + "\n"
     }
 
     fileprivate func createHead(forStructNamed structName: String) -> String {
         return """
+            #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
             #include "\(structName).h"
             #include <stdio.h>
             #include <string.h>
