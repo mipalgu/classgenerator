@@ -112,6 +112,7 @@ public final class CHeaderCreator: ErrorContainer {
             #define \(fileName)
 
             #include "gu_util.h"
+            #include <stdint.h>
             """
         let toStringSize = self.calculator.getToStringBufferSize(fromVariables: cls.variables)
         let descBufferSize = self.calculator.getDescriptionBufferSize(
@@ -204,11 +205,11 @@ public final class CHeaderCreator: ErrorContainer {
     fileprivate func createTail(withClassNamed name: String, andPostC postC: String) -> String {
         let name = String(name.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         return """
-            #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
-
             #ifdef __cplusplus
             extern "C" {
             #endif
+
+            #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 
             /**
              * Convert to a description string.
@@ -225,6 +226,8 @@ public final class CHeaderCreator: ErrorContainer {
              */
             struct \(name)* \(name)_from_string(struct \(name)* self, const char* str);
 
+            #endif /// WHITEBOARD_POSTER_STRING_CONVERSION\(postC)
+
             /**
              * Network stream serialisation
              */
@@ -233,8 +236,6 @@ public final class CHeaderCreator: ErrorContainer {
             #ifdef __cplusplus
             }
             #endif
-
-            #endif /// WHITEBOARD_POSTER_STRING_CONVERSION\(postC)
 
             #endif /// \(name)_h
             """
