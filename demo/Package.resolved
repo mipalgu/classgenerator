@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CGUSimpleWhiteboard",
+        "repositoryURL": "ssh://git.mipal.net/git/CGUSimpleWhiteboard",
+        "state": {
+          "branch": null,
+          "revision": "a0c95878a814e9fa53511ba04cf5274c377196cf",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "GUSimpleWhiteboard",
+        "repositoryURL": "ssh://git.mipal.net/git/swift_wb.git",
+        "state": {
+          "branch": "master",
+          "revision": "c603471ce139d3da60780d8a81d508f58772da0e",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
