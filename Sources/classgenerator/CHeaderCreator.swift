@@ -225,6 +225,11 @@ public final class CHeaderCreator: ErrorContainer {
              */
             struct \(name)* \(name)_from_string(struct \(name)* self, const char* str);
 
+            /**
+             * Network stream serialisation
+             */
+            size_t \(name)_to_network_compressed(const struct \(name)* self, char *dst);
+
             #ifdef __cplusplus
             }
             #endif
