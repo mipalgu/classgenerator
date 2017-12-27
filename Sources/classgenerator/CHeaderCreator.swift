@@ -120,8 +120,6 @@ public final class CHeaderCreator: ErrorContainer {
             withToStringBufferSize: toStringSize
         )
 
-        //Getting the whiteboard generator and the class generator to agree on a naming format is annoying... Using the ClassName for now.
-        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
         var defs = ""
         defs += "#define \(cls.name.uppercased())_GENERATED \n"
         defs += "#define \(cls.name.uppercased())_C_STRUCT \(structName) \n"
