@@ -111,6 +111,21 @@ public final class CHeaderCreator: ErrorContainer {
             #ifndef \(fileName)
             #define \(fileName)
 
+            #ifdef __linux
+            # ifndef _POSIX_SOURCE
+            #  define _POSIX_SOURCE 200112L
+            # endif
+            #endif
+            #ifndef _XOPEN_SOURCE
+            # define _XOPEN_SOURCE 700
+            #endif
+            #ifdef __APPLE__
+            # ifndef _DARWIN_C_SOURCE
+            #  define _DARWIN_C_SOURCE 200112L
+            #  define __DARWIN_C_LEVEL 200112L
+            # endif
+            #endif
+
             #include "gu_util.h"
             #include <stdint.h>
             """
