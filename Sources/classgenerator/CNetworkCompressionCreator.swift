@@ -197,9 +197,12 @@ public final class CNetworkCompressionCreator {
                 return bitSetterGenerator(data: "self->\(label) ? 1 : 0")
             case .char:
                 return """
-                  for (uint8_t b = 0; b < 8; b++) {
-                    \(bitSetterGenerator(data: "(self->\(label) >> b) & 1U"))
-                  }
+                  do {
+                    uint8_t b;
+                    for (b = 0; b < 8; b++) {
+                      \(bitSetterGenerator(data: "(self->\(label) >> b) & 1U"))
+                    }
+                  } while (false);
                   """
             case .numeric(let numericType):
                 switch numericType {
@@ -211,9 +214,12 @@ public final class CNetworkCompressionCreator {
                         }
                         return """
                             \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
-                            for (uint8_t b = 0; b < \(bitSize); b++) {
+                            do {
+                              uint8_t b;
+                              for (b = 0; b < \(bitSize); b++) {
                                 \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
-                            }
+                              }
+                            } while(false);
                             """
                 }
 
@@ -221,11 +227,13 @@ public final class CNetworkCompressionCreator {
                 return """
                   do { //limit declaration scope
                     uint8_t len = strlen(self->\(label));
-                    for (uint8_t b = 0; b < 8; b++) {
+                    uint8_t b;
+                    for (b = 0; b < 8; b++) {
                       \(bitSetterGenerator(data: "(len >> b) & 1U"))
                     }
-                    for (uint8_t c = 0; c < len; c++) {
-                      for (uint8_t b = 0; b < 8; b++) {
+                    uint8_t c;
+                    for (c = 0; c < len; c++) {
+                      for (b = 0; b < 8; b++) {
                         \(bitSetterGenerator(data: "(self->\(label)[len] >> b) & 1U"))
                       }
                     }
