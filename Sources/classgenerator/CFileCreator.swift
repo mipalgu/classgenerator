@@ -154,23 +154,47 @@ public final class CFileCreator: ErrorContainer {
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>
-            /* Network byte order functions */
-            //--------------------------------
-            #include <arpa/inet.h>
-            #include <netinet/in.h>
-            #include <endian.h>
-            #include <byteswap.h>
-            //--------------------------------
 
-            //Not ideal, doesn't cover all platforms
-            #if !defined(htonll) && !defined(ntohll)
-            # if __BYTE_ORDER == __LITTLE_ENDIAN
+            /* Network byte order functions */
+            #if defined(__linux)
+            #  include <endian.h>
+            #  include <byteswap.h>
+            #elif defined(__APPLE__) //Needs double checking
+            #  include <machine/endian.h>
+            #  include <machine/byte_order.h>
+            #  define bswap_16(x) NXSwapShort(x)
+            #  define bswap_32(x) NXSwapInt(x)
+            #  define bswap_64(x) NXSwapLongLong(x)
+            #else
+              //Manually define swap macros?
+            #endif
+
+            #if __BYTE_ORDER == __LITTLE_ENDIAN
+            #  if !defined(htonll) && !defined(ntohll)
             #   define htonll(x) bswap_64(x)
             #   define ntohll(x) bswap_64(x)
-            # else
-            #  define htonll(x) (x)
-            #  define ntohll(x) (x)
-            # endif
+            #  endif
+            #  if !defined(htonl) && !defined(ntohl)
+            #   define htonl(x) bswap_32(x)
+            #   define ntohl(x) bswap_32(x)
+            #  endif
+            #  if !defined(htons) && !defined(ntohs)
+            #   define htons(x) bswap_16(x)
+            #   define ntohs(x) bswap_32(x)
+            #  endif
+            #else
+            #  if !defined(htonll) && !defined(ntohll)
+            #   define htonll(x) (x)
+            #   define ntohll(x) (x)
+            #  endif
+            #  if !defined(htonl) && !defined(ntohl)
+            #   define htonl(x) (x)
+            #   define ntohl(x) (x)
+            #  endif
+            #  if !defined(htons) && !defined(ntohs)
+            #   define htons(x) (x)
+            #   define ntohs(x) (x)
+            #  endif
             #endif
             """
     }
