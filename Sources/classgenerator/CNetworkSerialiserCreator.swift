@@ -1,5 +1,5 @@
 /*
- * CNetworkCompressionCreator.swift 
+ * CNetworkSerialiserCreator.swift 
  * classgenerator 
  *
  * Created by Callum McColl and Carl Lusty on 30/11/2017.
@@ -56,7 +56,7 @@
  *
  */
 
-public final class CNetworkCompressionCreator {
+public final class CNetworkSerialiserCreator {
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers

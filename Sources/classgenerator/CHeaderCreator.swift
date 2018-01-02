@@ -246,7 +246,7 @@ public final class CHeaderCreator: ErrorContainer {
             /**
              * Network stream serialisation
              */
-            size_t \(name)_to_network_compressed(const struct \(name)* self, char *dst);
+            size_t \(name)_to_network_serialised(const struct \(name)* self, char *dst);
 
             #ifdef __cplusplus
             }

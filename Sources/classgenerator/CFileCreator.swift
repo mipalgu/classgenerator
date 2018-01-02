@@ -66,18 +66,18 @@ public final class CFileCreator: ErrorContainer {
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let descriptionCreator: CDescriptionCreator
-    fileprivate let networkCompressionCreator: CNetworkCompressionCreator
+    fileprivate let networkSerialiserCreator: CNetworkSerialiserCreator
     fileprivate let fromStringCreator: CFromStringCreator
 
     public init(
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         descriptionCreator: CDescriptionCreator = CDescriptionCreator(),
-        networkCompressionCreator: CNetworkCompressionCreator = CNetworkCompressionCreator(),
+        networkSerialiserCreator: CNetworkSerialiserCreator = CNetworkSerialiserCreator(),
         fromStringCreator: CFromStringCreator = CFromStringCreator()
     ) {
         self.creatorHelpers = creatorHelpers
         self.descriptionCreator = descriptionCreator
-        self.networkCompressionCreator = networkCompressionCreator
+        self.networkSerialiserCreator = networkSerialiserCreator
         self.fromStringCreator = fromStringCreator
     }
 
@@ -118,11 +118,11 @@ public final class CFileCreator: ErrorContainer {
             forStrVariable: "toString",
             includeLabels: false
         )
-        let toNetworkCompressed = self.networkCompressionCreator.createFunction(
-            creating: "to_network_compressed",
+        let toNetworkSerialised = self.networkSerialiserCreator.createFunction(
+            creating: "to_network_serialised",
             withComment: """
                 /**
-                 * Convert to a compressed, network byte order byte stream.
+                 * Convert to a compressed, serialised, network byte order byte stream.
                  */
                 """,
             forClass: cls,
@@ -145,7 +145,7 @@ public final class CFileCreator: ErrorContainer {
         return comment + "\n\n" + head + "\n\n" + ifdef
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
             + "\n\n" + fromStringFunc + "\n\n" + endif
-            + "\n\n" + toNetworkCompressed + "\n"
+            + "\n\n" + toNetworkSerialised + "\n"
     }
 
     fileprivate func createHead(forStructNamed structName: String) -> String {
