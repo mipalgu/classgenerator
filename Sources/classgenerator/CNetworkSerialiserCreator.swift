@@ -234,7 +234,7 @@ public final class CNetworkSerialiserCreator {
                     uint8_t c;
                     for (c = 0; c < len; c++) {
                       for (b = 0; b < 8; b++) {
-                        \(bitSetterGenerator(data: "(self->\(label)[len] >> b) & 1U"))
+                        \(bitSetterGenerator(data: "(self->\(label)[c] >> b) & 1U"))
                       }
                     }
                   } while(false);
