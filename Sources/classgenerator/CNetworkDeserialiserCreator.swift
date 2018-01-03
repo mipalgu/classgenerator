@@ -76,7 +76,6 @@ public final class CNetworkDeserialiserCreator {
         //swiftlint:disable:next line_length
         let definition = "size_t \(structName)_\(fLabel)(const char *src, struct \(structName) *dst)\n{"
         let head = """
-                //WIP NYI
                 uint16_t bit_offset = 0;
             """
         let descriptions = cls.variables.flatMap {
