@@ -167,10 +167,10 @@ public final class CNetworkDeserialiserCreator {
         return """
           do {
             uint16_t byte = bit_offset / 8;
-            uint16_t bit = bit_offset % 8;
+            uint16_t bit = 7 - (bit_offset % 8);
             char dataByte = src[byte];
-            unsigned char bitValue = (bit >> dataByte) & 1U;
-            \(variable);
+            unsigned char bitValue = (dataByte >> bit) & 1U;
+            \(variable)
             bit_offset = bit_offset + 1;
           } while(false);
         """
@@ -193,15 +193,15 @@ public final class CNetworkDeserialiserCreator {
                 )
                 */
             case .bit:
-                return bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << 1);")
+                return bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << 0);")
             case .bool:
-                return bitGetterGenerator(variable: "dst->\(label) = (bool)bitValue;")
+                return bitGetterGenerator(variable: "dst->\(label) = bitValue != 0;")
             case .char:
                 return 
                   """
                   do {
-                    uint8_t b;
-                    for (b = 0; b < 8; b++) {
+                    int8_t b;
+                    for (b = 7; b >= 0; b--) {
                       \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
                     }
                   } while (false);
@@ -216,8 +216,8 @@ public final class CNetworkDeserialiserCreator {
                         }
                         return """
                             do {
-                              uint8_t b;
-                              for (b = 0; b < \(bitSize); b++) {
+                              int8_t b;
+                              for (b = (\(bitSize) - 1); b >= 0; b--) {
                                 \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
                               }
                             } while(false);
@@ -228,8 +228,8 @@ public final class CNetworkDeserialiserCreator {
                 return """
                   do {
                     uint8_t len = 0;
-                    uint8_t b;
-                    for (b = 0; b < 8; b++) {
+                    int8_t b;
+                    for (b = 7; b >= 0; b--) {
                       \(bitGetterGenerator(variable: "len ^= (-bitValue ^ len) & (1UL << b);"))
                     }
                     uint8_t c;

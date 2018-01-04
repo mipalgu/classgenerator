@@ -167,7 +167,7 @@ public final class CNetworkSerialiserCreator {
         return """
           do {
             uint16_t byte = bit_offset / 8;
-            uint16_t bit = bit_offset % 8;
+            uint16_t bit = 7 - (bit_offset % 8);
             unsigned long newbit = !!(\(data));
             dst[byte] ^= (-newbit ^ dst[byte]) & (1UL << bit);
             bit_offset = bit_offset + 1;
@@ -194,12 +194,12 @@ public final class CNetworkSerialiserCreator {
             case .bit:
                 return bitSetterGenerator(data: "self->\(label)")
             case .bool:
-                return bitSetterGenerator(data: "self->\(label) ? 1 : 0")
+                return bitSetterGenerator(data: "self->\(label) ? 1U : 0U")
             case .char:
                 return """
                   do {
-                    uint8_t b;
-                    for (b = 0; b < 8; b++) {
+                    int8_t b;
+                    for (b = 7; b >= 0; b--) {
                       \(bitSetterGenerator(data: "(self->\(label) >> b) & 1U"))
                     }
                   } while (false);
@@ -215,8 +215,8 @@ public final class CNetworkSerialiserCreator {
                         return """
                             \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
                             do {
-                              uint8_t b;
-                              for (b = 0; b < \(bitSize); b++) {
+                              int8_t b;
+                              for (b = (\(bitSize) - 1); b >= 0; b--) {
                                 \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
                               }
                             } while(false);
@@ -227,13 +227,13 @@ public final class CNetworkSerialiserCreator {
                 return """
                   do { //limit declaration scope
                     uint8_t len = strlen(self->\(label));
-                    uint8_t b;
-                    for (b = 0; b < 8; b++) {
+                    int8_t b;
+                    for (b = 7; b >= 0; b--) {
                       \(bitSetterGenerator(data: "(len >> b) & 1U"))
                     }
                     uint8_t c;
                     for (c = 0; c < len; c++) {
-                      for (b = 0; b < 8; b++) {
+                      for (b = 7; b >= 0; b--) {
                         \(bitSetterGenerator(data: "(self->\(label)[c] >> b) & 1U"))
                       }
                     }
