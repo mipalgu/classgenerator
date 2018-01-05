@@ -61,10 +61,30 @@
 #ifndef wb_sections_h
 #define wb_sections_h
 
+#ifdef __linux
+# ifndef _POSIX_SOURCE
+#  define _POSIX_SOURCE 200112L
+# endif
+#endif
+#ifndef _XOPEN_SOURCE
+# define _XOPEN_SOURCE 700
+#endif
+#ifdef __APPLE__
+# ifndef _DARWIN_C_SOURCE
+#  define _DARWIN_C_SOURCE 200112L
+# endif
+# ifndef __DARWIN_C_LEVEL
+#  define __DARWIN_C_LEVEL 200112L
+# endif
+#endif
+
 #include "gu_util.h"
+#include <stdint.h>
 
 #include <stdint.h>
 
+#define SECTIONS_GENERATED 
+#define SECTIONS_C_STRUCT wb_sections 
 #define SECTIONS_NUMBER_OF_VARIABLES 1
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
@@ -85,11 +105,11 @@ struct wb_sections
 
 };
 
-#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 
 /**
  * Convert to a description string.
@@ -106,14 +126,25 @@ const char* wb_sections_to_string(const struct wb_sections* self, char* toString
  */
 struct wb_sections* wb_sections_from_string(struct wb_sections* self, const char* str);
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
 int f() {
     return 1;
 }
+
+/**
+ * Network stream serialisation
+ */
+size_t wb_sections_to_network_serialised(const struct wb_sections *self, char *dst);
+
+/**
+ * Network stream deserialisation
+ */
+size_t wb_sections_from_network_serialised(const char *src, struct wb_sections *dst);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /// wb_sections_h

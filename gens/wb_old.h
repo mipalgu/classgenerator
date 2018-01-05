@@ -61,8 +61,28 @@
 #ifndef wb_old_h
 #define wb_old_h
 
-#include "gu_util.h"
+#ifdef __linux
+# ifndef _POSIX_SOURCE
+#  define _POSIX_SOURCE 200112L
+# endif
+#endif
+#ifndef _XOPEN_SOURCE
+# define _XOPEN_SOURCE 700
+#endif
+#ifdef __APPLE__
+# ifndef _DARWIN_C_SOURCE
+#  define _DARWIN_C_SOURCE 200112L
+# endif
+# ifndef __DARWIN_C_LEVEL
+#  define __DARWIN_C_LEVEL 200112L
+# endif
+#endif
 
+#include "gu_util.h"
+#include <stdint.h>
+
+#define OLD_GENERATED 
+#define OLD_C_STRUCT wb_old 
 #define OLD_NUMBER_OF_VARIABLES 94
 
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
@@ -551,11 +571,11 @@ struct wb_old
 
 };
 
-#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 
 /**
  * Convert to a description string.
@@ -572,10 +592,21 @@ const char* wb_old_to_string(const struct wb_old* self, char* toString, size_t b
  */
 struct wb_old* wb_old_from_string(struct wb_old* self, const char* str);
 
+#endif /// WHITEBOARD_POSTER_STRING_CONVERSION
+
+/**
+ * Network stream serialisation
+ */
+size_t wb_old_to_network_serialised(const struct wb_old *self, char *dst);
+
+/**
+ * Network stream deserialisation
+ */
+size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst);
+
+
 #ifdef __cplusplus
 }
 #endif
-
-#endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
 #endif /// wb_old_h
