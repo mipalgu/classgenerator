@@ -56,6 +56,8 @@
  *
  */
 
+import whiteboard_helpers
+
 public final class CDescriptionCreator {
 
     fileprivate let creatorHelpers: CreatorHelpers

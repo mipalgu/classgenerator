@@ -8,7 +8,7 @@ let package = Package(
         .package(url: "ssh://git.mipal.net/git/whiteboard_helpers.git", .branch("master"))
     ],
     targets: [
-        .target(name: "classgenerator", dependencies: []),
+        .target(name: "classgenerator", dependencies: ["whiteboard_helpers"]),
         .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator")])
     ]
 )

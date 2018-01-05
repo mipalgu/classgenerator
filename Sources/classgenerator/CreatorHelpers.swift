@@ -58,12 +58,14 @@
 
 import Foundation
 
+import whiteboard_helpers
+
 public final class CreatorHelpers {
 
     fileprivate let date: Date
-    fileprivate let helpers: StringHelpers
+    fileprivate let helpers: WhiteboardHelpers
 
-    public init(date: Date = Date(), helpers: StringHelpers = StringHelpers()) {
+    public init(date: Date = Date(), helpers: WhiteboardHelpers = WhiteboardHelpers()) {
         self.date = date
         self.helpers = helpers
     }
@@ -114,25 +116,15 @@ public final class CreatorHelpers {
     }
 
     public func createArrayCountDef(inClass className: String, forVariable label: String, level: Int) -> String {
-        let levelStr = 0 == level ? "" : "_\(level)"
-        return "\(className.uppercased())_\(label.uppercased())\(levelStr)_ARRAY_SIZE"
+        return self.helpers.createArrayCountDef(inClass: className, forVariable: label, level: level)
     }
 
     public func createArrayCountDef(inClass className: String) -> (String) -> (Int) -> String {
-        //swiftlint:disable:next opening_brace
-        return { variable in
-            return { level in
-                self.createArrayCountDef(inClass: className, forVariable: variable, level: level)
-            }
-        }
+        return self.helpers.createArrayCountDef(inClass: className)
     }
 
     public func createClassName(forClassNamed className: String) -> String {
-        let camel = self.helpers.toCamelCase(className)
-        guard let first = camel.first else {
-            return ""
-        }
-        return String(self.helpers.toUpper(first)) + String(camel.dropFirst())
+        return self.helpers.createClassName(forClassNamed: className)
     }
 
     public func createComment(from str: String, prepend: String = "") -> String {
@@ -213,9 +205,7 @@ public final class CreatorHelpers {
     }
 
     public func createStructName(forClassNamed className: String) -> String {
-        return "wb_" + self.helpers.toSnakeCase(String(className.lazy.map {
-            self.helpers.isAlphaNumeric($0) ? $0 : "_"
-        }))
+        return self.helpers.createStructName(forClassNamed: className)
     }
 
 }

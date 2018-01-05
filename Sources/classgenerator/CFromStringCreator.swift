@@ -58,6 +58,8 @@
 
 import Foundation
 
+import whiteboard_helpers
+
 //swiftlint:disable:next type_body_length
 public final class CFromStringCreator {
 

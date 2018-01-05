@@ -56,6 +56,8 @@
  *
  */
 
+import whiteboard_helpers
+
 //swiftlint:disable type_body_length
 public final class CPPHeaderCreator: ErrorContainer {
 

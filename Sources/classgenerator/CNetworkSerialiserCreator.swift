@@ -56,6 +56,8 @@
  *
  */
 
+import whiteboard_helpers
+
 public final class CNetworkSerialiserCreator {
 
     fileprivate let creatorHelpers: CreatorHelpers

@@ -58,6 +58,8 @@
 
 import Foundation
 
+import whiteboard_helpers
+
 public final class CHeaderCreator: ErrorContainer {
 
     public fileprivate(set) var errors: [String] = []

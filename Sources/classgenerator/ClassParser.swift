@@ -58,6 +58,8 @@
 
 import Foundation
 
+import whiteboard_helpers
+
 public final class ClassParser<
     Container: ParserWarningsContainer,
     SectionsParser: SectionsParserType,
