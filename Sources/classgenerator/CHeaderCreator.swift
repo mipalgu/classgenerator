@@ -122,6 +122,8 @@ public final class CHeaderCreator: ErrorContainer {
             #ifdef __APPLE__
             # ifndef _DARWIN_C_SOURCE
             #  define _DARWIN_C_SOURCE 200112L
+            # endif
+            # ifndef __DARWIN_C_LEVEL
             #  define __DARWIN_C_LEVEL 200112L
             # endif
             #endif
