@@ -58,6 +58,7 @@
 
 import Foundation
 
+import swift_helpers
 import whiteboard_helpers
 
 //swiftlint:disable:next type_body_length

@@ -58,6 +58,7 @@
 
 import Foundation
 
+import swift_helpers
 import whiteboard_helpers
 
 public final class ClassParser<
