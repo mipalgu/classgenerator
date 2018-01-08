@@ -3102,9 +3102,9 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
       } while(false);
 
     do {
-      int8_t b;
-      for (b = 7; b >= 0; b--) {
-          do {
+        int8_t b;
+        for (b = 7; b >= 0; b--) {
+              do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
         char dataByte = src[byte];
@@ -3112,13 +3112,13 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         dst->c ^= (-bitValue ^ dst->c) & (1UL << b);
         bit_offset = bit_offset + 1;
       } while(false);
-      }
+        }
     } while (false);
 
     do {
-      int8_t b;
-      for (b = 7; b >= 0; b--) {
-          do {
+        int8_t b;
+        for (b = 7; b >= 0; b--) {
+              do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
         char dataByte = src[byte];
@@ -3126,13 +3126,13 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         dst->sc ^= (-bitValue ^ dst->sc) & (1UL << b);
         bit_offset = bit_offset + 1;
       } while(false);
-      }
+        }
     } while (false);
 
     do {
-      int8_t b;
-      for (b = 7; b >= 0; b--) {
-          do {
+        int8_t b;
+        for (b = 7; b >= 0; b--) {
+              do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
         char dataByte = src[byte];
@@ -3140,7 +3140,7 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         dst->uc ^= (-bitValue ^ dst->uc) & (1UL << b);
         bit_offset = bit_offset + 1;
       } while(false);
-      }
+        }
     } while (false);
 
     do {
@@ -3697,9 +3697,9 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
       } while(false);
 
     do {
-      int8_t b;
-      for (b = 7; b >= 0; b--) {
-          do {
+        int8_t b;
+        for (b = 7; b >= 0; b--) {
+              do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
         char dataByte = src[byte];
@@ -3707,13 +3707,13 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         dst->c2 ^= (-bitValue ^ dst->c2) & (1UL << b);
         bit_offset = bit_offset + 1;
       } while(false);
-      }
+        }
     } while (false);
 
     do {
-      int8_t b;
-      for (b = 7; b >= 0; b--) {
-          do {
+        int8_t b;
+        for (b = 7; b >= 0; b--) {
+              do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
         char dataByte = src[byte];
@@ -3721,13 +3721,13 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         dst->sc2 ^= (-bitValue ^ dst->sc2) & (1UL << b);
         bit_offset = bit_offset + 1;
       } while(false);
-      }
+        }
     } while (false);
 
     do {
-      int8_t b;
-      for (b = 7; b >= 0; b--) {
-          do {
+        int8_t b;
+        for (b = 7; b >= 0; b--) {
+              do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
         char dataByte = src[byte];
@@ -3735,7 +3735,7 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         dst->uc2 ^= (-bitValue ^ dst->uc2) & (1UL << b);
         bit_offset = bit_offset + 1;
       } while(false);
-      }
+        }
     } while (false);
 
     do {

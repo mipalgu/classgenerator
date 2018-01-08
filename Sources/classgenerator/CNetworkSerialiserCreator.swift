@@ -178,6 +178,7 @@ public final class CNetworkSerialiserCreator {
         """
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createNetworkCompressed(
         forVariable variable: Variable,
         forClassNamed className: String

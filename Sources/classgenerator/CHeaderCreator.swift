@@ -92,12 +92,18 @@ public final class CHeaderCreator: ErrorContainer {
         guard let strct = self.createStruct(forClass: cls, withStructName: structName) else {
             return nil
         }
-        let head = self.createHead(forFileNamed: fileName, withClass: cls, withStructName: structName, andGenFile: genfile)
+        let head = self.createHead(
+            forFileNamed: fileName,
+            withClass: cls,
+            withStructName: structName,
+            andGenFile: genfile
+        )
         let postC = nil == cls.postC ? "" : "\n\n" + cls.postC!
         let tail = self.createTail(withClassNamed: structName, andPostC: postC)
         return head + "\n\n" + strct + "\n\n" + tail + "\n"
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createHead(
         forFileNamed fileName: String,
         withClass cls: Class,
@@ -139,8 +145,8 @@ public final class CHeaderCreator: ErrorContainer {
             fromVariables: cls.variables,
             withToStringBufferSize: toStringSize
         )
-
-        //Getting the whiteboard generator and the class generator to agree on a naming format is annoying... Using the ClassName for now.
+        // Getting the whiteboard generator and the class generator to agree on a naming format is annoying...
+        // Using the ClassName for now.
         let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
         var defs = ""
         defs += "#define \(className.uppercased())_GENERATED \n"
@@ -222,6 +228,7 @@ public final class CHeaderCreator: ErrorContainer {
         }
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createTail(withClassNamed name: String, andPostC postC: String) -> String {
         let name = String(name.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         return """

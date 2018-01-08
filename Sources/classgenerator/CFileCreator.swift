@@ -162,6 +162,7 @@ public final class CFileCreator: ErrorContainer {
             + "\n\n" + fromNetworkSerialised + "\n"
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createHead(forStructNamed structName: String) -> String {
         return """
             #include "\(structName).h"

@@ -179,6 +179,7 @@ public final class CNetworkDeserialiserCreator {
         """
     }
 
+    //swiftlint:disable:next function_body_length
     fileprivate func createNetworkCompressed(
         forVariable variable: Variable,
         forClassNamed className: String
@@ -200,15 +201,14 @@ public final class CNetworkDeserialiserCreator {
             case .bool:
                 return bitGetterGenerator(variable: "dst->\(label) = bitValue != 0;")
             case .char:
-                return 
-                  """
-                  do {
-                    int8_t b;
-                    for (b = 7; b >= 0; b--) {
-                      \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
-                    }
-                  } while (false);
-                  """
+                return """
+                    do {
+                        int8_t b;
+                        for (b = 7; b >= 0; b--) {
+                            \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
+                        }
+                    } while (false);
+                    """
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):
