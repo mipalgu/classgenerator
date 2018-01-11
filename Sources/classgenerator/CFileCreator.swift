@@ -152,14 +152,15 @@ public final class CFileCreator: ErrorContainer {
             withStructNamed: structName,
             forStrVariable: "str"
         )
-
-        let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
-        let endif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
-        return comment + "\n\n" + head + "\n\n" + ifdef
+        let posterIfdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
+        let posterEndif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
+        let serialiseIfDef = "#ifdef WHITEBOARD_SERIALISATION"
+        let serialiseEndIf = "#endif // WHITEBOARD_SERIALISATION"
+        return comment + "\n\n" + head + "\n\n" + posterIfdef
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
-            + "\n\n" + fromStringFunc + "\n\n" + endif
-            + "\n\n" + toNetworkSerialised
-            + "\n\n" + fromNetworkSerialised + "\n"
+            + "\n\n" + fromStringFunc + "\n\n" + posterEndif
+            + "\n\n" + serialiseIfDef + "\n\n" + toNetworkSerialised
+            + "\n\n" + fromNetworkSerialised + "\n\n" + serialiseEndIf + "\n"
     }
 
     //swiftlint:disable:next function_body_length

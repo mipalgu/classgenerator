@@ -132,6 +132,8 @@ int f() {
     return 1;
 }
 
+#ifdef WHITEBOARD_SERIALISATION
+
 /**
  * Network stream serialisation
  */
@@ -142,6 +144,7 @@ size_t wb_sections_to_network_serialised(const struct wb_sections *self, char *d
  */
 size_t wb_sections_from_network_serialised(const char *src, struct wb_sections *dst);
 
+#endif /// WHITEBOARD_SERIALISATION
 
 #ifdef __cplusplus
 }

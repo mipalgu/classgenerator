@@ -1936,6 +1936,8 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION
 
+#ifdef WHITEBOARD_SERIALISATION
+
 /**
  * Convert to a compressed, serialised, network byte order byte stream.
  */
@@ -4259,3 +4261,5 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
     //The class generator does not support array network conversion yet.
     return bit_offset;
 }
+
+#endif // WHITEBOARD_SERIALISATION
