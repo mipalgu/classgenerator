@@ -137,6 +137,8 @@ public class DemoTests: ClassGeneratorTestCase {
             "-Xcc",
             "-DWHITEBOARD_POSTER_STRING_CONVERSION=1",
             "-Xcc",
+            "-DWHITEBOARD_SERIALISATION=1",
+            "-Xcc",
             "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
             ]
         p.launch()
@@ -165,6 +167,8 @@ public class DemoTests: ClassGeneratorTestCase {
             "test",
             "-Xcc",
             "-DWHITEBOARD_POSTER_STRING_CONVERSION=1",
+            "-Xcc",
+            "-DWHITEBOARD_SERIALISATION=1",
             "-Xcc",
             "-DUSE_WB_DEMO_C_CONVERSION=1",
             "-Xcc",
