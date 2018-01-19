@@ -21,7 +21,7 @@ gen:
 	ex -sc '132i|            ss << "particles={";' -cx TopParticles.h
 	ex -sc '133i|            for (int i = 0; i < TOPPARTICLES_PARTICLES_ARRAY_SIZE; i++) {' -cx TopParticles.h
 	ex -sc '134i|                guWhiteboard::ParticlePosition * particles_element = const_cast<guWhiteboard::ParticlePosition *>(static_cast<const guWhiteboard::ParticlePosition *>(&this->particles(i)));' -cx TopParticles.h
-	ex -sc '135i|                ss << (particles_first ? "" : ", ") << (particles_element->description());' -cx TopParticles.h
+	ex -sc '135i|                ss << (particles_first ? "" : ", ") << "{" << (particles_element->description()) << "}";' -cx TopParticles.h
 	ex -sc '136i|                particles_first = false;' -cx TopParticles.h
 	ex -sc '137i|            }' -cx TopParticles.h
 	ex -sc '138i|            ss << "}";' -cx TopParticles.h
@@ -29,7 +29,7 @@ gen:
 	ex -sc '153i|            ss << "{";' -cx TopParticles.h
 	ex -sc '154i|            for (int i = 0; i < TOPPARTICLES_PARTICLES_ARRAY_SIZE; i++) {' -cx TopParticles.h
 	ex -sc '155i|                guWhiteboard::ParticlePosition * particles_element = const_cast<guWhiteboard::ParticlePosition *>(static_cast<const guWhiteboard::ParticlePosition *>(&this->particles(i)));' -cx TopParticles.h
-	ex -sc '156i|                ss << (particles_first ? "" : ", ") << (particles_element->to_string());' -cx TopParticles.h
+	ex -sc '156i|                ss << (particles_first ? "" : ", ") << "{" << (particles_element->to_string()) << "}";' -cx TopParticles.h
 	ex -sc '157i|                particles_first = false;' -cx TopParticles.h
 	ex -sc '158i|            }' -cx TopParticles.h
 	ex -sc '159i|            ss << "}";' -cx TopParticles.h
