@@ -108,6 +108,11 @@ cleangen:
 	rm -f wb_top_particles.c
 	rm -f TopParticles.h
 	rm -f TopParticles.swift
+copy:
+	cp TopParticles.h ../../gusimplewhiteboard/typeClassDefs
+	cp ParticlePosition.h ../../gusimplewhiteboard/typeClassDefs
+	cp wb_top_* ../../gusimplewhiteboard/typeClassDefs
+	cp wb_particle_* ../../gusimplewhiteboard/typeClassDefs
 
 .include "../../../mk/mipal.mk"		# comes last!
 
