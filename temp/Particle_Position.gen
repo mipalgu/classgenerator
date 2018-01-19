@@ -2,13 +2,13 @@
 
 -c
 
-#include "wb_point2D.h"
+#include "wb_point2d.h"
 
 -c++
 #include "Point2D.h"
 
 -properties
-struct wb_point2D	position=wb_point2D() //position in the soccer field, The origin (0,0) us the center of the soccer field, larger Y is along the soccer field towards the oponetns goaa, smaller Y is back towards our on goal. Positive X is to the right of our goall keeper Measuremtns are CM CENTIMETERS
+struct wb_point2d	position=wb_point2d() //position in the soccer field, The origin (0,0) us the center of the soccer field, larger Y is along the soccer field towards the oponetns goaa, smaller Y is back towards our on goal. Positive X is to the right of our goall keeper Measuremtns are CM CENTIMETERS
 int16_t	headingInDegrees	//90 degrees is looking ahead into the oponetns goal. Zero degrees is our goalie looking rigth, 180 is lookign left. It allows negative values, so -45 is looking rigth but also back. But 235 is allowed looking back and left. 
 float	confidence	// degre of certaintity that this a reliable locaiton where the robot is, should be between 0 and 1
 
