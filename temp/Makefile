@@ -61,6 +61,40 @@ gen:
 	ex -sc '195i|                    }' -cx TopParticles.h
 	ex -sc '196i|                }' -cx TopParticles.h
 	ex -sc '197i|            }' -cx TopParticles.h
+	ex -sc '126i|            Point2D * position = const_cast<Point2D *>(static_cast<const Point2D *>(&this->_position));' -cx ParticlePosition.h
+	ex -sc '127i|            ss << "position={ " << position->description() << " }";' -cx ParticlePosition.h
+	ex -sc '128i|            ss << ", ";' -cx ParticlePosition.h
+	ex -sc '144i|            Point2D * position = const_cast<Point2D *>(static_cast<const Point2D *>(&this->_position));' -cx ParticlePosition.h
+	ex -sc '145i|            ss << "{ " << position->to_string() << " }";' -cx ParticlePosition.h
+	ex -sc '146i|            ss << ", ";' -cx ParticlePosition.h
+	ex -sc '159i|            unsigned long position_index= str.find("position=");' -cx ParticlePosition.h
+	ex -sc '160i|            if (position_index != std::string::npos) {' -cx ParticlePosition.h
+	ex -sc '161i|                memset(&var[0], 0, sizeof(var));' -cx ParticlePosition.h
+	ex -sc '162i|                int bracecount = 1;' -cx ParticlePosition.h
+	ex -sc '163i|                unsigned long lastBrace = position_index;' -cx ParticlePosition.h
+	ex -sc '164i|                Point2D pos = Point2D();' -cx ParticlePosition.h
+	ex -sc '165i|                int pos_index = 0;' -cx ParticlePosition.h
+	ex -sc '166i|                for (unsigned long index = position_index; index < str.length(); index++) {' -cx ParticlePosition.h
+	ex -sc "167i|                    if (str.at(index) == '{') {" -cx ParticlePosition.h
+	ex -sc '168i|                        bracecount++;' -cx ParticlePosition.h
+	ex -sc '169i|                        lastBrace = index;' -cx ParticlePosition.h
+	ex -sc '170i|                        continue;' -cx ParticlePosition.h
+	ex -sc '171i|                    }' -cx ParticlePosition.h
+	ex -sc "172i|                    if (str.at(index) == '}') {" -cx ParticlePosition.h
+	ex -sc '173i|                        bracecount--; ' -cx ParticlePosition.h
+	ex -sc '174i|                        if (bracecount < 1) {' -cx ParticlePosition.h
+	ex -sc '175i|                            break;' -cx ParticlePosition.h
+	ex -sc '176i|                        }' -cx ParticlePosition.h
+	ex -sc '177i|                        if (bracecount != 2) {' -cx ParticlePosition.h
+	ex -sc '178i|                            continue;' -cx ParticlePosition.h
+	ex -sc '179i|                        }' -cx ParticlePosition.h
+	ex -sc '180i|                        std::string value = str.substr(lastBrace, index - lastBrace + 1);' -cx ParticlePosition.h
+	ex -sc '181i|                        pos.from_string(value);' -cx ParticlePosition.h
+	ex -sc '182i|                        this->_position = Point2D(pos);' -cx ParticlePosition.h
+	ex -sc '183i|                        continue;' -cx ParticlePosition.h
+	ex -sc '184i|                    }' -cx ParticlePosition.h
+	ex -sc '185i|                }' -cx ParticlePosition.h
+	ex -sc '186i|            }' -cx ParticlePosition.h
 	
 cleangen:
 	rm -f wb_point2D.h
