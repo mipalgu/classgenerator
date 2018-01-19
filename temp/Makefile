@@ -36,31 +36,33 @@ gen:
 	ex -sc '170i|            unsigned long particles_index = str.find("particles=");' -cx TopParticles.h
 	ex -sc '171i|            if (particles_index != std::string::npos) {' -cx TopParticles.h
 	ex -sc '172i|                memset(&var[0], 0, sizeof(var));' -cx TopParticles.h
-	ex -sc '173i|                int bracecount = 1;' -cx TopParticles.h
+	ex -sc '173i|                int bracecount = 0;' -cx TopParticles.h
 	ex -sc '174i|                unsigned long lastBrace = particles_index;' -cx TopParticles.h
 	ex -sc '175i|                ParticlePosition pos = ParticlePosition();' -cx TopParticles.h
 	ex -sc '176i|                int pos_index = 0;' -cx TopParticles.h
 	ex -sc '177i|                for (unsigned long index = particles_index; index < str.length(); index++) {' -cx TopParticles.h
 	ex -sc "178i|                    if (str.at(index) == '{') {" -cx TopParticles.h
 	ex -sc '179i|                        bracecount++;' -cx TopParticles.h
-	ex -sc '180i|                        lastBrace = index;' -cx TopParticles.h
-	ex -sc '181i|                        continue;' -cx TopParticles.h
-	ex -sc '182i|                    }' -cx TopParticles.h
-	ex -sc "183i|                    if (str.at(index) == '}') {" -cx TopParticles.h
-	ex -sc '184i|                        bracecount--; ' -cx TopParticles.h
-	ex -sc '185i|                        if (bracecount < 1) {' -cx TopParticles.h
-	ex -sc '186i|                            break;' -cx TopParticles.h
-	ex -sc '187i|                        }' -cx TopParticles.h
-	ex -sc '188i|                        if (bracecount != 2) {' -cx TopParticles.h
-	ex -sc '189i|                            continue;' -cx TopParticles.h
-	ex -sc '190i|                        }' -cx TopParticles.h
-	ex -sc '191i|                        std::string value = str.substr(lastBrace, index - lastBrace + 1);' -cx TopParticles.h
-	ex -sc '192i|                        pos.from_string(value);' -cx TopParticles.h
-	ex -sc '193i|                        this->_particles[pos_index++] = ParticlePosition(pos);' -cx TopParticles.h
-	ex -sc '194i|                        continue;' -cx TopParticles.h
-	ex -sc '195i|                    }' -cx TopParticles.h
-	ex -sc '196i|                }' -cx TopParticles.h
-	ex -sc '197i|            }' -cx TopParticles.h
+	ex -sc '180i|                        if (bracecount == 2) {' -cx TopParticles.h
+	ex -sc '181i|                            lastBrace = index;' -cx TopParticles.h
+	ex -sc '182i|                        }' -cx TopParticles.h
+	ex -sc '183i|                        continue;' -cx TopParticles.h
+	ex -sc '184i|                    }' -cx TopParticles.h
+	ex -sc "185i|                    if (str.at(index) == '}') {" -cx TopParticles.h
+	ex -sc '186i|                        bracecount--; ' -cx TopParticles.h
+	ex -sc '187i|                        if (bracecount < 1) {' -cx TopParticles.h
+	ex -sc '188i|                            break;' -cx TopParticles.h
+	ex -sc '189i|                        }' -cx TopParticles.h
+	ex -sc '190i|                        if (bracecount != 1) {' -cx TopParticles.h
+	ex -sc '191i|                            continue;' -cx TopParticles.h
+	ex -sc '192i|                        }' -cx TopParticles.h
+	ex -sc '193i|                        std::string value = str.substr(lastBrace, index - lastBrace + 1);' -cx TopParticles.h
+	ex -sc '194i|                        pos.from_string(value);' -cx TopParticles.h
+	ex -sc '195i|                        this->_particles[pos_index++] = ParticlePosition(pos);' -cx TopParticles.h
+	ex -sc '196i|                        continue;' -cx TopParticles.h
+	ex -sc '197i|                    }' -cx TopParticles.h
+	ex -sc '198i|                }' -cx TopParticles.h
+	ex -sc '199i|            }' -cx TopParticles.h
 	ex -sc '126i|            Point2D * position = const_cast<Point2D *>(static_cast<const Point2D *>(&this->_position));' -cx ParticlePosition.h
 	ex -sc '127i|            ss << "position={ " << position->description() << " }";' -cx ParticlePosition.h
 	ex -sc '128i|            ss << ", ";' -cx ParticlePosition.h
@@ -70,30 +72,21 @@ gen:
 	ex -sc '159i|            unsigned long position_index= str.find("position=");' -cx ParticlePosition.h
 	ex -sc '160i|            if (position_index != std::string::npos) {' -cx ParticlePosition.h
 	ex -sc '161i|                memset(&var[0], 0, sizeof(var));' -cx ParticlePosition.h
-	ex -sc '162i|                int bracecount = 1;' -cx ParticlePosition.h
-	ex -sc '163i|                unsigned long lastBrace = position_index;' -cx ParticlePosition.h
-	ex -sc '164i|                Point2D pos = Point2D();' -cx ParticlePosition.h
-	ex -sc '165i|                for (unsigned long index = position_index; index < str.length(); index++) {' -cx ParticlePosition.h
-	ex -sc "166i|                    if (str.at(index) == '{') {" -cx ParticlePosition.h
-	ex -sc '167i|                        bracecount++;' -cx ParticlePosition.h
-	ex -sc '168i|                        lastBrace = index;' -cx ParticlePosition.h
-	ex -sc '169i|                        continue;' -cx ParticlePosition.h
-	ex -sc '170i|                    }' -cx ParticlePosition.h
-	ex -sc "171i|                    if (str.at(index) == '}') {" -cx ParticlePosition.h
-	ex -sc '172i|                        bracecount--; ' -cx ParticlePosition.h
-	ex -sc '173i|                        if (bracecount < 1) {' -cx ParticlePosition.h
-	ex -sc '174i|                            break;' -cx ParticlePosition.h
-	ex -sc '175i|                        }' -cx ParticlePosition.h
-	ex -sc '176i|                        if (bracecount != 2) {' -cx ParticlePosition.h
-	ex -sc '177i|                            continue;' -cx ParticlePosition.h
-	ex -sc '178i|                        }' -cx ParticlePosition.h
-	ex -sc '179i|                        std::string value = str.substr(lastBrace, index - lastBrace + 1);' -cx ParticlePosition.h
-	ex -sc '180i|                        pos.from_string(value);' -cx ParticlePosition.h
-	ex -sc '181i|                        this->_position = Point2D(pos);' -cx ParticlePosition.h
-	ex -sc '182i|                        continue;' -cx ParticlePosition.h
-	ex -sc '183i|                    }' -cx ParticlePosition.h
-	ex -sc '184i|                }' -cx ParticlePosition.h
-	ex -sc '185i|            }' -cx ParticlePosition.h
+	ex -sc '162i|                unsigned long firstBrace = position_index;' -cx ParticlePosition.h
+	ex -sc '163i|                Point2D pos = Point2D();' -cx ParticlePosition.h
+	ex -sc '164i|                for (unsigned long index = position_index; index < str.length(); index++) {' -cx ParticlePosition.h
+	ex -sc "165i|                    if (str.at(index) == '{') {" -cx ParticlePosition.h
+	ex -sc '166i|                        firstBrace = index;' -cx ParticlePosition.h
+	ex -sc '167i|                        continue;' -cx ParticlePosition.h
+	ex -sc '168i|                    }' -cx ParticlePosition.h
+	ex -sc "169i|                    if (str.at(index) == '}') {" -cx ParticlePosition.h
+	ex -sc '170i|                        std::string value = str.substr(firstBrace, index - firstBrace + 1);' -cx ParticlePosition.h
+	ex -sc '171i|                        pos.from_string(value);' -cx ParticlePosition.h
+	ex -sc '172i|                        this->_position = Point2D(pos);' -cx ParticlePosition.h
+	ex -sc '173i|                        continue;' -cx ParticlePosition.h
+	ex -sc '174i|                    }' -cx ParticlePosition.h
+	ex -sc '175i|                }' -cx ParticlePosition.h
+	ex -sc '176i|            }' -cx ParticlePosition.h
 	
 cleangen:
 	rm -f wb_point2d.h
@@ -111,8 +104,8 @@ cleangen:
 copy:
 	cp TopParticles.h ../../gusimplewhiteboard/typeClassDefs
 	cp ParticlePosition.h ../../gusimplewhiteboard/typeClassDefs
-	cp wb_top_* ../../gusimplewhiteboard/typeClassDefs
-	cp wb_particle_* ../../gusimplewhiteboard/typeClassDefs
+	cp Point2D.h ../../gusimplewhiteboard/typeClassDefs
+	cp wb_* ../../gusimplewhiteboard/typeClassDefs
 
 .include "../../../mk/mipal.mk"		# comes last!
 

@@ -18,7 +18,9 @@ int main() {
     p.set_particles(ParticlePosition(Point2D(12, 13), 2), 1);
     p.set_particles(ParticlePosition(Point2D(14, 15), 3), 2);
     p.set_particles(ParticlePosition(Point2D(16, 17), 4), 3);
-    std::cout << p.description() << std::endl;
+    TopParticles p2 = TopParticles();
+    p2.from_string(p.description());
+    std::cout << p2.description() << std::endl;
     return EXIT_SUCCESS;
 }
 
