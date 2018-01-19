@@ -104,8 +104,8 @@ cleangen:
 copy:
 	cp TopParticles.h ../../gusimplewhiteboard/typeClassDefs
 	cp ParticlePosition.h ../../gusimplewhiteboard/typeClassDefs
-	cp wb_top_* ../../gusimplewhiteboard/typeClassDefs
-	cp wb_particle_* ../../gusimplewhiteboard/typeClassDefs
+	cp Point2D.h ../../gusimplewhiteboard/typeClassDefs
+	cp wb_* ../../gusimplewhiteboard/typeClassDefs
 
 .include "../../../mk/mipal.mk"		# comes last!
 
