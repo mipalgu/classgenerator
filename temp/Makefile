@@ -96,8 +96,8 @@ gen:
 	ex -sc '185i|            }' -cx ParticlePosition.h
 	
 cleangen:
-	rm -f wb_point2D.h
-	rm -f wb_point2D.c
+	rm -f wb_point2d.h
+	rm -f wb_point2d.c
 	rm -f Point2D.h
 	rm -f Point2D.swift
 	rm -f wb_particle_position.h
