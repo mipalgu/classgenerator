@@ -154,8 +154,8 @@ public final class CFileCreator: ErrorContainer {
         )
         let posterIfdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let posterEndif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
-        let serialiseIfDef = "#ifdef WHITEBOARD_SERIALISATION"
-        let serialiseEndIf = "#endif // WHITEBOARD_SERIALISATION"
+        let serialiseIfDef = "/*#ifdef WHITEBOARD_SERIALISATION*/"
+        let serialiseEndIf = "/*#endif // WHITEBOARD_SERIALISATION*/"
         return comment + "\n\n" + head + "\n\n" + posterIfdef
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
             + "\n\n" + fromStringFunc + "\n\n" + posterEndif

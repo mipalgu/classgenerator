@@ -252,7 +252,7 @@ public final class CHeaderCreator: ErrorContainer {
 
             #endif /// WHITEBOARD_POSTER_STRING_CONVERSION\(postC)
 
-            #ifdef WHITEBOARD_SERIALISATION
+            /*#ifdef WHITEBOARD_SERIALISATION*/
 
             /**
              * Network stream serialisation
@@ -264,7 +264,7 @@ public final class CHeaderCreator: ErrorContainer {
              */
             size_t \(name)_from_network_serialised(const char *src, struct \(name) *dst);
 
-            #endif /// WHITEBOARD_SERIALISATION
+            /*#endif /// WHITEBOARD_SERIALISATION*/
 
             #ifdef __cplusplus
             }
