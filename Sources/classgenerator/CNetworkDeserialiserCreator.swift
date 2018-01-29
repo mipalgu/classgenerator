@@ -139,9 +139,9 @@ public final class CNetworkDeserialiserCreator {
                     uint32_t bytes = len * sizeof(\(variable.cType));
                     char *buf = (char *)malloc(bytes);
                     uint32_t c;
-                    uint8_t b;
+                    int8_t b;
                     for (c = 0; c < bytes; c++) {
-                      for (b = 0; b < 8; b++) {
+                      for (b = 7; b >= 0; b--) {
                         \(bitGetterGenerator(variable: "buf[c] ^= (-bitValue ^ buf[c]) & (1UL << b);"))
                       }
                     }
@@ -190,7 +190,7 @@ public final class CNetworkDeserialiserCreator {
                     }
                     uint8_t c;
                     for (c = 0; c < len; c++) {
-                      for (b = 0; b < 8; b++) {
+                      for (b = 7; b >= 0; b--) {
                         \(bitGetterGenerator(variable: "dst->\(label)[c] ^= (-bitValue ^ dst->\(label)[c]) & (1UL << b);"))
                       }
                     }
