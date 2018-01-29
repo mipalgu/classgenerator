@@ -110,62 +110,6 @@ public final class CNetworkSerialiserCreator {
             """
     }
 
-    /*
-    fileprivate func createArrayDescription(
-        forType type: VariableTypes,
-        withLabel label: String,
-        andClassName className: String,
-        _ level: Int = 0
-    ) -> String? {
-        switch type {
-            case .array(let subtype, _):
-                let arrLabel = 0 == level ? label : label + "_\(level)"
-                let temp: String?
-                switch subtype {
-                    case .array:
-                        temp = self.createArrayDescription(
-                            forType: subtype,
-                            withLabel: label,
-                            andClassName: className,
-                            level + 1
-                        )
-                    default:
-                      break;
-                        /*temp = self.createValue(
-                            forType: subtype,
-                            withLabel: self.createIndexes(forLabel: label, level),
-                            andClassName: className
-                        )*/
-                }
-                guard let value = temp else {
-                    return nil
-                }
-                //swiftlint:disable line_length
-                return """
-                    int \(arrLabel)_first = 0;
-                    for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
-                        if (1 == \(arrLabel)_first) {
-                        }
-                    \(self.stringHelpers.indent(value))
-                        \(arrLabel)_first = 1;
-                    }
-                    """
-            default:
-                break
-                /*
-                return self.createDescription(
-                    forType: type,
-                    withLabel: label,
-                    andClassName: className
-                )*/
-        }
-    }
-
-    fileprivate func createIndexes(forLabel label: String, _ level: Int) -> String {
-        return Array(0...level).map { 0 == $0 ? "[\(label)_index]" : "[\(label)_\($0)_index]" }.reduce(label, +)
-    }
-*/
-
     fileprivate func bitSetterGenerator(data: String) -> String {
         return """
           do {
@@ -185,16 +129,23 @@ public final class CNetworkSerialiserCreator {
     ) -> String? {
       let label = variable.label
         switch variable.type {
-            case .array:
-              return "//The class generator does not support array network conversion yet."
-              /*
-                return self.createArrayDescription(
-                    forType: type,
-                    withLabel: label,
-                    andClassName: className,
-                    appendingTo: strLabel
-                )
-                */
+            case .array(_, let len):
+              return """
+                  //Class generator does not support array network compression.
+                  //Copying into the buffer, uncompressed
+                  do { //limit declaration scope
+                    uint32_t len = \(len);
+                    uint32_t bytes = len * sizeof(\(variable.cType));
+                    char *buf = (char *)&self->\(label)[0];
+                    uint32_t c;
+                    int8_t b;
+                    for (c = 0; c < bytes; c++) {
+                      for (b = 7; b >= 0; b--) {
+                        \(bitSetterGenerator(data: "(buf[c] >> b) & 1U"))
+                      }
+                    }
+                  } while(false);
+              """
             case .bit:
                 return bitSetterGenerator(data: "self->\(label)")
             case .bool:
