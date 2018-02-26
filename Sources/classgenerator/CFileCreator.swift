@@ -200,7 +200,7 @@ public final class CFileCreator: ErrorContainer {
             #  endif
             #  if !defined(htons) && !defined(ntohs)
             #   define htons(x) bswap_16(x)
-            #   define ntohs(x) bswap_32(x)
+            #   define ntohs(x) bswap_16(x)
             #  endif
             #else
             #  if !defined(htonll) && !defined(ntohll)
