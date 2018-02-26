@@ -29,7 +29,8 @@ install: host
 	cp .build/${SWIFT_BUILD_CONFIG}/classgenerator /usr/local/bin
 
 clean:
-	rm -rf .build
+	-rm -rf .build
+	-rm -rf Package.resolved
 
 .include "../../mk/jenkins.mk"
 
