@@ -10,7 +10,6 @@ XCTMain([
     testCase(ParserTests.allTests),
     testCase(SanitiserTests.allTests),
     testCase(SectionsParserTests.allTests),
-    testCase(StringHelpersTests.allTests),
     testCase(SwiftFileCreatorTests.allTests),
     testCase(TypeIdentifierTests.allTests)
 ])
