@@ -2,7 +2,7 @@ import Foundation
 
 import Containers
 import IO
-import Parsing
+import Parsers
 
 let container = WarningsContainerRef()
 

@@ -13,7 +13,7 @@ let package = Package(
         .target(name: "Containers", dependencies: []),
         .target(name: "IO", dependencies: []),
         .target(name: "Helpers", dependencies: []),
-        .target(name: "Parsing", dependencies: [
+        .target(name: "Parsers", dependencies: [
             .target(name: "Data"),
             .target(name: "Containers"),
             .target(name: "IO"),
@@ -33,7 +33,7 @@ let package = Package(
             .target(name: "Containers"),
             .target(name: "IO"),
             .target(name: "Helpers"),
-            .target(name: "Parsing"),
+            .target(name: "Parsers"),
             .target(name: "Creators"),
             "swift_helpers",
             "whiteboard_helpers"

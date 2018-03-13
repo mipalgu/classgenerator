@@ -62,7 +62,7 @@ import Creators
 import Data
 import Helpers
 import IO
-import Parsing
+import Parsers
 
 public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
 
