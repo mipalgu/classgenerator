@@ -57,6 +57,7 @@
  */
 
 import Foundation
+@testable import Parsers
 @testable import classgenerator
 import XCTest
 

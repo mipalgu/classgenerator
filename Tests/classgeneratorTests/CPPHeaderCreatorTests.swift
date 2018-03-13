@@ -57,6 +57,7 @@
  */
 
 import Foundation
+@testable import Creators
 @testable import classgenerator
 import XCTest
 
