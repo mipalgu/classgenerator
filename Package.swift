@@ -24,7 +24,9 @@ let package = Package(
         .target(name: "Creators", dependencies: [
             .target(name: "Data"),
             .target(name: "Containers"),
-            .target(name: "Helpers")
+            .target(name: "Helpers"),
+            "swift_helpers",
+            "whiteboard_helpers"
         ]),
         .target(name: "classgenerator", dependencies: [
             .target(name: "Data"),

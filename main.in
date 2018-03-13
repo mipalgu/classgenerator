@@ -1,5 +1,9 @@
 import Foundation
 
+import Containers
+import IO
+import Parsing
+
 let container = WarningsContainerRef()
 
 let generator = ClassGenerator(
