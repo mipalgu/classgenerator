@@ -58,6 +58,12 @@
 
 import Foundation
 
+import Creators
+import Data
+import Helpers
+import IO
+import Parsing
+
 public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
 
     fileprivate let argumentsParser: ClassGeneratorParser
