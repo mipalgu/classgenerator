@@ -92,7 +92,7 @@
 #  endif
 #  if !defined(htons) && !defined(ntohs)
 #   define htons(x) bswap_16(x)
-#   define ntohs(x) bswap_32(x)
+#   define ntohs(x) bswap_16(x)
 #  endif
 #else
 #  if !defined(htonll) && !defined(ntohll)
@@ -1936,7 +1936,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str)
 
 #endif // WHITEBOARD_POSTER_STRING_CONVERSION
 
-#ifdef WHITEBOARD_SERIALISATION
+/*#ifdef WHITEBOARD_SERIALISATION*/
 
 /**
  * Convert to a compressed, serialised, network byte order byte stream.
@@ -3054,9 +3054,47 @@ size_t wb_old_to_network_serialised(const struct wb_old *self, char *dst)
         bit_offset = bit_offset + 1;
       } while(false);
 
-    //The class generator does not support array network conversion yet.
+        //Class generator does not support array network compression.
+        //Copying into the buffer, uncompressed
+        do { //limit declaration scope
+          uint32_t len = 4;
+          uint32_t bytes = len * sizeof(int16_t);
+          char *buf = (char *)&self->array16[0];
+          uint32_t c;
+          int8_t b;
+          for (c = 0; c < bytes; c++) {
+            for (b = 7; b >= 0; b--) {
+                do {
+        uint16_t byte = bit_offset / 8;
+        uint16_t bit = 7 - (bit_offset % 8);
+        unsigned long newbit = !!((buf[c] >> b) & 1U);
+        dst[byte] ^= (-newbit ^ dst[byte]) & (1UL << bit);
+        bit_offset = bit_offset + 1;
+      } while(false);
+            }
+          }
+        } while(false);
 
-    //The class generator does not support array network conversion yet.
+        //Class generator does not support array network compression.
+        //Copying into the buffer, uncompressed
+        do { //limit declaration scope
+          uint32_t len = 3;
+          uint32_t bytes = len * sizeof(bool);
+          char *buf = (char *)&self->bools[0];
+          uint32_t c;
+          int8_t b;
+          for (c = 0; c < bytes; c++) {
+            for (b = 7; b >= 0; b--) {
+                do {
+        uint16_t byte = bit_offset / 8;
+        uint16_t bit = 7 - (bit_offset % 8);
+        unsigned long newbit = !!((buf[c] >> b) & 1U);
+        dst[byte] ^= (-newbit ^ dst[byte]) & (1UL << bit);
+        bit_offset = bit_offset + 1;
+      } while(false);
+            }
+          }
+        } while(false);
     return bit_offset;
 }
 
@@ -3081,7 +3119,7 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
       }
       uint8_t c;
       for (c = 0; c < len; c++) {
-        for (b = 0; b < 8; b++) {
+        for (b = 7; b >= 0; b--) {
             do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
@@ -3676,7 +3714,7 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
       }
       uint8_t c;
       for (c = 0; c < len; c++) {
-        for (b = 0; b < 8; b++) {
+        for (b = 7; b >= 0; b--) {
             do {
         uint16_t byte = bit_offset / 8;
         uint16_t bit = 7 - (bit_offset % 8);
@@ -4256,10 +4294,54 @@ size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst)
         bit_offset = bit_offset + 1;
       } while(false);
 
-    //The class generator does not support array network conversion yet.
+        //Class generator does not support array network compression.
+        //Copying into the buffer, uncompressed
+        do { //limit declaration scope
+          uint32_t len = 4;
+          uint32_t bytes = len * sizeof(int16_t);
+          char *buf = (char *)malloc(bytes);
+          uint32_t c;
+          int8_t b;
+          for (c = 0; c < bytes; c++) {
+            for (b = 7; b >= 0; b--) {
+                do {
+        uint16_t byte = bit_offset / 8;
+        uint16_t bit = 7 - (bit_offset % 8);
+        char dataByte = src[byte];
+        unsigned char bitValue = (dataByte >> bit) & 1U;
+        buf[c] ^= (-bitValue ^ buf[c]) & (1UL << b);
+        bit_offset = bit_offset + 1;
+      } while(false);
+            }
+          }
+          memcpy(&dst->array16[0], &buf[0], bytes);
+          free(buf);
+        } while(false);
 
-    //The class generator does not support array network conversion yet.
+        //Class generator does not support array network compression.
+        //Copying into the buffer, uncompressed
+        do { //limit declaration scope
+          uint32_t len = 3;
+          uint32_t bytes = len * sizeof(bool);
+          char *buf = (char *)malloc(bytes);
+          uint32_t c;
+          int8_t b;
+          for (c = 0; c < bytes; c++) {
+            for (b = 7; b >= 0; b--) {
+                do {
+        uint16_t byte = bit_offset / 8;
+        uint16_t bit = 7 - (bit_offset % 8);
+        char dataByte = src[byte];
+        unsigned char bitValue = (dataByte >> bit) & 1U;
+        buf[c] ^= (-bitValue ^ buf[c]) & (1UL << b);
+        bit_offset = bit_offset + 1;
+      } while(false);
+            }
+          }
+          memcpy(&dst->bools[0], &buf[0], bytes);
+          free(buf);
+        } while(false);
     return bit_offset;
 }
 
-#endif // WHITEBOARD_SERIALISATION
+/*#endif // WHITEBOARD_SERIALISATION*/

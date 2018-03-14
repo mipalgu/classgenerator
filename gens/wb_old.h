@@ -594,7 +594,7 @@ struct wb_old* wb_old_from_string(struct wb_old* self, const char* str);
 
 #endif /// WHITEBOARD_POSTER_STRING_CONVERSION
 
-#ifdef WHITEBOARD_SERIALISATION
+/*#ifdef WHITEBOARD_SERIALISATION*/
 
 /**
  * Network stream serialisation
@@ -606,7 +606,7 @@ size_t wb_old_to_network_serialised(const struct wb_old *self, char *dst);
  */
 size_t wb_old_from_network_serialised(const char *src, struct wb_old *dst);
 
-#endif /// WHITEBOARD_SERIALISATION
+/*#endif /// WHITEBOARD_SERIALISATION*/
 
 #ifdef __cplusplus
 }
