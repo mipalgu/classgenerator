@@ -59,6 +59,7 @@
 import Foundation
 @testable import Creators
 @testable import classgenerator
+import Helpers
 import XCTest
 
 public class CHeaderCreatorTests: ClassGeneratorTestCase {

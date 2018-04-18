@@ -57,8 +57,11 @@
  */
 
 import Data
+import Helpers
 
 public final class TypeIdentifier {
+
+    fileprivate let helpers: CreatorHelpers
 
     fileprivate let values: [String: VariableTypes] = [
         "bool": .bool,
@@ -113,7 +116,9 @@ public final class TypeIdentifier {
         return values
     }
 
-    public init() {}
+    public init(helpers: CreatorHelpers = CreatorHelpers()) {
+        self.helpers = helpers
+    }
 
     public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String]) -> VariableTypes {
         if nil != arrCounts.first {
@@ -126,6 +131,9 @@ public final class TypeIdentifier {
         if nil != words.first(where: { $0.hasPrefix("enum") }) {
             return self.identifyEnum(fromType: type)
         }
+        if nil != words.first(where: { $0 == "gen" }) {
+            return self.identifyGen(fromType: type)
+        }
         if "string" == type {
             return .string("0")
         }
@@ -137,6 +145,21 @@ public final class TypeIdentifier {
         #else
         return self.linuxValues[type] ?? .unknown
         #endif
+    }
+
+    fileprivate func identifyGen(fromType type: String) -> VariableTypes {
+        let words = type.components(separatedBy:.whitespaces)
+        guard
+            let index = words.enumerated().first(where: { $1 == "gen" })?.0,
+            let name = words.dropFirst(index + 1).first
+        else {
+            return .unknown
+        }
+        return .gen(
+            name,
+            self.helpers.createStructName(forClassNamed: name),
+            self.helpers.createClassName(forClassNamed: name)
+        )
     }
 
     fileprivate func identifyEnum(fromType type: String) -> VariableTypes {

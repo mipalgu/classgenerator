@@ -12,7 +12,7 @@ let package = Package(
         .target(name: "Data", dependencies: []),
         .target(name: "Containers", dependencies: []),
         .target(name: "IO", dependencies: []),
-        .target(name: "Helpers", dependencies: []),
+        .target(name: "Helpers", dependencies: ["whiteboard_helpers"]),
         .target(name: "Parsers", dependencies: [
             .target(name: "Data"),
             .target(name: "Containers"),
