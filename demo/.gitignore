@@ -6,3 +6,7 @@ Sources/bridge/wb_demo.h
 Sources/bridge/wb_demo.c
 Sources/bridge/Demo.h
 Sources/demo/Demo.swift
+Sources/bridge/wb_sub.h
+Sources/bridge/wb_sub.c
+Sources/bridge/Sub.h
+Sources/demo/Sub.swift

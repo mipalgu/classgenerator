@@ -7,6 +7,7 @@ all:	all-real
 
 generate-classes:
 	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./demo.gen
+	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./sub.gen
 
 .include "../../../mk/mipal.mk"
 

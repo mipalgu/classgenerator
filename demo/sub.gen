@@ -1,0 +1,12 @@
+-author	Callum McColl
+
+-c
+
+-swift
+import bridge
+
+-comment
+This is to test recursive types.
+
+-properties
+int i = 0 // An integer.
