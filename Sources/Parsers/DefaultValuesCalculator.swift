@@ -72,6 +72,8 @@ public final class DefaultValuesCalculator {
                 return ("true", "true")
             case .char:
                 return ("0", "UnicodeScalar(UInt8.min)")
+            case .gen(_, let structName, let className):
+                return (structName + "()", className + "()")
             case .numeric(let subtype):
                 return self.calculateNumericDefaultValue(forNumericType: subtype)
             case .pointer:
