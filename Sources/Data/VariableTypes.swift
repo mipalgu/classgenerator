@@ -62,6 +62,7 @@ public enum VariableTypes {
     case bit
     case bool
     case char(CharSigns)
+    case gen(String, String, String) // gen name, struct name, class name
     case numeric(NumericTypes)
     indirect case pointer(VariableTypes)
     case string(String)
