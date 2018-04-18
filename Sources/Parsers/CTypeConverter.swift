@@ -66,6 +66,8 @@ public final class CTypeConverter {
         switch type {
             case .bit:
                 return "unsigned int"
+            case .gen(_, let structName, _):
+                return signature.components(separatedBy: .whitespaces).filter { $0 != "gen" }.reduce("", +)
             default:
                 return signature
         }
