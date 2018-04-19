@@ -279,6 +279,8 @@ public final class CPPStringFunctionsCreator {
                         \(pre)\(getter);
                     }
                     """
+            case .gen(_, _, let className):
+                return pre + "\"{\" << \(className)(\(getter)) << \"}\";"
             case .numeric(.signed):
                 return "\(pre)static_cast<signed>(\(getter));"
             case .numeric(.unsigned):
