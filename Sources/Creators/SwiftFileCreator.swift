@@ -357,6 +357,8 @@ public final class SwiftFileCreator: ErrorContainer {
                         case .unsigned:
                             return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt8"
                     }
+                case .gen(_, let structName, _):
+                    return "let \($0.label) = (dictionary[\"\($0.label)\"] as? [String: Any]).flatMap({ \(structName)(fromDictionary: $0)  })"
                 case .pointer:
                     return nil
                 default:
