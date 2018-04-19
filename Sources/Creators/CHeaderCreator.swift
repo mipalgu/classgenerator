@@ -165,6 +165,18 @@ public final class CHeaderCreator: ErrorContainer {
                     continue
             }
         }
+        defs += "\n" + cls.variables.lazy.map {
+            return """
+                #if !defined (__cplusplus) && !defined(SKIP_C_CONVENIENCE_MACROS)
+                #ifndef \($0.label)
+                #define \($0.label)() _\($0.label)
+                #endif
+                #ifndef set\($0.label.capitalized)
+                #define set\($0.label.capitalized)(x) _\($0.label) = (x)
+                #endif
+                #endif
+                """
+        }.combine("") { $0 + "\n\n" + $1 }
         let preC = nil == cls.preC ? "" : cls.preC! + "\n\n"
         return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines)
     }
