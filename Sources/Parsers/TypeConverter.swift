@@ -58,15 +58,11 @@
 
 import Foundation
 
+import Data
+
 public final class TypeConverter {
 
     fileprivate let values: [String: String] = [
-        "bit": "Bool",
-        "string": "String",
-        "bool": "Bool",
-        "char": "UnicodeScalar",
-        "signed char": "UnicodeScalar",
-        "unsigned char": "UnicodeScalar",
         "signed": "Int32",
         "signed int": "Int32",
         "unsigned": "UInt32",
@@ -110,21 +106,42 @@ public final class TypeConverter {
 
     public init() {}
 
-    func convert(type: String) throws -> String {
-        if type.last != "*" {
+    func convert(fromType type: VariableTypes, withSignature signature: String) throws -> String {
+        switch type {
+        case .array(let subtype, _):
+            return try self.convert(fromType: subtype, withSignature: signature)
+        case .bit:
+            return "Bool"
+        case .bool:
+            return "Bool"
+        case .char:
+            return "UnicodeScalar"
+        case .gen(_, let structName, _):
+            return structName
+        case .numeric:
             //swiftlint:disable:next line_length
-            guard let v = self.values[type] ?? type.components(separatedBy: CharacterSet.whitespaces).last else {
+            guard let v = self.values[signature] ?? signature.components(separatedBy: CharacterSet.whitespaces).last else {
                 throw ParsingErrors.parsingError(0, "Unable to parse type.")
             }
             return v
+        case .string:
+            return "String"
+        case .pointer(let subtype):
+            let words = String(signature.dropLast()).trimmingCharacters(in: .whitespaces)
+                .components(separatedBy: CharacterSet.whitespaces)
+            guard let last = words.last else {
+                throw ParsingErrors.parsingError(0, "Unable to parse type.")
+            }
+            let newType = try self.convert(fromType: subtype, withSignature: last)
+            return "UnsafeMutablePointer<\(newType)>!"
+        case .unknown:
+            let words = signature.trimmingCharacters(in: .whitespaces)
+                .components(separatedBy: CharacterSet.whitespaces)
+            guard let last = words.last else {
+                throw ParsingErrors.parsingError(0, "Unable to parse type.")
+            }
+            return last
         }
-        let words = String(type.dropLast()).trimmingCharacters(in: .whitespaces)
-            .components(separatedBy: CharacterSet.whitespaces)
-        guard let last = words.last else {
-            throw ParsingErrors.parsingError(0, "Unable to parse type.")
-        }
-        let newType = try self.convert(type: last)
-        return "UnsafeMutablePointer<\(newType)>!"
     }
 
 }

@@ -152,7 +152,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         }
         let swiftType: String
         do {
-            swiftType = try self.typeConverter.convert(type: signature)
+            swiftType = try self.typeConverter.convert(fromType: type, withSignature: signature)
         } catch ParsingErrors.parsingError(let offset, let message) {
             throw ParsingErrors.parsingError(signature.count + offset, message)
         }
