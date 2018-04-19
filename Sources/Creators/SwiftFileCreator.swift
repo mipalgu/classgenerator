@@ -458,6 +458,8 @@ public final class SwiftFileCreator: ErrorContainer {
                 return "\"\(label)=\\(self._\(label))\""
             case .char:
                 return "\"\(label)=\\(0 == self.\(label) ? \"\" : String(Character(self._\(label))))\""
+            case .gen:
+                return "\"\(label)={\" + self.\(label).description + \"}\""
             case .unknown, .pointer:
                 return nil
             default:
