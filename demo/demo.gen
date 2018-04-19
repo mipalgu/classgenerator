@@ -18,6 +18,9 @@
 #include "somestruct.h"
 #include "wb_sub.h"
 
+-c++
+#include "Sub.h"
+
 -swift
 import bridge
 
