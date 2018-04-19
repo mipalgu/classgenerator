@@ -223,15 +223,7 @@ public final class SwiftFileCreator: ErrorContainer {
     fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
         let startDef = "public init("
-        let containsArrays = nil != variables.lazy.filter {
-            switch $0.type {
-                case .array, .bit, .char, .string:
-                    return true
-                default:
-                    return false
-            }
-        }.first
-        let copy = true == containsArrays ? "self = \(structName)()\n" : ""
+        let copy = "self.init()\n"
         let params = variables.map {
             let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
             return "\($0.label): \(type) = \($0.swiftDefaultValue)"
@@ -334,15 +326,7 @@ public final class SwiftFileCreator: ErrorContainer {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a `\(structName)` from a dictionary.")
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
-        let shouldCopy = nil != variables.lazy.filter {
-            switch $0.type {
-                case .array, .bit, .char, .string:
-                    return true
-                default:
-                    return false
-            }
-        }.first
-        let copy = true == shouldCopy ? "self = \(structName)()\n" : ""
+        let copy = "self.init()\n"
         let guardDef = "guard"
         let casts = variables.flatMap {
             switch $0.type {
