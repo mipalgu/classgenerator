@@ -130,6 +130,14 @@ public class DemoTests: ClassGeneratorTestCase {
             "./Sources/bridge",
             "--swift-file",
             "./Sources/demo",
+            "./sub.gen"
+        ])
+        self.generator.run([
+            "classgenerator",
+            "--c-header",
+            "./Sources/bridge",
+            "--swift-file",
+            "./Sources/demo",
             "./demo.gen"
         ])
         let p = Process()
@@ -155,6 +163,14 @@ public class DemoTests: ClassGeneratorTestCase {
             XCTFail("Unable to change into demo directory.")
             return
         }
+        self.generator.run([
+            "classgenerator",
+            "--c-header",
+            "./Sources/bridge",
+            "--swift-file",
+            "./Sources/demo",
+            "./sub.gen"
+        ])
         self.generator.run([
             "classgenerator",
             "--c-header",
