@@ -215,7 +215,7 @@ public final class CPPFromStringCreator {
                 let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
                 return setter("static_cast<\(cType)>(\(conversionFunction)(\(getter).c_str()))") + ";"
             case .gen(_, _, let className):
-                return setter(className + "(\(getter));")
+                return setter(className + "(\(getter))") + ";"
             case .string(let length):
                 return "gu_strlcpy(const_cast<char *>(this->\(label)()), \(getter).c_str(), \(length));"
             case .pointer:
