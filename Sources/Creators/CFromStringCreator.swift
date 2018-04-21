@@ -86,7 +86,7 @@ public final class CFromStringCreator {
     ) -> String {
         //swiftlint:disable:next line_length
         let definition = "struct \(structName)* \(structName)_\(fLabel)(struct \(structName)* self, const char* \(strLabel))\n{"
-        let head = self.createHead(forClassNamed: cls.name, forStrVariable: strLabel)
+        /*let head = self.createHead(forClassNamed: cls.name, forStrVariable: strLabel)
         let fillTokens = self.createFillTokens(forClassNamed: cls.name, withArrayVariables: cls.variables.filter {
             switch $0.type {
                 case .array:
@@ -97,12 +97,85 @@ public final class CFromStringCreator {
         })
         let assignVarsSection = self.assignVars(cls.variables, forClassNamed: cls.name)
         let cleanup = "free(str_copy);\nreturn self;"
-        let contents = head + "\n" + fillTokens + "\n" + assignVarsSection + "\n" + cleanup
+        let contents = head + "\n" + fillTokens + "\n" + assignVarsSection + "\n" + cleanup*/
+        let contents = self.createContents(forClass: cls, forStrVariable: strLabel)
         let endDefinition = "}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
     }
 
-    fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
+    fileprivate func createContents(forClass cls: Class, forStrVariable strLabel: String) -> String {
+        let head = """
+            size_t temp_length = strlen(\(strLabel));
+            int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
+            int index = 0;
+            char var_str[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
+            int bracecount = 0;
+            int lastBrace = -1;
+            int startVar = 0;
+            int endVar = -1;
+            """
+            let vars = self.assignVars(cls.variables, fromStringNamed: strLabel, forClassNamed: cls.name)
+            let end = "return self;"
+            return head + "\n" + vars + "\n" + end
+    }
+
+    fileprivate func assignVars(
+        _ variables: [Variable],
+        fromStringNamed strLabel: String,
+        forClassNamed className: String
+    ) -> String {
+        return variables.lazy.map { variable in
+            let value = self.createValue(
+                forType: variable.type,
+                withLabel: variable.label,
+                andCType: variable.cType,
+                accessedFrom: "var_str",
+                inClassNamed: className
+            )
+            return  """
+                bracecount = 0;
+                lastBrace = -1;
+                startVar = index;
+                endVar = -1;
+                for (int i = index; i < length; i++) {
+                    index = i;
+                    if (bracecount == 0 && \(strLabel)[index] == '=') {
+                        startVar = index + 1;
+                        continue;
+                    }
+                    if (bracecount == 0 && \(strLabel)[index] == ',') {
+                        endVar = index;
+                        break;
+                    }
+                    if (\(strLabel)[index] == '{') {
+                        bracecount++;
+                        if (bracecount == 2) {
+                            lastBrace = index;
+                        }
+                        continue;
+                    }
+                    if (\(strLabel)[index] == '}') {
+                        bracecount--;
+                        if (bracecount < 1) {
+                            return self;
+                        }
+                        if (bracecount != 1) {
+                            continue;
+                        }
+                        endVar = index;
+                        break;
+                    }
+                }
+                if (endVar == -1) {
+                    return self;
+                }
+                strncpy(var_str, \(strLabel) + startVar, endVar - startVar + 1);
+                var_str[endVar - startVar + 1] = 0;
+                """
+        }.combine("") { $0 + "\n" + $1 }
+    }
+
+    /*fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
         return """
             char* strings[\(className.uppercased())_NUMBER_OF_VARIABLES];
             memset(strings, 0, sizeof(strings));
@@ -217,7 +290,7 @@ public final class CFromStringCreator {
                     return self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assignment)
             }
         }.combine("") { $0 + "\n" + $1}
-    }
+    }*/
 
     fileprivate func createGuard(accessing label: String) -> String {
         return "if (\(label) != NULL)"
