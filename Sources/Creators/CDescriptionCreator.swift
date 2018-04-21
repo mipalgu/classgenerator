@@ -233,6 +233,21 @@ public final class CDescriptionCreator {
                 return value
             case .char:
                 return self.createSNPrintf("\(pre)%c", "self->\(label)", appendingTo: strLabel)
+            case .gen(let genName, let structName, _):
+                let fun = true == includeLabels ? "description" : "to_string"
+                let size = genName.uppercased() + "_" + (true == includeLabels ? "DESC" : "TO_STRING") + "_BUFFER_SIZE"
+                return """
+                    len = gu_strlcat(\(strLabel), "\(pre)", bufferSize);
+                    \(self.createGuard(forStrVariable: strLabel))
+                    len = gu_strlcat(\(strLabel), "{", bufferSize);
+                    \(self.createGuard(forStrVariable: strLabel))
+                    char \(label)_buffer[\(size)];
+                    char* \(label)_p = \(label)_buffer;
+                    const char* \(label)_\(fun) = \(structName)_\(fun)(&self->\(label), \(label)_p, \(size));
+                    len = gu_strlcat(\(strLabel), \(label)_p, bufferSize);
+                    \(self.createGuard(forStrVariable: strLabel))
+                    len = gu_strlcat(\(strLabel), "}", bufferSize);
+                    """
             case .numeric(let numericType):
                 return self.createSNPrintf(
                     "\(pre)%\(self.createFormat(forNumericType: numericType))",
