@@ -108,7 +108,8 @@ public final class CFromStringCreator {
             size_t temp_length = strlen(\(strLabel));
             int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
             int index = 0;
-            char var_str[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
+            char var_str_buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
+            char* var_str = &var_str_buffer[0];
             int bracecount = 0;
             int lastBrace = -1;
             int startVar = 0;
@@ -124,14 +125,29 @@ public final class CFromStringCreator {
         fromStringNamed strLabel: String,
         forClassNamed className: String
     ) -> String {
-        return variables.lazy.map { variable in
-            let value = self.createValue(
+        return variables.lazy.compactMap { variable in
+            let accessor = "var_str"
+            guard let value = self.createValue(
                 forType: variable.type,
                 withLabel: variable.label,
                 andCType: variable.cType,
-                accessedFrom: "var_str",
+                accessedFrom: accessor,
                 inClassNamed: className
-            )
+            ) else {
+                return nil
+            }
+            let assignment: String
+            switch variable.type {
+                case .array:
+                    assignment = value
+                case .string:
+                    assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(value)
+                case .char:
+                    assignment = self.createGuard(accessing: accessor) + " {\n" + self.stringHelpers.indent(value) + "\n}"
+                default:
+                    let assign = "self->\(variable.label) = \(value)"
+                    assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assign)
+            }
             return  """
                 bracecount = 0;
                 lastBrace = -1;
@@ -166,11 +182,13 @@ public final class CFromStringCreator {
                         break;
                     }
                 }
+                index++;
                 if (endVar == -1) {
                     return self;
                 }
                 strncpy(var_str, \(strLabel) + startVar, endVar - startVar + 1);
                 var_str[endVar - startVar + 1] = 0;
+                \(assignment)
                 """
         }.combine("") { $0 + "\n" + $1 }
     }
@@ -305,13 +323,14 @@ public final class CFromStringCreator {
     ) -> String? {
         switch type {
             case .array:
-                return self.createArrayValue(
+                return nil
+                /*return self.createArrayValue(
                     forType: type,
                     withLabel: label,
                     andCType: cType,
                     accessedFrom: accessor,
                     inClassNamed: className
-                )
+                )*/
             case .bool:
                 return "strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0 ? true : false;"
             case .char:
