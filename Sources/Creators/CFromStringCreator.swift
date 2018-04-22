@@ -107,12 +107,18 @@ public final class CFromStringCreator {
         let head = """
             size_t temp_length = strlen(\(strLabel));
             int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
-            int index = 0;
+            if (length < 1) {
+                return self;
+            }
             char var_str_buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
             char* var_str = &var_str_buffer[0];
             int bracecount = 0;
             int lastBrace = -1;
             int startVar = 0;
+            int index = 0;
+            if (index == 0 && \(strLabel)[0] == '{') {
+                index = 1;
+            }
             """
             let vars = self.assignVars(cls.variables, fromStringNamed: strLabel, forClassNamed: cls.name)
             let end = "return self;"
@@ -128,9 +134,9 @@ public final class CFromStringCreator {
         return variables.lazy.compactMap { variable in
             let setter: (String) -> String
             switch variable.type {
-            case .array, .gen:
+            case .array:
                 setter = { $0 }
-            case .string:
+            case .string, .gen:
                 setter = { $0 + ";"}
             default:
                 setter = { "self->\(variable.label) = \($0);" }
@@ -194,20 +200,32 @@ public final class CFromStringCreator {
                 break;
             }
             """
+        let createVarStr: String
         let forEnd = """
-            }
-            strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
-            \(accessor)[index - startVar] = 0;
             if (bracecount == 0 && \(strLabel)[index] == '}') {
                 index++;
             }
             index++;
             """
         switch type {
-        case .array, .gen:
+        case .array:
+            createVarStr = """
+                strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
+                \(accessor)[index - startVar] = 0;
+                """
+            break
+        case .gen:
+            createVarStr = """
+                strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
+                \(accessor)[(index - startVar) + 1] = 0;
+                """
             break;
         default:
-            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n" + forEnd + "\n" + value
+            createVarStr = """
+                strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
+                \(accessor)[index - startVar] = 0;
+                """
+            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n}\n" + createVarStr + "\n" + forEnd + "\n" + value
         }
         let braceContent = """
             if (\(strLabel)[index] == '{') {
@@ -232,7 +250,12 @@ public final class CFromStringCreator {
         let braceEnd = """
             bracecount = 0;
             """
-        return forStart + "\n" + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n" + forEnd + "\n" + braceEnd + "\n" + value
+        return forStart + "\n"
+            + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n}\n"
+            + createVarStr + "\n"
+            + forEnd + "\n"
+            + braceEnd + "\n"
+            + value
     }
 
     /*fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
@@ -387,6 +410,9 @@ public final class CFromStringCreator {
                     char \(label)_temp;
                     \(assign)
                     """
+            case .gen(_, let structName, _):
+                let p = "printf(\"gen \(accessor): %s\\n\", \(accessor));"
+                return p + "\n" + setter(structName + "_from_string(&self->\(label), \(accessor))")
             case .bit, .numeric:
                 return self.createNumericValue(
                     fromStringNamed: strLabel,
