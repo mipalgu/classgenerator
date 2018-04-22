@@ -169,48 +169,62 @@ public final class CFromStringCreator {
                 let assign = "self->\(label) = \(value)"
                 assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assign)
         }
-        return  """
-            bracecount = 0;
-            lastBrace = -1;
+        let forStart = """
             startVar = index;
             endVar = -1;
             for (int i = index; i < length; i++) {
-                index = i;
-                if (bracecount == 0 && \(strLabel)[index] == '=') {
-                    startVar = index + 1;
-                    continue;
-                }
-                if (bracecount == 0 && \(strLabel)[index] == ',') {
-                    endVar = index;
-                    break;
-                }
-                if (\(strLabel)[index] == '{') {
-                    bracecount++;
-                    if (bracecount == 2) {
-                        lastBrace = index;
-                    }
-                    continue;
-                }
-                if (\(strLabel)[index] == '}') {
-                    bracecount--;
-                    if (bracecount < 1) {
-                        return self;
-                    }
-                    if (bracecount != 1) {
-                        continue;
-                    }
-                    endVar = index;
-                    break;
-                }
+            """
+        let forContent = """
+            index = i;
+            if (bracecount == 0 && \(strLabel)[index] == '=') {
+                startVar = index + 1;
+                continue;
+            }
+            if (bracecount == 0 && \(strLabel)[index] == ',') {
+                endVar = index;
+                break;
+            }
+            """
+        let forEnd = """
             }
             index++;
             if (endVar == -1) {
                 return self;
             }
-            strncpy(\(accessor), \(strLabel) + startVar, endVar - startVar + 1);
+            strncpy(\(accessor), \(strLabel) + startVar, endVar - startVar);
             \(accessor)[endVar - startVar + 1] = 0;
-            \(assignment)
             """
+        switch type {
+        case .array, .gen:
+            break;
+        default:
+            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n" + forEnd + "\n" + assignment
+        }
+        let braceContent = """
+            if (\(strLabel)[index] == '{') {
+                bracecount++;
+                if (bracecount == 2) {
+                    lastBrace = index;
+                }
+                continue;
+            }
+            if (\(strLabel)[index] == '}') {
+                bracecount--;
+                if (bracecount < 1) {
+                    return self;
+                }
+                if (bracecount != 1) {
+                    continue;
+                }
+                endVar = index;
+                break;
+            }
+            """
+        let braceEnd = """
+            bracecount = 0;
+            lastBrace = -1;
+            """
+        return forStart + "\n" + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n" + forEnd + "\n" + braceEnd + "\n" + assignment
     }
 
     /*fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
