@@ -113,7 +113,6 @@ public final class CFromStringCreator {
             int bracecount = 0;
             int lastBrace = -1;
             int startVar = 0;
-            int endVar = -1;
             """
             let vars = self.assignVars(cls.variables, fromStringNamed: strLabel, forClassNamed: cls.name)
             let end = "return self;"
@@ -156,6 +155,7 @@ public final class CFromStringCreator {
         andCType cType: String,
         accessedFrom accessor: String,
         inClassNamed className: String,
+        withLength length: String = "length",
         _ level: Int = 0,
         _ setter: (String) -> String = { $0 }
     ) -> String? {
@@ -174,8 +174,7 @@ public final class CFromStringCreator {
         let forStart = """
             printf("Parsing \(label)\\n");
             startVar = index;
-            endVar = -1;
-            for (int i = index; i < length; i++) {
+            for (int i = index; i < \(length); i++) {
             """
         let forContent = """
             index = i;
@@ -184,19 +183,25 @@ public final class CFromStringCreator {
                 startVar = index + 1;
                 continue;
             }
+            if (bracecount == 0 && isspace(\(strLabel)[index])) {
+                startVar = index + 1;
+                continue;
+            }
             if (bracecount == 0 && \(strLabel)[index] == ',') {
-                endVar = index;
+                break;
+            }
+            if (bracecount == 0 && \(strLabel)[index] == '}') {
                 break;
             }
             """
         let forEnd = """
             }
-            index++;
-            if (endVar == -1) {
-                return self;
+            strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
+            \(accessor)[index - startVar] = 0;
+            if (bracecount == 0 && \(strLabel)[index] == '}') {
+                index++;
             }
-            strncpy(\(accessor), \(strLabel) + startVar, endVar - startVar);
-            \(accessor)[endVar - startVar + 1] = 0;
+            index++;
             """
         switch type {
         case .array, .gen:
@@ -221,13 +226,11 @@ public final class CFromStringCreator {
                 if (bracecount != 0) {
                     continue;
                 }
-                endVar = index;
                 break;
             }
             """
         let braceEnd = """
             bracecount = 0;
-            lastBrace = -1;
             """
         return forStart + "\n" + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n" + forEnd + "\n" + braceEnd + "\n" + value
     }
@@ -421,11 +424,12 @@ public final class CFromStringCreator {
                     level: level
                 )
                 let head = """
-                    index -= endVar - startVar;
+                    index = lastBrace + 1;
                     for (int \(index) = 0; \(index) < \(length); \(index)++) {
                         printf("Looping \(label): %d\\n", \(index));
                     """
                 let end = """
+                    printf("var_str: %s\\n", var_str);
                     }
                     """
                 let assignment: String
@@ -440,6 +444,7 @@ public final class CFromStringCreator {
                             andCType: cType,
                             accessedFrom: accessor,
                             inClassNamed: className,
+                            withLength: "length",
                             level + 1,
                             { "self->\(label)[\(index)] = \($0);" }
                         ) else {
@@ -447,7 +452,7 @@ public final class CFromStringCreator {
                         }
                         assignment = value
                 }
-                return head + "\n" + self.stringHelpers.indent(assignment) + "\n}"
+                return head + "\n" + self.stringHelpers.indent(assignment) + "\n" + end
             default:
                 return self.createParsing(
                     fromStringNamed: strLabel,

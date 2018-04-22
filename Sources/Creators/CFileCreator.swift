@@ -174,6 +174,7 @@ public final class CFileCreator: ErrorContainer {
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>
+            #include <ctype.h>
 
             /* Network byte order functions */
             #if defined(__linux)
