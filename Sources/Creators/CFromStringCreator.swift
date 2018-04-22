@@ -126,71 +126,88 @@ public final class CFromStringCreator {
         forClassNamed className: String
     ) -> String {
         return variables.lazy.compactMap { variable in
-            let accessor = "var_str"
-            guard let value = self.createValue(
+            return self.createParsing(
+                fromStringNamed: strLabel,
                 forType: variable.type,
                 withLabel: variable.label,
                 andCType: variable.cType,
-                accessedFrom: accessor,
+                accessedFrom: "var_str",
                 inClassNamed: className
-            ) else {
-                return nil
-            }
-            let assignment: String
-            switch variable.type {
-                case .array:
-                    assignment = value
-                case .string:
-                    assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(value)
-                case .char:
-                    assignment = self.createGuard(accessing: accessor) + " {\n" + self.stringHelpers.indent(value) + "\n}"
-                default:
-                    let assign = "self->\(variable.label) = \(value)"
-                    assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assign)
-            }
-            return  """
-                bracecount = 0;
-                lastBrace = -1;
-                startVar = index;
-                endVar = -1;
-                for (int i = index; i < length; i++) {
-                    index = i;
-                    if (bracecount == 0 && \(strLabel)[index] == '=') {
-                        startVar = index + 1;
-                        continue;
-                    }
-                    if (bracecount == 0 && \(strLabel)[index] == ',') {
-                        endVar = index;
-                        break;
-                    }
-                    if (\(strLabel)[index] == '{') {
-                        bracecount++;
-                        if (bracecount == 2) {
-                            lastBrace = index;
-                        }
-                        continue;
-                    }
-                    if (\(strLabel)[index] == '}') {
-                        bracecount--;
-                        if (bracecount < 1) {
-                            return self;
-                        }
-                        if (bracecount != 1) {
-                            continue;
-                        }
-                        endVar = index;
-                        break;
-                    }
-                }
-                index++;
-                if (endVar == -1) {
-                    return self;
-                }
-                strncpy(var_str, \(strLabel) + startVar, endVar - startVar + 1);
-                var_str[endVar - startVar + 1] = 0;
-                \(assignment)
-                """
+            )
         }.combine("") { $0 + "\n" + $1 }
+    }
+
+    fileprivate func createParsing(
+        fromStringNamed strLabel: String,
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClassNamed className: String
+    ) -> String? {
+        guard let value = self.createValue(
+            forType: type,
+            withLabel: label,
+            andCType: cType,
+            accessedFrom: accessor,
+            inClassNamed: className
+        ) else {
+            return nil
+        }
+        let assignment: String
+        switch type {
+            case .array:
+                assignment = value
+            case .string:
+                assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(value)
+            case .char:
+                assignment = self.createGuard(accessing: accessor) + " {\n" + self.stringHelpers.indent(value) + "\n}"
+            default:
+                let assign = "self->\(label) = \(value)"
+                assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assign)
+        }
+        return  """
+            bracecount = 0;
+            lastBrace = -1;
+            startVar = index;
+            endVar = -1;
+            for (int i = index; i < length; i++) {
+                index = i;
+                if (bracecount == 0 && \(strLabel)[index] == '=') {
+                    startVar = index + 1;
+                    continue;
+                }
+                if (bracecount == 0 && \(strLabel)[index] == ',') {
+                    endVar = index;
+                    break;
+                }
+                if (\(strLabel)[index] == '{') {
+                    bracecount++;
+                    if (bracecount == 2) {
+                        lastBrace = index;
+                    }
+                    continue;
+                }
+                if (\(strLabel)[index] == '}') {
+                    bracecount--;
+                    if (bracecount < 1) {
+                        return self;
+                    }
+                    if (bracecount != 1) {
+                        continue;
+                    }
+                    endVar = index;
+                    break;
+                }
+            }
+            index++;
+            if (endVar == -1) {
+                return self;
+            }
+            strncpy(\(accessor), \(strLabel) + startVar, endVar - startVar + 1);
+            \(accessor)[endVar - startVar + 1] = 0;
+            \(assignment)
+            """
     }
 
     /*fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
