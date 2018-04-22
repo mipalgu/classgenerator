@@ -64,6 +64,8 @@ public final class CTypeConverter {
 
     public func convert(signature: String, withType type: VariableTypes) -> String {
         switch type {
+            case .array(let subtype, _):
+                return self.convert(signature: signature, withType: subtype)
             case .bit:
                 return "unsigned int"
             case .gen(let className, let structName, _):
