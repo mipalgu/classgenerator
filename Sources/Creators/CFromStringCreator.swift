@@ -178,13 +178,11 @@ public final class CFromStringCreator {
             return nil
         }
         let forStart = """
-            printf("Parsing \(label)\\n");
             startVar = index;
             for (int i = index; i < \(length); i++) {
             """
         let forContent = """
             index = i;
-            printf("Parsing Char: %c, at index: %d\\n", \(strLabel)[index], index);
             if (bracecount == 0 && \(strLabel)[index] == '=') {
                 startVar = index + 1;
                 continue;
@@ -238,7 +236,6 @@ public final class CFromStringCreator {
             if (\(strLabel)[index] == '}') {
                 bracecount--;
                 if (bracecount < 0) {
-                    printf("bracecount < 1 - exiting\\n");
                     return self;
                 }
                 if (bracecount != 0) {
@@ -411,8 +408,7 @@ public final class CFromStringCreator {
                     \(assign)
                     """
             case .gen(_, let structName, _):
-                let p = "printf(\"gen \(accessor): %s\\n\", \(accessor));"
-                return p + "\n" + setter(structName + "_from_string(&self->\(label), \(accessor))")
+                return setter(structName + "_from_string(&self->\(label), \(accessor))")
             case .bit, .numeric:
                 return self.createNumericValue(
                     fromStringNamed: strLabel,
@@ -452,10 +448,8 @@ public final class CFromStringCreator {
                 let head = """
                     index = lastBrace + 1;
                     for (int \(index) = 0; \(index) < \(length); \(index)++) {
-                        printf("Looping \(label): %d\\n", \(index));
                     """
                 let end = """
-                    printf("var_str: %s\\n", var_str);
                     }
                     """
                 let assignment: String
