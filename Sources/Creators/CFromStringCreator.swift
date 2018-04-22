@@ -125,14 +125,26 @@ public final class CFromStringCreator {
         fromStringNamed strLabel: String,
         forClassNamed className: String
     ) -> String {
+        let accessor = "var_str"
         return variables.lazy.compactMap { variable in
+            let setter: (String) -> String
+            switch variable.type {
+            case .array, .gen:
+                setter = { $0 }
+            case .string:
+                setter = { $0 + ";"}
+            default:
+                setter = { "self->\(variable.label) = \($0);" }
+            }
             return self.createParsing(
                 fromStringNamed: strLabel,
                 forType: variable.type,
                 withLabel: variable.label,
                 andCType: variable.cType,
-                accessedFrom: "var_str",
-                inClassNamed: className
+                accessedFrom: accessor,
+                inClassNamed: className,
+                0,
+                setter
             )
         }.combine("") { $0 + "\n" + $1 }
     }
@@ -144,7 +156,8 @@ public final class CFromStringCreator {
         andCType cType: String,
         accessedFrom accessor: String,
         inClassNamed className: String,
-        _ level: Int = 0
+        _ level: Int = 0,
+        _ setter: (String) -> String = { $0 }
     ) -> String? {
         guard let value = self.createValue(
             fromStringNamed: strLabel,
@@ -153,29 +166,20 @@ public final class CFromStringCreator {
             andCType: cType,
             accessedFrom: accessor,
             inClassNamed: className,
-            level
+            level,
+            setter
         ) else {
             return nil
         }
-        let assignment: String
-        switch type {
-            case .array:
-                assignment = value
-            case .string:
-                assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(value)
-            case .char:
-                assignment = self.createGuard(accessing: accessor) + " {\n" + self.stringHelpers.indent(value) + "\n}"
-            default:
-                let assign = "self->\(label) = \(value)"
-                assignment = self.createGuard(accessing: accessor) + "\n" + self.stringHelpers.indent(assign)
-        }
         let forStart = """
+            printf("Parsing \(label)\\n");
             startVar = index;
             endVar = -1;
             for (int i = index; i < length; i++) {
             """
         let forContent = """
             index = i;
+            printf("Parsing Char: %c, at index: %d\\n", \(strLabel)[index], index);
             if (bracecount == 0 && \(strLabel)[index] == '=') {
                 startVar = index + 1;
                 continue;
@@ -198,22 +202,23 @@ public final class CFromStringCreator {
         case .array, .gen:
             break;
         default:
-            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n" + forEnd + "\n" + assignment
+            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n" + forEnd + "\n" + value
         }
         let braceContent = """
             if (\(strLabel)[index] == '{') {
                 bracecount++;
-                if (bracecount == 2) {
+                if (bracecount == 1) {
                     lastBrace = index;
                 }
                 continue;
             }
             if (\(strLabel)[index] == '}') {
                 bracecount--;
-                if (bracecount < 1) {
+                if (bracecount < 0) {
+                    printf("bracecount < 1 - exiting\\n");
                     return self;
                 }
-                if (bracecount != 1) {
+                if (bracecount != 0) {
                     continue;
                 }
                 endVar = index;
@@ -224,7 +229,7 @@ public final class CFromStringCreator {
             bracecount = 0;
             lastBrace = -1;
             """
-        return forStart + "\n" + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n" + forEnd + "\n" + braceEnd + "\n" + assignment
+        return forStart + "\n" + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n" + forEnd + "\n" + braceEnd + "\n" + value
     }
 
     /*fileprivate func createHead(forClassNamed className: String, forStrVariable strLabel: String) -> String {
@@ -355,7 +360,8 @@ public final class CFromStringCreator {
         andCType cType: String,
         accessedFrom accessor: String,
         inClassNamed className: String,
-        _ level: Int = 0
+        _ level: Int = 0,
+        _ setter: (String) -> String = { $0 }
     ) -> String? {
         switch type {
             case .array:
@@ -366,15 +372,17 @@ public final class CFromStringCreator {
                     andCType: cType,
                     accessedFrom: accessor,
                     inClassNamed: className,
-                    level
+                    level,
+                    setter
                 )
             case .bool:
-                return "strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0 ? true : false;"
+                return setter("strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0")
             case .char:
                 let cast = "char" == cType ? "" : "(\(cType)) "
+                let assign = setter("\(cast)(*strncpy(&\(label)_temp, \(accessor), 1))")
                 return """
                     char \(label)_temp;
-                    self->\(label) = \(cast)(*strncpy(&\(label)_temp, \(accessor), 1));
+                    \(assign)
                     """
             case .bit, .numeric:
                 return self.createNumericValue(
@@ -383,10 +391,12 @@ public final class CFromStringCreator {
                     withLabel: label,
                     andCType: cType,
                     accessedFrom: accessor,
-                    inClassNamed: className
+                    inClassNamed: className,
+                    level,
+                    setter
                 )
             case.string(let length):
-                return "strncpy(&self->\(label)[0], \(accessor), \(length));"
+                return setter("strncpy(&self->\(label)[0], \(accessor), \(length))")
             default:
                 return nil
         }
@@ -399,16 +409,24 @@ public final class CFromStringCreator {
         andCType cType: String,
         accessedFrom accessor: String,
         inClassNamed className: String,
-        _ level: Int = 0
+        _ level: Int = 0,
+        _ setter: (String) -> String = { $0 }
     ) -> String? {
         switch type {
             case .array(let subtype, _):
                 let index = label + "_\(level)" + "_index";
+                let length = self.creatorHelpers.createArrayCountDef(
+                    inClass: className,
+                    forVariable: label,
+                    level: level
+                )
                 let head = """
-                    index -= endVar - startVar + 1;
-                    \(cType) \(label)_\(level);
-                    int \(index);
-                    for (\(index) = 0; \(index) < \(className.uppercased())_ARRAY_SIZE, \(index)++) {
+                    index -= endVar - startVar;
+                    for (int \(index) = 0; \(index) < \(length); \(index)++) {
+                        printf("Looping \(label): %d\\n", \(index));
+                    """
+                let end = """
+                    }
                     """
                 let assignment: String
                 switch subtype {
@@ -418,11 +436,12 @@ public final class CFromStringCreator {
                         guard let value = self.createParsing(
                             fromStringNamed: strLabel,
                             forType: subtype,
-                            withLabel: "\(label)[\(index)]",
+                            withLabel: "\(label)_\(level)",
                             andCType: cType,
                             accessedFrom: accessor,
                             inClassNamed: className,
-                            level + 1
+                            level + 1,
+                            { "self->\(label)[\(index)] = \($0);" }
                         ) else {
                             return nil
                         }
@@ -436,7 +455,9 @@ public final class CFromStringCreator {
                     withLabel: label,
                     andCType: cType,
                     accessedFrom: accessor,
-                    inClassNamed: className
+                    inClassNamed: className,
+                    level,
+                    setter
                 )
         }
     }
@@ -448,21 +469,22 @@ public final class CFromStringCreator {
         andCType cType: String,
         accessedFrom accessor: String,
         inClassNamed className: String,
-        _ level: Int = 0
+        _ level: Int = 0,
+        _ setter: (String) -> String
     ) -> String? {
         switch type {
             case .bit:
-                return "(\(cType))atoi(\(accessor));"
+                return setter("(\(cType))atoi(\(accessor))")
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):
-                        return "(\(cType))atof(\(accessor));"
+                        return setter("(\(cType))atof(\(accessor))")
                     case .long(.long):
-                        return "(\(cType))atoll(\(accessor));"
+                        return setter("(\(cType))atoll(\(accessor))")
                     case .long(.signed), .long(.unsigned):
-                        return "(\(cType))atol(\(accessor));"
+                        return setter("(\(cType))atol(\(accessor))")
                     case .signed, .unsigned:
-                        return "(\(cType))atoi(\(accessor));"
+                        return setter("(\(cType))atoi(\(accessor))")
                 }
             default:
                 return self.createValue(
@@ -472,7 +494,8 @@ public final class CFromStringCreator {
                     andCType: cType,
                     accessedFrom: accessor,
                     inClassNamed: className,
-                    level
+                    level,
+                    setter
                 )
         }
     }
