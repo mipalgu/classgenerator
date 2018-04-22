@@ -143,14 +143,17 @@ public final class CFromStringCreator {
         withLabel label: String,
         andCType cType: String,
         accessedFrom accessor: String,
-        inClassNamed className: String
+        inClassNamed className: String,
+        _ level: Int = 0
     ) -> String? {
         guard let value = self.createValue(
+            fromStringNamed: strLabel,
             forType: type,
             withLabel: label,
             andCType: cType,
             accessedFrom: accessor,
-            inClassNamed: className
+            inClassNamed: className,
+            level
         ) else {
             return nil
         }
@@ -332,22 +335,25 @@ public final class CFromStringCreator {
     }
 
     fileprivate func createValue(
+        fromStringNamed strLabel: String,
         forType type: VariableTypes,
         withLabel label: String,
         andCType cType: String,
         accessedFrom accessor: String,
-        inClassNamed className: String
+        inClassNamed className: String,
+        _ level: Int = 0
     ) -> String? {
         switch type {
             case .array:
-                return nil
-                /*return self.createArrayValue(
+                return self.createArrayValue(
+                    fromStringNamed: strLabel,
                     forType: type,
                     withLabel: label,
                     andCType: cType,
                     accessedFrom: accessor,
-                    inClassNamed: className
-                )*/
+                    inClassNamed: className,
+                    level
+                )
             case .bool:
                 return "strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0 ? true : false;"
             case .char:
@@ -358,6 +364,7 @@ public final class CFromStringCreator {
                     """
             case .bit, .numeric:
                 return self.createNumericValue(
+                    fromStringNamed: strLabel,
                     forType: type,
                     withLabel: label,
                     andCType: cType,
@@ -372,6 +379,7 @@ public final class CFromStringCreator {
     }
 
     fileprivate func createArrayValue(
+        fromStringNamed strLabel: String,
         forType type: VariableTypes,
         withLabel label: String,
         andCType cType: String,
@@ -381,38 +389,35 @@ public final class CFromStringCreator {
     ) -> String? {
         switch type {
             case .array(let subtype, _):
-                let levelStr = 0 == level ? "" : "_\(level)"
-                let sizeLabel = label + levelStr + "_smallest"
-                let countLabel = label + levelStr + "_count"
-                let countDef = self.creatorHelpers.createArrayCountDef(
-                    inClass: className,
-                    forVariable: label,
-                    level: level
-                )
-                let def = "size_t \(sizeLabel) = \(countLabel) < \(countDef) ? \(countLabel) : \(countDef);"
-                let index = "\(label)\(levelStr)_index"
-                let loopDef = "for (int \(index) = 0; \(index) < \(sizeLabel); \(index)++) {"
-                let accessList = self.createArrayAccess(forVariable: label, level)
-                let loopContent: String
+                let index = label + "_\(level)" + "_index";
+                let head = """
+                    index -= endVar - startVar + 1;
+                    \(cType) \(label)_\(level);
+                    int \(index);
+                    for (\(index) = 0; \(index) < \(className.uppercased())_ARRAY_SIZE, \(index)++) {
+                    """
+                let assignment: String
                 switch subtype {
                     case .array:
                         return nil
                     default:
-                        guard let value = self.createValue(
+                        guard let value = self.createParsing(
+                            fromStringNamed: strLabel,
                             forType: subtype,
-                            withLabel: label,
+                            withLabel: "\(label)[\(index)]",
                             andCType: cType,
-                            accessedFrom: label + levelStr + "_values" + accessList,
-                            inClassNamed: className
+                            accessedFrom: accessor,
+                            inClassNamed: className,
+                            level + 1
                         ) else {
                             return nil
                         }
-                        loopContent = "self->\(label)\(accessList) = \(value)"
+                        assignment = value
                 }
-                let endLoop = "}"
-                return def + "\n" + loopDef + "\n" + self.stringHelpers.indent(loopContent) + "\n" + endLoop
+                return head + "\n" + self.stringHelpers.indent(assignment) + "\n}"
             default:
-                return self.createValue(
+                return self.createParsing(
+                    fromStringNamed: strLabel,
                     forType: type,
                     withLabel: label,
                     andCType: cType,
@@ -422,19 +427,14 @@ public final class CFromStringCreator {
         }
     }
 
-    fileprivate func createArrayAccess(forVariable label: String, _ level: Int) -> String {
-        if level <= 0 {
-            return "[\(label)_index]"
-        }
-        return self.createArrayAccess(forVariable: label, level - 1) + "[\(label)_\(level)_\(index)]"
-    }
-
     fileprivate func createNumericValue(
+        fromStringNamed strLabel: String,
         forType type: VariableTypes,
         withLabel label: String,
         andCType cType: String,
         accessedFrom accessor: String,
-        inClassNamed className: String
+        inClassNamed className: String,
+        _ level: Int = 0
     ) -> String? {
         switch type {
             case .bit:
@@ -452,11 +452,13 @@ public final class CFromStringCreator {
                 }
             default:
                 return self.createValue(
+                    fromStringNamed: strLabel,
                     forType: type,
                     withLabel: label,
                     andCType: cType,
                     accessedFrom: accessor,
-                    inClassNamed: className
+                    inClassNamed: className,
+                    level
                 )
         }
     }
