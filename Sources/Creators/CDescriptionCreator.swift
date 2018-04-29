@@ -173,7 +173,7 @@ public final class CDescriptionCreator {
                     len = gu_strlcat(\(strLabel), "\(includeLabel ? arrLabel + "=" : ""){", bufferSize);
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
                     \(self.stringHelpers.indent(self.createGuard(forStrVariable: strLabel)))
-                        if (0 == \(arrLabel)_index) {
+                        if (\(arrLabel)_index > 0) {
                             \(self.createComma(appendingTo: strLabel))
                         }
                     \(self.stringHelpers.indent(value))
