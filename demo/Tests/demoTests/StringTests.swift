@@ -78,15 +78,15 @@ public class StringTests: XCTestCase {
         ]
     }
 
-    var demo: wb_demo = wb_demo()
+    var demo: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(1), wb_sub(2)])
 
     //swiftlint:disable line_length
     let expectedDemoDescription: String = """
-        str=hi, b=false, c=c, sc=c, uc=c, i=1, si=1, sii=1, u=1, ui=1, u8=1, u16=1, u32=1, u64=1, i8=1, i16=1, i32=1, i64=1, s=1, si_2=1, ss=1, ssi=1, us=1, usi=1, l=1, li=1, sl=1, sli=1, ul=1, uli=1, ll=1, lli=1, sll=1, slli=1, ull=1, ulli=1, f=1.000000, ft=1.000000, d=1.000000, dt=1.000000, str2=, b2=true, c2=, sc2=, uc2=, i2=0, si2=0, sii2=0, u2=0, ui2=0, u82=0, u162=0, u322=0, u642=0, i82=0, i162=0, i322=0, i642=0, s2=0, si_22=0, ss2=0, ssi2=0, us2=0, usi2=0, l2=0, li2=0, sl2=0, sli2=0, ul2=0, uli2=0, ll2=0, lli2=0, sll2=0, slli2=0, ull2=0, ulli2=0, f2=0.000000, ft2=0.000000, d2=0.000000, dt2=0.000000, array16={1, 2, 3, 4}, bools={true, true, true}, myBit=0, myBit2=1, sub1={i=0}, sub2={i=1}
+        str=hi, b=false, c=c, sc=c, uc=c, i=1, si=1, sii=1, u=1, ui=1, u8=1, u16=1, u32=1, u64=1, i8=1, i16=1, i32=1, i64=1, s=1, si_2=1, ss=1, ssi=1, us=1, usi=1, l=1, li=1, sl=1, sli=1, ul=1, uli=1, ll=1, lli=1, sll=1, slli=1, ull=1, ulli=1, f=1.000000, ft=1.000000, d=1.000000, dt=1.000000, str2=, b2=true, c2=, sc2=, uc2=, i2=0, si2=0, sii2=0, u2=0, ui2=0, u82=0, u162=0, u322=0, u642=0, i82=0, i162=0, i322=0, i642=0, s2=0, si_22=0, ss2=0, ssi2=0, us2=0, usi2=0, l2=0, li2=0, sl2=0, sli2=0, ul2=0, uli2=0, ll2=0, lli2=0, sll2=0, slli2=0, ull2=0, ulli2=0, f2=0.000000, ft2=0.000000, d2=0.000000, dt2=0.000000, array16={1, 2, 3, 4}, bools={true, true, true}, myBit=0, myBit2=1, sub1={i=0}, sub2={i=1}, subs={{i=0}, {i=1}, {i=2}}
         """
 
     let expectedToString: String = """
-        hi, false, c, c, c, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.000000, 1.000000, 1.000000, 1.000000, , true, , , , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.000000, 0.000000, 0.000000, 0.000000, {1, 2, 3, 4}, {true, true, true}, 0, 1, {0}, {1}
+        hi, false, c, c, c, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.000000, 1.000000, 1.000000, 1.000000, , true, , , , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.000000, 0.000000, 0.000000, 0.000000, {1, 2, 3, 4}, {true, true, true}, 0, 1, {0}, {1}, {{0}, {1}, {2}}
         """
 
     var cDescription: String {
@@ -120,7 +120,7 @@ public class StringTests: XCTestCase {
     public override func setUp() {
         var sub = wb_sub.make()
         sub.i = 1
-        self.demo = wb_demo("hi", sub2: sub)
+        self.demo = wb_demo("hi", sub2: sub, subs: [wb_sub(0), wb_sub(1), wb_sub(2)])
     }
 
     public func test_cDescriptionEqualsExpectedDescription() {
