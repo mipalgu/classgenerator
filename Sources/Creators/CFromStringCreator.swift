@@ -408,7 +408,11 @@ public final class CFromStringCreator {
                     \(assign)
                     """
             case .gen(_, let structName, _):
-                return setter(structName + "_from_string(&self->\(label), \(accessor))")
+                let localLabel = 0 == level ? "self->" + label : label
+                let pre = 0 == level ? "" : "struct " + structName + " " + label + ";\n"
+                let assign = structName + "_from_string(&\(localLabel), \(accessor));"
+                let end = 0 == level ? "" : "\n" + setter(localLabel)
+                return pre + assign + end
             case .bit, .numeric:
                 return self.createNumericValue(
                     fromStringNamed: strLabel,
