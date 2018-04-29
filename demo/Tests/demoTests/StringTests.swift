@@ -120,7 +120,7 @@ public class StringTests: XCTestCase {
     public override func setUp() {
         var sub = wb_sub.make()
         sub.i = 1
-        self.demo = wb_demo(str: "hi", sub2: sub)
+        self.demo = wb_demo("hi", sub2: sub)
     }
 
     public func test_cDescriptionEqualsExpectedDescription() {
@@ -183,7 +183,7 @@ public class StringTests: XCTestCase {
     }
 
     public func test_swiftDescriptionCanBeConvertedToStruct() {
-        var target = wb_demo(str: "tar")
+        var target = wb_demo("tar")
         let description = "\(self.demo)"
         let result = description.utf8CString.withUnsafeBufferPointer {
             wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))

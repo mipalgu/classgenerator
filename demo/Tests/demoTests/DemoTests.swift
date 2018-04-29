@@ -79,7 +79,7 @@ public class DemoTests: XCTestCase {
     var demo: wb_demo = wb_demo()
 
     public override func setUp() {
-        self.demo = wb_demo(str: "hello")
+        self.demo = wb_demo("hello")
     }
 
     public func test_constructorUsesDefaultValues() {
@@ -433,6 +433,10 @@ public class DemoTests: XCTestCase {
         XCTAssertEqual(lhs, rhs)
         rhs.sub2 = lhs.sub2
         XCTAssertEqual(lhs, rhs)
+        rhs._subs = [wb_sub(1), wb_sub(2), wb_sub(3)]
+        XCTAssertNotEqual(lhs, rhs)
+        rhs._subs = lhs._subs
+        XCTAssertEqual(lhs, rhs)
     }
 
     //swiftlint:disable:next function_body_length
@@ -529,7 +533,12 @@ public class DemoTests: XCTestCase {
             ],
             "sub2": [
                 "i": self.demo.sub2.i
-            ]
+            ],
+            "subs": (
+                self.demo.subs.0,
+                self.demo.subs.1,
+                self.demo.subs.2
+            )
         ]
         let result = wb_demo(fromDictionary: d)
         XCTAssertEqual(self.demo, result)

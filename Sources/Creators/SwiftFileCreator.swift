@@ -213,7 +213,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = "public static func make() -> \(structName) {"
         let content: String
         if let v = variables.first {
-            content = "return \(structName)(\(v.label): \(v.swiftDefaultValue))"
+            content = "return \(structName)(\(v.swiftDefaultValue))"
         } else {
             content = "return \(structName)()"
         }
@@ -224,9 +224,10 @@ public final class SwiftFileCreator: ErrorContainer {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
         let startDef = "public init("
         let copy = "self.init()\n"
-        let params = variables.map {
-            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
-            return "\($0.label): \(type) = \($0.swiftDefaultValue)"
+        let params = variables.enumerated().map {
+            let type = self.createSwiftType(forType: $1.type, withSwiftType: $1.swiftType)
+            let label = (0 == $0 ? "_ " : "") + $1.label
+            return "\(label): \(type) = \($1.swiftDefaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
