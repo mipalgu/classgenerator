@@ -159,10 +159,10 @@ public final class CDescriptionCreator {
                             forType: subtype,
                             withLabel: arrLabel,
                             andClassName: className,
-                            includeLabel: false,
+                            includeLabel: includeLabel,
                             appendingTo: strLabel,
                             { _ in "self->" + self.createIndexes(forLabel: label, level) },
-                            level
+                            level + 1
                         )
                 }
                 guard let value = temp else {
@@ -205,6 +205,7 @@ public final class CDescriptionCreator {
         _ createGetter: (String) -> String = { "self->" + $0 },
         _ level: Int = 0
     ) -> String? {
+        let pre = true == includeLabel && 0 == level ? label + "=" : ""
         let getter = createGetter(label)
         switch type {
             case .array:
@@ -216,17 +217,17 @@ public final class CDescriptionCreator {
                     appendingTo: strLabel
                 )
             case .bit:
-                return self.createSNPrintf("%u", getter, appendingTo: strLabel)
+                return self.createSNPrintf("\(pre)%u", getter, appendingTo: strLabel)
             case .bool:
-                return "len = gu_strlcat(\(strLabel), \(getter) ? \"true\" : \"false\", bufferSize);"
+                return "len = gu_strlcat(\(strLabel), \(getter) ? \"\(pre)true\" : \"\(pre)false\", bufferSize);"
             case .char:
-                return self.createSNPrintf("%c", getter, appendingTo: strLabel)
+                return self.createSNPrintf("\(pre)%c", getter, appendingTo: strLabel)
             case .gen(let genName, let structName, _):
                 let fun = true == includeLabel ? "description" : "to_string"
                 let localLabel = 0 == level ? label : label + "_\(level)"
                 let size = genName.uppercased() + "_" + (true == includeLabel ? "DESC" : "TO_STRING") + "_BUFFER_SIZE"
                 return """
-                    len = gu_strlcat(\(strLabel), "{", bufferSize);
+                    len = gu_strlcat(\(strLabel), "\(pre){", bufferSize);
                     \(self.createGuard(forStrVariable: strLabel))
                     char \(localLabel)_buffer[\(size)];
                     char* \(localLabel)_p = \(localLabel)_buffer;
@@ -237,12 +238,12 @@ public final class CDescriptionCreator {
                     """
             case .numeric(let numericType):
                 return self.createSNPrintf(
-                    "%\(self.createFormat(forNumericType: numericType))",
+                    "\(pre)%\(self.createFormat(forNumericType: numericType))",
                     getter,
                     appendingTo: strLabel
                 )
             case .string:
-                return self.createSNPrintf("%s", getter, appendingTo: strLabel)
+                return self.createSNPrintf("\(pre)%s", getter, appendingTo: strLabel)
             default:
                 return nil
         }
@@ -274,58 +275,6 @@ public final class CDescriptionCreator {
                 return "d"
             case .unsigned:
                 return "u"
-        }
-    }
-
-    fileprivate func createStringValue(
-        forType type: VariableTypes,
-        withLabel label: String,
-        andClassName className: String,
-        includeLabel: Bool,
-        appendingTo strLabel: String,
-        _ createGetter: (String) -> String = { "self->" + $0 },
-        _ level: Int = 0
-    ) -> String? {
-        let getter = createGetter(label)
-        switch type {
-            case .array:
-                return self.createArrayDescription(
-                    forType: type,
-                    withLabel: label,
-                    andClassName: className,
-                    includeLabel: includeLabel,
-                    appendingTo: strLabel
-                )
-            case .bit:
-                return self.createSNPrintf("%u", getter, appendingTo: strLabel)
-            case .bool:
-                return "len = gu_strlcat(\(strLabel), \(getter) ? \"true\" : \"false\", bufferSize);"
-            case .char:
-                return self.createSNPrintf("%c", getter, appendingTo: strLabel)
-            case .gen(let genName, let structName, _):
-                let fun = true == includeLabel ? "description" : "to_string"
-                let localLabel = 0 == level ? label : label + "_\(level)"
-                let size = genName.uppercased() + "_" + (true == includeLabel ? "DESC" : "TO_STRING") + "_BUFFER_SIZE"
-                return """
-                    len = gu_strlcat(\(strLabel), "{", bufferSize);
-                    \(self.createGuard(forStrVariable: strLabel))
-                    char \(localLabel)_buffer[\(size)];
-                    char* \(localLabel)_p = \(localLabel)_buffer;
-                    const char* \(localLabel)_\(fun) = \(structName)_\(fun)(&self->\(localLabel), \(localLabel)_p, \(size));
-                    len = gu_strlcat(\(strLabel), \(localLabel)_p, bufferSize);
-                    \(self.createGuard(forStrVariable: strLabel))
-                    len = gu_strlcat(\(strLabel), "}", bufferSize);
-                    """
-            case .numeric(let numericType):
-                return self.createSNPrintf(
-                    "%\(self.createFormat(forNumericType: numericType))",
-                    getter,
-                    appendingTo: strLabel
-                )
-            case .string:
-                return self.createSNPrintf("%s", getter, appendingTo: strLabel)
-            default:
-                return nil
         }
     }
 
