@@ -80,8 +80,8 @@ public class WhiteboardTests: XCTestCase {
     }
 
     public func test_posts() {
-        let demo = wb_demo(str: "str")
-        let demo2 = wb_demo(str: "2")
+        let demo = wb_demo("str")
+        let demo2 = wb_demo("2")
         self.wbd.post(val: demo2)
         self.wbd.post(val: demo)
         let fetch = self.wbd.get()

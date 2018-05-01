@@ -155,7 +155,6 @@ public final class TypeIdentifier {
         else {
             return .unknown
         }
-        fatalError("'gen' type are currently not supported")
         return .gen(
             name,
             self.helpers.createStructName(forClassNamed: name),

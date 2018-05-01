@@ -115,3 +115,4 @@ bit myBit // A comment about myBit.
 bit myBit2=1 // A comment about myBit.
 gen sub sub1 // A comment about sub1.
 gen sub sub2 = wb_sub() // A comment about sub2.
+gen sub subs[3] // An array of subs.

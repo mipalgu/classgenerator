@@ -213,7 +213,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = "public static func make() -> \(structName) {"
         let content: String
         if let v = variables.first {
-            content = "return \(structName)(\(v.label): \(v.swiftDefaultValue))"
+            content = "return \(structName)(\(v.swiftDefaultValue))"
         } else {
             content = "return \(structName)()"
         }
@@ -224,9 +224,10 @@ public final class SwiftFileCreator: ErrorContainer {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
         let startDef = "public init("
         let copy = "self.init()\n"
-        let params = variables.map {
-            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
-            return "\($0.label): \(type) = \($0.swiftDefaultValue)"
+        let params = variables.enumerated().map {
+            let type = self.createSwiftType(forType: $1.type, withSwiftType: $1.swiftType)
+            let label = (0 == $0 ? "_ " : "") + $1.label
+            return "\(label): \(type) = \($1.swiftDefaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
@@ -420,7 +421,13 @@ public final class SwiftFileCreator: ErrorContainer {
             case .array:
                 return self.createArrayStringValue(fromType: variable.type, andLabel: variable.label)
             default:
-                guard let value = self.createStringValue(fromType: variable.type, andLabel: variable.label) else {
+                guard let value = self.createStringValue(
+                    fromType: variable.type,
+                    andLabel: variable.label,
+                    appendingTo: variable.label + "=",
+                    getter: "self.\(variable.label)",
+                    computedGetter: "self._\(variable.label)"
+                ) else {
                     return nil
                 }
                 return "descString += " + value
@@ -434,36 +441,66 @@ public final class SwiftFileCreator: ErrorContainer {
                     case .array:
                         return nil
                     default:
+                        guard
+                            let firstValue = self.createStringValue(
+                                fromType: subtype,
+                                andLabel: label,
+                                appendingTo: "",
+                                getter: "self." + label + ".0",
+                                computedGetter: "self._" + label + "[0]"
+                            ),
+                            let value = self.createStringValue(
+                            fromType: subtype,
+                            andLabel: label,
+                            appendingTo: "",
+                            getter: "$1",
+                            computedGetter: "$1"
+                        ) else {
+                            return nil
+                        }
                         //swiftlint:disable line_length
                         return """
-                            if let first = self._\(label).first {
-                                descString += \"\(label)={\"
-                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + ", \\($1)" }
-                                descString += \"}\"
-                            } else {
+                            if self._\(label).isEmpty {
                                 descString += \"\(label)={}\"
+                            } else {
+                                let first = \(firstValue)
+                                descString += \"\(label)={\"
+                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + ", " + \(value) }
+                                descString += \"}\"
                             }
                             """
                 }
             default:
-                return self.createStringValue(fromType: type, andLabel: label)
+                return self.createStringValue(
+                    fromType: type,
+                    andLabel: label,
+                    appendingTo: label + "=",
+                    getter: "self.\(label)",
+                    computedGetter: "self._\(label)"
+                )
         }
     }
 
-    fileprivate func createStringValue(fromType type: VariableTypes, andLabel label: String) -> String? {
+    fileprivate func createStringValue(
+        fromType type: VariableTypes,
+        andLabel label: String,
+        appendingTo pre: String,
+        getter: String,
+        computedGetter: String
+    ) -> String? {
         switch type {
             case .array:
                 return self.createArrayStringValue(fromType: type, andLabel: label)
             case .string:
-                return "\"\(label)=\\(self._\(label))\""
+                return "\"\(pre)\\(\(computedGetter))\""
             case .char:
-                return "\"\(label)=\\(0 == self.\(label) ? \"\" : String(Character(self._\(label))))\""
+                return "\"\(pre)\\(0 == \(getter) ? \"\" : String(Character(\(computedGetter))))\""
             case .gen:
-                return "\"\(label)={\" + self.\(label).description + \"}\""
+                return "\"\(pre){\" + \(getter).description + \"}\""
             case .unknown, .pointer:
                 return nil
             default:
-                return "\"\(label)=\\(self.\(label))\""
+                return "\"\(pre)\\(\(getter))\""
         }
     }
 
