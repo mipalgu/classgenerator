@@ -219,7 +219,7 @@ public final class CPPFromStringCreator {
                 return """
                     \(className) \(label) = \(className)();
                     \(label).from_string(\(getter));
-                    \(setter("\(className)(\(label))"));
+                    \(setter(label));
                     """
             case .string(let length):
                 return "gu_strlcpy(const_cast<char *>(this->\(label)()), \(getter).c_str(), \(length));"
@@ -258,7 +258,7 @@ public final class CPPFromStringCreator {
                         getterValue = "\(getter).substr(0, pos)"
                         break
                 }
-                let index = "\(label)_index"
+                let index = "\(label)_array_index"
                 let length = self.creatorHelpers.createArrayCountDef(
                     inClass: className,
                     forVariable: label,
@@ -293,10 +293,10 @@ public final class CPPFromStringCreator {
                                 if (\(label)_bracecount < 1) {
                                     break;
                                 }
-                                if (\(label)_bracecount != 1) {
+                                if (\(label)_bracecount > 1) {
                                     continue;
                                 }
-                                std::string \(label)_value = \(getter).substr(\(label)_lastBrace, \(label)_loop_index - \(label)_lastBrace + 1);
+                                std::string \(label)_value = str.substr(\(label)_lastBrace, \(label)_loop_index - \(label)_lastBrace + 1);
                         \(self.stringHelpers.indent(setter, 2))
                                 continue;
                             }
@@ -304,7 +304,7 @@ public final class CPPFromStringCreator {
                         """
                 default:
                     return """
-                        for (\(index) = 0; \(index) < \(length); \(index)++) {
+                        for (int \(index) = 0; \(index) < \(length); \(index)++) {
                             size_t pos = \(getter).find(",");
                         \(self.stringHelpers.indent(setter))
                             \(getter) = \(getter).substr(pos + 2);
