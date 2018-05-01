@@ -215,7 +215,12 @@ public final class CPPFromStringCreator {
                 let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
                 return setter("static_cast<\(cType)>(\(conversionFunction)(\(getter).c_str()))") + ";"
             case .gen(_, _, let className):
-                return setter(className + "(\(getter))") + ";"
+                //return setter(className + "(\(getter))") + ";"
+                return """
+                    \(className) \(label) = \(className)();
+                    \(label).from_string(\(getter));
+                    \(setter("\(className)(\(label))"));
+                    """
             case .string(let length):
                 return "gu_strlcpy(const_cast<char *>(this->\(label)()), \(getter).c_str(), \(length));"
             case .pointer:
@@ -239,10 +244,18 @@ public final class CPPFromStringCreator {
     ) -> String? {
         switch type {
             case .array(let subtype, _):
+                let postSetter: String
+                let getterValue: String
                 switch subtype {
                     case .array:
                         return nil
+                    case .gen:
+                        postSetter = "++"
+                        getterValue = "\(label)_value"
+                        break
                     default:
+                        postSetter = ""
+                        getterValue = "\(getter).substr(0, pos)"
                         break
                 }
                 let index = "\(label)_index"
@@ -256,21 +269,51 @@ public final class CPPFromStringCreator {
                     forVariable: label,
                     withType: subtype,
                     andCType: cType,
-                    withGetter: "\(getter).substr(0, pos)",
-                    andSetter: { "set_\(label)(\($0), \(index))" }
+                    withGetter: getterValue,
+                    andSetter: { "set_\(label)(\($0), \(index)\(postSetter))" }
                 ) else {
                     return nil
                 }
-                return """
-                    for (\(index) = 0; \(index) < \(length); \(index)++) {
-                        size_t pos = \(getter).find(",");
-                    \(self.stringHelpers.indent(setter))
-                        \(getter) = \(getter).substr(pos + 2);
-                        if (pos == std::string::npos) {
-                            break;
+                switch (subtype) {
+                case .gen:
+                    return """
+                        int \(label)_bracecount = 0;
+                        unsigned long \(label)_lastBrace = \(label)_index;
+                        int \(index) = 0;
+                        for (unsigned long \(label)_loop_index = \(label)_index; \(label)_loop_index < str.length(); \(label)_loop_index++) {
+                            if (str.at(\(label)_loop_index) == '{') {
+                                \(label)_bracecount++;
+                                if (\(label)_bracecount == 2) {
+                                    \(label)_lastBrace = \(label)_loop_index;
+                                }
+                                continue;
+                            }
+                            if (str.at(\(label)_loop_index) == '}') {
+                                \(label)_bracecount--;
+                                if (\(label)_bracecount < 1) {
+                                    break;
+                                }
+                                if (\(label)_bracecount != 1) {
+                                    continue;
+                                }
+                                std::string \(label)_value = \(getter).substr(\(label)_lastBrace, \(label)_loop_index - \(label)_lastBrace + 1);
+                        \(self.stringHelpers.indent(setter, 2))
+                                continue;
+                            }
                         }
-                    }
-                    """
+                        """
+                default:
+                    return """
+                        for (\(index) = 0; \(index) < \(length); \(index)++) {
+                            size_t pos = \(getter).find(",");
+                        \(self.stringHelpers.indent(setter))
+                            \(getter) = \(getter).substr(pos + 2);
+                            if (pos == std::string::npos) {
+                                break;
+                            }
+                        }
+                        """
+                }
             default:
                 return self.calculateSetterValue(
                     forClassNamed: className,
