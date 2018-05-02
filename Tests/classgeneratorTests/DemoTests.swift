@@ -68,6 +68,7 @@ public class DemoTests: ClassGeneratorTestCase {
 
     public static var allTests: [(String, (DemoTests) -> () throws -> Void)] {
         return [
+            ("test_makeDemo", test_makeDemo),
             ("test_demo", test_demo),
             ("test_demoWithCConversion", test_demoWithCConversion)
         ]
@@ -117,6 +118,20 @@ public class DemoTests: ClassGeneratorTestCase {
 
     public override func tearDown() {
         self.filemanager.changeCurrentDirectoryPath(self.startingDirectory)
+    }
+
+    public func test_makeDemo() {
+        guard true == self.filemanager.changeCurrentDirectoryPath("demo") else {
+            XCTFail("Unable to change into demo directory.")
+            return
+        }
+        let p = Process()
+        p.currentDirectoryPath = self.filemanager.currentDirectoryPath
+        p.launchPath = "/usr/bin/env"
+        p.arguments = ["bmake"]
+        p.launch()
+        p.waitUntilExit()
+        XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
     }
 
     public func test_demo() {
