@@ -121,6 +121,13 @@ public class DemoTests: ClassGeneratorTestCase {
     }
 
     public func test_makeDemo() {
+        let buildProcess = Process()
+        buildProcess.currentDirectoryPath = self.filemanager.currentDirectoryPath
+        buildProcess.launchPath = "/usr/bin/env"
+        buildProcess.arguments = ["bmake", "host"]
+        buildProcess.launch()
+        buildProcess.waitUntilExit()
+        XCTAssertEqual(EXIT_SUCCESS, buildProcess.terminationStatus, "Demo tests failed")
         guard true == self.filemanager.changeCurrentDirectoryPath("demo") else {
             XCTFail("Unable to change into demo directory.")
             return
