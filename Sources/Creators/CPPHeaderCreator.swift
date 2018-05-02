@@ -238,7 +238,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             let label = self.calculateCppLabel(forVariable: $0)
             switch $0.type {
                 case .array:
-                    return "\(type) \(label) = NULL"
+                    return "\(type) \(label) = NULLPTR"
                 default:
                     return "\(type) \(label) = \($0.defaultValue)"
             }
@@ -334,7 +334,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             case .array:
                 let def = arrayDefGetter(variable.label)(0)
                 let temp = """
-                    if (\(label) != NULL) {
+                    if (\(label) != NULLPTR) {
                         std::memcpy(this->_\(variable.label), \(label), \(def) * sizeof (\(variable.cType)));
                     }
                     """
