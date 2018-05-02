@@ -63,6 +63,8 @@ import CGUSimpleWhiteboard
 import GUSimpleWhiteboard
 import XCTest
 
+//swiftlint:disable identifier_name
+
 public class StringTests: XCTestCase {
 
     public static var allTests: [(String, (StringTests) -> () throws -> Void)] {

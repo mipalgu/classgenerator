@@ -63,6 +63,7 @@ import CGUSimpleWhiteboard
 import GUSimpleWhiteboard
 import XCTest
 
+//swiftlint:disable identifier_name
 //swiftlint:disable file_length
 //swiftlint:disable:next type_body_length
 public class DemoTests: XCTestCase {
