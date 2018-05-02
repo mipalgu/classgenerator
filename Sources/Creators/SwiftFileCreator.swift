@@ -383,6 +383,9 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = self.createExtensionDef(on: structName, extending: ["CustomStringConvertible"])
         let descriptionVarComment = self.creatorHelpers.createComment(from: "Convert to a description String.")
         let descriptionVar = "public var description: String {"
+        if nil == variables.first(where: { self.creatorHelpers.isSupportedStringType($0.type) }) {
+            return def + "\n\n" + self.stringHelpers.indent(descriptionVar + "\n" + self.stringHelpers.indent("return \"\"") + "\n}") + "\n\n}"
+        }
         let descDef = "var descString = \"\""
         let descReturn = "return descString"
         let setters = variables.flatMap {
