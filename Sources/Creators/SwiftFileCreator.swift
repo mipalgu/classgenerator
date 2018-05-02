@@ -126,7 +126,7 @@ public final class SwiftFileCreator: ErrorContainer {
     }
 
     fileprivate func createArrayWrappers(forVariables variables: [Variable]) -> String? {
-        return variables.flatMap {
+        let wrappers: [String] = variables.compactMap {
             let getterSetup: String
             let getterAssign: String
             switch $0.type {
@@ -158,7 +158,11 @@ public final class SwiftFileCreator: ErrorContainer {
             let getter = getterDef + "\n" + self.stringHelpers.indent(getterContent) + "\n" + endGetterDef
             let setter = setterDef + "\n" + self.stringHelpers.indent(setterContent) + "\n" + endSetterDef
             return def + "\n" + self.stringHelpers.indent(getter + " " + setter) + "\n" + endDef
-        }.combine("") { $0 + "\n\n" + $1 }
+        }
+        if wrappers.isEmpty {
+            return nil
+        }
+        return wrappers.combine("") { $0 + "\n\n" + $1 }
     }
 
     fileprivate func createBitGetter(withLabel label: String) -> String {
