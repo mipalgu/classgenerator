@@ -77,7 +77,9 @@ public final class CPPFromStringCreator {
         withStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
+        let containsSupportedTypes = nil != variables.first { self.isSupportedType($0.type) }
         let def = "void from_string(const std::string &str) {"
+        let nodef = "void from_string(const std::string &) {"
         let ifDef = "#ifdef USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let elseDef = "#else"
         let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
@@ -88,11 +90,11 @@ public final class CPPFromStringCreator {
             withVariables: variables
         )
         let endef = "}"
-        return self.stringHelpers.indent(def, 2) + "\n"
-            + ifDef + "\n"
+        return ifDef + "\n" + self.stringHelpers.indent(def, 2) + "\n"
             + self.stringHelpers.indent(cImplementation, 3) + "\n"
             + elseDef + "\n"
-            + self.stringHelpers.indent(cppImplementation, 3) + "\n"
+            + (containsSupportedTypes ? self.stringHelpers.indent(def, 2) : self.stringHelpers.indent(nodef, 2))
+            + "\n" + self.stringHelpers.indent(cppImplementation, 3) + "\n"
             + endifDef + "\n"
             + self.stringHelpers.indent(endef, 2)
     }
