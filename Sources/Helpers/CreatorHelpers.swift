@@ -209,4 +209,15 @@ public final class CreatorHelpers {
         return self.helpers.createStructName(forClassNamed: className)
     }
 
+    public func isSupportedStringType(_ type: VariableTypes) -> Bool {
+        switch type {
+        case .array(let subtype, _):
+            return self.isSupportedStringType(subtype)
+        case .unknown:
+            return false
+        default:
+            return true
+        }
+    }
+
 }

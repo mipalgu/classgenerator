@@ -77,7 +77,7 @@ public final class CPPFromStringCreator {
         withStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
-        let containsSupportedTypes = nil != variables.first { self.isSupportedType($0.type) }
+        let containsSupportedTypes = nil != variables.first { self.creatorHelpers.isSupportedStringType($0.type) }
         let def = "void from_string(const std::string &str) {"
         let nodef = "void from_string(const std::string &) {"
         let ifDef = "#ifdef USE_WB_\(cls.name.uppercased())_C_CONVERSION"
@@ -99,23 +99,12 @@ public final class CPPFromStringCreator {
             + self.stringHelpers.indent(endef, 2)
     }
 
-    fileprivate func isSupportedType(_ type: VariableTypes) -> Bool {
-        switch type {
-        case .array(let subtype, _):
-            return self.isSupportedType(subtype)
-        case .unknown:
-            return false
-        default:
-            return true
-        }
-    }
-
     fileprivate func createCPPImplementation(
         forClassNamed className: String,
         withStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
-        guard nil != variables.first(where: { self.isSupportedType($0.type) }) else {
+        guard nil != variables.first(where: { self.creatorHelpers.isSupportedStringType($0.type) }) else {
             return ""
         }
         let varDef = "char var[255];"
