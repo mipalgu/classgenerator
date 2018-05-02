@@ -68,5 +68,7 @@
 #include "somestruct.h"
 #include "wb_demo.h"
 #include "cpp_bridge.h"
+#include "wb_field_ball.h"
+#include "wb_field_balls.h"
 
 #endif  /* BRIDGE_H */

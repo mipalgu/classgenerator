@@ -10,3 +10,11 @@ Sources/bridge/wb_sub.h
 Sources/bridge/wb_sub.c
 Sources/bridge/Sub.h
 Sources/demo/Sub.swift
+Sources/bridge/wb_field_ball.h
+Sources/bridge/wb_field_ball.c
+Sources/bridge/FieldBall.h
+Sources/demo/FieldBall.swift
+Sources/bridge/wb_field_balls.h
+Sources/bridge/wb_field_balls.c
+Sources/bridge/FieldBalls.h
+Sources/demo/FieldBalls.swift

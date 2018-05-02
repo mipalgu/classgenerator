@@ -1,0 +1,26 @@
+-author Carl Lusty
+
+-c
+#include <stdint.h>
+
+enum BallOptions {
+	NoBallDetected = 0, ///< Not Found
+	UltraBall,          ///< Best
+	GreatBall,          ///< Better
+    RegularBall         ///< Fine
+};
+
+-swift
+import bridge
+
+-properties
+enum BallOptions sightingType = NoBallDetected // Ball detection details.
+
+uint16_t x = 0  //X position
+uint16_t y = 0  //Y position
+uint16_t r = 0  //Radius, in pixels
+
+-comment
+Results for the Ball Ray Tracer (guvision). 
+Coords are in visions XY system. 0,0 is the top left position. The bottom right position is dependant on the resolution in vision and should be check from the vision status whiteboard message.
+

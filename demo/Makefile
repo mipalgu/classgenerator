@@ -8,6 +8,8 @@ all:	all-real
 generate-classes:
 	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./demo.gen
 	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./sub.gen
+	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./fieldBall.gen
+	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./fieldBalls.gen
 
 .include "../../../mk/mipal.mk"
 

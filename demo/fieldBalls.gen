@@ -1,0 +1,14 @@
+-author Carl Lusty
+
+-c
+#include <wb_field_ball.h>
+
+-swift
+import bridge
+
+-properties
+
+struct wb_field_ball balls[2] = { wb_field_ball(), wb_field_ball() } //ball objects
+
+-comment
+Array of fieldBalls, one instance reported by each camera. Using the guvision camera ordering for top and bottom, on the Nao. Reported by the BallRayTracer.
