@@ -2,6 +2,7 @@ SWIFT=swift
 CUSTOM_WB_NAME=custom_whiteboard
 CUSTOM_WB_CLASSES=demo
 ALL_TARGETS=generate-classes host
+SWIFTCFLAGS=-warnings-as-errors
 
 all:	all-real
 
@@ -14,4 +15,4 @@ generate-classes:
 .include "../../../mk/c++11.mk"
 .include "../../../mk/mipal.mk"
 
-CFLAGS+=-DWHITEBOARD_POSTER_STRING_CONVERSION=1 -DWHITEBOARD_SERIALISATION=1 -I${SRCDIR}/bridge
+CFLAGS+=-DWHITEBOARD_POSTER_STRING_CONVERSION=1 -DWHITEBOARD_SERIALISATION=1 -I${SRCDIR}/bridge -Werror
