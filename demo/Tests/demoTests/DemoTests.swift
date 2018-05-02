@@ -93,7 +93,7 @@ public class DemoTests: XCTestCase {
             return
         }
         XCTAssertEqual(self.demo, result.pointee)
-        result.deallocate(capacity: 1)
+        result.deallocate()
     }
 
     //swiftlint:disable:next function_body_length
