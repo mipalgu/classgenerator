@@ -97,11 +97,25 @@ public final class CPPFromStringCreator {
             + self.stringHelpers.indent(endef, 2)
     }
 
+    fileprivate func isSupportedType(_ type: VariableTypes) -> Bool {
+        switch type {
+        case .array(let subtype, _):
+            return self.isSupportedType(subtype)
+        case .unknown:
+            return false
+        default:
+            return true
+        }
+    }
+
     fileprivate func createCPPImplementation(
         forClassNamed className: String,
         withStructNamed structName: String,
         withVariables variables: [Variable]
     ) -> String {
+        guard nil != variables.first(where: { self.isSupportedType($0.type) }) else {
+            return ""
+        }
         let varDef = "char var[255];"
         let conversionList = variables.enumerated().flatMap {
             self.createCPPImplementation(
