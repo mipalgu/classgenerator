@@ -74,6 +74,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
             ("test_identifiesAnArrayType", test_identifiesAnArrayType),
             ("test_identifiesMultiDimensionalArray", test_identifiesMultiDimensionalArray),
             ("test_doesNotIdentifyUnknownTypes", test_doesNotIdentifyUnknownTypes),
+            ("test_identifiesEnumsAsSignedIntegers", test_identifiesEnumsAsSignedIntegers)
             ("test_identifiesBit", test_identifiesBit)
         ]
     }
