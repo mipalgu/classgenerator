@@ -11,14 +11,13 @@ let package = Package(
     targets: [
         .target(name: "Data", dependencies: []),
         .target(name: "Containers", dependencies: []),
-        .target(name: "IO", dependencies: []),
         .target(name: "Helpers", dependencies: ["whiteboard_helpers"]),
         .target(name: "Parsers", dependencies: [
             .target(name: "Data"),
             .target(name: "Containers"),
-            .target(name: "IO"),
             .target(name: "Helpers"),
             "swift_helpers",
+            "IO",
             "whiteboard_helpers"
         ]),
         .target(name: "Creators", dependencies: [
@@ -31,13 +30,12 @@ let package = Package(
         .target(name: "classgenerator", dependencies: [
             .target(name: "Data"),
             .target(name: "Containers"),
-            .target(name: "IO"),
             .target(name: "Helpers"),
             .target(name: "Parsers"),
             .target(name: "Creators"),
             "swift_helpers",
             "whiteboard_helpers"
         ]),
-        .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator")])
+        .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator"), "swift_helpers"])
     ]
 )
