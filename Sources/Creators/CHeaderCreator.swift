@@ -140,7 +140,7 @@ public final class CHeaderCreator: ErrorContainer {
             # endif
             #endif
 
-            #include "gu_util.h"
+            #include <gu_util.h>
             #include <stdint.h>
             """
         let toStringSize = self.calculator.getToStringBufferSize(fromVariables: cls.variables)

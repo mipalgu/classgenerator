@@ -136,7 +136,7 @@ public final class CPPHeaderCreator: ErrorContainer {
             #include <sstream>
             #endif
 
-            #include "gu_util.h"
+            #include <gu_util.h>
             #include "\(structName).h"
             """
         return comment + "\n\n" + define
