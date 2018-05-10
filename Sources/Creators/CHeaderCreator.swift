@@ -213,7 +213,7 @@ public final class CHeaderCreator: ErrorContainer {
             case .pointer:
                 return "PROPERTY(" + cType + self.createPointers(forType: type) + ", " + label + ")"
             case .string(let length):
-                return "ARRAY_PROPERTY(char, \(label), \(length))"
+                return "STRING_PROPERTY(\(label), \(length))"
             default:
                 return "PROPERTY(" + cType + ", " + label + ")"
         }
