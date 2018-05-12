@@ -79,7 +79,8 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
                 "test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength",
                 test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength
             ),
-            ("test_calculatesDefaultValueForArrayWithMacroLength", test_calculatesDefaultValueForArrayWithMacroLength)
+            ("test_calculatesDefaultValueForArrayWithMacroLength", test_calculatesDefaultValueForArrayWithMacroLength),
+            ("test_calculateDefaultValueForEnum", test_calculatesDefaultValueForEnum)
         ]
     }
 
@@ -90,19 +91,19 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
     }
 
     public func test_calculatesDefaultValuesForPrimitiveTypes() {
-        let types: [(VariableTypes, (String, String))] = [
-            (.bit, ("0", "false")),
-            (.bool, ("true", "true")),
-            (.char(.signed), ("0", "UnicodeScalar(UInt8.min)")),
-            (.char(.unsigned), ("0", "UnicodeScalar(UInt8.min)")),
-            (.numeric(.double), ("0.0", "0.0")),
-            (.numeric(.float), ("0.0f", "0.0")),
-            (.numeric(.signed), ("0", "0")),
-            (.numeric(.unsigned), ("0", "0")),
-            (.string("5"), ("\"\"", "\"\""))
+        let types: [(VariableTypes, (String, String), String)] = [
+            (.bit, ("0", "false"), "bit"),
+            (.bool, ("true", "true"), "bool"),
+            (.char(.signed), ("0", "UnicodeScalar(UInt8.min)"), "signed char"),
+            (.char(.unsigned), ("0", "UnicodeScalar(UInt8.min)"), "unsiged char"),
+            (.numeric(.double), ("0.0", "0.0"), "double"),
+            (.numeric(.float), ("0.0f", "0.0"), "float"),
+            (.numeric(.signed), ("0", "0"), "signed"),
+            (.numeric(.unsigned), ("0", "0"), "unsigned"),
+            (.string("5"), ("\"\"", "\"\""), "string")
         ]
-        for (type, expected) in types {
-            guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+        for (type, expected, signature) in types {
+            guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: signature) else {
                 XCTFail("Unable to calculate default value of: \(type)")
                 return
             }
@@ -112,7 +113,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public func test_calculatesDefaultValueForPointers() {
         let type: VariableTypes = .pointer(.bool)
-        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+        guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "bool *") else {
             XCTFail("Unable to calculate default value of: \(type)")
             return
         }
@@ -121,7 +122,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public func test_calculatesDefaultValueForMultiplePointerTypes() {
         let type: VariableTypes = .pointer(.pointer(.pointer(.bool)))
-        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+        guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "bool ***") else {
             XCTFail("Unable to calculate default value of: \(type)")
             return
         }
@@ -130,7 +131,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public func test_calculatesDefaultValueForArrayWithIntegerLength() {
         let type: VariableTypes = .array(.numeric(.float), "3")
-        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+        guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "float") else {
             XCTFail("Unable to calculate default value of: \(type)")
             return
         }
@@ -139,7 +140,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public func test_calculatesDefaultValueForMultiDimensionalArrayWithIntegerLength() {
         let type: VariableTypes = .array(.array(.array(.numeric(.float), "3"), "1"), "1")
-        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+        guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "float") else {
             XCTFail("Unable to calculate default value of: \(type)")
             return
         }
@@ -148,11 +149,20 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
 
     public func test_calculatesDefaultValueForArrayWithMacroLength() {
         let type: VariableTypes = .array(.numeric(.float), "SOME_LENGTH")
-        guard let result = self.calculator.calculateDefaultValues(forType: type) else {
+        guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "float") else {
             XCTFail("Unable to calculate default value of: \(type)")
             return
         }
         self.assertEqual(("{}", "[]"), result)
+    }
+
+    public func test_calculatesDefaultValueForEnum() {
+        let type: VariableTypes = .numeric(.signed)
+        guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "enum MyEnum") else {
+            XCTFail("Unable to calculate default value of: \(type)")
+            return
+        }
+        self.assertEqual(("0", "MyEnum(rawValue: 0)"), result)
     }
 
     fileprivate func assertEqual<T: Equatable, U: Equatable>(_ lhs: (T, U), _ rhs: (T, U)) {

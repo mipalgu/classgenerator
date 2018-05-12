@@ -137,7 +137,7 @@ public final class Sanitiser {
         if nil == Int(value) {
             return value
         }
-        return signature.components(separatedBy: .whitespaces).last.map { value + " as " + $0}
+        return signature.components(separatedBy: .whitespaces).last.map { $0 + "(rawValue: " + value + ")" }
     }
 
     fileprivate func sanitiseNumericType(value: String, forNumericType type: NumericTypes) -> String {

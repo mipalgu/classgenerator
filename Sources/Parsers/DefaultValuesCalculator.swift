@@ -62,10 +62,10 @@ public final class DefaultValuesCalculator {
 
     public init() {}
 
-    func calculateDefaultValues(forType type: VariableTypes) -> (String, String)? {
+    func calculateDefaultValues(forType type: VariableTypes, withSignature signature: String) -> (String, String)? {
         switch type {
             case .array(let subtype, let length):
-                return self.calculateArrayDefaultValues(forType: subtype, withLength: length)
+                return self.calculateArrayDefaultValues(forType: subtype, withLength: length, withSignature: signature)
             case .bit:
                 return ("0", "false")
             case .bool:
@@ -75,7 +75,15 @@ public final class DefaultValuesCalculator {
             case .gen(_, let structName, _):
                 return (structName + "()", structName + "()")
             case .numeric(let subtype):
-                return self.calculateNumericDefaultValue(forNumericType: subtype)
+                let words = signature.components(separatedBy: .whitespaces)
+                let defaultValues = self.calculateNumericDefaultValue(forNumericType: subtype)
+                if nil == words.first(where: { $0 == "enum"}) {
+                    return defaultValues
+                }
+                guard let last = words.last else {
+                    return nil
+                }
+                return (defaultValues.0, last + "(rawValue: " + defaultValues.1 + ")")
             case .pointer:
                 return ("NULL", "nil")
             case .string:
@@ -100,12 +108,13 @@ public final class DefaultValuesCalculator {
 
     fileprivate func calculateArrayDefaultValues(
         forType type: VariableTypes,
-        withLength length: String
+        withLength length: String,
+        withSignature signature: String
     ) -> (String, String)? {
         guard let count = Int(length) else {
             return ("{}", "[]")
         }
-        guard let value = self.calculateDefaultValues(forType: type) else {
+        guard let value = self.calculateDefaultValues(forType: type, withSignature: signature) else {
             return nil
         }
         let cValues = Array(repeating: value.0, count: count).combine("") { $0 + ", " + $1 }

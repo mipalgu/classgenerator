@@ -190,7 +190,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         if split.count > 1 {
             return try self.parseDefaultValues(fromSegment: split[1], forType: type, withSignature: signature)
         }
-        guard let defaultValues = self.defaultValuesCalculator.calculateDefaultValues(forType: type) else {
+        guard let defaultValues = self.defaultValuesCalculator.calculateDefaultValues(forType: type, withSignature: signature) else {
             throw ParsingErrors.parsingError(0, "Unable to calculate default value for type: \(type)")
         }
         return defaultValues

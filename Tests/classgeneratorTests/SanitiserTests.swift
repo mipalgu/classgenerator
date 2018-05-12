@@ -82,7 +82,8 @@ public class SanitiserTests: ClassGeneratorTestCase {
             ("test_sanitisesLongFloats", test_sanitisesLongFloats),
             ("test_sanitisesPointersWithNullValues", test_sanitisesPointersWithNullValues),
             ("test_sanitisesArrayLiterals", test_sanitisesArrayLiterals),
-            ("test_sanitisesMultiDimensionalArrayLiterals", test_sanitisesMultiDimensionalArrayLiterals)
+            ("test_sanitisesMultiDimensionalArrayLiterals", test_sanitisesMultiDimensionalArrayLiterals),
+            ("test_sanitisesEnumNumericLiterals", test_sanitisesEnumNumericLiterals)
         ]
     }
 
@@ -153,7 +154,7 @@ public class SanitiserTests: ClassGeneratorTestCase {
     public func test_sanitisesEnumNumericLiterals() {
         let value = "3"
         XCTAssertEqual(
-            "\(value) as MyEnum",
+            "MyEnum(rawValue: \(value))",
             self.sanitiser.sanitise(value: value, forType: .numeric(.signed), withSignature: "enum MyEnum")
         )
     }
