@@ -94,59 +94,67 @@ public class SanitiserTests: ClassGeneratorTestCase {
 
     public func test_sanitisesCharIntoStringLiteralForSignedChar() {
         let value = "'c'"
-        XCTAssertEqual("\"c\"", self.sanitiser.sanitise(value: value, forType: .char(.signed)))
+        XCTAssertEqual("\"c\"", self.sanitiser.sanitise(value: value, forType: .char(.signed), withSignature: "signed char"))
     }
 
     public func test_sanitisesCharIntoStringLiteralForUnSignedChar() {
         let value = "'c'"
-        XCTAssertEqual("\"c\"", self.sanitiser.sanitise(value: value, forType: .char(.unsigned)))
+        XCTAssertEqual("\"c\"", self.sanitiser.sanitise(value: value, forType: .char(.unsigned), withSignature: "unsigned char"))
     }
 
     public func test_sanitisesCharIntegerLiteralIntoUnicodeScalarForSignedChar() {
         let value = "50"
-        XCTAssertEqual("UnicodeScalar(50)", self.sanitiser.sanitise(value: value, forType: .char(.signed)))
+        XCTAssertEqual("UnicodeScalar(50)", self.sanitiser.sanitise(value: value, forType: .char(.signed), withSignature: "signed char"))
     }
 
     public func test_sanitisesCharIntegerLiteralIntoUnicodeScalarForUnSignedChar() {
         let value = "50"
-        XCTAssertEqual("UnicodeScalar(50)", self.sanitiser.sanitise(value: value, forType: .char(.unsigned)))
+        XCTAssertEqual("UnicodeScalar(50)", self.sanitiser.sanitise(value: value, forType: .char(.unsigned), withSignature: "unsigned char"))
     }
 
     public func test_sanitisesFloatsWithFLiteral() {
         let value = "0.1f"
-        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.float)))
+        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.float), withSignature: "float"))
     }
 
     public func test_doesNotModifyFloatWithoutFLiteral() {
         let value = "0.1"
-        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.float)))
+        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.float), withSignature: "float"))
     }
 
     public func test_sanitisesLongFloats() {
         let value = "0.1f"
-        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.long(.long(.long(.float))))))
+        XCTAssertEqual("0.1", self.sanitiser.sanitise(value: value, forType: .numeric(.long(.long(.long(.float)))), withSignature: "long long long float"))
     }
 
     public func test_sanitisesPointersWithNullValues() {
         let value = "NULL"
-        XCTAssertEqual("nil", self.sanitiser.sanitise(value: value, forType: .pointer(.bool)))
+        XCTAssertEqual("nil", self.sanitiser.sanitise(value: value, forType: .pointer(.bool), withSignature: "void *"))
     }
 
     public func test_sanitisesArrayLiterals() {
         let value = "{1, 2, 3, 4}"
-        XCTAssertEqual("[1, 2, 3, 4]", self.sanitiser.sanitise(value: value, forType: .array(.numeric(.signed), "4")))
+        XCTAssertEqual("[1, 2, 3, 4]", self.sanitiser.sanitise(value: value, forType: .array(.numeric(.signed), "4"), withSignature: "int"))
     }
 
     public func test_sanitisesMultiDimensionalArrayLiterals() {
         let value = "{{1, 2}, {3, 4}}"
         XCTAssertEqual(
             "[[1, 2], [3, 4]]",
-            self.sanitiser.sanitise(value: value, forType: .array(.array(.numeric(.signed), "2"), "2"))
+            self.sanitiser.sanitise(value: value, forType: .array(.array(.numeric(.signed), "2"), "2"), withSignature: "int")
         )
         let value2 = "{{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}"
         XCTAssertEqual(
             "[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]",
-            self.sanitiser.sanitise(value: value2, forType: .array(.array(.array(.numeric(.signed), "2"), "2"), "2"))
+            self.sanitiser.sanitise(value: value2, forType: .array(.array(.array(.numeric(.signed), "2"), "2"), "2"), withSignature: "int")
+        )
+    }
+
+    public func test_sanitisesEnumNumericLiterals() {
+        let value = "3"
+        XCTAssertEqual(
+            "\(value) as MyEnum",
+            self.sanitiser.sanitise(value: value, forType: .numeric(.signed), withSignature: "enum MyEnum")
         )
     }
 

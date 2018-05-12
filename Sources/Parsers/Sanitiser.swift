@@ -63,15 +63,18 @@ public final class Sanitiser {
 
     public init() {}
 
-    public func sanitise(value: String, forType type: VariableTypes) -> String? {
+    public func sanitise(value: String, forType type: VariableTypes, withSignature signature: String) -> String? {
         switch type {
             case .array(let subtype, _):
-                return self.sanitiseArray(value: value, forType: subtype)
+                return self.sanitiseArray(value: value, forType: subtype, withSignature: signature)
             case .bit:
                 return self.sanitiseBit(value: value)
             case .char:
                 return self.sanitiseChar(value: value)
             case .numeric(let subtype):
+                if nil != signature.components(separatedBy: .whitespaces).first(where: { $0 == "enum"}) {
+                    return self.sanitiseEnumType(value: value, withSignature: signature)
+                }
                 return self.sanitiseNumericType(value: value, forNumericType: subtype)
             case .pointer:
                 if "NULL" == value {
@@ -83,10 +86,10 @@ public final class Sanitiser {
         }
     }
 
-    fileprivate func sanitiseArray(value: String, forType type: VariableTypes) -> String? {
+    fileprivate func sanitiseArray(value: String, forType type: VariableTypes, withSignature signature: String) -> String? {
         switch type {
             case .array(let subtype, _):
-                return self.sanitiseArray(value: value, forType: subtype)
+                return self.sanitiseArray(value: value, forType: subtype, withSignature: signature)
             default:
                 break
         }
@@ -101,7 +104,7 @@ public final class Sanitiser {
                 let temp = String(value.reversed()).prefix { $0 == "[" || $0 == "]" }
                 let suffix = String(String(temp).reversed())
                 let trimmedValue = String(value.dropFirst(prefix.count).dropLast(suffix.count))
-                guard let sanitisedValue = self.sanitise(value: trimmedValue, forType: type) else {
+                guard let sanitisedValue = self.sanitise(value: trimmedValue, forType: type, withSignature: signature) else {
                     return nil
                 }
                 return prefix + sanitisedValue + suffix
@@ -128,6 +131,13 @@ public final class Sanitiser {
         } else {
             return "UnicodeScalar(\(value))"
         }
+    }
+
+    fileprivate func sanitiseEnumType(value: String, withSignature signature: String) -> String? {
+        if nil == Int(value) {
+            return value
+        }
+        return signature.components(separatedBy: .whitespaces).last.map { value + " as " + $0}
     }
 
     fileprivate func sanitiseNumericType(value: String, forNumericType type: NumericTypes) -> String {

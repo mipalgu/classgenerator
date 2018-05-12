@@ -146,7 +146,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         let type = self.identifier.identify(fromTypeSignature: signature, andArrayCounts: arrCounts)
         let defaultValues: (String, String)
         do {
-            defaultValues = try self.parseDefaultValues(fromSplit: split, forType: type)
+            defaultValues = try self.parseDefaultValues(fromSplit: split, forType: type, withSignature: signature)
         } catch ParsingErrors.parsingError(let offset, let message) {
             throw ParsingErrors.parsingError(0 + offset, message)
         }
@@ -184,10 +184,11 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
 
     fileprivate func parseDefaultValues(
         fromSplit split: [String],
-        forType type: VariableTypes
+        forType type: VariableTypes,
+        withSignature signature: String
     ) throws -> (String, String) {
         if split.count > 1 {
-            return try self.parseDefaultValues(fromSegment: split[1], forType: type)
+            return try self.parseDefaultValues(fromSegment: split[1], forType: type, withSignature: signature)
         }
         guard let defaultValues = self.defaultValuesCalculator.calculateDefaultValues(forType: type) else {
             throw ParsingErrors.parsingError(0, "Unable to calculate default value for type: \(type)")
@@ -197,7 +198,8 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
 
     fileprivate func parseDefaultValues(
         fromSegment segment: String,
-        forType type: VariableTypes
+        forType type: VariableTypes,
+        withSignature signature: String
     ) throws -> (String, String) {
         let split = segment.components(separatedBy: "|")
         guard split.count <= 2 else {
@@ -205,7 +207,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         }
         if 1 == split.count {
             let trimmed = segment.trimmingCharacters(in: CharacterSet.whitespaces)
-            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type) ?? trimmed)
+            return (trimmed, self.sanitiser.sanitise(value: trimmed, forType: type, withSignature: signature) ?? trimmed)
         }
         guard 2 == split.count else {
             throw ParsingErrors.parsingError(split[0].count, "Malformed default value list: \(split[1])")
