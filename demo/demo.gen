@@ -18,6 +18,17 @@
 #include "somestruct.h"
 #include "wb_sub.h"
 
+/**
+ * @brief Resolutions Supported by Vision
+ */
+enum Resolutions {
+	QQVGA,  ///< 160 x 120
+	QVGA,   ///< 320 x 240
+	VGA,    ///< 640 x 480
+	HD_4VGA,    ///< 1280x960
+	SVGA   ///< 800 x 600
+};
+
 -c++
 #include "Sub.h"
 
@@ -116,3 +127,5 @@ bit myBit2=1 // A comment about myBit.
 gen sub sub1 // A comment about sub1.
 gen sub sub2 = wb_sub() // A comment about sub2.
 gen sub subs[3] // An array of subs.
+enum Resolutions cameraResolution2 // Resolution that the camera should caputre images at
+enum Resolutions cameraResolution = VGA // Resolution that the camera should caputre images at
