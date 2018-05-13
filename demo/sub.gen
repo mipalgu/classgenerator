@@ -10,3 +10,4 @@ This is to test recursive types.
 
 -properties
 int i = 0 // An integer.
+bool b = false // A boolean.

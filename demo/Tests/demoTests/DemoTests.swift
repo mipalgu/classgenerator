@@ -530,10 +530,12 @@ public class DemoTests: XCTestCase {
             "myBit": self.demo.myBit,
             "myBit2": self.demo.myBit2,
             "sub1": [
-                "i": self.demo.sub1.i
+                "i": self.demo.sub1.i,
+                "b": self.demo.sub1.b
             ],
             "sub2": [
-                "i": self.demo.sub2.i
+                "i": self.demo.sub2.i,
+                "b": self.demo.sub2.b
             ],
             "subs": (
                 self.demo.subs.0,
