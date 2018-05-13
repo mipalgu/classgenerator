@@ -144,6 +144,11 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         }
         let signature = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
         let type = self.identifier.identify(fromTypeSignature: signature, andArrayCounts: arrCounts)
+        do {
+            _ = try self.verify(type: type)
+        } catch ParsingErrors.parsingError(_, let message) {
+            throw ParsingErrors.parsingError(split[0].count, message)
+        }
         let defaultValues: (String, String)
         do {
             defaultValues = try self.parseDefaultValues(fromSplit: split, forType: type, withSignature: signature)
@@ -220,6 +225,31 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
 
     fileprivate func trimDefaultValueListSeparators(_ str: String) -> String {
         return str.trimmingCharacters(in: CharacterSet(charactersIn: "|"))
+    }
+
+    fileprivate func verify(type: VariableTypes) throws -> Bool {
+        switch type {
+        case .array(let subtype, let length):
+            switch subtype {
+            case .array:
+                throw ParsingErrors.parsingError(0, "The classgenerator currently does not support multi-dimensional arrays.")
+                return false
+            default:
+                break
+            }
+            if length == "0" {
+                throw ParsingErrors.parsingError(0, "Arrays must contain a length greater than zero.")
+                return false
+            }
+            return true
+        case .string(let length):
+            if length == "0" {
+                throw ParsingErrors.parsingError(0, "Strings must contain a length greater than zero.")
+            }
+            return true
+        default:
+            return true
+        }
     }
 
 }
