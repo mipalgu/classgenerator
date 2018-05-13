@@ -132,9 +132,8 @@ public final class CPPFromStringCreator {
             andIndex: index,
             isFirst: isFirst
         )
-        let pre = true == isFirst ? "" : " "
         let setup = """
-            unsigned long \(index) = str.find("\(pre)\(variable.label)=");
+            unsigned long \(index) = str.find("\(variable.label)=");
             if (\(index) != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
                 if (\(parseValue) == 1) {
@@ -161,7 +160,6 @@ public final class CPPFromStringCreator {
         isFirst: Bool
     ) -> String {
         let token: String
-        let index = index + (true == isFirst ? "" : " + 1")
         switch type {
             case  .array:
                 token = "{ %[^}]"
