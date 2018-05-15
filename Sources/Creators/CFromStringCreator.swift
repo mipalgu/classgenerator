@@ -407,6 +407,17 @@ public final class CFromStringCreator {
                     char \(label)_temp;
                     \(assign)
                     """
+            case .enumerated:
+                return self.createNumericValue(
+                    fromStringNamed: strLabel,
+                    forType: .numeric(.signed),
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className,
+                    level,
+                    setter
+                )
             case .gen(_, let structName, _):
                 let localLabel = 0 == level ? "self->" + label : label
                 let pre = 0 == level ? "" : "struct " + structName + " " + label + ";\n"
