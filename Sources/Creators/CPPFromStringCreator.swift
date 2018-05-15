@@ -108,7 +108,7 @@ public final class CPPFromStringCreator {
             return ""
         }
         let varDef = "char var[255];"
-        let conversionList = variables.enumerated().flatMap {
+        let conversionList = variables.enumerated().compactMap {
             self.createCPPImplementation(
                 forClassNamed: className,
                 withStructNamed: structName,

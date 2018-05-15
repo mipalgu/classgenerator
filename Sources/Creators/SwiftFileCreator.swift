@@ -333,7 +333,7 @@ public final class SwiftFileCreator: ErrorContainer {
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
         let copy = "self.init()\n"
         let guardDef = "guard"
-        let casts = variables.flatMap {
+        let casts = variables.compactMap {
             switch $0.type {
                 case .array, .string:
                     return "var \($0.label) = dictionary[\"\($0.label)\"]"
@@ -392,7 +392,7 @@ public final class SwiftFileCreator: ErrorContainer {
         }
         let descDef = "var descString = \"\""
         let descReturn = "return descString"
-        let setters = variables.flatMap {
+        let setters = variables.compactMap {
             self.createString(fromVariable: $0)
         }.combine("") { $0 + "\ndescString += \", \"\n" + $1 }
         let descriptionVarContent = descDef + "\n" + setters + "\n" + descReturn
@@ -409,7 +409,7 @@ public final class SwiftFileCreator: ErrorContainer {
 
     fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable]) -> String {
         let def = "public func == (lhs: \(structName), rhs: \(structName)) -> Bool {"
-        let content = "return " + variables.flatMap {
+        let content = "return " + variables.compactMap {
             switch $0.type {
                 case .unknown:
                     return nil

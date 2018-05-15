@@ -83,7 +83,7 @@ public final class CNetworkDeserialiserCreator {
         let head = """
                 uint16_t bit_offset = 0;
             """
-        let descriptions = cls.variables.flatMap {
+        let descriptions = cls.variables.compactMap {
             self.createNetworkCompressed(
                 forVariable: $0,
                 forClassNamed: cls.name

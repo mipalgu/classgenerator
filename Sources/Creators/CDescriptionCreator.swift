@@ -87,7 +87,7 @@ public final class CDescriptionCreator {
             #pragma clang diagnostic ignored "-Wunused-variable"
                 size_t len = 0;
             """
-        let descriptions = cls.variables.flatMap {
+        let descriptions = cls.variables.compactMap {
             self.createDescription(
                 forVariable: $0,
                 forClassNamed: cls.name,

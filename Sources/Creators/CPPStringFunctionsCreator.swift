@@ -196,7 +196,7 @@ public final class CPPStringFunctionsCreator {
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool
     ) -> String {
-        return variables.flatMap {
+        return variables.compactMap {
             self.createConcatString(
                 forClassNamed: className,
                 forType: $0.type,

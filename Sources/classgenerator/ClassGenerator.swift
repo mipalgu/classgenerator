@@ -242,7 +242,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
             if cs[1] == "-" {
                 return [str]
             }
-            return cs.flatMap { $0 == "-" ? nil : "-\($0)" }
+            return cs.compactMap { $0 == "-" ? nil : "-\($0)" }
         }
     }
 
