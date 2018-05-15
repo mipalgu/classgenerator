@@ -222,6 +222,12 @@ public final class CDescriptionCreator {
                 return "len = gu_strlcat(\(strLabel), \(getter) ? \"\(pre)true\" : \"\(pre)false\", bufferSize);"
             case .char:
                 return self.createSNPrintf("\(pre)%c", getter, appendingTo: strLabel)
+            case .enumerated(let name):
+                return self.createSNPrintf(
+                    "\(pre)%\(self.createFormat(forNumericType: .signed))",
+                    getter,
+                    appendingTo: strLabel
+                )
             case .gen(let genName, let structName, _):
                 let fun = true == includeLabel ? "description" : "to_string"
                 let localLabel = 0 == level ? label : label + "_\(level)"
