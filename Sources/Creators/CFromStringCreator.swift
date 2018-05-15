@@ -182,19 +182,21 @@ public final class CFromStringCreator {
             for (int i = index; i < \(length); i++) {
             """
         let forContent = """
-            index = i;
-            if (bracecount == 0 && \(strLabel)[index] == '=') {
-                startVar = index + 1;
+            index = i + 1;
+            if (bracecount == 0 && \(strLabel)[i] == '=') {
+                startVar = index;
                 continue;
             }
-            if (bracecount == 0 && isspace(\(strLabel)[index])) {
-                startVar = index + 1;
+            if (bracecount == 0 && isspace(\(strLabel)[i])) {
+                startVar = index;
                 continue;
             }
-            if (bracecount == 0 && \(strLabel)[index] == ',') {
+            if (bracecount == 0 && \(strLabel)[i] == ',') {
+                index = i;
                 break;
             }
-            if (bracecount == 0 && \(strLabel)[index] == '}') {
+            if (bracecount == 0 && \(strLabel)[i] == '}') {
+                index = i;
                 break;
             }
             """
@@ -210,6 +212,7 @@ public final class CFromStringCreator {
             createVarStr = """
                 strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
                 \(accessor)[index - startVar] = 0;
+                index++;
                 """
             break
         case .gen:
@@ -226,14 +229,14 @@ public final class CFromStringCreator {
             return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n}\n" + createVarStr + "\n" + forEnd + "\n" + value
         }
         let braceContent = """
-            if (\(strLabel)[index] == '{') {
+            if (\(strLabel)[i] == '{') {
                 bracecount++;
                 if (bracecount == 1) {
-                    lastBrace = index;
+                    lastBrace = i;
                 }
                 continue;
             }
-            if (\(strLabel)[index] == '}') {
+            if (\(strLabel)[i] == '}') {
                 bracecount--;
                 if (bracecount < 0) {
                     return self;
