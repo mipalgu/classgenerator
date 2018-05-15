@@ -77,6 +77,10 @@ public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
     switch (lhs, rhs) {
         case (.bit, .bit), (.bool, .bool), (.char, .char), (.unknown, .unknown):
             return true
+        case (.enumerated(let lname), .enumerated(let rname)):
+            return lname == rname
+        case (.gen(let lname, let lstructName, let lclassName), .gen(let rname, let rstructName, let rclassName)):
+            return lname == rname && lstructName == rstructName && lclassName == rclassName
         case (.string(let llength), .string(let rlength)):
             return llength == rlength
         case (.array(let ltype, let llength), .array(let rtype, let rlength)):
