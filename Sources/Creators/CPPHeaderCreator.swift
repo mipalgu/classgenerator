@@ -239,9 +239,9 @@ public final class CPPHeaderCreator: ErrorContainer {
             switch $0.type {
                 case .array:
                     return "\(type) \(label) = NULLPTR"
-                case .numeric:
-                    if nil == type.components(separatedBy: .whitespaces).first(where: { $0 == "enum"}) || nil == Int($0.defaultValue) {
-                        return "\(type) \(label) = \($0.defaultValue)"
+                case .enumerated:
+                    guard nil != Int($0.defaultValue) else {
+                        return $0.defaultValue
                     }
                     return "\(type) \(label) = static_cast<\(type)>(\($0.defaultValue))"
                 default:
