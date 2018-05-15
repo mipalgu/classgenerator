@@ -214,6 +214,8 @@ public final class CPPFromStringCreator {
                 return setter("\(getter).compare(\"true\") == 0 || \(getter).compare(\"1\") == 0 ? true : false") + ";"
             case .char:
                 return setter("static_cast<\(cType)>((\(getter)[0]))") + ";"
+            case .enumerated(let name):
+                return setter("static_cast<enum \(name)>(atoi(\(getter).c_str()))") + ";"
             case .numeric(let numericType):
                 let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
                 return setter("static_cast<\(cType)>(\(conversionFunction)(\(getter).c_str()))") + ";"
