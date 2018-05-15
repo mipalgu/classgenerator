@@ -80,10 +80,7 @@ public final class DefaultValuesCalculator {
                 if words.count <= index + 1 {
                     return nil
                 }
-                guard let name = words[index + 1] else {
-                    return nil
-                }
-                return ("0", name + "(rawValue: " + defaultValues.1 + ")")
+                return ("0", words[index + 1] + "(rawValue: 0)")
             case .gen(_, let structName, _):
                 return (structName + "()", structName + "()")
             case .numeric(let subtype):
