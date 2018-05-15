@@ -502,6 +502,8 @@ public final class SwiftFileCreator: ErrorContainer {
                 return "\"\(pre)\\(\(computedGetter))\""
             case .char:
                 return "\"\(pre)\\(0 == \(getter) ? \"\" : String(Character(\(computedGetter))))\""
+            case .enumerated:
+                return "\"\(pre)\\(\(getter).rawValue)\""
             case .gen:
                 return "\"\(pre){\" + \(getter).description + \"}\""
             case .unknown, .pointer:
