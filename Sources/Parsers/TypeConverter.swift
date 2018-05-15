@@ -116,6 +116,8 @@ public final class TypeConverter {
             return "Bool"
         case .char:
             return "UnicodeScalar"
+        case .enumerated(let name):
+            return name
         case .gen(_, let structName, _):
             return structName
         case .numeric:
