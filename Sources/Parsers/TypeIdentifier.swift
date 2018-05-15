@@ -128,7 +128,7 @@ public final class TypeIdentifier {
             return self.identifyPointer(fromType: type)
         }
         let words = type.components(separatedBy:.whitespaces)
-        if nil != words.first(where: { $0.hasPrefix("enum") }) {
+        if nil != words.first(where: { $0 == "enum" }) {
             return self.identifyEnum(fromType: type)
         }
         if nil != words.first(where: { $0 == "gen" }) {
@@ -163,7 +163,14 @@ public final class TypeIdentifier {
     }
 
     fileprivate func identifyEnum(fromType type: String) -> VariableTypes {
-        return .numeric(.signed)
+        let words = type.components(separatedBy:.whitespaces)
+        guard let (index, _) = words.enumerated().first(where: { $1 == "enum"}) else {
+            return .unknown
+        }
+        if words.count <= index + 1 {
+            return .unknown
+        }
+        return .enumerated(words[index + 1])
     }
 
     fileprivate func identifyPointer(fromType type: String) -> VariableTypes {
