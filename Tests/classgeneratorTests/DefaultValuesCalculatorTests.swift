@@ -157,7 +157,7 @@ public class DefaultValuesCalculatorTests: ClassGeneratorTestCase {
     }
 
     public func test_calculatesDefaultValueForEnum() {
-        let type: VariableTypes = .numeric(.signed)
+        let type: VariableTypes = .enumerated("MyEnum")
         guard let result = self.calculator.calculateDefaultValues(forType: type, withSignature: "enum MyEnum") else {
             XCTFail("Unable to calculate default value of: \(type)")
             return
