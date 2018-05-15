@@ -241,7 +241,7 @@ public final class CPPHeaderCreator: ErrorContainer {
                     return "\(type) \(label) = NULLPTR"
                 case .enumerated:
                     guard nil != Int($0.defaultValue) else {
-                        return $0.defaultValue
+                        return "\(type) \(label) = \($0.defaultValue)"
                     }
                     return "\(type) \(label) = static_cast<\(type)>(\($0.defaultValue))"
                 default:
