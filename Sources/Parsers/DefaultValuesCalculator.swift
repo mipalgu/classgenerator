@@ -72,15 +72,8 @@ public final class DefaultValuesCalculator {
                 return ("true", "true")
             case .char:
                 return ("0", "UnicodeScalar(UInt8.min)")
-            case .enumerated:
-                let words = signature.components(separatedBy: .whitespaces)
-                guard let (index, _) = words.enumerated().first(where: { $1 == "enum"}) else {
-                    return nil
-                }
-                if words.count <= index + 1 {
-                    return nil
-                }
-                return ("0", words[index + 1] + "(rawValue: 0)")
+            case .enumerated(let name):
+                return ("0", name + "(rawValue: 0)")
             case .gen(_, let structName, _):
                 return (structName + "()", structName + "()")
             case .numeric(let subtype):
