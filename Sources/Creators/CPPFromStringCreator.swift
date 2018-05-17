@@ -108,6 +108,7 @@ public final class CPPFromStringCreator {
             return ""
         }
         let varDef = "char var[255];"
+        let parsedDef = "bool parsed = false;"
         let conversionList = variables.enumerated().compactMap {
             self.createCPPImplementation(
                 forClassNamed: className,
@@ -116,7 +117,7 @@ public final class CPPFromStringCreator {
                 isFirst: $0 == 0
             )
         }.combine("") { $0 + "\n" + $1 }
-        return varDef + "\n" + conversionList
+        return varDef + "\n" + parsedDef + "\n" + conversionList
     }
 
     fileprivate func createCPPImplementation(
@@ -126,17 +127,19 @@ public final class CPPFromStringCreator {
         isFirst: Bool
     ) -> String? {
         let index = "\(variable.label)_index"
-        let parseValue = self.createParseValue(
+        let parseValue = self.stringHelpers.indent(self.createParseValue(
             forType: variable.type,
             withLabel: variable.label,
             andIndex: index,
             isFirst: isFirst
-        )
+        ))
         let setup = """
+            parsed = false;
             unsigned long \(index) = str.find("\(variable.label)=");
             if (\(index) != std::string::npos) {
                 memset(&var[0], 0, sizeof(var));
-                if (\(parseValue) == 1) {
+                \(parseValue)
+                if (parsed) {
             """
         guard let setter = self.calculateSetter(
             forClassNamed: className,
@@ -159,14 +162,44 @@ public final class CPPFromStringCreator {
         andIndex index: String,
         isFirst: Bool
     ) -> String {
-        let token: String
         switch type {
-            case  .array:
-                token = "{ %[^}]"
+            case  .array, .gen:
+                let bracecount = label +  "_bracecount";
+                return """
+                    int \(bracecount) = 0;
+                    unsigned long \(label)_start = \(index) + 5;
+                    for (unsigned long i = \(label)_start; i < str.length(); i++) {
+                        \(index) = i + 1;
+                        if (\(bracecount) == 0 && isspace(str[i])) {
+                            \(label)_start = \(index);
+                            continue;
+                        }
+                        if (\(bracecount) == 0 && str[i] == ',') {
+                            \(index) = i;
+                            break;
+                        }
+                        if (\(bracecount) == 0 && str[i] == '}') {
+                            \(index) = i;
+                            break;
+                        }
+                        if (str[i] == '{') {
+                            \(bracecount)++;
+                            continue;
+                        }
+                        if (str[i] == '}') {
+                            \(bracecount)--;
+                            if (\(bracecount) < 0) {
+                                return;
+                            }
+                            continue;
+                        }
+                    }
+                    strncpy(var, str.substr(\(label)_start, \(index) - \(label)_start).c_str() + \(label)_start, \(index) - \(label)_start);
+                    parsed = true;
+                    """
             default:
-                token = "%[^,]"
+                return "parsed = sscanf(str.substr(\(index), str.length()).c_str(), \"\(label) = %[^,]\", var) == 1;"
         }
-        return "sscanf(str.substr(\(index), str.length()).c_str(), \"\(label) = \(token)\", var)"
     }
 
     fileprivate func calculateSetter(
