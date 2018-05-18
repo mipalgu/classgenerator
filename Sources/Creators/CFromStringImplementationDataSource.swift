@@ -75,7 +75,22 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createSetup(forClass cls: Class) -> String {
-        return ""
+        return """
+            size_t temp_length = strlen(\(self.strLabel));
+            int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
+            if (length < 1) {
+                return self;
+            }
+            char \(self.accessor)_buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
+            char* \(self.accessor) = &\(self.accessor)_buffer[0];
+            int bracecount = 0;
+            int lastBrace = -1;
+            int startVar = 0;
+            int index = 0;
+            if (index == 0 && \(self.strLabel)[0] == '{') {
+                index = 1;
+            }
+            """
     }
 
     public func createTearDown(forClass cls: Class) -> String {
