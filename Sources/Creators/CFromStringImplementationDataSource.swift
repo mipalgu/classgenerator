@@ -111,7 +111,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
 
     public func createSetupArrayLoop(withIndexName index: String, andLength length: String) -> String {
         return """
-            index = lastBrace + 1;
+            while(\(self.strLabel)[index++] != '{');
             for (int \(index) = 0; \(index) < \(length); \(index)++) {
             """
     }
