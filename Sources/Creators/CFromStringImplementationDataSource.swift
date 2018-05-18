@@ -73,18 +73,22 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
 
     fileprivate let cast: (String, String) -> String
 
+    fileprivate let recurse: (String, String, String) -> String
+
     public init(
         selfStr: String,
         shouldReturnSelf: Bool,
         strLabel: String,
         stringHelpers: StringHelpers = StringHelpers(),
-        cast: @escaping (String, String) -> String
+        cast: @escaping (String, String) -> String,
+        recurse: @escaping (String, String, String) -> String
     ) {
         self.selfStr = selfStr
         self.shouldReturnSelf = shouldReturnSelf
         self.strLabel = strLabel
         self.stringHelpers = stringHelpers
         self.cast = cast
+        self.recurse = recurse
     }
 
     public func createSetup(forClass cls: Class) -> String {
@@ -276,7 +280,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             case .gen(_, let structName, _):
                 let localLabel = 0 == level ? "\(self.selfStr)->" + label : label
                 let pre = 0 == level ? "" : "struct " + structName + " " + label + ";\n"
-                let assign = structName + "_from_string(&\(localLabel), \(accessor));"
+                let assign = self.recurse(structName, localLabel, accessor)
                 let end = 0 == level ? "" : "\n" + setter(localLabel)
                 return pre + assign + end
             case .bit, .numeric:
