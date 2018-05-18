@@ -121,7 +121,7 @@ public final class FromStringImplementationCreator {
                         accessedFrom: accessor,
                         inClass: cls,
                         level + 1,
-                        setter: { "\(dataSource.selfStr)->\(label)[\(index)] = \($0);" }
+                        setter: { "\(dataSource.arraySetter(label, index, $0));" }
                     ) else {
                         return nil
                     }

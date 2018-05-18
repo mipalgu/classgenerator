@@ -108,7 +108,20 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
                 shouldReturnSelf: true,
                 strLabel: "str",
                 cast: { "((\($1))\($0))" },
-                recurse: { $0 + "_from_string(&\($1), \($2));" }
+                recurse: { (createVariable, structName, _, label, accessor) -> String in
+                    let assign = structName + "_from_string(&\(createVariable ? label : "self->" + label), \(accessor));"
+                    if false == createVariable {
+                        return assign
+                    }
+                    return """
+                        struct \(structName) \(label);
+                        \(assign)
+                        """
+                },
+                arrayGetter: { "self->" + $0 + "[" + $1 + "]" },
+                arraySetter: { "self->" + $0 + "[" + $1 + "] = " + $2 + ";" },
+                getter: { "self->" + $0 },
+                setter: { "self->" + $0 + " = " + $1 + ";"}
             )
         )
         let endDefinition = "}"

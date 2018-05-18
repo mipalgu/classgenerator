@@ -73,7 +73,15 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
 
     fileprivate let cast: (String, String) -> String
 
-    fileprivate let recurse: (String, String, String) -> String
+    fileprivate let recurse: (Bool, String, String, String, String) -> String
+
+    public let arrayGetter: (String, String) -> String
+
+    public let arraySetter: (String, String, String) -> String
+
+    public let getter: (String) -> String
+
+    public let setter: (String, String) -> String
 
     public init(
         selfStr: String,
@@ -81,7 +89,11 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         strLabel: String,
         stringHelpers: StringHelpers = StringHelpers(),
         cast: @escaping (String, String) -> String,
-        recurse: @escaping (String, String, String) -> String
+        recurse: @escaping (Bool, String, String, String, String) -> String,
+        arrayGetter: @escaping (String, String) -> String,
+        arraySetter: @escaping (String, String, String) -> String,
+        getter: @escaping (String) -> String,
+        setter: @escaping (String, String) -> String
     ) {
         self.selfStr = selfStr
         self.shouldReturnSelf = shouldReturnSelf
@@ -89,6 +101,10 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         self.stringHelpers = stringHelpers
         self.cast = cast
         self.recurse = recurse
+        self.arrayGetter = arrayGetter
+        self.arraySetter = arraySetter
+        self.getter = getter
+        self.setter = setter
     }
 
     public func createSetup(forClass cls: Class) -> String {
@@ -236,7 +252,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         case .string, .gen:
             return { $0 + ";" }
         default:
-            return { self.selfStr + "->" + variable.label + " = " + $0 + ";" }
+            return { self.setter(variable.label, $0) }
         }
     }
 
@@ -277,12 +293,10 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     level,
                     setter
                 )
-            case .gen(_, let structName, _):
-                let localLabel = 0 == level ? "\(self.selfStr)->" + label : label
-                let pre = 0 == level ? "" : "struct " + structName + " " + label + ";\n"
-                let assign = self.recurse(structName, localLabel, accessor)
-                let end = 0 == level ? "" : "\n" + setter(localLabel)
-                return pre + assign + end
+            case .gen(_, let structName, let className):
+                let assign = self.recurse(0 != level, structName, className, label, accessor)
+                let end = 0 == level ? "" : "\n" + setter(label)
+                return assign + end
             case .bit, .numeric:
                 return self.createNumericValue(
                     forType: type,
@@ -294,7 +308,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     setter
                 )
             case.string(let length):
-                return setter("strncpy(&\(self.selfStr)->\(label)[0], \(accessor), \(length))")
+                return setter("strncpy(\(self.getter(label)), \(accessor), \(length))")
             default:
                 return nil
         }

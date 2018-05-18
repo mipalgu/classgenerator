@@ -62,6 +62,12 @@ public protocol FromStringImplementationDataSource {
 
     var accessor: String { get }
 
+    var arrayGetter: (String, String) -> String { get }
+
+    var arraySetter: (String, String, String) -> String { get }
+
+    var getter: (String) -> String { get }
+
     var selfStr: String { get }
 
     var shouldReturnSelf: Bool { get }
