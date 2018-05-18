@@ -106,7 +106,8 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
             using: CFromStringImplementationDataSource(
                 selfStr: "self",
                 shouldReturnSelf: true,
-                strLabel: "str"
+                strLabel: "str",
+                cast: { "((\($1))\($0))" }
             )
         )
         let endDefinition = "}"

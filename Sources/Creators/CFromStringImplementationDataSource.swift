@@ -71,16 +71,20 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
 
     fileprivate let stringHelpers: StringHelpers
 
+    fileprivate let cast: (String, String) -> String
+
     public init(
         selfStr: String,
         shouldReturnSelf: Bool,
         strLabel: String,
-        stringHelpers: StringHelpers = StringHelpers()
+        stringHelpers: StringHelpers = StringHelpers(),
+        cast: @escaping (String, String) -> String
     ) {
         self.selfStr = selfStr
         self.shouldReturnSelf = shouldReturnSelf
         self.strLabel = strLabel
         self.stringHelpers = stringHelpers
+        self.cast = cast
     }
 
     public func createSetup(forClass cls: Class) -> String {
@@ -88,7 +92,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             size_t temp_length = strlen(\(self.strLabel));
             int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
             if (length < 1) {
-                return self;
+                \(self.shouldReturnSelf ? "return \(self.selfStr);" : "return;")
             }
             char \(self.accessor)_buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
             char* \(self.accessor) = &\(self.accessor)_buffer[0];
@@ -248,8 +252,13 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             case .bool:
                 return setter("strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0")
             case .char:
-                let cast = "char" == cType ? "" : "(\(cType)) "
-                let assign = setter("\(cast)(*strncpy(&\(label)_temp, \(accessor), 1))")
+                let assign: String
+                let value = "(*strncpy(&\(label)_temp, \(accessor), 1))"
+                if "char" == cType {
+                    assign = setter(value)
+                } else {
+                    assign = setter(self.cast(value, cType))
+                }
                 return """
                     char \(label)_temp;
                     \(assign)
@@ -265,7 +274,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     setter
                 )
             case .gen(_, let structName, _):
-                let localLabel = 0 == level ? "self->" + label : label
+                let localLabel = 0 == level ? "\(self.selfStr)->" + label : label
                 let pre = 0 == level ? "" : "struct " + structName + " " + label + ";\n"
                 let assign = structName + "_from_string(&\(localLabel), \(accessor));"
                 let end = 0 == level ? "" : "\n" + setter(localLabel)
@@ -281,7 +290,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     setter
                 )
             case.string(let length):
-                return setter("strncpy(&self->\(label)[0], \(accessor), \(length))")
+                return setter("strncpy(&\(self.selfStr)->\(label)[0], \(accessor), \(length))")
             default:
                 return nil
         }
@@ -298,17 +307,17 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     ) -> String? {
         switch type {
             case .bit:
-                return setter("(\(cType))atoi(\(accessor))")
+                return setter(self.cast("atoi(\(accessor))", cType))
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):
-                        return setter("(\(cType))atof(\(accessor))")
+                        return setter(self.cast("atof(\(accessor))", cType))
                     case .long(.long):
-                        return setter("(\(cType))atoll(\(accessor))")
+                        return setter(self.cast("atoll(\(accessor))", cType))
                     case .long(.signed), .long(.unsigned):
-                        return setter("(\(cType))atol(\(accessor))")
+                        return setter(self.cast("atol(\(accessor))", cType))
                     case .signed, .unsigned:
-                        return setter("(\(cType))atoi(\(accessor))")
+                        return setter(self.cast("atoi(\(accessor))", cType))
                 }
             default:
                 return nil
