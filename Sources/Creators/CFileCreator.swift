@@ -72,15 +72,15 @@ public final class CFileCreator: ErrorContainer {
     fileprivate let descriptionCreator: CDescriptionCreator
     fileprivate let networkSerialiserCreator: CNetworkSerialiserCreator
     fileprivate let networkDeserialiserCreator: CNetworkDeserialiserCreator
-    fileprivate let fromStringCreator: CFromStringCreator<CFromStringImplementationCreator>
+    fileprivate let fromStringCreator: CFromStringCreator<FromStringImplementationCreator>
 
     public init(
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         descriptionCreator: CDescriptionCreator = CDescriptionCreator(),
         networkSerialiserCreator: CNetworkSerialiserCreator = CNetworkSerialiserCreator(),
         networkDeserialiserCreator: CNetworkDeserialiserCreator = CNetworkDeserialiserCreator(),
-        fromStringCreator: CFromStringCreator<CFromStringImplementationCreator> = CFromStringCreator(
-            implementationCreator: CFromStringImplementationCreator()
+        fromStringCreator: CFromStringCreator<FromStringImplementationCreator> = CFromStringCreator(
+            implementationCreator: FromStringImplementationCreator()
         )
     ) {
         self.creatorHelpers = creatorHelpers

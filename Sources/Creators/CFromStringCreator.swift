@@ -64,7 +64,7 @@ import swift_helpers
 import whiteboard_helpers
 
 //swiftlint:disable:next type_body_length
-public final class CFromStringCreator<ImplementationCreator: CFromStringImplementationCreator> {
+public final class CFromStringCreator<ImplementationCreator: FromStringImplementationCreator> {
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let implementationCreator: ImplementationCreator
@@ -101,7 +101,14 @@ public final class CFromStringCreator<ImplementationCreator: CFromStringImplemen
         let assignVarsSection = self.assignVars(cls.variables, forClassNamed: cls.name)
         let cleanup = "free(str_copy);\nreturn self;"
         let contents = head + "\n" + fillTokens + "\n" + assignVarsSection + "\n" + cleanup*/
-        let contents = self.implementationCreator.createFromStringImplementation(forClass: cls, forStrVariable: strLabel)
+        let contents = self.implementationCreator.createFromStringImplementation(
+            forClass: cls,
+            using: CFromStringImplementationDataSource(
+                selfStr: "self",
+                shouldReturnSelf: true,
+                strLabel: "str"
+            )
+        )
         let endDefinition = "}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
     }
