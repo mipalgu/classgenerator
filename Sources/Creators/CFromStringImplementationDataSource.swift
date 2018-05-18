@@ -94,7 +94,10 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createTearDown(forClass cls: Class) -> String {
-        return ""
+        if true == self.shouldReturnSelf {
+            return "return " + self.selfStr + ";"
+        }
+        return "return;"
     }
 
     public func createSetupArrayLoop(withIndexName index: String, andLength length: String) -> String {
