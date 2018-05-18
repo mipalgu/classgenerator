@@ -60,7 +60,7 @@ import Data
 
 public final class CFromStringImplementationDataSource: FromStringImplementationDataSource {
 
-    public let accessor: String = ""
+    public let accessor: String = "var_str"
 
     public let selfStr: String
 
@@ -101,7 +101,14 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         return nil
     }
 
-    public func setter(forType: VariableTypes) -> (String) -> String {
-        return { $0 }
+    public func setter(forVariable variable: Variable) -> (String) -> String {
+        switch variable.type {
+        case .array:
+            return { $0 }
+        case .string, .gen:
+            return { $0 + ";" }
+        default:
+            return { self.selfStr + "->" + variable.label + " = " + $0 + ";" }
+        }
     }
 }

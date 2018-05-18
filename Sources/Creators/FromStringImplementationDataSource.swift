@@ -85,6 +85,6 @@ public protocol FromStringImplementationDataSource {
         setter: (String) -> String
     ) -> String?
 
-    func setter(forType: VariableTypes) -> (String) -> String
+    func setter(forVariable: Variable) -> (String) -> String
 
 }

@@ -80,7 +80,7 @@ public final class FromStringImplementationCreator {
                 accessedFrom: dataSource.accessor,
                 inClass: cls,
                 level: 0,
-                setter: dataSource.setter(forType: $0.type)
+                setter: dataSource.setter(forVariable: $0)
             )
         }.combine("") { $0 + "\n" + $1 }
         let tearDown = dataSource.createTearDown(forClass: cls)
