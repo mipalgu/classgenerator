@@ -101,8 +101,9 @@ public final class FromStringImplementationCreator {
             return nil
         default:
             return dataSource.createValue(
-                forVariable: variable,
-                withLabel: label,
+                forType: variable.type,
+                withLabel: variable.label,
+                andCType: variable.cType,
                 accessedFrom: accessor,
                 inClass: cls,
                 level,

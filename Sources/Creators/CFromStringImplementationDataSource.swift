@@ -57,6 +57,7 @@
  */
 
 import Data
+import swift_helpers
 
 public final class CFromStringImplementationDataSource: FromStringImplementationDataSource {
 
@@ -68,10 +69,18 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
 
     public let strLabel: String
 
-    public init(selfStr: String, shouldReturnSelf: Bool, strLabel: String) {
+    fileprivate let stringHelpers: StringHelpers
+
+    public init(
+        selfStr: String,
+        shouldReturnSelf: Bool,
+        strLabel: String,
+        stringHelpers: StringHelpers = StringHelpers()
+    ) {
         self.selfStr = selfStr
         self.shouldReturnSelf = shouldReturnSelf
         self.strLabel = strLabel
+        self.stringHelpers = stringHelpers
     }
 
     public func createSetup(forClass cls: Class) -> String {
@@ -112,14 +121,104 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createValue(
-        forVariable: Variable,
-        withLabel: String,
-        accessedFrom: String,
-        inClass: Class,
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClass cls: Class,
         _ level: Int,
         setter: (String) -> String
     ) -> String? {
-        return nil
+        guard let value = self.createVariablesValue(
+            forType: type,
+            withLabel: label,
+            andCType: cType,
+            accessedFrom: accessor,
+            inClass: cls,
+            level,
+            setter
+        ) else {
+            return nil
+        }
+        let forStart = """
+            startVar = index;
+            for (int i = index; i < length; i++) {
+            """
+        let forContent = """
+            index = i + 1;
+            if (bracecount == 0 && \(strLabel)[i] == '=') {
+                startVar = index;
+                continue;
+            }
+            if (bracecount == 0 && isspace(\(strLabel)[i])) {
+                startVar = index;
+                continue;
+            }
+            if (bracecount == 0 && \(strLabel)[i] == ',') {
+                index = i;
+                break;
+            }
+            if (bracecount == 0 && \(strLabel)[i] == '}') {
+                index = i;
+                break;
+            }
+            """
+        let createVarStr: String
+        let forEnd = """
+            if (bracecount == 0 && \(strLabel)[index] == '}') {
+                index++;
+            }
+            index++;
+            """
+        switch type {
+        case .array:
+            createVarStr = """
+                strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
+                \(accessor)[index - startVar] = 0;
+                index++;
+                """
+            break
+        case .gen:
+            createVarStr = """
+                strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
+                \(accessor)[(index - startVar) + 1] = 0;
+                """
+            break;
+        default:
+            createVarStr = """
+                strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
+                \(accessor)[index - startVar] = 0;
+                """
+            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n}\n" + createVarStr + "\n" + forEnd + "\n" + value
+        }
+        let braceContent = """
+            if (\(strLabel)[i] == '{') {
+                bracecount++;
+                if (bracecount == 1) {
+                    lastBrace = i;
+                }
+                continue;
+            }
+            if (\(strLabel)[i] == '}') {
+                bracecount--;
+                if (bracecount < 0) {
+                    \(true == self.shouldReturnSelf ? "return self;" : "return;")
+                }
+                if (bracecount != 0) {
+                    continue;
+                }
+                break;
+            }
+            """
+        let braceEnd = """
+            bracecount = 0;
+            """
+        return forStart + "\n"
+            + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n}\n"
+            + createVarStr + "\n"
+            + forEnd + "\n"
+            + braceEnd + "\n"
+            + value
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
@@ -132,4 +231,88 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             return { self.selfStr + "->" + variable.label + " = " + $0 + ";" }
         }
     }
+
+    public func createVariablesValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClass cls: Class,
+        _ level: Int,
+        _ setter: (String) -> String
+    ) -> String? {
+        let className = cls.name
+        switch type {
+            case .array:
+                return nil
+            case .bool:
+                return setter("strcmp(\(accessor), \"true\") == 0 || strcmp(\(accessor), \"1\") == 0")
+            case .char:
+                let cast = "char" == cType ? "" : "(\(cType)) "
+                let assign = setter("\(cast)(*strncpy(&\(label)_temp, \(accessor), 1))")
+                return """
+                    char \(label)_temp;
+                    \(assign)
+                    """
+            case .enumerated:
+                return self.createNumericValue(
+                    forType: .numeric(.signed),
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className,
+                    level,
+                    setter
+                )
+            case .gen(_, let structName, _):
+                let localLabel = 0 == level ? "self->" + label : label
+                let pre = 0 == level ? "" : "struct " + structName + " " + label + ";\n"
+                let assign = structName + "_from_string(&\(localLabel), \(accessor));"
+                let end = 0 == level ? "" : "\n" + setter(localLabel)
+                return pre + assign + end
+            case .bit, .numeric:
+                return self.createNumericValue(
+                    forType: type,
+                    withLabel: label,
+                    andCType: cType,
+                    accessedFrom: accessor,
+                    inClassNamed: className,
+                    level,
+                    setter
+                )
+            case.string(let length):
+                return setter("strncpy(&self->\(label)[0], \(accessor), \(length))")
+            default:
+                return nil
+        }
+    }
+
+    fileprivate func createNumericValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClassNamed className: String,
+        _ level: Int = 0,
+        _ setter: (String) -> String
+    ) -> String? {
+        switch type {
+            case .bit:
+                return setter("(\(cType))atoi(\(accessor))")
+            case .numeric(let numericType):
+                switch numericType {
+                    case .double, .float, .long(.double), .long(.float):
+                        return setter("(\(cType))atof(\(accessor))")
+                    case .long(.long):
+                        return setter("(\(cType))atoll(\(accessor))")
+                    case .long(.signed), .long(.unsigned):
+                        return setter("(\(cType))atol(\(accessor))")
+                    case .signed, .unsigned:
+                        return setter("(\(cType))atoi(\(accessor))")
+                }
+            default:
+                return nil
+        }
+    }
+
 }
