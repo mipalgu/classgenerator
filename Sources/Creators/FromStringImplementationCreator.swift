@@ -57,13 +57,16 @@
  */
 
 import Data
+import Helpers
 import swift_helpers
 
 public final class FromStringImplementationCreator {
 
+    fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
 
-    public init(stringHelpers: StringHelpers = StringHelpers()) {
+    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), stringHelpers: StringHelpers = StringHelpers()) {
+        self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
     }
 
@@ -97,8 +100,34 @@ public final class FromStringImplementationCreator {
         setter: (String) -> String
     ) -> String? {
         switch variable.type {
-        case .array:
-            return nil
+        case .array(let subtype, _):
+            let index = label + "_\(level)_index"
+            let length = self.creatorHelpers.createArrayCountDef(
+                inClass: cls.name,
+                forVariable: label,
+                level: level
+            )
+            let head = dataSource.createSetupArrayLoop(withIndexName: index, andLength: length)
+            let end = dataSource.createTearDownArrayLoop(withIndexName: index, andLength: length)
+            let assignment: String
+            switch subtype {
+                case .array:
+                    return nil
+                default:
+                    guard let value = dataSource.createValue(
+                        forType: subtype,
+                        withLabel: "\(label)_\(level)",
+                        andCType: variable.cType,
+                        accessedFrom: accessor,
+                        inClass: cls,
+                        level + 1,
+                        setter: { "\(dataSource.selfStr)->\(label)[\(index)] = \($0);" }
+                    ) else {
+                        return nil
+                    }
+                    assignment = value
+            }
+            return head + "\n" + self.stringHelpers.indent(assignment) + "\n" + end
         default:
             return dataSource.createValue(
                 forType: variable.type,
