@@ -56,12 +56,59 @@
  *
  */
 
+import Data
+import swift_helpers
+
 public final class FromStringImplementationCreator {
 
+    fileprivate let stringHelpers: StringHelpers
+
+    public init(stringHelpers: StringHelpers = StringHelpers()) {
+        self.stringHelpers = stringHelpers
+    }
+
     func createFromStringImplementation<DataSource: FromStringImplementationDataSource>(
+        forClass cls: Class,
         using dataSource: DataSource
     ) -> String {
-        return ""
+        let setup = dataSource.createSetup(forClass: cls)
+        let vars = cls.variables.compactMap {
+            self.createSetter(
+                using: dataSource,
+                forVariable: $0,
+                withLabel: $0.label,
+                accessedFrom: dataSource.selfStr,
+                inClass: cls,
+                level: 0,
+                setter: { $0 }
+            )
+        }.combine("") { $0 + "\n" + $1 }
+        let tearDown = dataSource.createTearDown(forClass: cls)
+        return setup + "\n" + vars + "\n" + tearDown
+    }
+
+    fileprivate func createSetter<DataSource: FromStringImplementationDataSource>(
+        using dataSource: DataSource,
+        forVariable variable: Variable,
+        withLabel label: String,
+        accessedFrom accessor: String,
+        inClass cls: Class,
+        level: Int,
+        setter: (String) -> String
+    ) -> String? {
+        switch variable.type {
+        case .array:
+            return nil
+        default:
+            return dataSource.createValue(
+                forVariable: variable,
+                withLabel: label,
+                accessedFrom: accessor,
+                inClass: cls,
+                level,
+                setter: setter
+            )
+        }
     }
 
 }
