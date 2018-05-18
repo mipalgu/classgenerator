@@ -60,6 +60,8 @@ import Data
 
 public protocol FromStringImplementationDataSource {
 
+    var accessor: String { get }
+
     var selfStr: String { get }
 
     var shouldReturnSelf: Bool { get }
@@ -82,5 +84,7 @@ public protocol FromStringImplementationDataSource {
         _ level: Int,
         setter: (String) -> String
     ) -> String?
+
+    func setter(forType: VariableTypes) -> (String) -> String
 
 }
