@@ -1,5 +1,5 @@
 /*
- * FromStringImplementationCreator.swift 
+ * FromStringImplementationCreatorType.swift 
  * Creators 
  *
  * Created by Callum McColl on 18/05/2018.
@@ -58,7 +58,7 @@
 
 import Data
 
-public protocol FromStringImplementationCreator {
+public protocol FromStringImplementationCreatorType {
 
     func createFromStringImplementation(forClass: Class, forStrVariable: String) -> String
 

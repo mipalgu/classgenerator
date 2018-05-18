@@ -56,4 +56,4 @@
  *
  */
 
-public protocol CFromStringImplementationCreatorType: FromStringImplementationCreator {}
+public protocol CFromStringImplementationCreatorType: FromStringImplementationCreatorType {}
