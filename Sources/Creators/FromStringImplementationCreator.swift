@@ -75,15 +75,16 @@ public final class FromStringImplementationCreator {
         using dataSource: DataSource
     ) -> String {
         let setup = dataSource.createSetup(forClass: cls)
-        let vars = cls.variables.compactMap {
+        let vars = cls.variables.enumerated().compactMap {
             self.createSetter(
+                atIndex: $0,
                 using: dataSource,
-                forVariable: $0,
-                withLabel: $0.label,
+                forVariable: $1,
+                withLabel: $1.label,
                 accessedFrom: dataSource.accessor,
                 inClass: cls,
                 level: 0,
-                setter: dataSource.setter(forVariable: $0)
+                setter: dataSource.setter(forVariable: $1)
             )
         }.combine("") { $0 + "\n" + $1 }
         let tearDown = dataSource.createTearDown(forClass: cls)
@@ -91,6 +92,7 @@ public final class FromStringImplementationCreator {
     }
 
     fileprivate func createSetter<DataSource: FromStringImplementationDataSource>(
+        atIndex vIndex: Int,
         using dataSource: DataSource,
         forVariable variable: Variable,
         withLabel label: String,
@@ -107,7 +109,7 @@ public final class FromStringImplementationCreator {
                 forVariable: label,
                 level: level
             )
-            let head = dataSource.createSetupArrayLoop(withIndexName: index, andLength: length)
+            let head = dataSource.createSetupArrayLoop(atIndex: vIndex, withIndexName: index, andLength: length)
             let end = dataSource.createTearDownArrayLoop(withIndexName: index, andLength: length)
             let assignment: String
             switch subtype {
@@ -115,6 +117,7 @@ public final class FromStringImplementationCreator {
                     return nil
                 default:
                     guard let value = dataSource.createValue(
+                        atIndex: vIndex,
                         forType: subtype,
                         withLabel: "\(label)_\(level)",
                         andCType: variable.cType,
@@ -130,6 +133,7 @@ public final class FromStringImplementationCreator {
             return head + "\n" + self.stringHelpers.indent(assignment) + "\n" + end
         default:
             return dataSource.createValue(
+                atIndex: vIndex,
                 forType: variable.type,
                 withLabel: variable.label,
                 andCType: variable.cType,

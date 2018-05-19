@@ -108,6 +108,13 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createSetup(forClass cls: Class) -> String {
+        let keyAssigns = cls.variables.enumerated().map {
+            return """
+                case \($1.label):
+                    varIndex = \($0);
+                    break;
+                """
+        }.combine("") { $0 + "\n" + $1}
         return """
             size_t temp_length = strlen(\(self.strLabel));
             int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
@@ -120,20 +127,87 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             int lastBrace = -1;
             int startVar = 0;
             int index = 0;
+            bool useKeys = false;
+            int startKey = 0;
+            int endKey = 0;
+            int varIndex = 0;
             if (index == 0 && \(self.strLabel)[0] == '{') {
                 index = 1;
             }
+            startVar = index;
+            startKey = startVar;
+            do {
+                for (int i = index; i < length; i++) {
+                    index = i + 1;
+                    if (bracecount == 0 && \(strLabel)[i] == '=') {
+                        endKey = i - 1;
+                        useKeys = true;
+                        startVar = index;
+                        continue;
+                    }
+                    if (bracecount == 0 && isspace(\(strLabel)[i])) {
+                        startVar = index;
+                        continue;
+                    }
+                    if (bracecount == 0 && \(strLabel)[i] == ',') {
+                        index = i;
+                        break;
+                    }
+                    if (\(strLabel)[i] == '{') {
+                        bracecount++;
+                        if (bracecount == 1) {
+                            lastBrace = i;
+                        }
+                        continue;
+                    }
+                    if (\(strLabel)[i] == '}') {
+                        bracecount--;
+                        if (bracecount < 0) {
+                            \(true == self.shouldReturnSelf ? "return self;" : "return;")
+                        }
+                        if (bracecount != 0) {
+                            continue;
+                        }
+                        break;
+                    }
+                }
+                strncpy(\(self.accessor), \(strLabel) + startVar, index - startVar);
+                \(self.accessor)[index - startVar] = 0;
+                if (bracecount == 0 && \(strLabel)[index] == '}') {
+                    index++;
+                }
+                index++;
+                bracecount = 0;
+                if (key != NULLPRT) {
+                    switch (key) {
+            \(self.stringHelpers.indent(keyAssigns, 3))
+                        default:
+                            continue;
+                    }
+                }
+                switch (varIndex) {
             """
     }
 
     public func createTearDown(forClass cls: Class) -> String {
-        if true == self.shouldReturnSelf {
-            return "return " + self.selfStr + ";"
+        let end = """
+                }
+                startVar = index;
+                startKey = startVar;
+                varIndex++;
+            while(index < length);
+            """
+        if false == self.shouldReturnSelf {
+            return end
         }
-        return "return;"
+        return end + "\n" + "return \(self.selfStr);"
     }
 
-    public func createSetupArrayLoop(withIndexName index: String, andLength length: String) -> String {
+    public func createSetupArrayLoop(
+        atIndex offset: Int,
+        withIndexName index: String,
+        andLength length: String
+    ) -> String {
         return """
             while(\(self.strLabel)[index++] != '{');
             for (int \(index) = 0; \(index) < \(length); \(index)++) {
@@ -145,6 +219,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createValue(
+        atIndex index: Int,
         forType type: VariableTypes,
         withLabel label: String,
         andCType cType: String,
@@ -164,85 +239,10 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         ) else {
             return nil
         }
-        let forStart = """
-            startVar = index;
-            for (int i = index; i < length; i++) {
-            """
-        let forContent = """
-            index = i + 1;
-            if (bracecount == 0 && \(strLabel)[i] == '=') {
-                startVar = index;
-                continue;
-            }
-            if (bracecount == 0 && isspace(\(strLabel)[i])) {
-                startVar = index;
-                continue;
-            }
-            if (bracecount == 0 && \(strLabel)[i] == ',') {
-                index = i;
-                break;
-            }
-            if (bracecount == 0 && \(strLabel)[i] == '}') {
-                index = i;
-                break;
-            }
-            """
-        let createVarStr: String
-        let forEnd = """
-            if (bracecount == 0 && \(strLabel)[index] == '}') {
-                index++;
-            }
-            index++;
-            """
-        switch type {
-        case .array:
-            createVarStr = """
-                strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
-                \(accessor)[index - startVar] = 0;
-                index++;
-                """
-            break
-        case .gen:
-            createVarStr = """
-                strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
-                \(accessor)[(index - startVar) + 1] = 0;
-                """
-            break;
-        default:
-            createVarStr = """
-                strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
-                \(accessor)[index - startVar] = 0;
-                """
-            return forStart + "\n" + self.stringHelpers.indent(forContent) + "\n}\n" + createVarStr + "\n" + forEnd + "\n" + value
-        }
-        let braceContent = """
-            if (\(strLabel)[i] == '{') {
-                bracecount++;
-                if (bracecount == 1) {
-                    lastBrace = i;
-                }
-                continue;
-            }
-            if (\(strLabel)[i] == '}') {
-                bracecount--;
-                if (bracecount < 0) {
-                    \(true == self.shouldReturnSelf ? "return self;" : "return;")
-                }
-                if (bracecount != 0) {
-                    continue;
-                }
-                break;
-            }
-            """
-        let braceEnd = """
-            bracecount = 0;
-            """
-        return forStart + "\n"
-            + self.stringHelpers.indent(forContent + "\n" + braceContent) + "\n}\n"
-            + createVarStr + "\n"
-            + forEnd + "\n"
-            + braceEnd + "\n"
-            + value
+        return self.stringHelpers.indent("""
+            case \(index):
+            \(self.stringHelpers.indent(value))
+            """, 3)
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
