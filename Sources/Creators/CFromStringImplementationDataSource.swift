@@ -115,6 +115,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     break;
                 """
         }.combine("") { $0 + "\n" + $1}
+        let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
         return """
             size_t temp_length = strlen(\(self.strLabel));
             int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
@@ -123,6 +124,8 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             }
             char \(self.accessor)_buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
             char* \(self.accessor) = &\(self.accessor)_buffer[0];
+            char key_buffer[\(keyBufferSize)];
+            char* key = &key_buffer[0];
             int bracecount = 0;
             int lastBrace = -1;
             int startVar = 0;
@@ -137,47 +140,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             startVar = index;
             startKey = startVar;
             do {
-                for (int i = index; i < length; i++) {
-                    index = i + 1;
-                    if (bracecount == 0 && \(strLabel)[i] == '=') {
-                        endKey = i - 1;
-                        useKeys = true;
-                        startVar = index;
-                        continue;
-                    }
-                    if (bracecount == 0 && isspace(\(strLabel)[i])) {
-                        startVar = index;
-                        continue;
-                    }
-                    if (bracecount == 0 && \(strLabel)[i] == ',') {
-                        index = i;
-                        break;
-                    }
-                    if (\(strLabel)[i] == '{') {
-                        bracecount++;
-                        if (bracecount == 1) {
-                            lastBrace = i;
-                        }
-                        continue;
-                    }
-                    if (\(strLabel)[i] == '}') {
-                        bracecount--;
-                        if (bracecount < 0) {
-                            \(true == self.shouldReturnSelf ? "return self;" : "return;")
-                        }
-                        if (bracecount != 0) {
-                            continue;
-                        }
-                        break;
-                    }
-                }
-                strncpy(\(self.accessor), \(strLabel) + startVar, index - startVar);
-                \(self.accessor)[index - startVar] = 0;
-                if (bracecount == 0 && \(strLabel)[index] == '}') {
-                    index++;
-                }
-                index++;
-                bracecount = 0;
+            \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor)))
                 if (key != NULLPRT) {
                     switch (key) {
             \(self.stringHelpers.indent(keyAssigns, 3))
@@ -192,8 +155,6 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     public func createTearDown(forClass cls: Class) -> String {
         let end = """
                 }
-                startVar = index;
-                startKey = startVar;
                 varIndex++;
             while(index < length);
             """
@@ -256,7 +217,59 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         }
     }
 
-    public func createVariablesValue(
+    fileprivate func createParseLoop(accessedFrom accessor: String) -> String {
+        return """
+            for (int i = index; i < length; i++) {
+                index = i + 1;
+                if (bracecount == 0 && \(strLabel)[i] == '=') {
+                    endKey = i - 1;
+                    startVar = index;
+                    continue;
+                }
+                if (bracecount == 0 && isspace(\(strLabel)[i])) {
+                    startVar = index;
+                    if (endKey == -1) {
+                        startKey = index;
+                    }
+                    continue;
+                }
+                if (bracecount == 0 && \(strLabel)[i] == ',') {
+                    index = i;
+                    break;
+                }
+                if (\(strLabel)[i] == '{') {
+                    bracecount++;
+                    if (bracecount == 1) {
+                        lastBrace = i;
+                    }
+                    continue;
+                }
+                if (\(strLabel)[i] == '}') {
+                    bracecount--;
+                    if (bracecount < 0) {
+                        \(true == self.shouldReturnSelf ? "return self;" : "return;")
+                    }
+                    if (bracecount != 0) {
+                        continue;
+                    }
+                    break;
+                }
+            }
+            if (endKey >= startKey) {
+                strncpy(key, \(strLabel) + startKey, endKey - startKey);
+                key[endKey - startKey] = 0;
+            }
+            strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
+            \(accessor)[index - startVar] = 0;
+            bracecount = 0;
+            index += 2;
+            startVar = index;
+            startKey = startVar;
+            endKey = -1;
+            """
+    }
+
+    fileprivate func createVariablesValue(
         forType type: VariableTypes,
         withLabel label: String,
         andCType cType: String,
