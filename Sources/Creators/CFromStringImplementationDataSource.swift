@@ -110,7 +110,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     public func createSetup(forClass cls: Class) -> String {
         let keyAssigns = cls.variables.enumerated().map {
             return """
-                if (1 == strcmp(\"\($1.label)\", \(self.accessor))) {
+                if (0 == strcmp(\"\($1.label)\", \(self.accessor))) {
                     varIndex = \($0);
                 }
                 """
