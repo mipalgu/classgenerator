@@ -161,7 +161,6 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createSetupArrayLoop(
-        atIndex offset: Int,
         withIndexName index: String,
         andLength length: String
     ) -> String {
@@ -175,6 +174,18 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         return self.stringHelpers.indent("}", 3)
     }
 
+    public func createArrayValue(
+        forType type: VariableTypes,
+        withLabel label: String,
+        andCType cType: String,
+        accessedFrom accessor: String,
+        inClass cls: Class,
+        level: Int,
+        setter: (String) -> String
+    ) -> String? {
+        return nil
+    }
+
     public func createValue(
         atIndex index: Int,
         forType type: VariableTypes,
@@ -182,7 +193,6 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         andCType cType: String,
         accessedFrom accessor: String,
         inClass cls: Class,
-        _ level: Int,
         setter: (String) -> String
     ) -> String? {
         guard let value = self.createVariablesValue(
@@ -191,17 +201,12 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             andCType: cType,
             accessedFrom: accessor,
             inClass: cls,
-            level,
-            setter
+            level: 0,
+            setter: setter
         ) else {
             return nil
         }
-        return self.stringHelpers.indent("""
-            case \(index):
-            {
-            \(self.stringHelpers.indent(value))
-            }
-            """, 2)
+        return self.stringHelpers.indent(self.createCase("\(index)", containing: value), 2)
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
@@ -213,6 +218,15 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         default:
             return { self.setter(variable.label, $0) }
         }
+    }
+
+    fileprivate func createCase(_ condition: String, containing contents: String) -> String {
+        return """
+        case \(condition):
+        {
+        \(self.stringHelpers.indent(contents))
+        }
+        """
     }
 
     fileprivate func createParseLoop(accessedFrom accessor: String) -> String {
@@ -274,8 +288,8 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         andCType cType: String,
         accessedFrom accessor: String,
         inClass cls: Class,
-        _ level: Int,
-        _ setter: (String) -> String
+        level: Int,
+        setter: (String) -> String
     ) -> String? {
         let className = cls.name
         switch type {

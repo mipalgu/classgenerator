@@ -92,7 +92,7 @@ public final class FromStringImplementationCreator {
     }
 
     fileprivate func createSetter<DataSource: FromStringImplementationDataSource>(
-        atIndex vIndex: Int,
+        atIndex index: Int,
         using dataSource: DataSource,
         forVariable variable: Variable,
         withLabel label: String,
@@ -110,21 +110,20 @@ public final class FromStringImplementationCreator {
                 forVariable: label,
                 level: level
             )
-            let head = dataSource.createSetupArrayLoop(atIndex: vIndex, withIndexName: index, andLength: length)
+            let head = dataSource.createSetupArrayLoop(withIndexName: index, andLength: length)
             let end = dataSource.createTearDownArrayLoop(withIndexName: index, andLength: length)
             let assignment: String
             switch subtype {
                 case .array:
                     return nil
                 default:
-                    guard let value = dataSource.createValue(
-                        atIndex: vIndex,
+                    guard let value = dataSource.createArrayValue(
                         forType: subtype,
                         withLabel: "\(label)_\(level)",
                         andCType: variable.cType,
                         accessedFrom: accessor,
                         inClass: cls,
-                        level + 1,
+                        level: level + 1,
                         setter: { "\(dataSource.arraySetter(label, index, $0));" }
                     ) else {
                         return nil
@@ -134,13 +133,12 @@ public final class FromStringImplementationCreator {
             return head + "\n" + self.stringHelpers.indent(assignment) + "\n" + end
         default:
             return dataSource.createValue(
-                atIndex: vIndex,
+                atIndex: index,
                 forType: variable.type,
                 withLabel: variable.label,
                 andCType: variable.cType,
                 accessedFrom: accessor,
                 inClass: cls,
-                level,
                 setter: setter
             )
         }

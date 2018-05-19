@@ -78,9 +78,19 @@ public protocol FromStringImplementationDataSource {
 
     func createTearDown(forClass: Class) -> String
 
-    func createSetupArrayLoop(atIndex: Int, withIndexName: String, andLength: String) -> String
+    func createSetupArrayLoop(withIndexName: String, andLength: String) -> String
 
     func createTearDownArrayLoop(withIndexName: String, andLength: String) -> String
+
+    func createArrayValue(
+        forType: VariableTypes,
+        withLabel: String,
+        andCType: String,
+        accessedFrom: String,
+        inClass: Class,
+        level: Int,
+        setter: (String) -> String
+    ) -> String?
 
     func createValue(
         atIndex: Int,
@@ -89,7 +99,6 @@ public protocol FromStringImplementationDataSource {
         andCType: String,
         accessedFrom: String,
         inClass: Class,
-        _ level: Int,
         setter: (String) -> String
     ) -> String?
 
