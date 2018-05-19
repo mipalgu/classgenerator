@@ -141,7 +141,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             startKey = startVar;
             do {
             \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor)))
-                if (key != NULLPRT) {
+                if (key != NULLPTR) {
                     switch (key) {
             \(self.stringHelpers.indent(keyAssigns, 3))
                         default:
@@ -169,14 +169,14 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         withIndexName index: String,
         andLength length: String
     ) -> String {
-        return """
+        return self.stringHelpers.indent("""
             while(\(self.strLabel)[index++] != '{');
             for (int \(index) = 0; \(index) < \(length); \(index)++) {
-            """
+            """, 3)
     }
 
     public func createTearDownArrayLoop(withIndexName index: String, andLength length: String) -> String {
-        return "}"
+        return self.stringHelpers.indent("}", 3)
     }
 
     public func createValue(
@@ -203,7 +203,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         return self.stringHelpers.indent("""
             case \(index):
             \(self.stringHelpers.indent(value))
-            """, 3)
+            """, 2)
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
