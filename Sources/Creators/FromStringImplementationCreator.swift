@@ -77,7 +77,7 @@ public final class FromStringImplementationCreator {
         let setup = dataSource.createSetup(forClass: cls)
         let vars = cls.variables.enumerated().compactMap {
             self.createSetter(
-                atIndex: $0,
+                atOffset: $0,
                 using: dataSource,
                 forVariable: $1,
                 withLabel: $1.label,
@@ -92,7 +92,7 @@ public final class FromStringImplementationCreator {
     }
 
     fileprivate func createSetter<DataSource: FromStringImplementationDataSource>(
-        atIndex index: Int,
+        atOffset offset: Int,
         using dataSource: DataSource,
         forVariable variable: Variable,
         withLabel label: String,
@@ -103,15 +103,14 @@ public final class FromStringImplementationCreator {
     ) -> String? {
         switch variable.type {
         case .array(let subtype, _):
-            return nil
             let index = label + "_\(level)_index"
             let length = self.creatorHelpers.createArrayCountDef(
                 inClass: cls.name,
                 forVariable: label,
                 level: level
             )
-            let head = dataSource.createSetupArrayLoop(withIndexName: index, andLength: length)
-            let end = dataSource.createTearDownArrayLoop(withIndexName: index, andLength: length)
+            let head = dataSource.createSetupArrayLoop(atOffset: offset, withIndexName: index, andLength: length)
+            let end = dataSource.createTearDownArrayLoop(atOffset: offset, withIndexName: index, andLength: length)
             let assignment: String
             switch subtype {
                 case .array:
@@ -133,7 +132,7 @@ public final class FromStringImplementationCreator {
             return head + "\n" + self.stringHelpers.indent(assignment) + "\n" + end
         default:
             return dataSource.createValue(
-                atIndex: index,
+                atOffset: offset,
                 forType: variable.type,
                 withLabel: variable.label,
                 andCType: variable.cType,

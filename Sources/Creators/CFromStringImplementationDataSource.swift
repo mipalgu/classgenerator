@@ -161,17 +161,33 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createSetupArrayLoop(
+        atOffset offset: Int,
+        withIndexName index: String,
+        andLength length: String
+    ) -> String {
+        let start = """
+            case \(offset):
+            {
+                index = lastBrace + 1;
+                startVar = index;
+                startKey = startVar;
+                endKey = -1;
+                bracecount = 0;
+                for (int \(index) = 0; \(index) < \(length); \(index)++) {
+            """
+        let loop = self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor), 2)
+        return self.stringHelpers.indent(start + "\n" + loop, 2)
+    }
+
+    public func createTearDownArrayLoop(
+        atOffset offset: Int,
         withIndexName index: String,
         andLength length: String
     ) -> String {
         return self.stringHelpers.indent("""
-            while(\(self.strLabel)[index++] != '{');
-            for (int \(index) = 0; \(index) < \(length); \(index)++) {
-            """, 3)
-    }
-
-    public func createTearDownArrayLoop(withIndexName index: String, andLength length: String) -> String {
-        return self.stringHelpers.indent("}", 3)
+                }
+            }
+            """, 2)
     }
 
     public func createArrayValue(
@@ -183,11 +199,22 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         level: Int,
         setter: (String) -> String
     ) -> String? {
-        return nil
+        guard let value = self.createVariablesValue(
+            forType: type,
+            withLabel: label,
+            andCType: cType,
+            accessedFrom: accessor,
+            inClass: cls,
+            level: level,
+            setter: setter
+        ) else {
+            return nil
+        }
+        return self.stringHelpers.indent(value, 3)
     }
 
     public func createValue(
-        atIndex index: Int,
+        atOffset offset: Int,
         forType type: VariableTypes,
         withLabel label: String,
         andCType cType: String,
@@ -206,7 +233,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         ) else {
             return nil
         }
-        return self.stringHelpers.indent(self.createCase("\(index)", containing: value), 2)
+        return self.stringHelpers.indent(self.createCase("\(offset)", containing: value), 2)
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
@@ -259,20 +286,17 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 if (\(strLabel)[i] == '}') {
                     bracecount--;
                     if (bracecount < 0) {
-                        \(true == self.shouldReturnSelf ? "return self;" : "return;")
+                        index = i - 1;
+                        break;
                     }
-                    if (bracecount != 0) {
-                        continue;
-                    }
-                    break;
                 }
             }
             if (endKey >= startKey) {
-                strncpy(key, \(strLabel) + startKey, endKey - startKey);
-                key[endKey - startKey] = 0;
+                strncpy(key, \(strLabel) + startKey, (endKey - startKey) + 1);
+                key[(endKey - startKey) + 1] = 0;
             }
-            strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
-            \(accessor)[index - startVar] = 0;
+            strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
+            \(accessor)[(index - startVar) + 1] = 0;
             printf("found variable: %s\\n", \(accessor));
             bracecount = 0;
             index += 2;
