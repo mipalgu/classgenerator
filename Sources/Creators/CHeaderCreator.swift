@@ -206,8 +206,9 @@ public final class CHeaderCreator: ErrorContainer {
                 return "ARRAY_PROPERTY("
                     + cType
                     + ", \(label)"
-                    + ", \(className.uppercased())_\(label.uppercased())_"
-                    + "\(0 == level ? "" : "\(level)_")ARRAY_SIZE)"
+                    + ", "
+                    + self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: level)
+                    + ")"
             case .bit:
                 return "BIT_PROPERTY(" + label + ")"
             case .pointer:

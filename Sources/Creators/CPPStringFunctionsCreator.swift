@@ -231,10 +231,11 @@ public final class CPPStringFunctionsCreator {
                 ) else {
                     return nil
                 }
+                let sizeDef = self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: 0)
                 return """
                     bool \(label)_first = true;
                     ss << \(true == includeLabel ? "\"\(label)={\";" : "\"{\";")
-                    for (int i = 0; i < \(className.uppercased())_\(label.uppercased())_ARRAY_SIZE; i++) {
+                    for (int i = 0; i < \(sizeDef); i++) {
                     \(self.stringHelpers.indent(value))
                         \(label)_first = false;
                     }
