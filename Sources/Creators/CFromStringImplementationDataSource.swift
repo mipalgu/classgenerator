@@ -110,11 +110,11 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     public func createSetup(forClass cls: Class) -> String {
         let keyAssigns = cls.variables.enumerated().map {
             return """
-                case \($1.label):
+                if (1 == strcmp(\"\($1.label)\", \(self.accessor))) {
                     varIndex = \($0);
-                    break;
+                }
                 """
-        }.combine("") { $0 + "\n" + $1}
+        }.combine("") { $0 + " else " + $1 }
         let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
         return """
             size_t temp_length = strlen(\(self.strLabel));
@@ -142,11 +142,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             do {
             \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor)))
                 if (key != NULLPTR) {
-                    switch (key) {
-            \(self.stringHelpers.indent(keyAssigns, 3))
-                        default:
-                            continue;
-                    }
+            \(self.stringHelpers.indent(keyAssigns, 2))
                 }
                 switch (varIndex) {
             """
@@ -156,7 +152,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         let end = """
                 }
                 varIndex++;
-            while(index < length);
+            } while(index < length);
             """
         if false == self.shouldReturnSelf {
             return end
@@ -202,7 +198,9 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         }
         return self.stringHelpers.indent("""
             case \(index):
+            {
             \(self.stringHelpers.indent(value))
+            }
             """, 2)
     }
 
@@ -261,6 +259,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             }
             strncpy(\(accessor), \(strLabel) + startVar, index - startVar);
             \(accessor)[index - startVar] = 0;
+            printf("found variable: %s\\n", \(accessor));
             bracecount = 0;
             index += 2;
             startVar = index;

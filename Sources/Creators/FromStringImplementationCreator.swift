@@ -103,6 +103,7 @@ public final class FromStringImplementationCreator {
     ) -> String? {
         switch variable.type {
         case .array(let subtype, _):
+            return nil
             let index = label + "_\(level)_index"
             let length = self.creatorHelpers.createArrayCountDef(
                 inClass: cls.name,

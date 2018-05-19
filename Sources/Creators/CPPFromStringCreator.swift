@@ -91,7 +91,7 @@ public final class CPPFromStringCreator {
         let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let cImplementation = structName + "_from_string(this, str.c_str());"
         let begin = "char * str_cstr = const_cast<char *>(str.c_str());"
-        let cppImplementation = self.implementationCreator.createFromStringImplementation(
+        /*let cppImplementation = self.implementationCreator.createFromStringImplementation(
             forClass: cls,
             using: CFromStringImplementationDataSource(
                 selfStr: "this",
@@ -110,7 +110,8 @@ public final class CPPFromStringCreator {
                 getter: { "this->" + $0 + "()" },
                 setter: { "this->set_" + $0 + "(" + $1 + ");"}
             )
-        )
+        )*/
+        let cppImplementation = ""
         let endef = "}"
         return ifDef + "\n" + self.stringHelpers.indent(def, 2) + "\n"
             + self.stringHelpers.indent(cImplementation, 3) + "\n"
