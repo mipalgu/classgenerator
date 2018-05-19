@@ -185,6 +185,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         andLength length: String
     ) -> String {
         return self.stringHelpers.indent("""
+                    break;
                 }
             }
             """, 2)
@@ -252,6 +253,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         case \(condition):
         {
         \(self.stringHelpers.indent(contents))
+            break;
         }
         """
     }
@@ -289,6 +291,9 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                         index = i - 1;
                         break;
                     }
+                }
+                if (i == length - 1) {
+                    index = i;
                 }
             }
             if (endKey >= startKey) {
