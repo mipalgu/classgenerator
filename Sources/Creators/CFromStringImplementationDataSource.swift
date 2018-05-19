@@ -296,9 +296,11 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     index = i;
                 }
             }
-            if (endKey >= startKey) {
+            if (endKey >= startKey && endKey - startKey < length) {
                 strncpy(key, \(strLabel) + startKey, (endKey - startKey) + 1);
                 key[(endKey - startKey) + 1] = 0;
+            } else {
+                key[0] = 0;
             }
             strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
             \(accessor)[(index - startVar) + 1] = 0;
