@@ -189,6 +189,9 @@ public class StringTests: XCTestCase {
             array16: [4, 3, 2, 1],
             subs: [wb_sub(b: true), wb_sub(b: false), wb_sub(b: true)]
         )
+        target.subs.0.i = 0
+        target.subs.1.i = 0
+        target.subs.2.i = 0
         XCTAssertEqual(expected, r.pointee)
     }
 
