@@ -70,5 +70,6 @@
 #include "cpp_bridge.h"
 #include "wb_field_ball.h"
 #include "wb_field_balls.h"
+#include "wb_vision_control_status.h"
 
 #endif  /* BRIDGE_H */

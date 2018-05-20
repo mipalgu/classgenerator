@@ -137,7 +137,6 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             int lastBrace = -1;
             int startVar = 0;
             int index = 0;
-            bool useKeys = false;
             int startKey = 0;
             int endKey = 0;
             int varIndex = 0;

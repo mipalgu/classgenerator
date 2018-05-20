@@ -178,6 +178,14 @@ public class DemoTests: ClassGeneratorTestCase {
             "./Sources/demo",
             "./fieldBall.gen"
         ])
+        self.generator.run([
+            "classgenerator",
+            "--c-header",
+            "./Sources/bridge",
+            "--swift-file",
+            "./Sources/demo",
+            "./vision_control_status.gen"
+        ])
         let p = Process()
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
         p.launchPath = "/usr/bin/env"
@@ -232,6 +240,14 @@ public class DemoTests: ClassGeneratorTestCase {
             "--swift-file",
             "./Sources/demo",
             "./fieldBall.gen"
+        ])
+        self.generator.run([
+            "classgenerator",
+            "--c-header",
+            "./Sources/bridge",
+            "--swift-file",
+            "./Sources/demo",
+            "./vision_control_status.gen"
         ])
         let p = Process()
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
