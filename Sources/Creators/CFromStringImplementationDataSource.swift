@@ -125,7 +125,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
         return """
             size_t temp_length = strlen(\(self.strLabel));
-            int length = (temp_length <= INT_MAX) ? (int)((ssize_t)temp_length) : -1;
+            int length = (temp_length <= INT_MAX) ? \(self.cast(self.cast("temp_length", "ssize_t"), "int")) : -1;
             if (length < 1) {
                 \(self.shouldReturnSelf ? "return \(self.selfStr);" : "return;")
             }
