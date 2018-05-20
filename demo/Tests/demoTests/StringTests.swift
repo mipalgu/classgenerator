@@ -71,10 +71,12 @@ public class StringTests: XCTestCase {
         return [
             ("test_cDescriptionEqualsExpectedDescription", test_cDescriptionEqualsExpectedDescription),
             ("test_cToStringEqualsExpectedToString", test_cToStringEqualsExpectedToString),
-            ("test_cFromStringCreatesStruct", test_cFromStringCreatesStruct),
+            ("test_cFromStringCreatesStructFromDescription", test_cFromStringCreatesStructFromDescription),
+            ("test_cFromStringCreatesStructFromToString", test_cFromStringCreatesStructFromToString),
             ("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
             ("test_cppToStringEqualsExpectedToString", test_cppToStringEqualsExpectedToString),
-            ("test_cppFromStringCreatesStruct", test_cppFromStringCreatesStruct),
+            ("test_cppFromStringCreatesStructFromDescription", test_cppFromStringCreatesStructFromDescription),
+            ("test_cppFromStringCreatesStructFromToString", test_cppFromStringCreatesStructFromToString),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionCanBeConvertedToStruct", test_swiftDescriptionCanBeConvertedToStruct)
         ]
@@ -131,9 +133,21 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(self.expectedToString, self.cToString)
     }
 
-    public func test_cFromStringCreatesStruct() {
+    public func test_cFromStringCreatesStructFromDescription() {
         var target: wb_demo = wb_demo()
         let result = self.expectedDemoDescription.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(self.demo, r.pointee)
+    }
+
+    public func test_cFromStringCreatesStructFromToString() {
+        var target: wb_demo = wb_demo()
+        let result = self.expectedToString.utf8CString.withUnsafeBufferPointer {
             wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
         }
         XCTAssertNotNil(result)
@@ -163,9 +177,21 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(expected, result)
     }
 
-    public func test_cppFromStringCreatesStruct() {
+    public func test_cppFromStringCreatesStructFromDescription() {
         var target: wb_demo = wb_demo()
         let result = self.expectedDemoDescription.utf8CString.withUnsafeBufferPointer {
+            cpp_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(self.demo, r.pointee)
+    }
+
+    public func test_cppFromStringCreatesStructFromToString() {
+        var target: wb_demo = wb_demo()
+        let result = self.expectedToString.utf8CString.withUnsafeBufferPointer {
             cpp_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
         }
         XCTAssertNotNil(result)
