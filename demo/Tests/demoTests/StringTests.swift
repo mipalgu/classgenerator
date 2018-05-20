@@ -73,10 +73,14 @@ public class StringTests: XCTestCase {
             ("test_cToStringEqualsExpectedToString", test_cToStringEqualsExpectedToString),
             ("test_cFromStringCreatesStructFromDescription", test_cFromStringCreatesStructFromDescription),
             ("test_cFromStringCreatesStructFromToString", test_cFromStringCreatesStructFromToString),
+            ("test_cFromStringParsesPartialDescription", test_cFromStringParsesPartialDescription),
+            ("test_cFromStringParsesPartialMixedDescription", test_cFromStringParsesPartialMixedDescription),
             ("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
             ("test_cppToStringEqualsExpectedToString", test_cppToStringEqualsExpectedToString),
             ("test_cppFromStringCreatesStructFromDescription", test_cppFromStringCreatesStructFromDescription),
             ("test_cppFromStringCreatesStructFromToString", test_cppFromStringCreatesStructFromToString),
+            ("test_cppFromStringParsesPartialDescription", test_cppFromStringParsesPartialDescription),
+            ("test_cppFromStringParsesPartialMixedDescription", test_cppFromStringParsesPartialMixedDescription),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionCanBeConvertedToStruct", test_swiftDescriptionCanBeConvertedToStruct)
         ]
@@ -157,6 +161,37 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(self.demo, r.pointee)
     }
 
+    public func test_cFromStringParsesPartialDescription() {
+        var target: wb_demo = wb_demo.make()
+        let str = "str2=abc"
+        let result = str.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(wb_demo(str2: "abc"), r.pointee)
+    }
+
+    public func test_cFromStringParsesPartialMixedDescription() {
+        var target: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(0), wb_sub(0)])
+        let str = "array16={4, 3, 2, 1}, str2=cba, subs={{b=true}, {b=false}, {b=true}}"
+        let result = str.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        let expected = wb_demo(
+            str2: "cba",
+            array16: [4, 3, 2, 1],
+            subs: [wb_sub(b: true), wb_sub(b: false), wb_sub(b: true)]
+        )
+        XCTAssertEqual(expected, r.pointee)
+    }
+
     public func test_cppDescriptionEqualsExpectedDescription() {
         let expected = self.expectedDemoDescription
             .replacingOccurrences(of: "0.000000", with: "0")
@@ -199,6 +234,37 @@ public class StringTests: XCTestCase {
             return
         }
         XCTAssertEqual(self.demo, r.pointee)
+    }
+
+    public func test_cppFromStringParsesPartialDescription() {
+        var target: wb_demo = wb_demo.make()
+        let str = "str2=abc"
+        let result = str.utf8CString.withUnsafeBufferPointer {
+            cpp_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        XCTAssertEqual(wb_demo(str2: "abc"), r.pointee)
+    }
+
+    public func test_cppFromStringParsesPartialMixedDescription() {
+        var target: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(0), wb_sub(0)])
+        let str = "array16={4, 3, 2, 1}, str2=cba, subs={{b=true}, {b=false}, {b=true}}"
+        let result = str.utf8CString.withUnsafeBufferPointer {
+            cpp_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        let expected = wb_demo(
+            str2: "cba",
+            array16: [4, 3, 2, 1],
+            subs: [wb_sub(b: true), wb_sub(b: false), wb_sub(b: true)]
+        )
+        XCTAssertEqual(expected, r.pointee)
     }
 
     public func test_swiftDescriptionEqualsExpectedDescription() {
