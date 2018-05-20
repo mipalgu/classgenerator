@@ -1,9 +1,9 @@
 /*
- * bridge.h 
- * bridge 
+ * FromStringImplementationDataSource.swift 
+ * Creators 
  *
- * Created by Callum McColl on 11/09/2017.
- * Copyright © 2017 Callum McColl. All rights reserved.
+ * Created by Callum McColl on 18/05/2018.
+ * Copyright © 2018 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,20 +56,52 @@
  *
  */
 
-#ifndef BRIDGE_H
-#define BRIDGE_H
+import Data
 
-#include <termios.h> 
-#include "WBFunctor_types_generated.h"
-#include "gusimplewhiteboard.h"
-#include "guwhiteboard_c_types.h"
-#include "guwhiteboardtypelist_c_generated.h"
-#include "gu_util.h"
-#include "somestruct.h"
-#include "wb_demo.h"
-#include "cpp_bridge.h"
-#include "wb_field_ball.h"
-#include "wb_field_balls.h"
-#include "wb_vision_control_status.h"
+public protocol FromStringImplementationDataSource {
 
-#endif  /* BRIDGE_H */
+    var accessor: String { get }
+
+    var arrayGetter: (String, String) -> String { get }
+
+    var arraySetter: (String, String, String) -> String { get }
+
+    var getter: (String) -> String { get }
+
+    var selfStr: String { get }
+
+    var shouldReturnSelf: Bool { get }
+
+    var strLabel: String { get }
+
+    func createSetup(forClass: Class) -> String
+
+    func createTearDown(forClass: Class) -> String
+
+    func createSetupArrayLoop(atOffset: Int, withIndexName: String, andLength: String) -> String
+
+    func createTearDownArrayLoop(atOffset: Int, withIndexName: String, andLength: String) -> String
+
+    func createArrayValue(
+        forType: VariableTypes,
+        withLabel: String,
+        andCType: String,
+        accessedFrom: String,
+        inClass: Class,
+        level: Int,
+        setter: (String) -> String
+    ) -> String?
+
+    func createValue(
+        atOffset: Int,
+        forType: VariableTypes,
+        withLabel: String,
+        andCType: String,
+        accessedFrom: String,
+        inClass: Class,
+        setter: (String) -> String
+    ) -> String?
+
+    func setter(forVariable: Variable) -> (String) -> String
+
+}

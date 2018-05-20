@@ -16,18 +16,8 @@
 #include <stdint.h>
 #include <string.h>
 #include "somestruct.h"
+#include "wb_vision_control_status.h"
 #include "wb_sub.h"
-
-/**
- * @brief Resolutions Supported by Vision
- */
-enum Resolutions {
-	QQVGA,  ///< 160 x 120
-	QVGA,   ///< 320 x 240
-	VGA,    ///< 640 x 480
-	HD_4VGA,    ///< 1280x960
-	SVGA   ///< 800 x 600
-};
 
 -c++
 #include "Sub.h"

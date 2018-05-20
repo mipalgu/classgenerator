@@ -18,3 +18,7 @@ Sources/bridge/wb_field_balls.h
 Sources/bridge/wb_field_balls.c
 Sources/bridge/FieldBalls.h
 Sources/demo/FieldBalls.swift
+Sources/bridge/wb_vision_control_status.h
+Sources/bridge/wb_vision_control_status.c
+Sources/bridge/VisionControlStatus.h
+Sources/demo/VisionControlStatus.swift

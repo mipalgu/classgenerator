@@ -65,10 +65,16 @@ public final class CPPFromStringCreator {
 
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
+    fileprivate let implementationCreator: FromStringImplementationCreator
 
-    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), stringHelpers: StringHelpers = StringHelpers()) {
+    public init(
+        creatorHelpers: CreatorHelpers = CreatorHelpers(),
+        stringHelpers: StringHelpers = StringHelpers(),
+        implementationCreator: FromStringImplementationCreator = FromStringImplementationCreator()
+    ) {
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
+        self.implementationCreator = implementationCreator
     }
 
     public func createFromStringFunction(
@@ -84,269 +90,35 @@ public final class CPPFromStringCreator {
         let elseDef = "#else"
         let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let cImplementation = structName + "_from_string(this, str.c_str());"
-        let cppImplementation = self.createCPPImplementation(
-            forClassNamed: className,
-            withStructNamed: structName,
-            withVariables: variables
+        let begin = "char * str_cstr = const_cast<char *>(str.c_str());"
+        let cppImplementation = self.implementationCreator.createFromStringImplementation(
+            forClass: cls,
+            using: CFromStringImplementationDataSource(
+                selfStr: "this",
+                shouldReturnSelf: false,
+                strLabel: "str_cstr",
+                cast: { "static_cast<\($1)>(\($0))" },
+                recurse: { (createVariable, structName, className, label, accessor) -> String in
+                    return """
+                        \(className) \(label)_temp = \(className)();
+                        \(label)_temp.from_string(\(accessor));
+                        \(createVariable ? "struct \(structName) \(label) = \(label)_temp;" : "this->set_\(label)(\(label)_temp);")
+                        """
+                },
+                arrayGetter: { "this->" + $0 + "(" + $1 + ")"},
+                arraySetter: { "this->set_" + $0 + "(" + $2 + ", " + $1 + ");"},
+                getter: { "this->" + $0 + "()" },
+                setter: { "this->set_" + $0 + "(" + $1 + ");"}
+            )
         )
         let endef = "}"
         return ifDef + "\n" + self.stringHelpers.indent(def, 2) + "\n"
             + self.stringHelpers.indent(cImplementation, 3) + "\n"
             + elseDef + "\n"
             + (containsSupportedTypes ? self.stringHelpers.indent(def, 2) : self.stringHelpers.indent(nodef, 2))
-            + "\n" + self.stringHelpers.indent(cppImplementation, 3) + "\n"
+            + "\n" + self.stringHelpers.indent(begin + "\n" + cppImplementation, 3) + "\n"
             + endifDef + "\n"
             + self.stringHelpers.indent(endef, 2)
-    }
-
-    fileprivate func createCPPImplementation(
-        forClassNamed className: String,
-        withStructNamed structName: String,
-        withVariables variables: [Variable]
-    ) -> String {
-        guard nil != variables.first(where: { self.creatorHelpers.isSupportedStringType($0.type) }) else {
-            return ""
-        }
-        let varDef = "char var[255];"
-        let conversionList = variables.enumerated().compactMap {
-            self.createCPPImplementation(
-                forClassNamed: className,
-                withStructNamed: structName,
-                forVariable: $1,
-                isFirst: $0 == 0
-            )
-        }.combine("") { $0 + "\n" + $1 }
-        return varDef + "\n" + conversionList
-    }
-
-    fileprivate func createCPPImplementation(
-        forClassNamed className: String,
-        withStructNamed structName: String,
-        forVariable variable: Variable,
-        isFirst: Bool
-    ) -> String? {
-        let index = "\(variable.label)_index"
-        let parseValue = self.createParseValue(
-            forType: variable.type,
-            withLabel: variable.label,
-            andIndex: index,
-            isFirst: isFirst
-        )
-        let setup = """
-            unsigned long \(index) = str.find("\(variable.label)=");
-            if (\(index) != std::string::npos) {
-                memset(&var[0], 0, sizeof(var));
-                if (\(parseValue) == 1) {
-            """
-        guard let setter = self.calculateSetter(
-            forClassNamed: className,
-            forVariable: variable.label,
-            withType: variable.type,
-            andCType: variable.cType
-        ) else {
-            return nil
-        }
-        let finish = """
-                }
-            }
-            """
-        return setup + "\n" + self.stringHelpers.indent(setter, 2) + "\n" + finish
-    }
-
-    fileprivate func createParseValue(
-        forType type: VariableTypes,
-        withLabel label: String,
-        andIndex index: String,
-        isFirst: Bool
-    ) -> String {
-        let token: String
-        switch type {
-            case  .array:
-                token = "{ %[^}]"
-            default:
-                token = "%[^,]"
-        }
-        return "sscanf(str.substr(\(index), str.length()).c_str(), \"\(label) = \(token)\", var)"
-    }
-
-    fileprivate func calculateSetter(
-        forClassNamed className: String,
-        forVariable label: String,
-        withType type: VariableTypes,
-        andCType cType: String
-    ) -> String? {
-        let getValue = "std::string value = std::string(var);"
-        guard let setter = self.calculateSetterValue(
-            forClassNamed: className,
-            forVariable: label,
-            withType: type,
-            andCType: cType,
-            withGetter: "value",
-            andSetter: { "set_\(label)(\($0))" }
-        ) else {
-            return nil
-        }
-        return getValue + "\n" + setter
-    }
-
-    //swiftlint:disable:next function_parameter_count
-    fileprivate func calculateSetterValue(
-        forClassNamed className: String,
-        forVariable label: String,
-        withType type: VariableTypes,
-        andCType cType: String,
-        withGetter getter: String,
-        andSetter setter: (String) -> String
-    ) -> String? {
-        switch type {
-            case .array:
-                return self.calculateArraySetterValue(
-                    forClassNamed: className,
-                    forVariable: label,
-                    withType: type,
-                    andCType: cType,
-                    withGetter: getter,
-                    andSetter: setter
-                )
-            case .bit:
-                return setter("static_cast<\(cType)>(atoi(\(getter).c_str()))") + ";"
-            case .bool:
-                return setter("\(getter).compare(\"true\") == 0 || \(getter).compare(\"1\") == 0 ? true : false") + ";"
-            case .char:
-                return setter("static_cast<\(cType)>((\(getter)[0]))") + ";"
-            case .enumerated(let name):
-                return setter("static_cast<enum \(name)>(atoi(\(getter).c_str()))") + ";"
-            case .numeric(let numericType):
-                let conversionFunction = self.calculateConversionFunction(forNumericType: numericType)
-                return setter("static_cast<\(cType)>(\(conversionFunction)(\(getter).c_str()))") + ";"
-            case .gen(_, _, let className):
-                //return setter(className + "(\(getter))") + ";"
-                return """
-                    \(className) \(label) = \(className)();
-                    \(label).from_string(\(getter));
-                    \(setter(label));
-                    """
-            case .string(let length):
-                return "gu_strlcpy(const_cast<char *>(this->\(label)()), \(getter).c_str(), \(length));"
-            case .pointer:
-                let typeExtras = self.creatorHelpers.calculateSignatureExtras(forType: type)
-                //swiftlint:disable:next line_length
-                let cast = "const \(cType)\(typeExtras) \(label)_cast = static_cast<\(cType)\(typeExtras)>(atol(\(getter).c_str()));"
-                return cast + "\n" + setter("\(label)_cast") + ";"
-            case .unknown:
-                return nil
-        }
-    }
-
-    //swiftlint:disable:next function_parameter_count
-    fileprivate func calculateArraySetterValue(
-        forClassNamed className: String,
-        forVariable label: String,
-        withType type: VariableTypes,
-        andCType cType: String,
-        withGetter getter: String,
-        andSetter setter: (String) -> String
-    ) -> String? {
-        switch type {
-            case .array(let subtype, _):
-                let postSetter: String
-                let getterValue: String
-                switch subtype {
-                    case .array:
-                        return nil
-                    case .gen:
-                        postSetter = "++"
-                        getterValue = "\(label)_value"
-                        break
-                    default:
-                        postSetter = ""
-                        getterValue = "\(getter).substr(0, pos)"
-                        break
-                }
-                let index = "\(label)_array_index"
-                let length = self.creatorHelpers.createArrayCountDef(
-                    inClass: className,
-                    forVariable: label,
-                    level: 0
-                )
-                guard let setter = self.calculateSetterValue(
-                    forClassNamed: className,
-                    forVariable: label,
-                    withType: subtype,
-                    andCType: cType,
-                    withGetter: getterValue,
-                    andSetter: { "set_\(label)(\($0), \(index)\(postSetter))" }
-                ) else {
-                    return nil
-                }
-                switch (subtype) {
-                case .gen:
-                    return """
-                        int \(label)_bracecount = 0;
-                        unsigned long \(label)_lastBrace = \(label)_index;
-                        int \(index) = 0;
-                        for (unsigned long \(label)_loop_index = \(label)_index; \(label)_loop_index < str.length(); \(label)_loop_index++) {
-                            if (str.at(\(label)_loop_index) == '{') {
-                                \(label)_bracecount++;
-                                if (\(label)_bracecount == 2) {
-                                    \(label)_lastBrace = \(label)_loop_index;
-                                }
-                                continue;
-                            }
-                            if (str.at(\(label)_loop_index) == '}') {
-                                \(label)_bracecount--;
-                                if (\(label)_bracecount < 1) {
-                                    break;
-                                }
-                                if (\(label)_bracecount > 1) {
-                                    continue;
-                                }
-                                std::string \(label)_value = str.substr(\(label)_lastBrace, \(label)_loop_index - \(label)_lastBrace + 1);
-                        \(self.stringHelpers.indent(setter, 2))
-                                continue;
-                            }
-                        }
-                        """
-                default:
-                    return """
-                        for (int \(index) = 0; \(index) < \(length); \(index)++) {
-                            size_t pos = \(getter).find(",");
-                        \(self.stringHelpers.indent(setter))
-                            \(getter) = \(getter).substr(pos + 2);
-                            if (pos == std::string::npos) {
-                                break;
-                            }
-                        }
-                        """
-                }
-            default:
-                return self.calculateSetterValue(
-                    forClassNamed: className,
-                    forVariable: label,
-                    withType: type,
-                    andCType: cType,
-                    withGetter: getter,
-                    andSetter: setter
-                )
-        }
-    }
-
-    fileprivate func calculateConversionFunction(forNumericType type: NumericTypes) -> String {
-        switch type {
-            case .float, .double:
-                return "atof"
-            case .signed, .unsigned:
-                return "atoi"
-            case .long(let subtype):
-                switch subtype {
-                    case .float, .double:
-                        return "atof"
-                    case .long:
-                        return "atoll"
-                    default:
-                        return "atol"
-                }
-        }
     }
 
 }
