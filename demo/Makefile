@@ -16,4 +16,4 @@ generate-classes:
 .include "../../../mk/c++11.mk"
 .include "../../../mk/mipal.mk"
 
-CFLAGS+=-DWHITEBOARD_POSTER_STRING_CONVERSION=1 -DWHITEBOARD_SERIALISATION=1 -I${SRCDIR}/bridge -Werror
+CFLAGS+=-DWHITEBOARD_POSTER_STRING_CONVERSION=1 -DWHITEBOARD_SERIALISATION=1 -I${SRCDIR}/bridge -Werror -Wall
