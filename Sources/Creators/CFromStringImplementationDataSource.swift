@@ -108,9 +108,16 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createSetup(forClass cls: Class) -> String {
-        let keyAssigns = cls.variables.enumerated().map {
+        let keyAssigns = cls.variables.lazy.filter{
+            switch $0.type {
+            case .pointer, .unknown:
+                return false
+            default:
+                return true
+            }
+        }.enumerated().map {
             return """
-                if (0 == strcmp(\"\($1.label)\", \(self.accessor))) {
+                if (0 == strcmp(\"\($1.label)\", key)) {
                     varIndex = \($0);
                 }
                 """
@@ -141,9 +148,11 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             startKey = startVar;
             do {
             \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor)))
+                printf("varIndex: %d, before key: %s\\n", varIndex, key);
                 if (key != NULLPTR) {
             \(self.stringHelpers.indent(keyAssigns, 2))
                 }
+                printf("varIndex: %d\\n", varIndex);
                 switch (varIndex) {
             """
     }
@@ -168,12 +177,14 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         let start = """
             case \(offset):
             {
+                int restartIndex = index;
                 index = lastBrace + 1;
                 startVar = index;
                 startKey = startVar;
                 endKey = -1;
                 bracecount = 0;
                 for (int \(index) = 0; \(index) < \(length); \(index)++) {
+                    printf("\(index): %d\\n", \(index));
             """
         let loop = self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor), 2)
         return self.stringHelpers.indent(start + "\n" + loop, 2)
@@ -185,8 +196,11 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         andLength length: String
     ) -> String {
         return self.stringHelpers.indent("""
-                    break;
+                    printf("var_str: %s\\n", var_str);
                 }
+                index = restartIndex;
+                printf("end index: %d\\n", index);
+                break;
             }
             """, 2)
     }
@@ -211,7 +225,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         ) else {
             return nil
         }
-        return self.stringHelpers.indent(value, 3)
+        return self.stringHelpers.indent("printf(\"Assigning %s to \(label)\\n\", \(accessor));\nfflush(stdout);\n\(value)", 3)
     }
 
     public func createValue(
@@ -234,7 +248,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         ) else {
             return nil
         }
-        return self.stringHelpers.indent(self.createCase("\(offset)", containing: value), 2)
+        return self.stringHelpers.indent(self.createCase("\(offset)", containing: "printf(\"Assigning %s to \(label)\\n\", \(accessor));\nfflush(stdout);\n\(value)"), 2)
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
@@ -275,7 +289,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     continue;
                 }
                 if (bracecount == 0 && \(strLabel)[i] == ',') {
-                    index = i;
+                    index = i - 1;
                     break;
                 }
                 if (\(strLabel)[i] == '{') {
@@ -305,6 +319,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
             \(accessor)[(index - startVar) + 1] = 0;
             printf("found variable: %s\\n", \(accessor));
+            printf("found variable index: %d\\n", index);
             bracecount = 0;
             index += 2;
             startVar = index;

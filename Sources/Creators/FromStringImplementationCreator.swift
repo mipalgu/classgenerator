@@ -75,7 +75,14 @@ public final class FromStringImplementationCreator {
         using dataSource: DataSource
     ) -> String {
         let setup = dataSource.createSetup(forClass: cls)
-        let vars = cls.variables.enumerated().compactMap {
+        let vars = cls.variables.lazy.filter {
+            switch $0.type {
+            case .pointer, .unknown:
+                return false
+            default:
+                return true
+            }
+        }.enumerated().compactMap {
             self.createSetter(
                 atOffset: $0,
                 using: dataSource,
