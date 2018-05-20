@@ -74,12 +74,14 @@ public class StringTests: XCTestCase {
             ("test_cFromStringCreatesStructFromDescription", test_cFromStringCreatesStructFromDescription),
             ("test_cFromStringCreatesStructFromToString", test_cFromStringCreatesStructFromToString),
             ("test_cFromStringParsesPartialDescription", test_cFromStringParsesPartialDescription),
+            ("test_cFromStringParsesPartialUnorderedDescription", test_cFromStringParsesPartialUnorderedDescription),
             ("test_cFromStringParsesPartialMixedDescription", test_cFromStringParsesPartialMixedDescription),
             ("test_cppDescriptionEqualsExpectedDescription", test_cppDescriptionEqualsExpectedDescription),
             ("test_cppToStringEqualsExpectedToString", test_cppToStringEqualsExpectedToString),
             ("test_cppFromStringCreatesStructFromDescription", test_cppFromStringCreatesStructFromDescription),
             ("test_cppFromStringCreatesStructFromToString", test_cppFromStringCreatesStructFromToString),
             ("test_cppFromStringParsesPartialDescription", test_cppFromStringParsesPartialDescription),
+            ("test_cppFromStringParsesPartialUnorderedDescription", test_cppFromStringParsesPartialUnorderedDescription),
             ("test_cppFromStringParsesPartialMixedDescription", test_cppFromStringParsesPartialMixedDescription),
             ("test_swiftDescriptionEqualsExpectedDescription", test_swiftDescriptionEqualsExpectedDescription),
             ("test_swiftDescriptionCanBeConvertedToStruct", test_swiftDescriptionCanBeConvertedToStruct)
@@ -174,7 +176,7 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(wb_demo(str2: "abc"), r.pointee)
     }
 
-    public func test_cFromStringParsesPartialMixedDescription() {
+    public func test_cFromStringParsesPartialUnorderedDescription() {
         var target: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(0), wb_sub(0)])
         let str = "array16={4, 3, 2, 1}, str2=cba, subs={{b=true}, {b=false}, {b=true}}"
         let result = str.utf8CString.withUnsafeBufferPointer {
@@ -192,6 +194,25 @@ public class StringTests: XCTestCase {
         target.subs.0.i = 0
         target.subs.1.i = 0
         target.subs.2.i = 0
+        XCTAssertEqual(expected, r.pointee)
+    }
+
+    public func test_cFromStringParsesPartialMixedDescription() {
+        var target: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(0), wb_sub(0)])
+        let str = "array16={4, 3, 2, 1}, {true, false, true}, str2=cba, true"
+        let result = str.utf8CString.withUnsafeBufferPointer {
+            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        let expected = wb_demo(
+            str2: "cba",
+            b2: true,
+            array16: [4, 3, 2, 1],
+            bools: [true, false, true]
+        )
         XCTAssertEqual(expected, r.pointee)
     }
 
@@ -252,7 +273,7 @@ public class StringTests: XCTestCase {
         XCTAssertEqual(wb_demo(str2: "abc"), r.pointee)
     }
 
-    public func test_cppFromStringParsesPartialMixedDescription() {
+    public func test_cppFromStringParsesPartialUnorderedDescription() {
         var target: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(0), wb_sub(0)])
         let str = "array16={4, 3, 2, 1}, str2=cba, subs={{b=true}, {b=false}, {b=true}}"
         let result = str.utf8CString.withUnsafeBufferPointer {
@@ -266,6 +287,25 @@ public class StringTests: XCTestCase {
             str2: "cba",
             array16: [4, 3, 2, 1],
             subs: [wb_sub(b: true), wb_sub(b: false), wb_sub(b: true)]
+        )
+        XCTAssertEqual(expected, r.pointee)
+    }
+
+    public func test_cppFromStringParsesPartialMixedDescription() {
+        var target: wb_demo = wb_demo(subs: [wb_sub(0), wb_sub(0), wb_sub(0)])
+        let str = "array16={4, 3, 2, 1}, {true, false, true}, str2=cba, true"
+        let result = str.utf8CString.withUnsafeBufferPointer {
+            cpp_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+        }
+        XCTAssertNotNil(result)
+        guard let r = result else {
+            return
+        }
+        let expected = wb_demo(
+            str2: "cba",
+            b2: true,
+            array16: [4, 3, 2, 1],
+            bools: [true, false, true]
         )
         XCTAssertEqual(expected, r.pointee)
     }
