@@ -25,6 +25,7 @@ let package = Package(
             .target(name: "Containers"),
             .target(name: "Helpers"),
             "swift_helpers",
+            "IO",
             "whiteboard_helpers"
         ]),
         .target(name: "classgenerator", dependencies: [
@@ -34,6 +35,7 @@ let package = Package(
             .target(name: "Parsers"),
             .target(name: "Creators"),
             "swift_helpers",
+            "IO",
             "whiteboard_helpers"
         ]),
         .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator"), "swift_helpers"])
