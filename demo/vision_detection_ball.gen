@@ -1,0 +1,33 @@
+-author Carl Lusty
+
+-c
+#include <stdint.h>
+
+enum BallOptions2 {
+	NoBallDetected2 = 0, ///< No Ball Found
+	BallDetected2        ///< Ball Found
+};
+
+-swift
+import bridge
+
+-properties
+enum BallOptions2 sightingType = NoBallDetected2 // Ball detection details.
+
+int16_t x = 0  //X position
+int16_t y = 0  //Y position
+uint16_t r = 0  //Radius
+
+-comment
+Results for the Ball Ray Tracer (guvision). 
+Results are a percentage of the image utilised, at whatever the resolution and FOV happen to be.
+You can check the vision status message for resolution and FOV information.
+Coords:
+    x, Int16.MinValue <-> Int16.MaxValue
+    y, Int16.MinValue <-> Int16.MaxValue
+    r, 0 <-> UInt16.MaxValue
+Minus x Left
+Plus x Right
+Plus y Up
+Minus y Down
+Center near 0,0

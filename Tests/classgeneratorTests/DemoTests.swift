@@ -120,6 +120,28 @@ public class DemoTests: ClassGeneratorTestCase {
         self.filemanager.changeCurrentDirectoryPath(self.startingDirectory)
     }
 
+    fileprivate func regen() {
+        let gens = [
+            "sub",
+            "demo",
+            "fieldBalls",
+            "fieldBall",
+            "vision_control_status",
+            "vision_detection_ball",
+            "vision_detection_balls"
+        ]
+        gens.forEach {
+            self.generator.run([
+                "classgenerator",
+                "--c-header",
+                "./Sources/bridge",
+                "--swift-file",
+                "./Sources/demo",
+                "./\($0).gen"
+            ])
+        }
+    }
+
     public func test_makeDemo() {
         let buildProcess = Process()
         buildProcess.currentDirectoryPath = self.filemanager.currentDirectoryPath
@@ -146,46 +168,7 @@ public class DemoTests: ClassGeneratorTestCase {
             XCTFail("Unable to change into demo directory.")
             return
         }
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./sub.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./demo.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./fieldBalls.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./fieldBall.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./vision_control_status.gen"
-        ])
+        self.regen()
         let p = Process()
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
         p.launchPath = "/usr/bin/env"
@@ -209,46 +192,7 @@ public class DemoTests: ClassGeneratorTestCase {
             XCTFail("Unable to change into demo directory.")
             return
         }
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./sub.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./demo.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./fieldBalls.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./fieldBall.gen"
-        ])
-        self.generator.run([
-            "classgenerator",
-            "--c-header",
-            "./Sources/bridge",
-            "--swift-file",
-            "./Sources/demo",
-            "./vision_control_status.gen"
-        ])
+        self.regen()
         let p = Process()
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
         p.launchPath = "/usr/bin/env"

@@ -1,0 +1,18 @@
+-author Carl Lusty
+
+-c
+#include "wb_vision_detection_ball.h"
+#include <stdint.h>
+-c++
+#include "VisionDetectionBall.h"
+
+-swift
+import bridge
+
+-properties
+
+uint64_t frameNumber = 0  //visionFrameNumber
+gen vision_detection_ball balls[2] //ball objects
+
+-comment
+Array of fieldBalls, one instance reported by each camera. Using the guvision camera ordering for top and bottom, on the Nao. Reported by the BallRayTracer.

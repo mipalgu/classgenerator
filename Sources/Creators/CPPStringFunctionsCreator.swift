@@ -85,6 +85,7 @@ public final class CPPStringFunctionsCreator {
             withStructNamed: structName
         )
         let body = self.createStringFunctionBody(
+            forGenNamed: cls.name,
             forClassNamed: className,
             andStructNamed: structName,
             withVariables: variables,
@@ -109,6 +110,7 @@ public final class CPPStringFunctionsCreator {
             withStructNamed: structName
         )
         let body = self.createStringFunctionBody(
+            forGenNamed: cls.name,
             forClassNamed: className,
             andStructNamed: structName,
             withVariables: variables,
@@ -121,6 +123,7 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createStringFunctionBody(
+        forGenNamed genName: String,
         forClassNamed className: String,
         andStructNamed structName: String,
         withVariables variables: [Variable],
@@ -131,6 +134,7 @@ public final class CPPStringFunctionsCreator {
         let elseDef = "#else"
         let endifCConversion = "#endif /// USE_\(structName.uppercased())_C_CONVERSION"
         let cppImplementation = self.createCPPVariableStringSetters(
+            forGenNamed: genName,
             forClassNamed: className,
             withVariables: variables,
             andIncludeLabels: includeLabels
@@ -177,12 +181,14 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createCPPVariableStringSetters(
+        forGenNamed genName: String,
         forClassNamed className: String,
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool
     ) -> String {
         let ssdef = "std::ostringstream ss;"
         let concat = self.createConcatString(
+            forGenNamed: genName,
             forClassNamed: className,
             withVariables: variables,
             andIncludeLabels: includeLabels
@@ -192,12 +198,14 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createConcatString(
+        forGenNamed genName: String,
         forClassNamed className: String,
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool
     ) -> String {
         return variables.compactMap {
             self.createConcatString(
+                forGenNamed: genName,
                 forClassNamed: className,
                 forType: $0.type,
                 withLabel: $0.label,
@@ -207,6 +215,7 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createConcatString(
+        forGenNamed genName: String,
         forClassNamed className: String,
         forType type: VariableTypes,
         withLabel label: String,
@@ -222,6 +231,7 @@ public final class CPPStringFunctionsCreator {
                 }
                 let createGetter: (String) -> String = { "this->" + $0 + "(i)" }
                 guard let value = self.createStringValue(
+                    forGenNamed: genName,
                     forClassNamed: className,
                     forType: subtype,
                     withLabel: label,
@@ -231,7 +241,7 @@ public final class CPPStringFunctionsCreator {
                 ) else {
                     return nil
                 }
-                let sizeDef = self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: 0)
+                let sizeDef = self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: 0)
                 return """
                     bool \(label)_first = true;
                     ss << \(true == includeLabel ? "\"\(label)={\";" : "\"{\";")
@@ -244,6 +254,7 @@ public final class CPPStringFunctionsCreator {
             default:
                 let pre = "ss << \(true == includeLabel ? "\"\(label)=\" << " : "")"
                 return self.createStringValue(
+                    forGenNamed: genName,
                     forClassNamed: className,
                     forType: type,
                     withLabel: label,
@@ -254,6 +265,7 @@ public final class CPPStringFunctionsCreator {
     }
 
     fileprivate func createStringValue(
+        forGenNamed genName: String,
         forClassNamed className: String,
         forType type: VariableTypes,
         withLabel label: String,
@@ -265,6 +277,7 @@ public final class CPPStringFunctionsCreator {
         switch type {
             case .array:
                 return self.createConcatString(
+                    forGenNamed: genName,
                     forClassNamed: className,
                     forType: type,
                     withLabel: label,

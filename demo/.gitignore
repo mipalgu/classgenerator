@@ -22,3 +22,11 @@ Sources/bridge/wb_vision_control_status.h
 Sources/bridge/wb_vision_control_status.c
 Sources/bridge/VisionControlStatus.h
 Sources/demo/VisionControlStatus.swift
+Sources/bridge/wb_vision_detection_ball.h
+Sources/bridge/wb_vision_detection_ball.c
+Sources/bridge/VisionDetectionBall.h
+Sources/demo/VisionDetectionBall.swift
+Sources/bridge/wb_vision_detection_balls.h
+Sources/bridge/wb_vision_detection_balls.c
+Sources/bridge/VisionDetectionBalls.h
+Sources/demo/VisionDetectionBalls.swift

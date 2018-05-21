@@ -12,6 +12,8 @@ generate-classes:
 	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./fieldBall.gen
 	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./fieldBalls.gen
 	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./vision_control_status.gen
+	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./vision_detection_ball.gen
+	../.build/debug/classgenerator --c-header ./Sources/bridge --swift-file ./Sources/demo ./vision_detection_balls.gen
 
 .include "../../../mk/c++11.mk"
 .include "../../../mk/mipal.mk"

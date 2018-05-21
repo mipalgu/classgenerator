@@ -71,5 +71,7 @@
 #include "wb_field_ball.h"
 #include "wb_field_balls.h"
 #include "wb_vision_control_status.h"
+#include "wb_vision_detection_ball.h"
+#include "wb_vision_detection_balls.h"
 
 #endif  /* BRIDGE_H */
