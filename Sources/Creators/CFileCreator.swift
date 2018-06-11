@@ -162,11 +162,17 @@ public final class CFileCreator: ErrorContainer {
         let posterEndif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
         let serialiseIfDef = "/*#ifdef WHITEBOARD_SERIALISATION*/"
         let serialiseEndIf = "/*#endif // WHITEBOARD_SERIALISATION*/"
-        return comment + "\n\n" + head + "\n\n" + posterIfdef
+        let preC = cls.preCFile.map { $0 + "\n\n" } ?? ""
+        let postC = cls.postCFile.map { $0 + "\n\n" } ?? ""
+        return comment
+            + preC
+            + "\n\n" + head + "\n\n" + posterIfdef
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
             + "\n\n" + fromStringFunc + "\n\n" + posterEndif
             + "\n\n" + serialiseIfDef + "\n\n" + toNetworkSerialised
-            + "\n\n" + fromNetworkSerialised + "\n\n" + serialiseEndIf + "\n"
+            + "\n\n" + fromNetworkSerialised + "\n\n" + serialiseEndIf
+            + postC
+            + "\n"
     }
 
     //swiftlint:disable:next function_body_length

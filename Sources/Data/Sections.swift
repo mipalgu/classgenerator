@@ -66,6 +66,10 @@ public struct Sections {
 
     public let comments: String?
 
+    public let preCFile: String?
+
+    public let postCFile: String?
+
     public let postC: String?
 
     public let preCpp: String?
@@ -85,6 +89,8 @@ public struct Sections {
         preC: String? = nil,
         variables: String,
         comments: String? = nil,
+        preCFile: String? = nil,
+        postCFile: String? = nil,
         postC: String? = nil,
         preCpp: String? = nil,
         embeddedCpp: String? = nil,
@@ -97,6 +103,8 @@ public struct Sections {
         self.preC = preC
         self.variables = variables
         self.comments = comments
+        self.preCFile = preCFile
+        self.postCFile = postCFile
         self.postC = postC
         self.preCpp = preCpp
         self.embeddedCpp = embeddedCpp

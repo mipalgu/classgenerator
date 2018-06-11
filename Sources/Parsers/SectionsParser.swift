@@ -111,6 +111,8 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
         var vars: String?
         var comments: String?
         var postc: String?
+        var preCFile: String?
+        var postCFile: String?
         var precpp: String?
         var cpp: String?
         var postcpp: String?
@@ -129,6 +131,8 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
             //swiftlint:disable opening_brace
             if true == (assignIfValid(&author, first, self.isAuthorLine(first))
                 || assignIfValid(&prec, combined, self.isPreCMarker(first))
+                || assignIfValid(&preCFile, combined, self.isPreCFileMarker(first))
+                || assignIfValid(&postCFile, combined, self.isPostCFileMarker(first))
                 || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
                 || assignIfValid(&comments, combined, self.isCommentMarker(first))
                 || assignIfValid(&postc, combined, self.isPostCMarker(first))
@@ -164,6 +168,8 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
             preC: prec,
             variables: variables,
             comments: comments,
+            preCFile: preCFile,
+            postCFile: postCFile,
             postC: postc,
             preCpp: precpp,
             embeddedCpp: cpp,
@@ -203,6 +209,8 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
     fileprivate func isMarker(_ str: String) -> Bool {
         return self.isAuthorLine(str)
             || self.isPreCMarker(str)
+            || self.isPreCFileMarker(str)
+            || self.isPostCFileMarker(str)
             || self.isPropertiesMarker(str)
             || self.isCommentMarker(str)
             || self.isPostCMarker(str)
@@ -221,6 +229,14 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
 
     fileprivate func isPreCMarker(_ str: String) -> Bool {
         return str == "-c"
+    }
+
+    fileprivate func isPreCFileMarker(_ str: String) -> Bool {
+        return str == "%c"
+    }
+
+    fileprivate func isPostCFileMarker(_ str: String) -> Bool {
+        return str == "#c"
     }
 
     fileprivate func isPropertiesMarker(_ str: String) -> Bool {

@@ -123,6 +123,8 @@ public final class ClassParser<
                 comment: comment,
                 variables: variables,
                 preC: sections.preC,
+                preCFile: sections.preCFile,
+                postCFile: sections.postCFile,
                 postC: sections.postC,
                 preCpp: sections.preCpp,
                 embeddedCpp: sections.embeddedCpp,

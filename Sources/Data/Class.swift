@@ -68,6 +68,10 @@ public struct Class {
 
     public let preC: String?
 
+    public let preCFile: String?
+
+    public let postCFile: String?
+
     public let postC: String?
 
     public let preCpp: String?
@@ -88,6 +92,8 @@ public struct Class {
         comment: String,
         variables: [Variable],
         preC: String? = nil,
+        preCFile: String? = nil,
+        postCFile: String? = nil,
         postC: String? = nil,
         preCpp: String? = nil,
         embeddedCpp: String? = nil,
@@ -101,6 +107,8 @@ public struct Class {
         self.comment = comment
         self.variables = variables
         self.preC = preC
+        self.preCFile = preCFile
+        self.postCFile = postCFile
         self.postC = postC
         self.preCpp = preCpp
         self.embeddedCpp = embeddedCpp
