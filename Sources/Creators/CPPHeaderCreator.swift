@@ -194,9 +194,21 @@ public final class CPPHeaderCreator: ErrorContainer {
             forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
-            forVariables: variables
+            forVariables: variables,
+            otherType: name
         )
-        let publicContent = constructor + "\n\n" + copyConstructor + "\n\n" + structCopyConstructor + "\n\n" + copyAssignmentOperator
+        let structCopyAssignmentOperator = self.createCopyAssignmentOperator(
+            forClass: cls,
+            forClassNamed: name,
+            withStructNamed: extendName,
+            forVariables: variables,
+            otherType: "struct " + extendName
+        )
+        let publicContent = constructor + "\n\n"
+            + copyConstructor + "\n\n"
+            + structCopyConstructor + "\n\n"
+            + copyAssignmentOperator + "\n\n"
+            + structCopyAssignmentOperator
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
@@ -301,10 +313,11 @@ public final class CPPHeaderCreator: ErrorContainer {
         forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
-        forVariables variables: [Variable]
+        forVariables variables: [Variable],
+        otherType: String
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
-        let def = "\(className) &operator = (const \(className) &other) {"
+        let def = "\(className) &operator = (const \(otherType) &other) {"
         let setters = self.createSetters(
             forVariables: variables,
             addConstOnPointers: false,
