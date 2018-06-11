@@ -163,10 +163,9 @@ public final class CFileCreator: ErrorContainer {
         let serialiseIfDef = "/*#ifdef WHITEBOARD_SERIALISATION*/"
         let serialiseEndIf = "/*#endif // WHITEBOARD_SERIALISATION*/"
         let preC = cls.preCFile.map { $0 + "\n\n" } ?? ""
-        let postC = cls.postCFile.map { $0 + "\n\n" } ?? ""
+        let postC = cls.postCFile.map { "\n\n" + $0 } ?? ""
         return comment
-            + preC
-            + "\n\n" + head + "\n\n" + posterIfdef
+            + "\n\n" + head + "\n\n" + preC + posterIfdef
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
             + "\n\n" + fromStringFunc + "\n\n" + posterEndif
             + "\n\n" + serialiseIfDef + "\n\n" + toNetworkSerialised
