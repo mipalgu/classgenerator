@@ -293,7 +293,7 @@ public final class CPPStringFunctionsCreator {
                         \(pre)\(getter);
                     }
                     """
-            case .gen(_, let structName, let className):
+            case .gen(_, _, let className):
                 let fun = true == includeLabel ? "description" : "to_string"
                 return """
                     guWhiteboard::\(className) * \(label)_cast = const_cast<guWhiteboard::\(className) *>(static_cast<const guWhiteboard::\(className) *>(&\(getter)));

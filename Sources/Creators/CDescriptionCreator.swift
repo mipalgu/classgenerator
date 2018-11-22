@@ -222,7 +222,7 @@ public final class CDescriptionCreator {
                 return "len = gu_strlcat(\(strLabel), \(getter) ? \"\(pre)true\" : \"\(pre)false\", bufferSize);"
             case .char:
                 return self.createSNPrintf("\(pre)%c", getter, appendingTo: strLabel)
-            case .enumerated(let name):
+            case .enumerated:
                 return self.createSNPrintf(
                     "\(pre)%\(self.createFormat(forNumericType: .signed))",
                     getter,

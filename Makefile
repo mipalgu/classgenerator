@@ -3,6 +3,8 @@ DIR!=pwd
 
 ALL_TARGETS=swift-test
 
+SWIFTCFLAGS=-warnings-as-errors
+
 all:	all-real
 
 all-real:	swift-test

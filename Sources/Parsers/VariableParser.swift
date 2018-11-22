@@ -233,13 +233,11 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
             switch subtype {
             case .array:
                 throw ParsingErrors.parsingError(0, "The classgenerator currently does not support multi-dimensional arrays.")
-                return false
             default:
                 break
             }
             if length == "0" {
                 throw ParsingErrors.parsingError(0, "Arrays must contain a length greater than zero.")
-                return false
             }
             return true
         case .string(let length):
