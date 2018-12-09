@@ -123,6 +123,9 @@ public final class CHeaderCreator: ErrorContainer {
             #ifndef \(fileName)
             #define \(fileName)
 
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wreserved-id-macro"
+
             #ifdef __linux
             # ifndef _POSIX_SOURCE
             #  define _POSIX_SOURCE 200112L
@@ -139,6 +142,8 @@ public final class CHeaderCreator: ErrorContainer {
             #  define __DARWIN_C_LEVEL 200112L
             # endif
             #endif
+
+            #pragma clang diagnostic pop
 
             #include <gu_util.h>
             #include <stdint.h>

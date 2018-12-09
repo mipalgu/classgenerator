@@ -184,6 +184,8 @@ public final class CFileCreator: ErrorContainer {
             #include <ctype.h>
 
             /* Network byte order functions */
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wunused-macros"
             #if defined(__linux)
             #  include <endian.h>
             #  include <byteswap.h>
@@ -228,6 +230,7 @@ public final class CFileCreator: ErrorContainer {
             #   define ntohs(x) (x)
             #  endif
             #endif
+            #pragma clang diagnostic pop
             """
     }
 
