@@ -138,7 +138,7 @@ public final class CNetworkSerialiserCreator {
                   do { //limit declaration scope
                     uint32_t len = \(len);
                     uint32_t bytes = len * sizeof(\(variable.cType));
-                    char *buf = (char *)&self->\(label)[0];
+                    const char *buf = (const char *)&self->\(label)[0];
                     uint32_t c;
                     int8_t b;
                     for (c = 0; c < bytes; c++) {
