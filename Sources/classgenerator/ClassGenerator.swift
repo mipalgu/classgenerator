@@ -157,7 +157,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
 
     fileprivate func create(_ path: String?, _ fileName: String) -> URL {
         guard let path = path else {
-            return URL(fileURLWithPath: fileName)
+            return URL(fileURLWithPath: FileManager.default.currentDirectoryPath + "/" + fileName, isDirectory: false)
         }
         if true == self.fileHelpers.directoryExists(path) {
             let url = URL(fileURLWithPath: path, isDirectory: true)
