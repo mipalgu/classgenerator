@@ -94,9 +94,14 @@ public final class CNetworkDeserialiserCreator {
             "\n\n" +
             $1
         })
+        let useVariables = """
+            //avoid unused variable warnings when you try to use an empty gen file or a gen file with no supported serialisation types.
+            (void)src;
+            (void)dst;
+        """
         let returnStatement = "    return bit_offset;"
         let endDefinition = "}"
-        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + returnStatement + "\n" + endDefinition
+        return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + useVariables + "\n" + returnStatement + "\n" + endDefinition
     }
 
     fileprivate func createGuard(withStructNamed structName: String) -> String {
