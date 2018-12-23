@@ -166,6 +166,17 @@ public final class CNetworkSerialiserCreator {
                     }
                   } while (false);
                   """
+            case .enumerated:
+                let bitSize:UInt8 = 32
+                return """
+                  \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
+                  do {
+                    int8_t b;
+                    for (b = (\(bitSize) - 1); b >= 0; b--) {
+                      \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
+                    }
+                  } while(false);
+                  """
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):

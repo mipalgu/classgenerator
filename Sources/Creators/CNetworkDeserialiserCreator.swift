@@ -169,6 +169,17 @@ public final class CNetworkDeserialiserCreator {
                         }
                     } while (false);
                     """
+            case .enumerated:
+                let bitSize:UInt8 = 32
+                return """
+                  do {
+                    int8_t b;
+                    for (b = (\(bitSize) - 1); b >= 0; b--) {
+                      \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
+                    }
+                  } while(false);
+                  dst->\(label) = \(ntohC(bits: bitSize))(dst->\(label));
+                  """
             case .numeric(let numericType):
                 switch numericType {
                     case .double, .float, .long(.double), .long(.float):
