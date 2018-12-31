@@ -189,9 +189,9 @@ public final class CFileCreator: ErrorContainer {
             #if defined(__linux)
             #  include <endian.h>
             #  include <byteswap.h>
-            #elif defined(__APPLE__) //Needs double checking
-            #  include <machine/endian.h>
-            #  include <machine/byte_order.h>
+            #elif defined(__APPLE__) 
+            #  include <machine/endian.h>           //Needed for __BYTE_ORDER
+            #  include <architecture/byte_order.h>   //Needed for byte swap functions
             #  define bswap_16(x) NXSwapShort(x)
             #  define bswap_32(x) NXSwapInt(x)
             #  define bswap_64(x) NXSwapLongLong(x)
