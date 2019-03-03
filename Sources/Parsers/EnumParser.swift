@@ -76,17 +76,15 @@ public final class EnumParser {
         if words.first ?? "" != "enum" {
             throw ParsingErrors.parsingError(0, "Enum string must start with 'enum'.")
         }
-        if words.last ?? "" != ";" {
+        if words.last?.last.map({ String($0) }) ?? "" != ";" {
             throw ParsingErrors.parsingError(words.count - 1, "Enum must be terminated with a semicolon.")
         }
         guard let unsanitisedIdentifier = words.dropFirst().first, false == unsanitisedIdentifier.isEmpty else {
             throw ParsingErrors.parsingError(1, "No identifier specified for enum.")
         }
         let identifier = try self.parseIdentifier(from: unsanitisedIdentifier)
-        if words.dropFirst(2).first ?? "" != "{" || words.dropLast().last ?? "" != "}" {
-            throw ParsingErrors.parsingError(3, "Malformed enumerator list detected.")
-        }
-        let caseList = words.dropFirst(3).dropLast(2).combine("") { $0 + $1 }.components(separatedBy: ",")
+        let caseList = try self.parseCaseList(from: str)
+        print(caseList)
         guard false == caseList.isEmpty else {
             throw ParsingErrors.parsingError(4, "Enumerator list must not be empty.")
         }
@@ -105,6 +103,30 @@ public final class EnumParser {
             throw ParsingErrors.parsingError(1, "Enum identifier must be alphanumeric.")
         }
         return identifier
+    }
+    
+    fileprivate func parseCaseList(from str: String) throws -> [String] {
+        let lsplit = str.components(separatedBy: "{")
+        guard let startOfCaseList = lsplit.first else {
+            throw ParsingErrors.parsingError(3, "No enumerator list found for enum.")
+        }
+        guard lsplit.count < 3 else {
+            throw ParsingErrors.parsingError(3, "Possible multiple enumerator lists found for enum.")
+        }
+        let rsplit = startOfCaseList.components(separatedBy: "}")
+        guard let caseList = rsplit.first else {
+            throw ParsingErrors.parsingError(3, "Missing terminating curly brace for enumerator list.")
+        }
+        guard rsplit.count < 2 else {
+            throw ParsingErrors.parsingError(3, "Possible multiple terminating curly brace for enumerator list.")
+        }
+        return caseList.components(separatedBy: ",").compactMap {
+            let trimmed = $0.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty {
+                return nil
+            }
+            return trimmed
+        }
     }
     
     fileprivate func parseCases(fromList cases: [String]) throws -> [String: Int] {

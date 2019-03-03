@@ -91,6 +91,8 @@ public final class EnumParserTests: ClassGeneratorTestCase {
         do {
             let result = try self.parser.parseCStyleEnum(str)
             XCTAssertEqual(expected, result)
+        } catch ParsingErrors.parsingError(_, let message) {
+            XCTFail("Unable to parse basic c style enum: \(message)")
         } catch {
             XCTFail("Unable to parse basic c style enum.")
         }
