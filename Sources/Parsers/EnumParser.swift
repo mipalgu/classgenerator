@@ -84,7 +84,6 @@ public final class EnumParser {
         }
         let identifier = try self.parseIdentifier(from: unsanitisedIdentifier)
         let caseList = try self.parseCaseList(from: str)
-        print(caseList)
         guard false == caseList.isEmpty else {
             throw ParsingErrors.parsingError(4, "Enumerator list must not be empty.")
         }
@@ -107,7 +106,7 @@ public final class EnumParser {
     
     fileprivate func parseCaseList(from str: String) throws -> [String] {
         let lsplit = str.components(separatedBy: "{")
-        guard let startOfCaseList = lsplit.first else {
+        guard let startOfCaseList = lsplit.dropFirst().first else {
             throw ParsingErrors.parsingError(3, "No enumerator list found for enum.")
         }
         guard lsplit.count < 3 else {
@@ -117,7 +116,7 @@ public final class EnumParser {
         guard let caseList = rsplit.first else {
             throw ParsingErrors.parsingError(3, "Missing terminating curly brace for enumerator list.")
         }
-        guard rsplit.count < 2 else {
+        guard rsplit.count < 3 else {
             throw ParsingErrors.parsingError(3, "Possible multiple terminating curly brace for enumerator list.")
         }
         return caseList.components(separatedBy: ",").compactMap {
@@ -130,7 +129,37 @@ public final class EnumParser {
     }
     
     fileprivate func parseCases(fromList cases: [String]) throws -> [String: Int] {
-        throw ParsingErrors.parsingError(4, "Not Yet Implemented")
+        var nextNumber = 0
+        var names: Set<String> = []
+        names.reserveCapacity(cases.count)
+        let tuples: [(String, Int)] = try cases.enumerated().map {
+            let arr = $1.components(separatedBy: "=")
+            let split = arr.lazy.compactMap { (str: String) -> String? in
+                let trimmed = str.trimmingCharacters(in: .whitespacesAndNewlines)
+                if trimmed.isEmpty {
+                    return nil
+                }
+                return trimmed
+            }
+            guard split.count < 3 else {
+                throw ParsingErrors.parsingError($0, "Multiple assignment operators found for enum case.")
+            }
+            let name = split[0]
+            guard false == names.contains(name) else {
+                throw ParsingErrors.parsingError($0, "Found duplicate '\(name)' cases in enum.")
+            }
+            names.insert(name)
+            if 1 == split.count {
+                defer { nextNumber += 1 }
+                return (name, nextNumber)
+            }
+            guard let number = Int(split[1]) else {
+                throw ParsingErrors.parsingError($0, "Unable to convert '\(split[1])' to a valid number assigned to the '\(split[0])' case.")
+            }
+            nextNumber = number + 1
+            return (name, number)
+        }
+        return Dictionary<String, Int>(uniqueKeysWithValues: tuples)
     }
     
 }
