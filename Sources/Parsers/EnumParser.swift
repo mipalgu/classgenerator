@@ -57,11 +57,58 @@
  */
 
 import Data
+import Foundation
+import swift_helpers
 
 public final class EnumParser {
     
+    fileprivate let stringHelpers: StringHelpers
+    
+    public init(stringHelpers: StringHelpers = StringHelpers()) {
+        self.stringHelpers = stringHelpers
+    }
+    
     public func parseCStyleEnum(_ str: String) throws -> Enum {
-        throw ParsingErrors.parsingError(0, "Enum parsing is not yet implemented")
+        let words = str.components(separatedBy: .whitespacesAndNewlines)
+        if words.isEmpty {
+            throw ParsingErrors.parsingError(0, "Unable to parse enum from empty string.")
+        }
+        if words.first ?? "" != "enum" {
+            throw ParsingErrors.parsingError(0, "Enum string must start with 'enum'.")
+        }
+        if words.last ?? "" != ";" {
+            throw ParsingErrors.parsingError(words.count - 1, "Enum must be terminated with a semicolon.")
+        }
+        guard let unsanitisedIdentifier = words.dropFirst().first, false == unsanitisedIdentifier.isEmpty else {
+            throw ParsingErrors.parsingError(1, "No identifier specified for enum.")
+        }
+        let identifier = try self.parseIdentifier(from: unsanitisedIdentifier)
+        if words.dropFirst(2).first ?? "" != "{" || words.dropLast().last ?? "" != "}" {
+            throw ParsingErrors.parsingError(3, "Malformed enumerator list detected.")
+        }
+        let caseList = words.dropFirst(3).dropLast(2).combine("") { $0 + $1 }.components(separatedBy: ",")
+        guard false == caseList.isEmpty else {
+            throw ParsingErrors.parsingError(4, "Enumerator list must not be empty.")
+        }
+        let cases = try self.parseCases(fromList: caseList)
+        return Enum(name: identifier, cases: cases)
+    }
+    
+    fileprivate func parseIdentifier(from identifier: String) throws -> String {
+        guard
+            identifier.first?.unicodeScalars.count ?? 0 < 2,
+            true == CharacterSet.letters.contains(identifier.first?.unicodeScalars.first ?? UnicodeScalar(UInt8(0)))
+        else {
+            throw ParsingErrors.parsingError(1, "Enum identifier must start with an alphabetic character.")
+        }
+        guard nil == identifier.first(where: { !self.stringHelpers.isAlphaNumeric($0) }) else {
+            throw ParsingErrors.parsingError(1, "Enum identifier must be alphanumeric.")
+        }
+        return identifier
+    }
+    
+    fileprivate func parseCases(fromList cases: [String]) throws -> [String: Int] {
+        throw ParsingErrors.parsingError(4, "Not Yet Implemented")
     }
     
 }
