@@ -56,6 +56,8 @@
  *
  */
 
+@testable import Data
+@testable import Parsers
 import XCTest
 
 public final class EnumParserTests: ClassGeneratorTestCase {
@@ -74,7 +76,7 @@ public final class EnumParserTests: ClassGeneratorTestCase {
     
     fileprivate var parser: EnumParser!
     
-    public func setUp() {
+    public override func setUp() {
         self.parser = EnumParser()
     }
     
@@ -85,14 +87,13 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Second
             };
             """
-        let result: Enum
-        do {
-            result = try self.parser.parseCStyleEnum(str)
-        } catch {
-            fatalError("Unable to parse basic c style enum.")
-        }
         let expected = Enum(name: "MyEnum", cases: ["First": 0, "Second": 1])
-        XCTAssertEqual(expected, result)
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch {
+            XCTFail("Unable to parse basic c style enum.")
+        }
     }
     
     public func test_canParseEnumWithTrailingComma() {
@@ -102,14 +103,13 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Second,
             };
             """
-        let result: Enum
-        do {
-            result = try self.parser.parseCStyleEnum(str)
-        } catch {
-            fatalError("Unable to parse basic c style enum.")
-        }
         let expected = Enum(name: "MyEnum", cases: ["First": 0, "Second": 1])
-        XCTAssertEqual(expected, result)
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch {
+            XCTFail("Unable to parse basic c style enum.")
+        }
     }
     
     public func test_canParseCStyleEnumWithNumericValues() {
@@ -119,14 +119,13 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Second = 2
             };
             """
-        let result: Enum
-        do {
-            result = try self.parser.parseCStyleEnum(str)
-        } catch {
-            fatalError("Unable to parse c style enum with numeric values on cases.")
-        }
         let expected = Enum(name: "MyEnum", cases: ["First": 1, "Second": 2])
-        XCTAssertEqual(expected, result)
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch {
+            XCTFail("Unable to parse c style enum with numeric values on cases.")
+        }
     }
     
     public func test_cannotParseCStyleEnumWithoutATrailingSemicolon() {
@@ -136,9 +135,8 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Second
             }
             """
-        let result: Enum
         do {
-            result = try self.parser.parseCStyleEnum(str)
+            _ = try self.parser.parseCStyleEnum(str)
         } catch {
             return
         }
@@ -152,9 +150,8 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Second
             };
             """
-        let result: Enum
         do {
-            result = try self.parser.parseCStyleEnum(str)
+            _ = try self.parser.parseCStyleEnum(str)
         } catch {
             return
         }
@@ -171,14 +168,13 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Fifth
             };
             """
-        let result: Enum
-        do {
-            result = try self.parser.parseCStyleEnum(str)
-        } catch {
-            fatalError("Unable to parse c style enum with mixed assignments.")
-        }
         let expected = Enum(name: "MyEnum", cases: ["First": 1, "Second": 4, "Third": 5, "Fourth": 2, "Fifth": 3])
-        XCTAssertEqual(expected, result)
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch {
+            XCTFail("Unable to parse c style enum with mixed assignments.")
+        }
     }
     
     public func test_canParseCStyleEnumWithArithmeticAssignments() {
@@ -189,14 +185,13 @@ public final class EnumParserTests: ClassGeneratorTestCase {
                 Third = First + Second + Second
             };
             """
-        let result: Enum
-        do {
-            result = try self.parser.parseCStyleEnum(str)
-        } catch {
-            fatalError("Unable to parse c style enum with arithmetic in assignments.")
-        }
         let expected = Enum(name: "MyEnum", cases: ["First": 1, "Second": 2, "Third": 4])
-        XCTAssertEqual(expected, result)
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch {
+            XCTFail("Unable to parse c style enum with arithmetic in assignments.")
+        }
     }
     
 }
