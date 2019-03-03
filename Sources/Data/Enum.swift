@@ -68,3 +68,11 @@ public struct Enum {
     }
     
 }
+
+extension Enum: Equatable {
+    
+    public static func == (lhs: Enum, rhs: Enum) -> Bool {
+        return lhs.name == rhs.name && lhs.cases == rhs.cases
+    }
+    
+}
