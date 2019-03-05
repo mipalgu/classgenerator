@@ -70,7 +70,9 @@ public final class EnumParserTests: ClassGeneratorTestCase {
             ("test_cannotParseCStyleEnumWithoutATrailingSemicolon", test_cannotParseCStyleEnumWithoutATrailingSemicolon),
             ("test_cannotParseCStyleEnumWithANumericName", test_cannotParseCStyleEnumWithANumericName),
             ("test_canParseEnumWithMissingAssignments", test_canParseEnumWithMissingAssignments),
-            ("test_canParseCStyleEnumWithArithmeticAssignments", test_canParseCStyleEnumWithArithmeticAssignments)
+            ("test_canParseCStyleEnumWithArithmeticAssignments", test_canParseCStyleEnumWithArithmeticAssignments),
+            ("test_canParseCStyleEnumWithInlineComments", test_canParseCStyleEnumWithInlineComments),
+            ("test_canParseCStyleEnumWithMultilineComments", test_canParseCStyleEnumWithMultilineComments)
         ]
     }
     
@@ -193,6 +195,42 @@ public final class EnumParserTests: ClassGeneratorTestCase {
             XCTAssertEqual(expected, result)
         } catch {
             XCTFail("Unable to parse c style enum with arithmetic in assignments.")
+        }
+    }
+    
+    public func test_canParseCStyleEnumWithInlineComments() {
+        let str = """
+            enum MyEnum { // Block
+                First, // The First Case
+                Second, // The Second Case
+                Third// The ThirdCase
+            };
+            """
+        let expected = Enum(name: "MyEnum", cases: ["First": 0, "Second": 1, "Third": 2])
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch {
+            XCTFail("Unable to parse c style enum with inline comments.")
+        }
+    }
+    
+    public func test_canParseCStyleEnumWithMultilineComments() {
+        let str = """
+            enum MyEnum /* Comment */ { /* Another Comment */
+                First/* First Case */,
+                Second, /* Second Case */
+                Third
+            }/* End */;
+            """
+        let expected = Enum(name: "MyEnum", cases: ["First": 0, "Second": 1, "Third": 2])
+        do {
+            let result = try self.parser.parseCStyleEnum(str)
+            XCTAssertEqual(expected, result)
+        } catch ParsingErrors.parsingError(_, let message) {
+            XCTFail("Unable to parse c style enum with multiline comments: \(message)")
+        } catch {
+            XCTFail("Unable to parse c style enum with multiline comments.")
         }
     }
     

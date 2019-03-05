@@ -69,6 +69,7 @@ public final class EnumParser {
     }
     
     public func parseCStyleEnum(_ str: String) throws -> Enum {
+        let str = try self.removeComments(from: str)
         let words = str.components(separatedBy: .whitespacesAndNewlines)
         if words.isEmpty {
             throw ParsingErrors.parsingError(0, "Unable to parse enum from empty string.")
@@ -89,6 +90,24 @@ public final class EnumParser {
         }
         let cases = try self.parseCases(fromList: caseList)
         return Enum(name: identifier, cases: cases)
+    }
+    
+    fileprivate func removeComments(from str: String) throws -> String {
+        let lines = str.components(separatedBy: .newlines)
+        let filtered = lines.lazy.map { $0.components(separatedBy: "//")[0] }.combine("") { $0 + "\n" + $1 }
+        return try self.removeMultiLineComments(from: filtered)
+    }
+    
+    fileprivate func removeMultiLineComments(from str: String) throws -> String {
+        guard let firstIndex = str.range(of: "/*")?.lowerBound, str[str.index(before: firstIndex)] != Character("\\") else {
+            return str
+        }
+        guard let lastIndex = str.range(of: "*/")?.upperBound else {
+            throw ParsingErrors.parsingError(0, "Invalid Multiline Comment detected in enum declaration.")
+        }
+        let prefix = String(str.prefix(upTo: firstIndex))
+        let remaining = try self.removeComments(from: String(str[lastIndex..<str.endIndex]))
+        return prefix + remaining
     }
     
     fileprivate func parseIdentifier(from identifier: String) throws -> String {
