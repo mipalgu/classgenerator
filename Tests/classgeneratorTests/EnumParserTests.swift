@@ -70,7 +70,6 @@ public final class EnumParserTests: ClassGeneratorTestCase {
             ("test_cannotParseCStyleEnumWithoutATrailingSemicolon", test_cannotParseCStyleEnumWithoutATrailingSemicolon),
             ("test_cannotParseCStyleEnumWithANumericName", test_cannotParseCStyleEnumWithANumericName),
             ("test_canParseEnumWithMissingAssignments", test_canParseEnumWithMissingAssignments),
-            ("test_canParseCStyleEnumWithArithmeticAssignments", test_canParseCStyleEnumWithArithmeticAssignments),
             ("test_canParseCStyleEnumWithInlineComments", test_canParseCStyleEnumWithInlineComments),
             ("test_canParseCStyleEnumWithMultilineComments", test_canParseCStyleEnumWithMultilineComments)
         ]
@@ -178,23 +177,6 @@ public final class EnumParserTests: ClassGeneratorTestCase {
             XCTAssertEqual(expected, result)
         } catch {
             XCTFail("Unable to parse c style enum with mixed assignments.")
-        }
-    }
-    
-    public func test_canParseCStyleEnumWithArithmeticAssignments() {
-        let str = """
-            enum MyEnum {
-                First = 1,
-                Second,
-                Third = First + Second + Second
-            };
-            """
-        let expected = Enum(name: "MyEnum", cases: ["First": 1, "Second": 2, "Third": 4])
-        do {
-            let result = try self.parser.parseCStyleEnum(str)
-            XCTAssertEqual(expected, result)
-        } catch {
-            XCTFail("Unable to parse c style enum with arithmetic in assignments.")
         }
     }
     
