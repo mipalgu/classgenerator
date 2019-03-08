@@ -68,6 +68,7 @@ public class ClassGeneratorParser {
             USAGE: classgenerator [options] <class_name.gen>
 
             OPTIONS:
+                    -b              Use backwards compatible naming conventions.
                     -c              Do Not Generate a C++ wrapper.
                     -s              Do Not Generate a Swift wrapper.
                     --c-header <directory=./>
@@ -97,6 +98,8 @@ public class ClassGeneratorParser {
 
     fileprivate func handleNextFlag(_ task: Task, words: inout [String]) throws -> Task {
         switch words.first! {
+        case "-b":
+            return self.handleBFlag(_: task, words: &words)
         case "-c":
             return self.handleCFlag(task, words: &words)
         case "-s":
@@ -114,6 +117,12 @@ public class ClassGeneratorParser {
         default:
             return try self.handlePath(task, words: &words)
         }
+    }
+    
+    fileprivate func handleBFlag(_ task: Task, words: inout [String]) -> Task {
+        var temp = task
+        temp.useBackwardsCompatibleNamingConventions = true
+        return temp
     }
 
     fileprivate func handleCFlag(_ task: Task, words: inout [String]) -> Task {

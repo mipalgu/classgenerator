@@ -73,5 +73,7 @@ public struct Task {
     var cppHeaderOutputPath: String?
 
     var swiftFileOutputPath: String?
+    
+    var useBackwardsCompatibleNamingConventions: Bool = false
 
 }
