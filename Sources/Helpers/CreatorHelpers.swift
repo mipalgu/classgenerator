@@ -63,10 +63,12 @@ import whiteboard_helpers
 
 public final class CreatorHelpers {
 
+    fileprivate let backwardsCompatible: Bool
     fileprivate let date: Date
     fileprivate let helpers: WhiteboardHelpers
 
-    public init(date: Date = Date(), helpers: WhiteboardHelpers = WhiteboardHelpers()) {
+    public init(backwardsCompatible: Bool = false, date: Date = Date(), helpers: WhiteboardHelpers = WhiteboardHelpers()) {
+        self.backwardsCompatible = backwardsCompatible
         self.date = date
         self.helpers = helpers
     }
@@ -125,6 +127,9 @@ public final class CreatorHelpers {
     }
 
     public func createClassName(forClassNamed className: String) -> String {
+        if true == self.backwardsCompatible {
+            return self.helpers.createClassName(forClassNamed: className)
+        }
         return self.helpers.createClassName(forClassNamed: className)
     }
 
@@ -205,6 +210,9 @@ public final class CreatorHelpers {
     }
 
     public func createStructName(forClassNamed className: String) -> String {
+        if true == self.backwardsCompatible {
+            return self.helpers.createStructName(forClassNamed: className)
+        }
         return self.helpers.createStructName(forClassNamed: className)
     }
 

@@ -69,32 +69,22 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
     fileprivate let argumentsParser: ClassGeneratorParser
     fileprivate let parser: Parser
     fileprivate let fileHelpers: FileHelpers
-    fileprivate let creatorHelpers: CreatorHelpers
-    fileprivate let cHeaderCreator: CHeaderCreator
-    fileprivate let cFileCreator: CFileCreator
-    fileprivate let cppHeaderCreator: CPPHeaderCreator
-    fileprivate let swiftFileCreator: SwiftFileCreator
-    fileprivate let printer: P
+    fileprivate var creatorHelpers: CreatorHelpers!
+    fileprivate var cHeaderCreator: CHeaderCreator!
+    fileprivate var cFileCreator: CFileCreator!
+    fileprivate var cppHeaderCreator: CPPHeaderCreator!
+    fileprivate var swiftFileCreator: SwiftFileCreator!
+    fileprivate var printer: P
 
     public init(
         argumentsParser: ClassGeneratorParser = ClassGeneratorParser(),
         parser: Parser,
         fileHelpers: FileHelpers = FileHelpers(),
-        creatorHelpers: CreatorHelpers = CreatorHelpers(),
-        cHeaderCreator: CHeaderCreator = CHeaderCreator(),
-        cFileCreator: CFileCreator = CFileCreator(),
-        cppHeaderCreator: CPPHeaderCreator = CPPHeaderCreator(),
-        swiftFileCreator: SwiftFileCreator = SwiftFileCreator(),
         printer: P
     ) {
         self.argumentsParser = argumentsParser
         self.parser = parser
         self.fileHelpers = fileHelpers
-        self.creatorHelpers = creatorHelpers
-        self.cHeaderCreator = cHeaderCreator
-        self.cFileCreator = cFileCreator
-        self.cppHeaderCreator = cppHeaderCreator
-        self.swiftFileCreator = swiftFileCreator
         self.printer = printer
     }
 
@@ -141,6 +131,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
         self.parser.warnings.forEach(self.handleWarning)
         let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
         let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+        self.createCreators(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
         self.generateFiles(
             fromClass: cls,
             cHeaderPath: self.create(task.cHeaderOutputPath, structName + ".h"),
@@ -153,6 +144,14 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
             generateCppWrapper: task.generateCppWrapper,
             generateSwiftWrapper: task.generateSwiftWrapper
         )
+    }
+    
+    fileprivate func createCreators(backwardsCompatible: Bool) {
+        self.creatorHelpers = CreatorHelpers(backwardsCompatible: backwardsCompatible)
+        self.cHeaderCreator = CHeaderCreator(creatorHelpers: self.creatorHelpers)
+        self.cFileCreator = CFileCreator(creatorHelpers: self.creatorHelpers)
+        self.cppHeaderCreator = CPPHeaderCreator(creatorHelpers: self.creatorHelpers)
+        self.swiftFileCreator = SwiftFileCreator(creatorHelpers: self.creatorHelpers)
     }
 
     fileprivate func create(_ path: String?, _ fileName: String) -> URL {
