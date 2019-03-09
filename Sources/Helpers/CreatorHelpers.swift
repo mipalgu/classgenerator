@@ -119,19 +119,15 @@ public final class CreatorHelpers {
     }
 
     public func createArrayCountDef(inClass className: String, forVariable label: String, level: Int) -> String {
-        return self.helpers.createArrayCountDef(inClass: className, forVariable: label, level: level)
+        return self.helpers.createArrayCountDef(inClass: className, forVariable: label, level: level, backwardsCompatible: self.backwardsCompatible)
     }
 
     public func createArrayCountDef(inClass className: String) -> (String) -> (Int) -> String {
-        return self.helpers.createArrayCountDef(inClass: className)
+        return self.helpers.createArrayCountDef(inClass: className, backwardsCompatible: self.backwardsCompatible)
     }
 
     public func createClassName(forClassNamed className: String) -> String {
-        if false == self.backwardsCompatible {
-            return self.helpers.createClassName(forClassNamed: className)
-        }
-        let split = className.split(separator: "_").lazy.map { String($0) }
-        return split.combine("") { $0 + ($1.first.map { String($0).capitalized } ?? "") + String($1.dropFirst()) }
+        return self.helpers.createClassName(forClassNamed: className, backwardsCompatible: self.backwardsCompatible)
     }
 
     public func createComment(from str: String, prepend: String = "") -> String {
@@ -211,10 +207,7 @@ public final class CreatorHelpers {
     }
 
     public func createStructName(forClassNamed className: String) -> String {
-        if false == self.backwardsCompatible {
-            return self.helpers.createStructName(forClassNamed: className)
-        }
-        return "wb_" + className.lowercased()
+        return self.helpers.createStructName(forClassNamed: className, backwardsCompatible: self.backwardsCompatible)
     }
 
     public func isSupportedStringType(_ type: VariableTypes) -> Bool {
