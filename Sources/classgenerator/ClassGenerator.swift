@@ -129,9 +129,9 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)
+        self.createCreators(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
         let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
         let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
-        self.createCreators(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
         self.generateFiles(
             fromClass: cls,
             cHeaderPath: self.create(task.cHeaderOutputPath, structName + ".h"),

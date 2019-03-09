@@ -127,10 +127,11 @@ public final class CreatorHelpers {
     }
 
     public func createClassName(forClassNamed className: String) -> String {
-        if true == self.backwardsCompatible {
+        if false == self.backwardsCompatible {
             return self.helpers.createClassName(forClassNamed: className)
         }
-        return self.helpers.createClassName(forClassNamed: className)
+        let split = className.split(separator: "_").lazy.map { String($0) }
+        return split.combine("") { $0 + ($1.first.map { String($0).capitalized } ?? "") + String($1.dropFirst()) }
     }
 
     public func createComment(from str: String, prepend: String = "") -> String {
@@ -210,10 +211,10 @@ public final class CreatorHelpers {
     }
 
     public func createStructName(forClassNamed className: String) -> String {
-        if true == self.backwardsCompatible {
+        if false == self.backwardsCompatible {
             return self.helpers.createStructName(forClassNamed: className)
         }
-        return self.helpers.createStructName(forClassNamed: className)
+        return "wb_" + className.lowercased()
     }
 
     public func isSupportedStringType(_ type: VariableTypes) -> Bool {
