@@ -1,13 +1,13 @@
 SWIFT=swift
 DIR!=pwd
 
-ALL_TARGETS=swift-test
+ALL_TARGETS=test
 
 SWIFTCFLAGS=-warnings-as-errors
 
 all:	all-real
 
-all-real:	swift-test
+all-real:	test
 
 .include "../../mk/prefs.mk"
 
@@ -21,6 +21,7 @@ swift-build:
 
 swift-test:
 	rm -f Sources/classgenerator/main.swift
+	rm -rf demo/.build
 	$Eenv ${BUILD_ENV} ${SWIFT} test -c ${SWIFT_BUILD_CONFIG} ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
 
 host:	swift-build
