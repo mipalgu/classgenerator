@@ -136,7 +136,7 @@ public class DemoTests: ClassGeneratorTestCase {
                 "--c-header",
                 "./Sources/bridge",
                 "--swift-file",
-                "./Tests/demoTests",
+                "./Sources/demo",
                 "./\($0).gen"
             ])
         }
