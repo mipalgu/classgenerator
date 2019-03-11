@@ -20,7 +20,6 @@ let package = Package(
             dependencies: [
                 .target(name: "bridge"),
                 .target(name: "demo"),
-                "CGUSimpleWhiteboard",
                 "GUSimpleWhiteboard"
             ]
         )
