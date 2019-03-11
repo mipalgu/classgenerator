@@ -21,7 +21,6 @@ swift-build:
 
 swift-test:
 	rm -f Sources/classgenerator/main.swift
-	rm -rf demo/.build
 	$Eenv ${BUILD_ENV} ${SWIFT} test -c ${SWIFT_BUILD_CONFIG} ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
 
 host:	swift-build
@@ -34,6 +33,8 @@ install: host
 clean:
 	-rm -rf .build
 	-rm -rf Package.resolved
+	-rm -rf demo/.build
+	-rm -rf demo/Package.resolved
 
 .include "../../mk/jenkins.mk"
 
