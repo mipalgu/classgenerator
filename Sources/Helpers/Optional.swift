@@ -58,7 +58,7 @@
 
 public extension Optional {
 
-    public func failMap<T>(_ transform: (Wrapped) -> T?) -> T?? {
+    func failMap<T>(_ transform: (Wrapped) -> T?) -> T?? {
         switch self {
             case .some(let value):
                 guard let result = transform(value) else {
