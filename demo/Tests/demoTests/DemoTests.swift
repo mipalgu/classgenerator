@@ -56,12 +56,10 @@
  *
  */
 
-import bridge
-@testable import demo
-
 import CGUSimpleWhiteboard
 import GUSimpleWhiteboard
 import XCTest
+@testable import bridge
 
 //swiftlint:disable identifier_name
 //swiftlint:disable file_length

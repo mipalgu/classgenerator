@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "demo",
     products: [
-        .library(name: "demo", targets: ["demo"])
+        .library(name: "demo", targets: ["bridge"])
     ],
     dependencies: [
         .package(url: "ssh://git.mipal.net/git/CGUSimpleWhiteboard.git", .branch("master")),
@@ -14,12 +14,10 @@ let package = Package(
     ],
     targets: [
         .target(name: "bridge", dependencies: []),
-        .target(name: "demo", dependencies: ["bridge"]),
         .testTarget(
             name: "demoTests",
             dependencies: [
                 .target(name: "bridge"),
-                .target(name: "demo"),
                 "GUSimpleWhiteboard"
             ]
         )
