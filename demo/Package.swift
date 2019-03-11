@@ -9,6 +9,7 @@ let package = Package(
         .library(name: "demo", targets: ["demo"])
     ],
     dependencies: [
+        .package(url: "ssh://git.mipal.net/git/CGUSimpleWhiteboard.git", .branch("master")),
         .package(url: "ssh://git.mipal.net/git/swift_wb.git", .branch("master"))
     ],
     targets: [
