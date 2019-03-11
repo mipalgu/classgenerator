@@ -18,8 +18,7 @@ let package = Package(
             name: "demoTests",
             dependencies: [
                 .target(name: "bridge"),
-                .target(name: "demo"),
-                "GUSimpleWhiteboard"
+                .target(name: "demo")
             ]
         )
     ]
