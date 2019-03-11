@@ -56,7 +56,7 @@
  *
  */
 
-extension Sequence where Self.SubSequence: Sequence, Self.SubSequence.Iterator.Element == Self.Iterator.Element {
+extension Collection where Self.SubSequence: Sequence, Self.SubSequence.Iterator.Element == Self.Iterator.Element {
 
     /**
      *  Split a sequence int sub-arrays where each sub-array contains elements
@@ -94,7 +94,7 @@ extension Sequence where Self.SubSequence: Sequence, Self.SubSequence.Iterator.E
 }
 
 //swiftlint:disable opening_brace
-extension Sequence where
+extension Collection where
     Self.SubSequence: Sequence,
     Self.SubSequence.Iterator.Element == Self.Iterator.Element,
     Self.Iterator.Element: Equatable
