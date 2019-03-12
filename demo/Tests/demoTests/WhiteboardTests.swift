@@ -56,11 +56,12 @@
  *
  */
 
-import bridge
-@testable import demo
-
+import CGUSimpleWhiteboard
 import GUSimpleWhiteboard
 import XCTest
+
+@testable import bridge
+@testable import demo
 
 public class WhiteboardTests: XCTestCase {
 
