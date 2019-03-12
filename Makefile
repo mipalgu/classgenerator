@@ -39,3 +39,15 @@ clean:
 .include "../../mk/jenkins.mk"
 
 xc-clean:	clean
+
+generate-xcodeproj:
+	if [ ! -f "Sources/classgenerator/main.swift" ]; then \
+		cp main.in Sources/classgenerator/main.swift ;\
+	elif [ ! $(cmp -s "main.in" "Sources/classgenerator/main.swift") ]; then \
+		cp main.in Sources/classgenerator/main.swift ; \
+	fi;
+	$Ecp config.sh.in config.sh
+	$Eecho "CCFLAGS=\"${CFLAGS:C,(.*),-Xcc \1,g}\"" >> config.sh
+	$Eecho "LINKFLAGS=\"${LDFLAGS:C,(.*),-Xlinker \1,g}\"" >> config.sh
+	$Eecho "SWIFTCFLAGS=\"${SWIFTCFLAGS:C,(.*),-Xswiftc \1,g}\"" >> config.sh
+	$E./xcodegen.sh
