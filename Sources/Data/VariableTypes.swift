@@ -60,7 +60,7 @@ public enum VariableTypes {
     
     public var isRecursive: Bool {
         switch self {
-        case .array, .gen:
+        case .array:
             return true
         default:
             return false

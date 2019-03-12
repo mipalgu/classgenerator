@@ -173,11 +173,11 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         andLength length: String,
         recursive: Bool
     ) -> String {
-        let lastBrace = recursive ? "\n    index = lastBrace + 1;" : ""
         let start = """
             case \(offset):
             {
-                int restartIndex = index;\(lastBrace)
+                int restartIndex = index;
+                index = lastBrace + 1;
                 startVar = index;
                 startKey = startVar;
                 endKey = -1;
