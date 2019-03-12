@@ -116,7 +116,7 @@ public final class FromStringImplementationCreator {
                 forVariable: label,
                 level: level
             )
-            let head = dataSource.createSetupArrayLoop(atOffset: offset, withIndexName: index, andLength: length)
+            let head = dataSource.createSetupArrayLoop(atOffset: offset, withIndexName: index, andLength: length, recursive: subtype.isRecursive)
             let end = dataSource.createTearDownArrayLoop(atOffset: offset, withIndexName: index, andLength: length)
             let assignment: String
             switch subtype {

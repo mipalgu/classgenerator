@@ -123,6 +123,8 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 """
         }.combine("") { $0 + " else " + $1 }
         let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
+        let recursive = nil != cls.variables.first { $0.type.isRecursive }
+        let lastBrace = recursive ? "\nint lastBrace = -1;" : ""
         return """
             size_t temp_length = strlen(\(self.strLabel));
             int length = (temp_length <= INT_MAX) ? \(self.cast(self.cast("temp_length", "ssize_t"), "int")) : -1;
@@ -133,8 +135,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             char* \(self.accessor) = &\(self.accessor)_buffer[0];
             char key_buffer[\(keyBufferSize)];
             char* key = &key_buffer[0];
-            int bracecount = 0;
-            int lastBrace = -1;
+            int bracecount = 0;\(lastBrace)
             int startVar = 0;
             int index = 0;
             int startKey = 0;
@@ -146,7 +147,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             startVar = index;
             startKey = startVar;
             do {
-            \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor)))
+            \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive)))
                 if (key != NULLPTR) {
             \(self.stringHelpers.indent(keyAssigns, 2))
                 }
@@ -169,20 +170,21 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     public func createSetupArrayLoop(
         atOffset offset: Int,
         withIndexName index: String,
-        andLength length: String
+        andLength length: String,
+        recursive: Bool
     ) -> String {
+        let lastBrace = recursive ? "\n    index = lastBrace + 1;" : ""
         let start = """
             case \(offset):
             {
-                int restartIndex = index;
-                index = lastBrace + 1;
+                int restartIndex = index;\(lastBrace)
                 startVar = index;
                 startKey = startVar;
                 endKey = -1;
                 bracecount = 0;
                 for (int \(index) = 0; \(index) < \(length); \(index)++) {
             """
-        let loop = self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor), 2)
+        let loop = self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive), 2)
         return self.stringHelpers.indent(start + "\n" + loop, 2)
     }
 
@@ -266,7 +268,12 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         """
     }
 
-    fileprivate func createParseLoop(accessedFrom accessor: String) -> String {
+    fileprivate func createParseLoop(accessedFrom accessor: String, recursive: Bool) -> String {
+        let lastBrace = !recursive ? "" : ("\n" + """
+                    if (bracecount == 1) {
+                        lastBrace = i;
+                    }
+            """)
         return """
             for (int i = index; i < length; i++) {
                 index = i + 1;
@@ -287,10 +294,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     break;
                 }
                 if (\(strLabel)[i] == '{') {
-                    bracecount++;
-                    if (bracecount == 1) {
-                        lastBrace = i;
-                    }
+                    bracecount++;\(lastBrace)
                     continue;
                 }
                 if (\(strLabel)[i] == '}') {
