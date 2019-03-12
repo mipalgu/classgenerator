@@ -158,6 +158,7 @@ public class DemoTests: ClassGeneratorTestCase {
         p.currentDirectoryPath = self.filemanager.currentDirectoryPath
         p.launchPath = "/usr/bin/env"
         p.arguments = ["bmake"]
+        print((p.launchPath ?? "") + " " + (p.arguments?.combine("") { $0 + " " + $1} ?? ""))
         p.launch()
         p.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
@@ -182,6 +183,7 @@ public class DemoTests: ClassGeneratorTestCase {
             "-Xcc",
             "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
             ]
+        print((p.launchPath ?? "") + " " + (p.arguments?.combine("") { $0 + " " + $1} ?? ""))
         p.launch()
         p.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
@@ -208,6 +210,7 @@ public class DemoTests: ClassGeneratorTestCase {
             "-Xcc",
             "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
         ]
+        print((p.launchPath ?? "") + " " + (p.arguments?.combine("") { $0 + " " + $1} ?? ""))
         p.launch()
         p.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
