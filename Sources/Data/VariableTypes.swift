@@ -57,6 +57,15 @@
  */
 
 public enum VariableTypes {
+    
+    public var isRecursive: Bool {
+        switch self {
+        case .array, .gen:
+            return true
+        default:
+            return false
+        }
+    }
 
     indirect case array(VariableTypes, String)
     case bit
@@ -68,6 +77,7 @@ public enum VariableTypes {
     indirect case pointer(VariableTypes)
     case string(String)
     case unknown
+
 
 }
 
