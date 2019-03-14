@@ -76,6 +76,8 @@ public final class ClassParser<
     }
 
     public fileprivate(set) var container: Container
+    
+    fileprivate let enumParser: EnumParser
 
     fileprivate let helpers: StringHelpers
 
@@ -85,6 +87,7 @@ public final class ClassParser<
 
     public init(
         container: Container,
+        enumParser: EnumParserr = EnumParser(),
         sectionsParser: SectionsParser,
         variablesParser: VariablesTableParser,
         helpers: StringHelpers = StringHelpers()
@@ -108,6 +111,7 @@ public final class ClassParser<
             else {
                 return nil
             }
+            let enums = [sections.preC, sections.postC].flatMap(self.parseEnums)
             let variables = try self.variablesParser.parseVariables(fromSection: sections.variables)
             guard let author: String = self.parseAuthor(fromSection: sections.author) else {
                 self.errors.append("You must specify the author of the class.")
@@ -140,6 +144,23 @@ public final class ClassParser<
             self.errors.append("Unable to parse \(file)")
             return nil
         }
+    }
+    
+    fileprivate func parseEnums(fromSection section: String) -> [Enum] {
+        guard
+            let range = section.range(of: "enum"),
+            let endRange = section[range.upperBound..<section.endIndex].range(of: ";")
+        else {
+            return []
+        }
+        let firstIndex = range.lowerBound
+        let endIndex = endRange.lowerBound
+        let enumSection = String(section[firstIndex ... endIndex])
+        let remaining = String(section[section.index(after: endIndex)..<section.endIndex])
+        guard let cStyleEnum = try? self.enumParser.parseCStyleEnum(enumSection) else {
+            return self.parseEnums(fromSection: remaining)
+        }
+        return [cStyleEnum] + self.parseEnums(fromSection: remaining)
     }
 
     fileprivate func parseClassName(from str: String) -> String? {
