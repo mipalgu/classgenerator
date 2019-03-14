@@ -111,7 +111,7 @@
 #include "SwitchSubsumption.h"
 #include "SwitchSubsumptionTrafficLights.h"
 #include "Input3D.h"
-#include "HAL_ArmTarget.h"
+#include "HalArmTarget.h"
 #include "VisionLines.h"
 #include "VisionRobots.h"
 #include "FieldHorizon.h"
