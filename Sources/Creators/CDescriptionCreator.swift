@@ -90,6 +90,7 @@ public final class CDescriptionCreator {
         let descriptions = cls.variables.compactMap {
             self.createDescription(
                 forVariable: $0,
+                inClass: cls,
                 forClassNamed: cls.name,
                 appendingTo: strLabel,
                 includeLabels: includeLabels
@@ -124,6 +125,7 @@ public final class CDescriptionCreator {
 
     fileprivate func createDescription(
         forVariable variable: Variable,
+        inClass cls: Class,
         forClassNamed className: String,
         appendingTo strLabel: String,
         includeLabels: Bool
@@ -131,6 +133,7 @@ public final class CDescriptionCreator {
         return self.createValue(
             forType: variable.type,
             withLabel: variable.label,
+            inClass: cls,
             andClassName: className,
             includeLabel: includeLabels,
             appendingTo: strLabel
@@ -141,6 +144,7 @@ public final class CDescriptionCreator {
     fileprivate func createArrayDescription(
         forType type: VariableTypes,
         withLabel label: String,
+        inClass cls: Class,
         andClassName className: String,
         includeLabel: Bool,
         appendingTo strLabel: String,
@@ -158,6 +162,7 @@ public final class CDescriptionCreator {
                         temp = self.createValue(
                             forType: subtype,
                             withLabel: arrLabel,
+                            inClass: cls,
                             andClassName: className,
                             includeLabel: includeLabel,
                             appendingTo: strLabel,
@@ -185,6 +190,7 @@ public final class CDescriptionCreator {
                 return self.createValue(
                     forType: type,
                     withLabel: label,
+                    inClass: cls,
                     andClassName: className,
                     includeLabel: includeLabel,
                     appendingTo: strLabel
@@ -199,6 +205,7 @@ public final class CDescriptionCreator {
     fileprivate func createValue(
         forType type: VariableTypes,
         withLabel label: String,
+        inClass cls: Class,
         andClassName className: String,
         includeLabel: Bool,
         appendingTo strLabel: String,
@@ -212,6 +219,7 @@ public final class CDescriptionCreator {
                 return self.createArrayDescription(
                     forType: type,
                     withLabel: label,
+                    inClass: cls,
                     andClassName: className,
                     includeLabel: includeLabel,
                     appendingTo: strLabel
@@ -222,12 +230,33 @@ public final class CDescriptionCreator {
                 return "len = gu_strlcat(\(strLabel), \(getter) ? \"\(pre)true\" : \"\(pre)false\", bufferSize);"
             case .char:
                 return self.createSNPrintf("\(pre)%c", getter, appendingTo: strLabel)
-            case .enumerated:
-                return self.createSNPrintf(
+            case .enumerated(let name):
+                let numericValue = self.createSNPrintf(
                     "\(pre)%\(self.createFormat(forNumericType: .signed))",
                     getter,
                     appendingTo: strLabel
                 )
+                guard let enm = cls.enums.first(where: { $0.name == name }) else {
+                    return numericValue
+                }
+                let setter: (String) -> String = { self.createSNPrintf("\(pre)\($0)", appendingTo: strLabel) }
+                let cases = enm.cases.map {
+                    return """
+                            case \($0.0):
+                            {
+                                \(setter($0.0))
+                                break;
+                            }
+                        """
+                }
+                let combinedCases = cases.combine("") { $0 + "\n" + $1 }
+                let defaultCase = """
+                        default: {
+                            \(numericValue)
+                            break;
+                        }
+                    """
+                return "switch " + getter + " {\n" + combinedCases + "\n" + defaultCase + "\n" + "}"
             case .gen(let genName, let structName, _):
                 let fun = true == includeLabel ? "description" : "to_string"
                 let localLabel = 0 == level ? label : label + "_\(level)"
