@@ -86,6 +86,7 @@ public final class CPPStringFunctionsCreator {
         )
         let body = self.createStringFunctionBody(
             forGenNamed: cls.name,
+            inClass: cls,
             forClassNamed: className,
             andStructNamed: structName,
             withVariables: variables,
@@ -111,6 +112,7 @@ public final class CPPStringFunctionsCreator {
         )
         let body = self.createStringFunctionBody(
             forGenNamed: cls.name,
+            inClass: cls,
             forClassNamed: className,
             andStructNamed: structName,
             withVariables: variables,
@@ -124,6 +126,7 @@ public final class CPPStringFunctionsCreator {
 
     fileprivate func createStringFunctionBody(
         forGenNamed genName: String,
+        inClass cls: Class,
         forClassNamed className: String,
         andStructNamed structName: String,
         withVariables variables: [Variable],
@@ -135,6 +138,7 @@ public final class CPPStringFunctionsCreator {
         let endifCConversion = "#endif /// USE_\(structName.uppercased())_C_CONVERSION"
         let cppImplementation = self.createCPPVariableStringSetters(
             forGenNamed: genName,
+            inClass: cls,
             forClassNamed: className,
             withVariables: variables,
             andIncludeLabels: includeLabels
@@ -182,6 +186,7 @@ public final class CPPStringFunctionsCreator {
 
     fileprivate func createCPPVariableStringSetters(
         forGenNamed genName: String,
+        inClass cls: Class,
         forClassNamed className: String,
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool
@@ -189,6 +194,7 @@ public final class CPPStringFunctionsCreator {
         let ssdef = "std::ostringstream ss;"
         let concat = self.createConcatString(
             forGenNamed: genName,
+            inClass: cls,
             forClassNamed: className,
             withVariables: variables,
             andIncludeLabels: includeLabels
@@ -199,6 +205,7 @@ public final class CPPStringFunctionsCreator {
 
     fileprivate func createConcatString(
         forGenNamed genName: String,
+        inClass cls: Class,
         forClassNamed className: String,
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool
@@ -206,6 +213,7 @@ public final class CPPStringFunctionsCreator {
         return variables.compactMap {
             self.createConcatString(
                 forGenNamed: genName,
+                inClass: cls,
                 forClassNamed: className,
                 forType: $0.type,
                 withLabel: $0.label,
@@ -216,6 +224,7 @@ public final class CPPStringFunctionsCreator {
 
     fileprivate func createConcatString(
         forGenNamed genName: String,
+        inClass cls: Class,
         forClassNamed className: String,
         forType type: VariableTypes,
         withLabel label: String,
@@ -232,6 +241,7 @@ public final class CPPStringFunctionsCreator {
                 let createGetter: (String) -> String = { "this->" + $0 + "(i)" }
                 guard let value = self.createStringValue(
                     forGenNamed: genName,
+                    inClass: cls,
                     forClassNamed: className,
                     forType: subtype,
                     withLabel: label,
@@ -255,6 +265,7 @@ public final class CPPStringFunctionsCreator {
                 let pre = "ss << \(true == includeLabel ? "\"\(label)=\" << " : "")"
                 return self.createStringValue(
                     forGenNamed: genName,
+                    inClass: cls,
                     forClassNamed: className,
                     forType: type,
                     withLabel: label,
@@ -266,6 +277,7 @@ public final class CPPStringFunctionsCreator {
 
     fileprivate func createStringValue(
         forGenNamed genName: String,
+        inClass cls: Class,
         forClassNamed className: String,
         forType type: VariableTypes,
         withLabel label: String,
@@ -278,6 +290,7 @@ public final class CPPStringFunctionsCreator {
             case .array:
                 return self.createConcatString(
                     forGenNamed: genName,
+                    inClass: cls,
                     forClassNamed: className,
                     forType: type,
                     withLabel: label,
@@ -293,6 +306,28 @@ public final class CPPStringFunctionsCreator {
                         \(pre)\(getter);
                     }
                     """
+            case .enumerated(let name):
+                let numericValue = "\(pre)static_cast<signed>(\(getter));"
+                guard let enm = cls.enums.first(where: { $0.name == name }) else {
+                    return numericValue
+                }
+                let cases = enm.cases.map {
+                    return """
+                            case \($0.0):
+                            {
+                                \(pre)"\($0.0)";
+                                break;
+                            }
+                        """
+                }
+                let combinedCases = cases.combine("") { $0 + "\n" + $1 }
+                let defaultCase = """
+                        default: {
+                            \(numericValue)
+                            break;
+                        }
+                    """
+                return "switch " + getter + " {\n" + combinedCases + "\n" + defaultCase + "\n" + "}"
             case .gen(_, _, let className):
                 let fun = true == includeLabel ? "description" : "to_string"
                 return """
