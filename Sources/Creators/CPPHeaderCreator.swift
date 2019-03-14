@@ -63,7 +63,7 @@ import swift_helpers
 import whiteboard_helpers
 
 //swiftlint:disable type_body_length
-public final class CPPHeaderCreator: ErrorContainer {
+public final class CPPHeaderCreator: Creator {
 
     public let errors: [String] = []
 
@@ -87,8 +87,8 @@ public final class CPPHeaderCreator: ErrorContainer {
         self.stringFunctionsCreator = stringFunctionsCreator
         self.fromStringCreator = fromStringCreator
     }
-
-    public func createCPPHeader(
+    
+    public func create(
         forClass cls: Class,
         forFileNamed fileName: String,
         withClassName className: String,

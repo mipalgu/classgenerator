@@ -64,7 +64,7 @@ import whiteboard_helpers
 
 //swiftlint:disable file_length
 //swiftlint:disable:next type_body_length
-public final class SwiftFileCreator: ErrorContainer {
+public final class SwiftFileCreator: Creator {
 
     public let errors: [String] = []
 
@@ -79,10 +79,11 @@ public final class SwiftFileCreator: ErrorContainer {
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
     }
-
-    public func createSwiftFile(
+    
+    public func create(
         forClass cls: Class,
         forFileNamed fileName: String,
+        withClassName className: String,
         withStructName structName: String,
         generatedFrom genfile: String
     ) -> String? {

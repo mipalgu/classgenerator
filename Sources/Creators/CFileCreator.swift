@@ -60,7 +60,7 @@ import Containers
 import Data
 import Helpers
 
-public final class CFileCreator: ErrorContainer {
+public final class CFileCreator: Creator {
 
     public let errors: [String] = []
 
@@ -89,18 +89,19 @@ public final class CFileCreator: ErrorContainer {
         self.networkDeserialiserCreator = networkDeserialiserCreator
         self.fromStringCreator = fromStringCreator
     }
-
+    
     //swiftlint:disable:next function_body_length
-    public func createCFile(
+    public func create(
         forClass cls: Class,
         forFileNamed fileName: String,
+        withClassName _: String,
         withStructName structName: String,
-        generatedFrom genFile: String
+        generatedFrom genfile: String
     ) -> String? {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
             withAuthor: cls.author,
-            andGenFile: genFile
+            andGenFile: genfile
         )
         let head = self.createHead(forStructNamed: structName)
         let descriptionFunc = self.descriptionCreator.createFunction(

@@ -58,7 +58,7 @@
 
 import Data
 
-public protocol Creator {
+public protocol Creator: ErrorContainer {
     
     func create(
         forClass cls: Class,

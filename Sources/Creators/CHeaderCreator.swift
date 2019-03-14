@@ -64,7 +64,7 @@ import Helpers
 import swift_helpers
 import whiteboard_helpers
 
-public final class CHeaderCreator: ErrorContainer {
+public final class CHeaderCreator: Creator {
 
     public fileprivate(set) var errors: [String] = []
 
@@ -85,10 +85,11 @@ public final class CHeaderCreator: ErrorContainer {
         self.creatorHelpers = creatorHelpers
         self.helpers = helpers
     }
-
-    public func createCHeader(
+    
+    public func create(
         forClass cls: Class,
         forFileNamed fileName: String,
+        withClassName className: String,
         withStructName structName: String,
         generatedFrom genfile: String
     ) -> String? {
