@@ -58,9 +58,11 @@
 
 import Foundation
 
+@testable import Creators
 @testable import Containers
 @testable import IO
 @testable import Parsers
+@testable import Helpers
 @testable import classgenerator
 import XCTest
 
@@ -88,7 +90,11 @@ public class DemoTests: ClassGeneratorTestCase {
             StderrOutputStream,
             StdoutOutputStream,
             StdoutOutputStream
-        >
+        >,
+        CHeaderCreatorFactory,
+        CFileCreatorFactory,
+        CPPHeaderCreatorFactory,
+        SwiftFileCreatorFactory
     >!
 
     public override func setUp() {
@@ -108,7 +114,12 @@ public class DemoTests: ClassGeneratorTestCase {
                 errorStream: StderrOutputStream(),
                 messageStream: StdoutOutputStream(),
                 warningStream: StdoutOutputStream()
-            )
+            ),
+            creatorHelpersFactory: CreatorHelpersFactory(),
+            cHeaderCreatorFactory: CHeaderCreatorFactory(),
+            cFileCreatorFactory: CFileCreatorFactory(),
+            cppHeaderCreatorFactory: CPPHeaderCreatorFactory(),
+            swiftFileCreatorFactory: SwiftFileCreatorFactory()
         )
         _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/wb_demo.h")
         _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/wb_demo.c")
