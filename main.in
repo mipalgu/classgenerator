@@ -1,5 +1,7 @@
 import Foundation
 
+import Helpers
+import Creators
 import Containers
 import IO
 import Parsers
@@ -19,7 +21,12 @@ let generator = ClassGenerator(
         errorStream: StderrOutputStream(),
         messageStream: StdoutOutputStream(),
         warningStream: StdoutOutputStream()
-    )
+    ),
+    creatorHelpersFactory: CreatorHelpersFactory(),
+    cHeaderCreatorFactory: CHeaderCreatorFactory(),
+    cFileCreatorFactory: CFileCreatorFactory(),
+    cppHeaderCreatorFactory: CPPHeaderCreatorFactory(),
+    swiftFileCreatorFactory: SwiftFileCreatorFactory()
 )
 
 generator.run(CommandLine.arguments)

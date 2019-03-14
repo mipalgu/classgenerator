@@ -64,28 +64,38 @@ import Helpers
 import IO
 import Parsers
 
-public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
+public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCreatorFactory: CreatorFactory, CFileCreatorFactory: CreatorFactory, CPPHeaderCreatorFactory: CreatorFactory, SwiftFileCreatorFactory: CreatorFactory> {
 
     fileprivate let argumentsParser: ClassGeneratorParser
     fileprivate let parser: Parser
     fileprivate let fileHelpers: FileHelpers
-    fileprivate var creatorHelpers: CreatorHelpers!
-    fileprivate var cHeaderCreator: CHeaderCreator!
-    fileprivate var cFileCreator: CFileCreator!
-    fileprivate var cppHeaderCreator: CPPHeaderCreator!
-    fileprivate var swiftFileCreator: SwiftFileCreator!
-    fileprivate var printer: P
+    fileprivate let creatorHelpersFactory: CreatorHelpersFactory
+    fileprivate let cHeaderCreatorFactory: CHeaderCreatorFactory
+    fileprivate let cFileCreatorFactory: CFileCreatorFactory
+    fileprivate let cppHeaderCreatorFactory: CPPHeaderCreatorFactory
+    fileprivate let swiftFileCreatorFactory: SwiftFileCreatorFactory
+    fileprivate let printer: P
 
     public init(
         argumentsParser: ClassGeneratorParser = ClassGeneratorParser(),
         parser: Parser,
         fileHelpers: FileHelpers = FileHelpers(),
-        printer: P
+        printer: P,
+        creatorHelpersFactory: CreatorHelpersFactory,
+        cHeaderCreatorFactory: CHeaderCreatorFactory,
+        cFileCreatorFactory: CFileCreatorFactory,
+        cppHeaderCreatorFactory: CPPHeaderCreatorFactory,
+        swiftFileCreatorFactory: SwiftFileCreatorFactory
     ) {
         self.argumentsParser = argumentsParser
         self.parser = parser
         self.fileHelpers = fileHelpers
         self.printer = printer
+        self.creatorHelpersFactory = creatorHelpersFactory
+        self.cHeaderCreatorFactory = cHeaderCreatorFactory
+        self.cFileCreatorFactory = cFileCreatorFactory
+        self.cppHeaderCreatorFactory = cppHeaderCreatorFactory
+        self.swiftFileCreatorFactory = swiftFileCreatorFactory
     }
 
     public func run(_ args: [String]) {
@@ -129,11 +139,19 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)
-        self.createCreators(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
-        let className = self.creatorHelpers.createClassName(forClassNamed: cls.name)
-        let structName = self.creatorHelpers.createStructName(forClassNamed: cls.name)
+        let creatorHelpers = self.creatorHelpersFactory.make(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
+        let className = creatorHelpers.createClassName(forClassNamed: cls.name)
+        let structName = creatorHelpers.createStructName(forClassNamed: cls.name)
+        let cHeaderCreator = self.cHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
+        let cFileCreator = self.cFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
+        let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
+        let swiftFileCreator = self.swiftFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         self.generateFiles(
             fromClass: cls,
+            cHeaderCreator: cHeaderCreator,
+            cFileCreator: cFileCreator,
+            cppHeaderCreator: cppHeaderCreator,
+            swiftFileCreator: swiftFileCreator,
             cHeaderPath: self.create(task.cHeaderOutputPath, structName + ".h"),
             cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, structName + ".c"),
             cppHeaderPath: self.create(task.cppHeaderOutputPath ?? task.cHeaderOutputPath, className + ".h"),
@@ -144,14 +162,6 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
             generateCppWrapper: task.generateCppWrapper,
             generateSwiftWrapper: task.generateSwiftWrapper
         )
-    }
-    
-    fileprivate func createCreators(backwardsCompatible: Bool) {
-        self.creatorHelpers = CreatorHelpers(backwardsCompatible: backwardsCompatible)
-        self.cHeaderCreator = CHeaderCreator(creatorHelpers: self.creatorHelpers)
-        self.cFileCreator = CFileCreator(creatorHelpers: self.creatorHelpers)
-        self.cppHeaderCreator = CPPHeaderCreator(creatorHelpers: self.creatorHelpers)
-        self.swiftFileCreator = SwiftFileCreator(creatorHelpers: self.creatorHelpers)
     }
 
     fileprivate func create(_ path: String?, _ fileName: String) -> URL {
@@ -168,6 +178,10 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
     //swiftlint:disable:next function_parameter_count
     fileprivate func generateFiles(
         fromClass cls: Class,
+        cHeaderCreator: CHeaderCreatorFactory._Creator,
+        cFileCreator: CFileCreatorFactory._Creator,
+        cppHeaderCreator: CPPHeaderCreatorFactory._Creator,
+        swiftFileCreator: SwiftFileCreatorFactory._Creator,
         cHeaderPath: URL,
         cFilePath: URL,
         cppHeaderPath: URL,
@@ -179,28 +193,30 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
         generateSwiftWrapper: Bool
     ) {
         guard true == self.generate(cHeaderPath.path, {
-            self.cHeaderCreator.createCHeader(
+            cHeaderCreator.create(
                 forClass: cls,
                 forFileNamed: cHeaderPath.lastPathComponent,
+                withClassName: className,
                 withStructName: structName,
                 generatedFrom: genfile
             )
         }) else {
-            self.handleError(self.cHeaderCreator.lastError ?? "Unable to create C Header at path: \(cHeaderPath.path)")
+            self.handleError(cHeaderCreator.lastError ?? "Unable to create C Header at path: \(cHeaderPath.path)")
         }
         guard true == self.generate(cFilePath.path, {
-            self.cFileCreator.createCFile(
+            cFileCreator.create(
                 forClass: cls,
                 forFileNamed: cFilePath.lastPathComponent,
+                withClassName: className,
                 withStructName: structName,
                 generatedFrom: genfile
             )
         }) else {
-            self.handleError(self.cFileCreator.lastError ?? "Unable to create C File")
+            self.handleError(cFileCreator.lastError ?? "Unable to create C File")
         }
         if true == generateCppWrapper {
             guard true == self.generate(cppHeaderPath.path, {
-                self.cppHeaderCreator.createCPPHeader(
+                cppHeaderCreator.create(
                     forClass: cls,
                     forFileNamed: cppHeaderPath.lastPathComponent,
                     withClassName: className,
@@ -208,19 +224,20 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer> {
                     generatedFrom: genfile
                 )
             }) else {
-                self.handleError(self.cppHeaderCreator.lastError ?? "Unable to create C++ Header")
+                self.handleError(cppHeaderCreator.lastError ?? "Unable to create C++ Header")
             }
         }
         if true == generateSwiftWrapper {
             guard true == self.generate(swiftFilePath.path, {
-                self.swiftFileCreator.createSwiftFile(
+                swiftFileCreator.create(
                     forClass: cls,
                     forFileNamed: swiftFilePath.lastPathComponent,
+                    withClassName: className,
                     withStructName: structName,
                     generatedFrom: genfile
                 )
             }) else {
-                self.handleError(self.swiftFileCreator.lastError ?? "Unable to create Swift file.")
+                self.handleError(swiftFileCreator.lastError ?? "Unable to create Swift file.")
             }
         }
     }

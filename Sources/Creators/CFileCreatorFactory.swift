@@ -61,7 +61,7 @@ import Helpers
 import swift_helpers
 import whiteboard_helpers
 
-public final class CFileCreatorFactor: CreatorFactory {
+public final class CFileCreatorFactory: CreatorFactory {
     
     fileprivate let date: Date
     fileprivate let stringHelpers: StringHelpers
