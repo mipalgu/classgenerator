@@ -65,6 +65,8 @@ public struct Class {
     public let comment: String
 
     public let variables: [Variable]
+    
+    public let enums: [Enum]
 
     public let preC: String?
 
@@ -91,6 +93,7 @@ public struct Class {
         author: String,
         comment: String,
         variables: [Variable],
+        enums: [Enum] = [],
         preC: String? = nil,
         preCFile: String? = nil,
         postCFile: String? = nil,
@@ -106,6 +109,7 @@ public struct Class {
         self.author = author
         self.comment = comment
         self.variables = variables
+        self.enums = enums
         self.preC = preC
         self.preCFile = preCFile
         self.postCFile = postCFile
@@ -127,6 +131,7 @@ public func == (lhs: Class, rhs: Class) -> Bool {
         && lhs.author == rhs.author
         && lhs.comment == rhs.comment
         && lhs.variables == rhs.variables
+        && lhs.enums == rhs.enums
         && lhs.preC == rhs.preC
         && lhs.postC == rhs.postC
         && lhs.preCpp == rhs.preCpp

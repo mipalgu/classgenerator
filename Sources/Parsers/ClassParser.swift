@@ -93,6 +93,7 @@ public final class ClassParser<
         helpers: StringHelpers = StringHelpers()
     ) {
         self.container = container
+        self.enumParser = enumParser
         self.helpers = helpers
         self.sectionsParser = sectionsParser
         self.variablesParser = variablesParser
@@ -126,6 +127,7 @@ public final class ClassParser<
                 author: author,
                 comment: comment,
                 variables: variables,
+                enums: enums,
                 preC: sections.preC,
                 preCFile: sections.preCFile,
                 postCFile: sections.postCFile,
