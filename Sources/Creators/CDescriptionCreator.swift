@@ -173,10 +173,11 @@ public final class CDescriptionCreator {
                 guard let value = temp else {
                     return nil
                 }
+                let arrDef = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: label, level: level)
                 //swiftlint:disable line_length
                 return """
                     len = gu_strlcat(\(strLabel), "\(includeLabel ? arrLabel + "=" : ""){", bufferSize);
-                    for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(self.stringHelpers.toSnakeCase(className).uppercased())_\(arrLabel.uppercased())_ARRAY_SIZE; \(arrLabel)_index++) {
+                    for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(arrDef); \(arrLabel)_index++) {
                     \(self.stringHelpers.indent(self.createGuard(forStrVariable: strLabel)))
                         if (\(arrLabel)_index > 0) {
                             \(self.createComma(appendingTo: strLabel))
