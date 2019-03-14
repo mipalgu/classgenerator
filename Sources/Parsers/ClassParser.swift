@@ -112,8 +112,8 @@ public final class ClassParser<
             else {
                 return nil
             }
-            let enums = [sections.preC ?? "", sections.postC ?? ""].flatMap(self.parseEnums)
             let variables = try self.variablesParser.parseVariables(fromSection: sections.variables)
+            let enums = [sections.preC ?? "", sections.postC ?? ""].flatMap(self.parseEnums)
             guard let author: String = self.parseAuthor(fromSection: sections.author) else {
                 self.errors.append("You must specify the author of the class.")
                 return nil
