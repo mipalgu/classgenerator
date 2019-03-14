@@ -351,8 +351,8 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     char \(label)_temp;
                     \(assign)
                     """
-            case .enumerated:
-                return self.createNumericValue(
+            case .enumerated(let name):
+                let numericSetter = self.createNumericValue(
                     forType: .numeric(.signed),
                     withLabel: label,
                     andCType: cType,
@@ -361,6 +361,18 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     level,
                     setter
                 )
+                guard let enm = cls.enums.first(where: { $0.name == name }) else {
+                    return numericSetter
+                }
+                let cases = enm.cases.map {
+                    return """
+                        if (strcmp(\"\($0.0)\", \(accessor)) == 0) {
+                            \(setter($0.0))
+                        }
+                        """
+                }
+                let handleCases = cases.combine("") { $0 + " else " + $1 }
+                return handleCases + " else {\n" + "    " + (numericSetter ?? "") + "\n}"
             case .gen(_, let structName, let className):
                 let assign = self.recurse(0 != level, structName, className, label, accessor)
                 let end = 0 == level ? "" : "\n" + setter(label)
