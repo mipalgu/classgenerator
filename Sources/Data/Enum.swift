@@ -58,9 +58,9 @@
 
 public struct Enum {
     
-    var name: String
+    public var name: String
     
-    var cases: [String: Int]
+    public var cases: [String: Int]
     
     public init(name: String, cases: [String: Int]) {
         self.name = name
