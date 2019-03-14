@@ -321,13 +321,7 @@ public final class CPPStringFunctionsCreator {
                         """
                 }
                 let combinedCases = cases.combine("") { $0 + "\n" + $1 }
-                let defaultCase = """
-                        default: {
-                            \(numericValue)
-                            break;
-                        }
-                    """
-                return "switch (" + getter + ") {\n" + combinedCases + "\n" + defaultCase + "\n" + "}"
+                return "switch (" + getter + ") {\n" + combinedCases + "\n" + "}"
             case .gen(_, _, let className):
                 let fun = true == includeLabel ? "description" : "to_string"
                 return """
