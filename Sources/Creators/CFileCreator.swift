@@ -158,16 +158,17 @@ public final class CFileCreator: ErrorContainer {
             withStructNamed: structName,
             forStrVariable: "str"
         )
-        let posterIfdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
+        let posterIfdef = "#ifndef WHITEBOARD_POSTER_STRING_CONVERSION"
         let posterEndif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"
+        let posterDef =  "#define WHITEBOARD_POSTER_STRING_CONVERSION"
         let serialiseIfDef = "/*#ifdef WHITEBOARD_SERIALISATION*/"
         let serialiseEndIf = "/*#endif // WHITEBOARD_SERIALISATION*/"
         let preC = cls.preCFile.map { $0 + "\n\n" } ?? ""
         let postC = cls.postCFile.map { "\n\n" + $0 } ?? ""
-        return comment
-            + "\n\n" + head + "\n\n" + preC + posterIfdef
+        return comment + "\n\n" + posterIfdef + "\n" + posterDef + "\n" + posterEndif
+            + "\n\n" + head + "\n\n" + preC
             + "\n\n" + descriptionFunc + "\n\n" + toStringFunc
-            + "\n\n" + fromStringFunc + "\n\n" + posterEndif
+            + "\n\n" + fromStringFunc
             + "\n\n" + serialiseIfDef + "\n\n" + toNetworkSerialised
             + "\n\n" + fromNetworkSerialised + "\n\n" + serialiseEndIf
             + postC
