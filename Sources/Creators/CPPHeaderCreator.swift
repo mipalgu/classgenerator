@@ -213,7 +213,7 @@ public final class CPPHeaderCreator: Creator {
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION"
-        let fromStringConstructor = self.createFromStringConstructor(forClassNamed: name, andStructNamed: extendName)
+        let fromStringConstructor = self.createFromStringConstructor(inClass: cls, forClassNamed: name, andStructNamed: extendName)
         let description = self.stringFunctionsCreator.createDescriptionFunction(
             forClass: cls,
             forClassNamed: name,
@@ -393,11 +393,16 @@ public final class CPPHeaderCreator: Creator {
     }
 
     fileprivate func createFromStringConstructor(
+        inClass cls: Class,
         forClassNamed className: String,
         andStructNamed structName: String
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "String Constructor.")
-        let constructor = "\(className)(const std::string &str) { \(structName)_from_string(this, str.c_str()); }"
+        let constructor = """
+            \(className)(const std::string &str) {
+                this->from_string(str);
+            }
+            """
         return comment + "\n" + constructor
     }
 
