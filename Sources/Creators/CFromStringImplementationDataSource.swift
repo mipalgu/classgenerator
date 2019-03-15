@@ -125,13 +125,14 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
         let recursive = nil != cls.variables.first { $0.type.isRecursive }
         let lastBrace = recursive ? "\nint lastBrace = -1;" : ""
+        let bufferDef = "\(cls.name.uppercased())_DESC_BUFFER_SIZE"
         return """
             size_t temp_length = strlen(\(self.strLabel));
             int length = (temp_length <= INT_MAX) ? \(self.cast(self.cast("temp_length", "ssize_t"), "int")) : -1;
-            if (length < 1) {
+            if (length < 1 || length > \(bufferDef)) {
                 \(self.shouldReturnSelf ? "return \(self.selfStr);" : "return;")
             }
-            char \(self.accessor)_buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE + 1];
+            char \(self.accessor)_buffer[\(bufferDef) + 1];
             char* \(self.accessor) = &\(self.accessor)_buffer[0];
             char key_buffer[\(keyBufferSize)];
             char* key = &key_buffer[0];

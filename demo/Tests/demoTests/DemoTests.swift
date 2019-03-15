@@ -60,7 +60,7 @@ import CGUSimpleWhiteboard
 import GUSimpleWhiteboard
 import XCTest
 
-@testable import bridge
+import bridge
 @testable import demo
 
 //swiftlint:disable identifier_name

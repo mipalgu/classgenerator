@@ -14,7 +14,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "bridge", dependencies: []),
-        .target(name: "demo", dependencies: ["bridge"]),
+        .target(name: "demo", dependencies: [.target(name: "bridge")]),
         .testTarget(
             name: "demoTests",
             dependencies: [
