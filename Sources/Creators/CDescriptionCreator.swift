@@ -241,7 +241,7 @@ public final class CDescriptionCreator {
                     return numericValue
                 }
                 let setter: (String) -> String = { self.createSNPrintf("\(pre)\($0)", appendingTo: strLabel) }
-                let cases = enm.cases.map {
+                let cases = enm.cases.sorted { $0.key < $1.key }.map {
                     return """
                             case \($0.0):
                             {

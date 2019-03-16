@@ -365,7 +365,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 guard let enm = cls.enums.first(where: { $0.name == name }) else {
                     return numericSetter
                 }
-                let cases = enm.cases.map {
+                let cases = enm.cases.sorted { $0.key < $1.key }.map {
                     return """
                         if (strcmp(\"\($0.0)\", \(accessor)) == 0) {
                             \(setter($0.0))

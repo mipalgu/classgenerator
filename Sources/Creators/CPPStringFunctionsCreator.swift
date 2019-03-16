@@ -311,7 +311,7 @@ public final class CPPStringFunctionsCreator {
                 guard let enm = cls.enums.first(where: { $0.name == name }) else {
                     return numericValue
                 }
-                let cases = enm.cases.map {
+                let cases = enm.cases.sorted { $0.key < $1.key }.map {
                     return """
                             case \($0.0):
                             {
