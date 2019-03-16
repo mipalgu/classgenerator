@@ -137,6 +137,18 @@ public final class CreatorHelpers {
         let temp = lines.reduce(start) { $0 + prepend + " * " + $1 + "\n" }
         return temp + end
     }
+    
+    public func createDefName(fromGenName genName: String) -> String {
+        return genName.uppercased()
+    }
+    
+    public func createDescriptionBufferSizeDef(fromGenName genName: String) -> String {
+        return self.helpers.createDescriptionBufferSizeDef(forClassNamed: genName)
+    }
+    
+    public func createToStringBufferSizeDef(fromGenName genName: String) -> String {
+        return self.helpers.createToStringBufferSizeDef(forClassNamed: genName)
+    }
 
     //swiftlint:disable:next function_body_length
     public func createFileComment(

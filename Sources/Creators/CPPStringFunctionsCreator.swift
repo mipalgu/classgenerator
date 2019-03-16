@@ -177,7 +177,7 @@ public final class CPPStringFunctionsCreator {
         withStructNamed structName: String
     ) -> String {
         return """
-            char buffer[\(cls.name.uppercased())_TO_STRING_BUFFER_SIZE];
+            char buffer[\(self.creatorHelpers.createToStringBufferSizeDef(fromGenName: cls.name))];
             \(structName)_to_string(this, buffer, sizeof(buffer));
             std::string toString = buffer;
             return toString;

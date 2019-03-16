@@ -154,13 +154,14 @@ public final class CHeaderCreator: Creator {
             fromVariables: cls.variables,
             withToStringBufferSize: toStringSize
         )
+        let defName = self.creatorHelpers.createDefName(fromGenName: cls.name)
         var defs = ""
-        defs += "#define \(cls.name.uppercased())_GENERATED \n"
-        defs += "#define \(cls.name.uppercased())_C_STRUCT \(structName) \n"
-        defs += "#define \(cls.name.uppercased())_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
+        defs += "#define \(defName)_GENERATED \n"
+        defs += "#define \(defName)_C_STRUCT \(structName) \n"
+        defs += "#define \(defName)_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
         defs += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION\n"
-        defs += "#define \(cls.name.uppercased())_DESC_BUFFER_SIZE \(descBufferSize)\n"
-        defs += "#define \(cls.name.uppercased())_TO_STRING_BUFFER_SIZE \(toStringSize)\n"
+        defs += "#define \(self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: cls.name)) \(descBufferSize)\n"
+        defs += "#define \(self.creatorHelpers.createToStringBufferSizeDef(fromGenName: cls.name)) \(toStringSize)\n"
         defs += "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION\n"
         for v in cls.variables {
             switch v.type {
