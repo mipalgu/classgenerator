@@ -255,7 +255,7 @@ public final class CDescriptionCreator {
             case .gen(let genName, let structName, _):
                 let fun = true == includeLabel ? "description" : "to_string"
                 let localLabel = 0 == level ? label : label + "_\(level)"
-                let size = genName.uppercased() + "_" + (true == includeLabel ? "DESC" : "TO_STRING") + "_BUFFER_SIZE"
+                let size = true == includeLabel ? self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName) : self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName)
                 return """
                     len = gu_strlcat(\(strLabel), "\(pre){", bufferSize);
                     \(self.createGuard(forStrVariable: strLabel))
