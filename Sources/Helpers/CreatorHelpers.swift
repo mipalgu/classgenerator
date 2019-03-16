@@ -139,7 +139,7 @@ public final class CreatorHelpers {
     }
     
     public func createDefName(fromGenName genName: String) -> String {
-        return genName.uppercased()
+        return self.helpers.createDefName(forClassNamed: genName, backwardsCompatible: self.backwardsCompatible)
     }
     
     public func createDescriptionBufferSizeDef(fromGenName genName: String) -> String {
