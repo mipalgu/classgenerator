@@ -272,7 +272,7 @@ public final class CPPHeaderCreator: Creator {
             let label = self.calculateCppLabel(forVariable: $0)
             switch $0.type {
             case .array:
-                return "\(type) \(label) = NULLPTR"
+                return "const \(type) \(label) = NULLPTR"
             case .enumerated:
                 guard nil != Int($0.defaultValue) else {
                     return "\(type) \(label) = \($0.defaultValue)"
