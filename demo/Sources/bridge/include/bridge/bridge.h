@@ -64,6 +64,7 @@
 #include "gusimplewhiteboard.h"
 #include "guwhiteboard_c_types.h"
 #include "guwhiteboardtypelist_c_generated.h"
+#include "guwhiteboardserialisation.h"
 #include "gu_util.h"
 #include "somestruct.h"
 #include "wb_demo.h"
