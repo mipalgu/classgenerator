@@ -204,6 +204,8 @@ public final class CPPHeaderCreator: Creator {
             forVariables: variables,
             otherType: "struct " + extendName
         )
+        let privateContent = self.createInit(forClass: cls, forVariables: variables)
+        let privateSection = "private:\n\n" + self.stringHelpers.indent(privateContent)
         let publicContent = constructor + "\n\n"
             + copyConstructor + "\n\n"
             + structCopyConstructor + "\n\n"
@@ -232,7 +234,7 @@ public final class CPPHeaderCreator: Creator {
             withStructNamed: extendName,
             withVariables: variables
         )
-        return self.stringHelpers.indent(def + "\n\n" + publicSection) + "\n\n"
+        return self.stringHelpers.indent(def + "\n\n" + privateSection + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
             + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
             + description + "\n\n" + toString + "\n\n" + fromString
@@ -245,29 +247,11 @@ public final class CPPHeaderCreator: Creator {
         let def = "class \(name): public \(extendName) {"
         return comment + "\n" + def
     }
-
-    fileprivate func createConstructor(
-        forClass cls: Class,
-        forClassNamed name: String,
-        forVariables variables: [Variable]
-    ) -> String {
-        let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
-        let startdef = "\(name)("
-        let list = variables.map {
-            let type = self.calculateCppType(forVariable: $0)
-            let label = self.calculateCppLabel(forVariable: $0)
-            switch $0.type {
-                case .array:
-                    return "\(type) \(label) = NULLPTR"
-                case .enumerated:
-                    guard nil != Int($0.defaultValue) else {
-                        return "\(type) \(label) = \($0.defaultValue)"
-                    }
-                    return "\(type) \(label) = static_cast<\(type)>(\($0.defaultValue))"
-                default:
-                    return "\(type) \(label) = \($0.defaultValue)"
-            }
-        }.combine("") { $0 + ", " + $1 }
+    
+    fileprivate func createInit(forClass cls: Class, forVariables variables: [Variable]) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Set the members of the class.")
+        let startdef = "void init("
+        let list = self.createDefaultParameters(forVariables: variables)
         let def = startdef + list + ") {"
         let setters = self.createSetters(
             forVariables: variables,
@@ -276,6 +260,41 @@ public final class CPPHeaderCreator: Creator {
             self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+    }
+    
+    fileprivate func createCallList(forVariables variables: [Variable], accessor: @escaping (String) -> String = { $0 }) -> String {
+        return variables.lazy.map { accessor($0.label) }.combine("") { $0 + ", " + $1 }
+    }
+    
+    fileprivate func createDefaultParameters(forVariables variables: [Variable]) -> String {
+        return variables.map {
+            let type = self.calculateCppType(forVariable: $0)
+            let label = self.calculateCppLabel(forVariable: $0)
+            switch $0.type {
+            case .array:
+                return "\(type) \(label) = NULLPTR"
+            case .enumerated:
+                guard nil != Int($0.defaultValue) else {
+                    return "\(type) \(label) = \($0.defaultValue)"
+                }
+                return "\(type) \(label) = static_cast<\(type)>(\($0.defaultValue))"
+            default:
+                return "\(type) \(label) = \($0.defaultValue)"
+            }
+        }.combine("") { $0 + ", " + $1 }
+    }
+
+    fileprivate func createConstructor(
+        forClass cls: Class,
+        forClassNamed name: String,
+        forVariables variables: [Variable]
+    ) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a new `\(name)`.")
+        let startdef = "\(name)("
+        let list = self.createDefaultParameters(forVariables: variables)
+        let def = startdef + list + ") {"
+        let call = "this->init(" + self.createCallList(forVariables: variables) + ");"
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(call) + "\n}"
     }
 
     fileprivate func calculateCppType(forVariable variable: Variable) -> String {
@@ -300,13 +319,8 @@ public final class CPPHeaderCreator: Creator {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Constructor.")
         let def = "\(className)(const \(otherType) &other): \(structName)() {"
-        let setters = self.createSetters(
-            forVariables: variables,
-            addConstOnPointers: false,
-            assignDefaults: false,
-            self.creatorHelpers.createArrayCountDef(inClass: cls.name)
-        ) { "other.\($0.label)()" }
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + "()" } + ");"
+        return comment + "\n" + def + "\n" + self.stringHelpers.indent(call) + "\n}"
     }
 
     fileprivate func createCopyAssignmentOperator(
@@ -318,14 +332,9 @@ public final class CPPHeaderCreator: Creator {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
         let def = "\(className) &operator = (const \(otherType) &other) {"
-        let setters = self.createSetters(
-            forVariables: variables,
-            addConstOnPointers: false,
-            assignDefaults: false,
-            self.creatorHelpers.createArrayCountDef(inClass: cls.name)
-        ) { "other.\($0.label)()" }
+        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + "()" } + ");"
         let ret = "return *this;"
-        let content = setters + "\n" + ret
+        let content = call + "\n" + ret
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(content) + "\n}"
     }
 
@@ -400,6 +409,7 @@ public final class CPPHeaderCreator: Creator {
         let comment = self.creatorHelpers.createComment(from: "String Constructor.")
         let constructor = """
             \(className)(const std::string &str) {
+                this->init();
                 this->from_string(str);
             }
             """
