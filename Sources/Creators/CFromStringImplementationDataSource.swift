@@ -108,7 +108,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     }
 
     public func createSetup(forClass cls: Class) -> String {
-        let keyAssigns = cls.variables.lazy.filter{
+        let keyAssignsIfs = cls.variables.lazy.filter{
             switch $0.type {
             case .pointer, .unknown:
                 return false
@@ -122,6 +122,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 }
                 """
         }.combine("") { $0 + " else " + $1 }
+        let keyAssigns = keyAssignsIfs.isEmpty ? "varIndex = -1;" : keyAssignsIfs + " else {\n    varIndex = -1;\n}"
         let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
         let recursive = nil != cls.variables.first { $0.type.isRecursive }
         let lastBrace = recursive ? "\nint lastBrace = -1;" : ""
@@ -140,7 +141,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             int startVar = 0;
             int index = 0;
             int startKey = 0;
-            int endKey = 0;
+            int endKey = -1;
             int varIndex = 0;
             if (index == 0 && \(self.strLabel)[0] == '{') {
                 index = 1;
@@ -149,17 +150,20 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             startKey = startVar;
             do {
             \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive)))
-                if (key != NULLPTR) {
+                if (strlen(key) > 0) {
             \(self.stringHelpers.indent(keyAssigns, 2))
                 }
                 switch (varIndex) {
+                    case -1: { break; }
             """
     }
 
     public func createTearDown(forClass cls: Class) -> String {
         let end = """
                 }
-                varIndex++;
+                if (varIndex >= 0) {
+                    varIndex++;
+                }
             } while(index < length);
             """
         if false == self.shouldReturnSelf {
