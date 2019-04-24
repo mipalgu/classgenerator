@@ -314,12 +314,12 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 }
             }
             if (endKey >= startKey && endKey - startKey < length) {
-                strncpy(key, \(strLabel) + startKey, (endKey - startKey) + 1);
+                strncpy(key, \(strLabel) + startKey, \(self.cast("(endKey - startKey) + 1", "size_t")));
                 key[(endKey - startKey) + 1] = 0;
             } else {
                 key[0] = 0;
             }
-            strncpy(\(accessor), \(strLabel) + startVar, (index - startVar) + 1);
+            strncpy(\(accessor), \(strLabel) + startVar, \(self.cast("(index - startVar) + 1", "size_t")));
             \(accessor)[(index - startVar) + 1] = 0;
             bracecount = 0;
             index += 2;
