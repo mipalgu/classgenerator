@@ -199,7 +199,7 @@ public final class CNetworkSerialiserCreator {
             case .string:
                 return """
                   do { //limit declaration scope
-                    uint8_t len = strlen(self->\(label));
+                    uint8_t len = (uint8_t) strlen(self->\(label));
                     int8_t b;
                     for (b = 7; b >= 0; b--) {
                       \(bitSetterGenerator(data: "(len >> b) & 1U"))
