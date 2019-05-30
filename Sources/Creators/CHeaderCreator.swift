@@ -175,6 +175,13 @@ public final class CHeaderCreator: Creator {
         let preC = nil == cls.preC ? "" : cls.preC! + "\n\n"
         return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines)
     }
+    
+    fileprivate func indentC(_ str: String, _ level: Int = 1) -> String {
+        return str.components(separatedBy: .newlines).map {
+            let str = $0.trimmingCharacters(in: .whitespaces)
+            return str.first == "#" ? $0 : self.helpers.indent($0, level)
+        }.combine("") { $0 + "\n" + $1}
+    }
 
     fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
         let start = self.creatorHelpers.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
@@ -191,7 +198,8 @@ public final class CHeaderCreator: Creator {
             let comment = self.creatorHelpers.createComment(from: v.comment ?? "", prepend: "    ")
             properties += comment + "\n    " + p + "\n\n"
         }
-        return start + properties + "};"
+        let embeddedC = cls.embeddedC.map { self.indentC($0) + "\n\n" } ?? ""
+        return start + properties + embeddedC + "};"
     }
 
     fileprivate func createProperty(

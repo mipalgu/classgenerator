@@ -65,6 +65,8 @@ public struct Sections {
     public let variables: String
 
     public let comments: String?
+    
+    public let embeddedC: String?
 
     public let preCFile: String?
 
@@ -89,6 +91,7 @@ public struct Sections {
         preC: String? = nil,
         variables: String,
         comments: String? = nil,
+        embeddedC: String? = nil,
         preCFile: String? = nil,
         postCFile: String? = nil,
         postC: String? = nil,
@@ -103,6 +106,7 @@ public struct Sections {
         self.preC = preC
         self.variables = variables
         self.comments = comments
+        self.embeddedC = embeddedC
         self.preCFile = preCFile
         self.postCFile = postCFile
         self.postC = postC
@@ -123,6 +127,7 @@ public func == (lhs: Sections, rhs: Sections) -> Bool {
         && lhs.preC == rhs.preC
         && lhs.variables == rhs.variables
         && lhs.comments == rhs.comments
+        && lhs.embeddedC == rhs.embeddedC
         && lhs.postC == rhs.postC
         && lhs.preCpp == rhs.preCpp
         && lhs.embeddedCpp == rhs.embeddedCpp

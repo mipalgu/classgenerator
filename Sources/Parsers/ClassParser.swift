@@ -129,6 +129,7 @@ public final class ClassParser<
                 variables: variables,
                 enums: enums,
                 preC: sections.preC,
+                embeddedC: sections.embeddedC,
                 preCFile: sections.preCFile,
                 postCFile: sections.postCFile,
                 postC: sections.postC,

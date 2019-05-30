@@ -110,6 +110,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
         var prec: String?
         var vars: String?
         var comments: String?
+        var embeddedC: String?
         var postc: String?
         var preCFile: String?
         var postCFile: String?
@@ -135,6 +136,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
                 || assignIfValid(&postCFile, combined, self.isPostCFileMarker(first))
                 || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
                 || assignIfValid(&comments, combined, self.isCommentMarker(first))
+                || assignIfValid(&embeddedC, combined, self.isEmbeddedCMarker(first))
                 || assignIfValid(&postc, combined, self.isPostCMarker(first))
                 || assignIfValid(&precpp, combined, self.isPreCppMarker(first))
                 || assignIfValid(&cpp, combined, self.isCppMarker(first))
@@ -168,6 +170,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
             preC: prec,
             variables: variables,
             comments: comments,
+            embeddedC: embeddedC,
             preCFile: preCFile,
             postCFile: postCFile,
             postC: postc,
@@ -213,6 +216,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
             || self.isPostCFileMarker(str)
             || self.isPropertiesMarker(str)
             || self.isCommentMarker(str)
+            || self.isEmbeddedCMarker(str)
             || self.isPostCMarker(str)
             || self.isPreCppMarker(str)
             || self.isCppMarker(str)
@@ -245,6 +249,10 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
 
     fileprivate func isCommentMarker(_ str: String) -> Bool {
         return str == "-comment"
+    }
+    
+    fileprivate func isEmbeddedCMarker(_ str: String) -> Bool {
+        return str == "$c"
     }
 
     fileprivate func isPostCMarker(_ str: String) -> Bool {
