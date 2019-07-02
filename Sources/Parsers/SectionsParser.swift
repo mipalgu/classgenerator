@@ -112,6 +112,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
         var comments: String?
         var embeddedC: String?
         var postc: String?
+        var topCFile: String?
         var preCFile: String?
         var postCFile: String?
         var precpp: String?
@@ -132,6 +133,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
             //swiftlint:disable opening_brace
             if true == (assignIfValid(&author, first, self.isAuthorLine(first))
                 || assignIfValid(&prec, combined, self.isPreCMarker(first))
+                || assignIfValid(&topCFile, combined, self.isTopCFileMarker(first))
                 || assignIfValid(&preCFile, combined, self.isPreCFileMarker(first))
                 || assignIfValid(&postCFile, combined, self.isPostCFileMarker(first))
                 || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
@@ -171,6 +173,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
             variables: variables,
             comments: comments,
             embeddedC: embeddedC,
+            topCFile: topCFile,
             preCFile: preCFile,
             postCFile: postCFile,
             postC: postc,
@@ -212,6 +215,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
     fileprivate func isMarker(_ str: String) -> Bool {
         return self.isAuthorLine(str)
             || self.isPreCMarker(str)
+            || self.isTopCFileMarker(str)
             || self.isPreCFileMarker(str)
             || self.isPostCFileMarker(str)
             || self.isPropertiesMarker(str)
@@ -233,6 +237,10 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
 
     fileprivate func isPreCMarker(_ str: String) -> Bool {
         return str == "-c"
+    }
+    
+    fileprivate func isTopCFileMarker(_ str: String) -> Bool {
+        return str == "^c"
     }
 
     fileprivate func isPreCFileMarker(_ str: String) -> Bool {

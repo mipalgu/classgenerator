@@ -103,7 +103,7 @@ public final class CFileCreator: Creator {
             withAuthor: cls.author,
             andGenFile: genfile
         )
-        let head = self.createHead(forStructNamed: structName)
+        let head = self.createHead(forStructNamed: structName, topC: cls.topCFile)
         let descriptionFunc = self.descriptionCreator.createFunction(
             creating: "description",
             withComment: """
@@ -177,9 +177,10 @@ public final class CFileCreator: Creator {
     }
 
     //swiftlint:disable:next function_body_length
-    fileprivate func createHead(forStructNamed structName: String) -> String {
+    fileprivate func createHead(forStructNamed structName: String, topC: String?) -> String {
+        let pre = topC == nil ? "" : topC! + "\n"
         return """
-            #include "\(structName).h"
+            \(pre)#include "\(structName).h"
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>
