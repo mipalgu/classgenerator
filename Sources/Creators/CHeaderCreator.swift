@@ -184,7 +184,8 @@ public final class CHeaderCreator: Creator {
 //    }
 
     fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
-        let start = self.creatorHelpers.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
+        let pragma = cls.variables.count > 0 ? "" : "#pragma clang diagnostic push\n#pragma clang diagnostic ignored \"-Wc++-compat\"\n\n"
+        let start = pragma + self.creatorHelpers.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
         var properties: String = ""
         for v in cls.variables {
             guard let p = self.createProperty(
@@ -199,7 +200,8 @@ public final class CHeaderCreator: Creator {
             properties += comment + "\n    " + p + "\n\n"
         }
         let embeddedC = cls.embeddedC.map { self.helpers.cIndent($0) + "\n\n" } ?? ""
-        return start + properties + embeddedC + "};"
+        let end = start + properties + embeddedC + "};"
+        return cls.variables.count > 0 ? end : end + "\n#pragma clang diagnostic pop"
     }
 
     fileprivate func createProperty(
