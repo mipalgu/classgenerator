@@ -159,7 +159,7 @@ public final class CPPHeaderCreator: Creator {
             withVariables: variables,
             andEmbeddedCpp: embeddedCpp
         )
-        let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.indent(postCpp!)
+        let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
         let endNamespace = "} /// namespace guWhiteboard"
         return namespace + "\n\n"
             + content + postCpp + "\n\n"
@@ -205,14 +205,14 @@ public final class CPPHeaderCreator: Creator {
             otherType: "struct " + extendName
         )
         let privateContent = self.createInit(forClass: cls, forVariables: variables)
-        let privateSection = "private:\n\n" + self.stringHelpers.indent(privateContent)
+        let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
             + copyConstructor + "\n\n"
             + structCopyConstructor + "\n\n"
             + copyAssignmentOperator + "\n\n"
             + structCopyAssignmentOperator
-        let publicSection = publicLabel + "\n\n" + self.stringHelpers.indent(publicContent)
-        let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.indent(cpp!)
+        let publicSection = publicLabel + "\n\n" + self.stringHelpers.cIndent(publicContent)
+        let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.cIndent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(inClass: cls, forClassNamed: name, andStructNamed: extendName)
@@ -234,12 +234,12 @@ public final class CPPHeaderCreator: Creator {
             withStructNamed: extendName,
             withVariables: variables
         )
-        return self.stringHelpers.indent(def + "\n\n" + privateSection + "\n\n" + publicSection) + "\n\n"
+        return self.stringHelpers.cIndent(def + "\n\n" + privateSection + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
-            + self.stringHelpers.indent(fromStringConstructor, 2) + "\n\n"
+            + self.stringHelpers.cIndent(fromStringConstructor, 2) + "\n\n"
             + description + "\n\n" + toString + "\n\n" + fromString
-            + "\n" + endif + self.stringHelpers.indent(cpp) + "\n"
-            + self.stringHelpers.indent("};")
+            + "\n" + endif + self.stringHelpers.cIndent(cpp) + "\n"
+            + self.stringHelpers.cIndent("};")
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {
@@ -259,7 +259,7 @@ public final class CPPHeaderCreator: Creator {
             assignDefaults: true,
             self.creatorHelpers.createArrayCountDef(inClass: cls.name)
         ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n}"
+        return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(setters) + "\n}"
     }
     
     fileprivate func createCallList(forVariables variables: [Variable], accessor: @escaping (String) -> String = { $0 }) -> String {
@@ -294,7 +294,7 @@ public final class CPPHeaderCreator: Creator {
         let list = self.createDefaultParameters(forVariables: variables)
         let def = startdef + list + ") {"
         let call = "this->init(" + self.createCallList(forVariables: variables) + ");"
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(call) + "\n}"
+        return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(call) + "\n}"
     }
 
     fileprivate func calculateCppType(forVariable variable: Variable) -> String {
@@ -320,7 +320,7 @@ public final class CPPHeaderCreator: Creator {
         let comment = self.creatorHelpers.createComment(from: "Copy Constructor.")
         let def = "\(className)(const \(otherType) &other): \(structName)() {"
         let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + "()" } + ");"
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(call) + "\n}"
+        return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(call) + "\n}"
     }
 
     fileprivate func createCopyAssignmentOperator(
@@ -335,7 +335,7 @@ public final class CPPHeaderCreator: Creator {
         let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + "()" } + ");"
         let ret = "return *this;"
         let content = call + "\n" + ret
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(content) + "\n}"
+        return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(content) + "\n}"
     }
 
     fileprivate func createSetters(

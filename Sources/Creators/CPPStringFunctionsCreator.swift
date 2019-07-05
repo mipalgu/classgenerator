@@ -93,9 +93,9 @@ public final class CPPStringFunctionsCreator {
             andCImplementation: cConversionDescription,
             andIncludeLabels: true
         )
-        return self.stringHelpers.indent(startDescription, 2) + "\n"
+        return self.stringHelpers.cIndent(startDescription, 2) + "\n"
             + body + "\n"
-            + self.stringHelpers.indent("}", 2)
+            + self.stringHelpers.cIndent("}", 2)
     }
 
     public func createToStringFunction(
@@ -119,9 +119,9 @@ public final class CPPStringFunctionsCreator {
             andCImplementation: cConversionToString,
             andIncludeLabels: false
         )
-        return self.stringHelpers.indent(startDescription, 2) + "\n"
+        return self.stringHelpers.cIndent(startDescription, 2) + "\n"
             + body + "\n"
-            + self.stringHelpers.indent("}", 2)
+            + self.stringHelpers.cIndent("}", 2)
     }
 
     fileprivate func createStringFunctionBody(
@@ -144,9 +144,9 @@ public final class CPPStringFunctionsCreator {
             andIncludeLabels: includeLabels
         )
         return ifCConversion + "\n"
-            + self.stringHelpers.indent(cImplementation, 3) + "\n"
+            + self.stringHelpers.cIndent(cImplementation, 3) + "\n"
             + elseDef + "\n"
-            + self.stringHelpers.indent(cppImplementation, 3) + "\n"
+            + self.stringHelpers.cIndent(cppImplementation, 3) + "\n"
             + endifCConversion
     }
 
@@ -256,7 +256,7 @@ public final class CPPStringFunctionsCreator {
                     bool \(label)_first = true;
                     ss << \(true == includeLabel ? "\"\(label)={\";" : "\"{\";")
                     for (int i = 0; i < \(sizeDef); i++) {
-                    \(self.stringHelpers.indent(value))
+                    \(self.stringHelpers.cIndent(value))
                         \(label)_first = false;
                     }
                     ss << "}";

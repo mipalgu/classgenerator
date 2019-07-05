@@ -125,7 +125,7 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
             )
         )
         let endDefinition = "}"
-        return comment + "\n" + definition + "\n" + self.stringHelpers.indent(contents) + "\n" + endDefinition
+        return comment + "\n" + definition + "\n" + self.stringHelpers.cIndent(contents) + "\n" + endDefinition
     }
 
 }

@@ -89,7 +89,7 @@ public final class CNetworkSerialiserCreator {
                 forClassNamed: cls.name
             )
         }
-        let vars = self.stringHelpers.indent(descriptions.combine("") {
+        let vars = self.stringHelpers.cIndent(descriptions.combine("") {
             $0 +
             "\n\n" +
             $1

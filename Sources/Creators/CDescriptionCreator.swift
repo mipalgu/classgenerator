@@ -99,7 +99,7 @@ public final class CDescriptionCreator {
         let guardedDescriptions = descriptions.map {
             self.createGuard(forStrVariable: strLabel) + "\n" + $0
         }
-        let vars = self.stringHelpers.indent(guardedDescriptions.combine("") {
+        let vars = self.stringHelpers.cIndent(guardedDescriptions.combine("") {
             $0 +
             "\n" +
             self.createGuard(forStrVariable: strLabel) + "\n" + self.createComma(appendingTo: strLabel) +
@@ -178,11 +178,11 @@ public final class CDescriptionCreator {
                 return """
                     len = gu_strlcat(\(strLabel), "\(includeLabel ? arrLabel + "=" : ""){", bufferSize);
                     for (int \(arrLabel)_index = 0; \(arrLabel)_index < \(arrDef); \(arrLabel)_index++) {
-                    \(self.stringHelpers.indent(self.createGuard(forStrVariable: strLabel)))
+                    \(self.stringHelpers.cIndent(self.createGuard(forStrVariable: strLabel)))
                         if (\(arrLabel)_index > 0) {
                             \(self.createComma(appendingTo: strLabel))
                         }
-                    \(self.stringHelpers.indent(value))
+                    \(self.stringHelpers.cIndent(value))
                     }
                     \(self.createGuard(forStrVariable: strLabel))
                     len = gu_strlcat(\(strLabel), "}", bufferSize);

@@ -149,9 +149,9 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             startVar = index;
             startKey = startVar;
             do {
-            \(self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive)))
+            \(self.stringHelpers.cIndent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive)))
                 if (strlen(key) > 0) {
-            \(self.stringHelpers.indent(keyAssigns, 2))
+            \(self.stringHelpers.cIndent(keyAssigns, 2))
                 }
                 switch (varIndex) {
                     case -1: { break; }
@@ -189,8 +189,8 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 bracecount = 0;
                 for (int \(index) = 0; \(index) < \(length); \(index)++) {
             """
-        let loop = self.stringHelpers.indent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive), 2)
-        return self.stringHelpers.indent(start + "\n" + loop, 2)
+        let loop = self.stringHelpers.cIndent(self.createParseLoop(accessedFrom: self.accessor, recursive: recursive), 2)
+        return self.stringHelpers.cIndent(start + "\n" + loop, 2)
     }
 
     public func createTearDownArrayLoop(
@@ -198,7 +198,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         withIndexName index: String,
         andLength length: String
     ) -> String {
-        return self.stringHelpers.indent("""
+        return self.stringHelpers.cIndent("""
                 }
                 index = restartIndex;
                 break;
@@ -226,7 +226,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         ) else {
             return nil
         }
-        return self.stringHelpers.indent(value, 3)
+        return self.stringHelpers.cIndent(value, 3)
     }
 
     public func createValue(
@@ -249,7 +249,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         ) else {
             return nil
         }
-        return self.stringHelpers.indent(self.createCase("\(offset)", containing: value), 2)
+        return self.stringHelpers.cIndent(self.createCase("\(offset)", containing: value), 2)
     }
 
     public func setter(forVariable variable: Variable) -> (String) -> String {
@@ -258,6 +258,15 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
             return { $0 }
         case .string, .gen:
             return { $0 + ";" }
+        case .enumerated:
+            return {
+                """
+                #pragma clang diagnostic push
+                #pragma clang diagnostic ignored "-Wbad-function-cast"
+                \(self.setter(variable.label, $0))
+                #pragma clang diagnostic pop
+                """
+            }
         default:
             return { self.setter(variable.label, $0) }
         }
@@ -267,7 +276,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         return """
         case \(condition):
         {
-        \(self.stringHelpers.indent(contents))
+        \(self.stringHelpers.cIndent(contents))
             break;
         }
         """

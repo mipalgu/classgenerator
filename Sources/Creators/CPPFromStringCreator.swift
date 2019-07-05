@@ -112,13 +112,13 @@ public final class CPPFromStringCreator {
             )
         )
         let endef = "}"
-        return ifDef + "\n" + self.stringHelpers.indent(def, 2) + "\n"
-            + self.stringHelpers.indent(cImplementation, 3) + "\n"
+        return ifDef + "\n" + self.stringHelpers.cIndent(def, 2) + "\n"
+            + self.stringHelpers.cIndent(cImplementation, 3) + "\n"
             + elseDef + "\n"
-            + (containsSupportedTypes ? self.stringHelpers.indent(def, 2) : self.stringHelpers.indent(nodef, 2))
-            + "\n" + self.stringHelpers.indent(begin + "\n" + cppImplementation, 3) + "\n"
+            + (containsSupportedTypes ? self.stringHelpers.cIndent(def, 2) : self.stringHelpers.cIndent(nodef, 2))
+            + "\n" + self.stringHelpers.cIndent(begin + "\n" + cppImplementation, 3) + "\n"
             + endifDef + "\n"
-            + self.stringHelpers.indent(endef, 2)
+            + self.stringHelpers.cIndent(endef, 2)
     }
 
 }
