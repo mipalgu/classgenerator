@@ -82,6 +82,16 @@ public final class CDescriptionCreator {
     ) -> String {
         //swiftlint:disable:next line_length
         let definition = "const char* \(structName)_\(fLabel)(const struct \(structName)* self, char* \(strLabel), size_t bufferSize)\n{"
+        if cls.variables.isEmpty {
+            return """
+            \(definition)
+                (void) self;
+                (void) bufferSize;
+                return \(strLabel);
+            }
+            """
+        }
+        
         let head = """
             #pragma clang diagnostic push
             #pragma clang diagnostic ignored "-Wunused-variable"
@@ -107,7 +117,7 @@ public final class CDescriptionCreator {
             $1
         })
         let returnStatement = "    return \(strLabel);"
-        let endDefinition = "}"
+        let endDefinition = "#pragma clang diagnostic pop\n}"
         return comment + "\n" + definition + "\n" + head + "\n" + vars + "\n" + returnStatement + "\n" + endDefinition
     }
 
