@@ -78,7 +78,7 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
         self.container = container
     }
 
-    public func parseSections(fromContents contents: String) -> Sections? {
+    public func parseSections(fromContents contents: String, withVariables variables: [String: String] = [:]) -> Sections? {
         self.errors = []
         let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             .components(separatedBy: CharacterSet.newlines)

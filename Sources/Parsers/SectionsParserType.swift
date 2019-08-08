@@ -61,6 +61,6 @@ import Data
 
 public protocol SectionsParserType: ErrorContainer, WarningsContainerDelegator, WarningsContainer, LastWarningAccessor {
 
-    func parseSections(fromContents: String) -> Sections?
+    func parseSections(fromContents: String, withVariables: [String: String]) -> Sections?
 
 }

@@ -106,7 +106,7 @@ public final class ClassParser<
             guard
                 let name = self.parseClassName(from: file),
                 let sections = self.delegate(
-                    { self.sectionsParser.parseSections(fromContents: contents) },
+                    { self.sectionsParser.parseSections(fromContents: contents, withVariables: [:]) },
                     self.sectionsParser
                 )
             else {
