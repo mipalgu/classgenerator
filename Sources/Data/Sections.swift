@@ -58,40 +58,40 @@
 
 public struct Sections {
 
-    public let author: String
+    public var author: String?
 
-    public let preC: String?
+    public var preC: String?
 
-    public let variables: String
+    public var variables: String?
 
-    public let comments: String?
+    public var comments: String?
     
-    public let embeddedC: String?
+    public var embeddedC: String?
     
-    public let topCFile: String?
+    public var topCFile: String?
 
-    public let preCFile: String?
+    public var preCFile: String?
 
-    public let postCFile: String?
+    public var postCFile: String?
 
-    public let postC: String?
+    public var postC: String?
 
-    public let preCpp: String?
+    public var preCpp: String?
 
-    public let embeddedCpp: String?
+    public var embeddedCpp: String?
 
-    public let postCpp: String?
+    public var postCpp: String?
 
-    public let preSwift: String?
+    public var preSwift: String?
 
-    public let embeddedSwift: String?
+    public var embeddedSwift: String?
 
-    public let postSwift: String?
+    public var postSwift: String?
 
     public init(
-        author: String,
+        author: String? = nil,
         preC: String? = nil,
-        variables: String,
+        variables: String? = nil,
         comments: String? = nil,
         embeddedC: String? = nil,
         topCFile: String? = nil,

@@ -109,21 +109,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         S.Iterator.Element == C,
         C.Iterator.Element == String
     {
-        var author: String?
-        var prec: String?
-        var vars: String?
-        var comments: String?
-        var embeddedC: String?
-        var postc: String?
-        var topCFile: String?
-        var preCFile: String?
-        var postCFile: String?
-        var precpp: String?
-        var cpp: String?
-        var postcpp: String?
-        var preswift: String?
-        var swift: String?
-        var postswift: String?
+        var sections = Sections()
         var usingOldFormat: Bool = false
         let assignIfValid: (inout String?, String, Bool) -> Bool = {
             if true == $2 { $0 = $1 }; return $2
@@ -134,21 +120,21 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
             }
             let combined = $0.dropFirst().reduce("") { $0 + "\n" + $1 }.trimmingCharacters(in: CharacterSet.newlines)
             //swiftlint:disable opening_brace
-            if true == (assignIfValid(&author, first, self.isAuthorLine(first))
-                || assignIfValid(&prec, combined, self.isPreCMarker(first))
-                || assignIfValid(&topCFile, combined, self.isTopCFileMarker(first))
-                || assignIfValid(&preCFile, combined, self.isPreCFileMarker(first))
-                || assignIfValid(&postCFile, combined, self.isPostCFileMarker(first))
-                || assignIfValid(&vars, combined, self.isPropertiesMarker(first))
-                || assignIfValid(&comments, combined, self.isCommentMarker(first))
-                || assignIfValid(&embeddedC, combined, self.isEmbeddedCMarker(first))
-                || assignIfValid(&postc, combined, self.isPostCMarker(first))
-                || assignIfValid(&precpp, combined, self.isPreCppMarker(first))
-                || assignIfValid(&cpp, combined, self.isCppMarker(first))
-                || assignIfValid(&postcpp, combined, self.isPostCppMarker(first))
-                || assignIfValid(&preswift, combined, self.isPreSwiftMarker(first))
-                || assignIfValid(&swift, combined, self.isSwiftMarker(first))
-                || assignIfValid(&postswift, combined, self.isPostSwiftMarker(first))
+            if true == (assignIfValid(&sections.author, first, self.isAuthorLine(first))
+                || assignIfValid(&sections.preC, combined, self.isPreCMarker(first))
+                || assignIfValid(&sections.topCFile, combined, self.isTopCFileMarker(first))
+                || assignIfValid(&sections.preCFile, combined, self.isPreCFileMarker(first))
+                || assignIfValid(&sections.postCFile, combined, self.isPostCFileMarker(first))
+                || assignIfValid(&sections.variables, combined, self.isPropertiesMarker(first))
+                || assignIfValid(&sections.comments, combined, self.isCommentMarker(first))
+                || assignIfValid(&sections.embeddedC, combined, self.isEmbeddedCMarker(first))
+                || assignIfValid(&sections.postC, combined, self.isPostCMarker(first))
+                || assignIfValid(&sections.preCpp, combined, self.isPreCppMarker(first))
+                || assignIfValid(&sections.embeddedCpp, combined, self.isCppMarker(first))
+                || assignIfValid(&sections.postCpp, combined, self.isPostCppMarker(first))
+                || assignIfValid(&sections.preSwift, combined, self.isPreSwiftMarker(first))
+                || assignIfValid(&sections.embeddedSwift, combined, self.isSwiftMarker(first))
+                || assignIfValid(&sections.postSwift, combined, self.isPostSwiftMarker(first))
             ) {
                 return
             }
@@ -156,8 +142,11 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                 return
             }
             usingOldFormat = true
-            vars = true == tempVars.isEmpty ? vars : tempVars
-            comments = tempComments ?? comments
+            sections.variables = true == tempVars.isEmpty ? sections.variables : tempVars
+            sections.comments = tempComments ?? sections.comments
+        }
+        if false == self.errors.isEmpty {
+            return nil
         }
         if true == usingOldFormat {
             self.container.warnings.append("The old format is depracated. Please convert this class to the new format.")
