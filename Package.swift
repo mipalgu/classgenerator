@@ -38,6 +38,6 @@ let package = Package(
             "IO",
             "whiteboard_helpers"
         ]),
-        .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator"), "swift_helpers"])
+        .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator"), .target(name: "Helpers"), "swift_helpers"])
     ]
 )
