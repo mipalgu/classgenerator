@@ -84,8 +84,9 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let line = "@include \"simple.mixer\""
         guard let (filePath, variables) = self.parser.parseCall(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
-        let (expectedFilePath, expectedVariables) = ("simple.mixer", [:])
+        let (expectedFilePath, expectedVariables) = ("simple.mixer", [String: String]())
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
     }
@@ -94,8 +95,9 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let line = "@include \"simple.mixer\"()"
         guard let (filePath, variables) = self.parser.parseCall(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
-        let (expectedFilePath, expectedVariables) = ("simple.mixer", [:])
+        let (expectedFilePath, expectedVariables) = ("simple.mixer", [String: String]())
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
     }
@@ -104,6 +106,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let line = "@include \"simple.mixer\"(firstVar: 1, secondVar: \"2\", thirdVar:3)"
         guard let (filePath, variables) = self.parser.parseCall(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", ["firstVar": "1", "secondVar": "\"2\"", "thirdVar": "3"])
         XCTAssertEqual(expectedFilePath, filePath)
@@ -115,6 +118,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let expected: [String: String?] = [:]
         guard let variables = self.parser.parseDeclaration(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
         XCTAssertEqual(expected, variables)
     }
@@ -124,6 +128,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let expected: [String: String?] = [:]
         guard let variables = self.parser.parseDeclaration(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
         XCTAssertEqual(expected, variables)
     }
@@ -133,6 +138,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let expected: [String: String?] = ["firstVar": .none, "secondVar": .none, "thirdVar": .none]
         guard let variables = self.parser.parseDeclaration(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
         XCTAssertEqual(expected, variables)
     }
@@ -142,6 +148,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         let expected: [String: String?] = ["firstVar": "1", "secondVar": .none, "thirdVar": "\"3\""]
         guard let variables = self.parser.parseDeclaration(line: line) else {
             XCTFail("Unable to parse \(line)")
+            return
         }
         XCTAssertEqual(expected, variables)
     }
