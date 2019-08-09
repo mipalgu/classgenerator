@@ -65,6 +65,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
     public static var allTests: [(String, (MixinParserTests) -> () throws -> Void)] {
         return [
             ("test_canParseSimpleCall", test_canParseSimpleCall),
+            ("test_canParseSimpleCallWithSearchPath", test_canParseSimpleCallWithSearchPath),
             ("test_canParseCallWithNoVariables", test_canParseCallWithNoVariables),
             ("test_canParseCallWithVariables", test_canParseCallWithVariables),
             ("test_canParseEmptyDeclaration", test_canParseEmptyDeclaration),
@@ -97,6 +98,25 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
     }
+
+    public func test_canParseSimpleCallWithSearchPath() {
+        let line = "@include <simple.mixer>"
+        let filePath: FilePath 
+        let variables: [String: String]
+        do {
+            let result = try self.parser.parseCall(line: line) 
+            filePath = result.0
+            variables = result.1
+        } catch (let e) {
+            XCTFail("Unable to parse \(line): \(e)")
+            return
+        }
+        let expectedFilePath: FilePath = .searchPath(name: "simple.mixer")
+        let expectedVariables: [String: String] = [:]
+        XCTAssertEqual(expectedFilePath, filePath)
+        XCTAssertEqual(expectedVariables, variables)
+    }
+
 
     public func test_canParseCallWithNoVariables() {
         let line = "@include \"simple.mixer\"()"
