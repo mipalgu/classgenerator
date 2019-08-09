@@ -227,5 +227,100 @@ public class SectionsParserTests: ClassGeneratorTestCase {
         XCTAssertEqual(expected, result)
     }
 
+    public func test_allMixinFields() {
+        let preC = "preC"
+        let embeddedC = "embeddedC"
+        let postC = "postC"
+        let topCFile = "topCFile"
+        let preCFile = "preCFile"
+        let postCFile = "postCFile"
+        let preCpp = "preCpp"
+        let embeddedCpp = "embeddedCpp"
+        let postCpp = "postCpp"
+        let preSwift = "preSwift"
+        let embeddedSwift = "embeddedSwift"
+        let postSwift = "postSwift"
+        let sharedContent = """
+            -c
+            \(preC)
+
+            $c
+            \(embeddedC)
+
+            +c
+            \(postC)
+
+            ^c
+            \(topCFile)
+
+            %c
+            \(preCFile)
+
+            #c
+            \(postCFile)
+
+            -c++
+            \(preCpp)
+
+            %c++
+            \(embeddedCpp)
+
+            +c++
+            \(postCpp)
+
+            -swift
+            \(preSwift)
+
+            %swift
+            \(embeddedSwift)
+
+            +swift
+            \(postSwift)
+            """
+        let mixinContent = """
+            @mixin
+            
+            -author Someone
+
+            \(sharedContent)
+            """
+        let parser = self.createParser(mixins: ["test.mixin": mixinContent])
+        let contents = """
+            -author Callum McColl
+
+            @include "test.mixin"
+
+            -properties
+            bool b // A boolean.
+
+            -comment
+            First comment.
+
+            \(sharedContent)
+            """
+        guard let result = parser.parseSections(fromContents: contents) else {
+            XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
+            return
+        }
+        let expected = Sections(
+            author: "-author Callum McColl, Someone",
+            preC: preC + "\n" + preC,
+            variables: "int i // An integer\nbool b // A boolean.",
+            comments: "First comment.",
+            embeddedC: embeddedC + "\n" + embeddedC,
+            topCFile: topCFile + "\n" + topCFile,
+            preCFile: preCFile + "\n" + preCFile,
+            postCFile: postCFile + "\n" + postCFile,
+            postC: postC + "\n" + postC,
+            preCpp: preCpp + "\n" + preCpp,
+            embeddedCpp: embeddedCpp + "\n" + embeddedCpp,
+            postCpp: postCpp + "\n" + postCpp,
+            preSwift: preSwift + "\n" + preSwift,
+            embeddedSwift: embeddedSwift + "\n" + embeddedSwift,
+            postSwift: postSwift + "\n" + postSwift
+        )
+        XCTAssertEqual(expected, result)
+    }
+
 
 }
