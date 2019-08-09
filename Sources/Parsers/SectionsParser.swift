@@ -217,6 +217,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
 
     fileprivate func isMarker(_ str: String) -> Bool {
         return self.isAuthorLine(str)
+            || self.isMixinMarker(str)
             || self.isPreCMarker(str)
             || self.isTopCFileMarker(str)
             || self.isPreCFileMarker(str)
@@ -236,6 +237,10 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
     fileprivate func isAuthorLine(_ str: String) -> Bool {
         return String(str.prefix(6)) == "author"
             || String(str.prefix(7)) == "-author"
+    }
+
+    fileprivate func isMixinMarker(_ str: String) -> Bool {
+        return str == "@include"
     }
 
     fileprivate func isPreCMarker(_ str: String) -> Bool {
