@@ -87,7 +87,7 @@ public final class MixinParser {
         var nameSet: Set<String> = []
         nameSet.reserveCapacity(vars.count)
         guard let allVars: [(String, String)] = try vars.failMap({ (str: String) throws -> (String, String)? in
-            let components = str.components(separatedBy: "=")
+            let components = str.components(separatedBy: ":")
             if components.count != 2 {
                 throw ParsingErrors.parsingError(0, "Malformed parameter list in mixin call.")
             }
