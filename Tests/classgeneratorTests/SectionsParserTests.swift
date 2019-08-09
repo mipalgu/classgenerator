@@ -278,7 +278,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             +swift
             \(postSwift)
             """
-        let mixinContent = """
+        let firstContent = """
             @mixin
             
             -author Someone
@@ -289,42 +289,57 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             int i // An integer.
 
             -comment
-            Second comment.
+            First comment.
             """
-        let parser = self.createParser(mixins: ["test.mixin": mixinContent])
-        let contents = """
-            -author Callum McColl
+        let secondContent = """
+            @mixin
 
-            @include "test.mixin"
+            -author Someone Else
+
+            \(sharedContent)
+
+            -properties
+            char c // A character.
+
+            -comment
+            Second Comment.
+            """
+        let parser = self.createParser(mixins: ["first.mixin": firstContent, "second.mixin": secondContent])
+        let contents = """
+            @include "first.mixin"
+
+            -author Callum McColl
 
             -properties
             bool b // A boolean.
 
             -comment
-            First comment.
+            Class comment.
 
             \(sharedContent)
+
+            @include "second.mixin"
             """
         guard let result = parser.parseSections(fromContents: contents) else {
             XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
         let expected = Sections(
-            author: "-author Callum McColl\n-author Someone",
-            preC: preC + "\n" + preC,
-            variables: "int i // An integer.\nbool b // A boolean.",
-            comments: "First comment.",
-            embeddedC: embeddedC + "\n" + embeddedC,
-            topCFile: topCFile + "\n" + topCFile,
-            preCFile: preCFile + "\n" + preCFile,
-            postCFile: postCFile + "\n" + postCFile,
-            postC: postC + "\n" + postC,
-            preCpp: preCpp + "\n" + preCpp,
-            embeddedCpp: embeddedCpp + "\n" + embeddedCpp,
-            postCpp: postCpp + "\n" + postCpp,
-            preSwift: preSwift + "\n" + preSwift,
-            embeddedSwift: embeddedSwift + "\n" + embeddedSwift,
-            postSwift: postSwift + "\n" + postSwift
+            author: "-author Someone\n-author Callum McColl\n-author Someone Else",
+            preC: preC + "\n" + preC + "\n" + preC,
+            variables: "int i // An integer.\nbool b // A boolean.\nchar c // A character.",
+            comments: "Class comment.",
+            embeddedC: embeddedC + "\n" + embeddedC + "\n" + embeddedC,
+            topCFile: topCFile + "\n" + topCFile + "\n" + topCFile,
+            preCFile: preCFile + "\n" + preCFile + "\n" + preCFile,
+            postCFile: postCFile + "\n" + postCFile + "\n" + postCFile,
+            postC: postC + "\n" + postC + "\n" + postC,
+            preCpp: preCpp + "\n" + preCpp + "\n" + preCpp,
+            embeddedCpp: embeddedCpp + "\n" + embeddedCpp + "\n" + embeddedCpp,
+            postCpp: postCpp + "\n" + postCpp + "\n" + postCpp,
+            preSwift: preSwift + "\n" + preSwift + "\n" + preSwift,
+            embeddedSwift: embeddedSwift + "\n" + embeddedSwift + "\n" + embeddedSwift,
+            postSwift: postSwift + "\n" + postSwift + "\n" + postSwift
         )
         XCTAssertEqual(expected, result)
     }
