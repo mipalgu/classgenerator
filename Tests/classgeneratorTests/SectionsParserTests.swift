@@ -309,9 +309,9 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             return
         }
         let expected = Sections(
-            author: "-author Callum McColl, Someone",
+            author: "-author Callum McColl\n-author Someone",
             preC: preC + "\n" + preC,
-            variables: "int i // An integer\nbool b // A boolean.",
+            variables: "int i // An integer.\nbool b // A boolean.",
             comments: "First comment.",
             embeddedC: embeddedC + "\n" + embeddedC,
             topCFile: topCFile + "\n" + topCFile,

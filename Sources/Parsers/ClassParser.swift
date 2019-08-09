@@ -206,17 +206,22 @@ public final class ClassParser<
     }
 
     fileprivate func parseAuthor(fromSection section: String) -> String? {
-        let words = section.components(separatedBy: CharacterSet.whitespaces)
-        guard "author" == words.first || "-author" == words.first else {
-            self.errors.append("Unable to parse authors name.")
+        guard let authors = section.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: .newlines).failMap({ (str: String) -> String? in
+            let words = str.components(separatedBy: CharacterSet.whitespaces)
+            guard "author" == words.first || "-author" == words.first else {
+                self.errors.append("Unable to parse authors name.")
+                return nil
+            }
+            let name = words.dropFirst().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: CharacterSet.whitespaces)
+            guard false == name.isEmpty else {
+                self.errors.append("Unable to find authors name.")
+                return nil
+            }
+            return name
+        }) else {
             return nil
         }
-        let name = words.dropFirst().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: CharacterSet.whitespaces)
-        guard false == name.isEmpty else {
-            self.errors.append("Unable to find authors name.")
-            return nil
-        }
-        return name
+        return Set(authors).sorted().combine("") { $0 + "," + $1 }
     }
 
     fileprivate func delegate<T, C: ErrorContainer>(_ parse: () -> T?, _ cont: C) -> T? {
