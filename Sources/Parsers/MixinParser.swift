@@ -107,8 +107,8 @@ public final class MixinParser {
         return (filePath, Dictionary<String, String>(uniqueKeysWithValues: allVars))
     }
 
-    public func parseDeclaration(line: String) -> [String: String?]? {
-        return nil
+    public func parseDeclaration(line: String) throws -> [String: String?] {
+        throw ParsingErrors.parsingError(0, "Not yet implemented")
     }
 
 }
