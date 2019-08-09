@@ -76,6 +76,8 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
 
     fileprivate let reader: Reader
 
+    fileprivate let mixinParser = MixinParser()
+
     public init(container: Container, reader: Reader) {
         self.container = container
         self.reader = reader
@@ -136,6 +138,53 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                 || assignIfValid(&sections.embeddedSwift, combined, self.isSwiftMarker(first))
                 || assignIfValid(&sections.postSwift, combined, self.isPostSwiftMarker(first))
             ) {
+                if self.isMixinCallLine(first) {
+                    let filePath: FilePath
+                    let variables: [String: String]
+                    do {
+                        let parsedData = try self.mixinParser.parseCall(line: first)
+                        filePath = parsedData.0
+                        variables = parsedData.1
+                    } catch let e {
+                        self.errors.append(e.localizedDescription)
+                        return
+                    }
+                    guard let contents = self.reader.read(filePath: filePath) else {
+                        self.errors.append("Unable to read mixin: \(filePath)")
+                        return
+                    }
+                    guard let firstLine = contents.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n").first else {
+                        self.errors.append("Unable to parse underlying mixin: \(filePath)")
+                        return
+                    }
+                    let declaredVariables: [String: String?]
+                    do {
+                        declaredVariables = try self.mixinParser.parseDeclaration(line: firstLine)
+                    } catch let e {
+                        self.errors.append(e.localizedDescription)
+                        self.errors.append("Unable to parse underlying mixin: \(filePath)")
+                        return
+                    }
+                    guard let tempVars = variables.keys.failMap({ (key: String) -> (String, String)? in
+                        if let value = variables[key] {
+                            return (key, value)
+                        }
+                        if let wrappedValue = declaredVariables[key], let value = wrappedValue {
+                            return (key, value)
+                        }
+                        self.errors.append("Missing parameter \(key) in mixin call.")
+                        return nil
+                    }) else {
+                        return
+                    }
+                    let passedVars = Dictionary(uniqueKeysWithValues: tempVars)
+                    guard let mixinSections = self.parseSections(fromContents: contents, withVariables: passedVars) else {
+                        self.errors.append("Unable to parse underlying mixin: \(filePath)")
+                        return
+                    }
+                    self.merge(&sections, mixinSections)
+                    return
+                }
                 return
             }
             guard let (tempVars, tempComments) = self.parseWithoutMarkers(section: $0) else {
@@ -151,31 +200,27 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         if true == usingOldFormat {
             self.container.warnings.append("The old format is depracated. Please convert this class to the new format.")
         }
-        guard let variables = vars else {
-            self.errors.append("Please specify a property list section (-properties).")
-            return nil
+        return sections
+    }
+
+    fileprivate func merge(_ sections: inout Sections, _ other: Sections) {
+        func mergeProperty(_ lhs: inout String?, _ rhs: String?) {
+            lhs = lhs.map { value in rhs.map { value + "\n" + $0 } } ?? rhs
         }
-        guard let a = author else {
-            self.errors.append("Please specify the author of the class.")
-            return nil
-        }
-        return Sections(
-            author: a,
-            preC: prec,
-            variables: variables,
-            comments: comments,
-            embeddedC: embeddedC,
-            topCFile: topCFile,
-            preCFile: preCFile,
-            postCFile: postCFile,
-            postC: postc,
-            preCpp: precpp,
-            embeddedCpp: cpp,
-            postCpp: postcpp,
-            preSwift: preswift,
-            embeddedSwift: swift,
-            postSwift: postswift
-        )
+        mergeProperty(&sections.author, other.author)
+        mergeProperty(&sections.variables, other.variables)
+        mergeProperty(&sections.comments, other.comments)
+        mergeProperty(&sections.embeddedC, other.embeddedC)
+        mergeProperty(&sections.topCFile, other.topCFile)
+        mergeProperty(&sections.preCFile, other.preCFile)
+        mergeProperty(&sections.postCFile, other.postCFile)
+        mergeProperty(&sections.postC, other.postC)
+        mergeProperty(&sections.preCpp, other.preCpp)
+        mergeProperty(&sections.embeddedCpp, other.embeddedCpp)
+        mergeProperty(&sections.postCpp, other.postCpp)
+        mergeProperty(&sections.preSwift, other.preSwift)
+        mergeProperty(&sections.embeddedSwift, other.embeddedSwift)
+        mergeProperty(&sections.postSwift, other.postSwift)
     }
 
     fileprivate func parseWithoutMarkers<C: Collection>(
@@ -206,7 +251,8 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
 
     fileprivate func isMarker(_ str: String) -> Bool {
         return self.isAuthorLine(str)
-            || self.isMixinMarker(str)
+            || self.isMixinLine(str)
+            || self.isMixinCallLine(str)
             || self.isPreCMarker(str)
             || self.isTopCFileMarker(str)
             || self.isPreCFileMarker(str)
@@ -228,8 +274,12 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
             || String(str.prefix(7)) == "-author"
     }
 
-    fileprivate func isMixinMarker(_ str: String) -> Bool {
-        return str == "@include"
+    fileprivate func isMixinLine(_ str: String) -> Bool {
+        return str.hasPrefix("@mixin")
+    }
+
+    fileprivate func isMixinCallLine(_ str: String) -> Bool {
+        return str.hasPrefix("@include")
     }
 
     fileprivate func isPreCMarker(_ str: String) -> Bool {
