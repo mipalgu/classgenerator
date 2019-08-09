@@ -82,7 +82,9 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseSimpleCall() {
         let line = "@include \"simple.mixer\""
-        let (filePath, variables) = self.parser.parseCall(line: line)
+        guard let (filePath, variables) = self.parser.parseCall(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", [:])
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
@@ -90,7 +92,9 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseCallWithNoVariables() {
         let line = "@include \"simple.mixer\"()"
-        let (filePath, variables) = self.parser.parseCall(line: line)
+        guard let (filePath, variables) = self.parser.parseCall(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", [:])
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
@@ -98,7 +102,9 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseCallWithVariables() {
         let line = "@include \"simple.mixer\"(firstVar: 1, secondVar: \"2\", thirdVar:3)"
-        let (filePath, variables) = self.parser.parseCall(line: line)
+        guard let (filePath, variables) = self.parser.parseCall(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", ["firstVar": "1", "secondVar": "\"2\"", "thirdVar": "3"])
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
@@ -107,28 +113,36 @@ public final class MixinParserTests: ClassGeneratorTestCase {
     public func test_canParseEmptyDeclaration() {
         let line = "@mixin"
         let expected: [String: String?] = [:]
-        let variables = self.parser.parseDeclaration(line: line)
+        guard let variables = self.parser.parseDeclaration(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         XCTAssertEqual(expected, variables)
     }
 
     public func test_canParseDeclarationWithNoVariables() {
         let line = "@mixin()"
         let expected: [String: String?] = [:]
-        let variables = self.parser.parseDeclaration(line: line)
+        guard let variables = self.parser.parseDeclaration(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         XCTAssertEqual(expected, variables)
     }
 
     public func test_canParseDeclarationWithVariables() {
         let line = "@mixin(firstVar, secondVar, thirdVar)"
         let expected: [String: String?] = ["firstVar": .none, "secondVar": .none, "thirdVar": .none]
-        let variables = self.parser.parseDeclaration(line: line)
+        guard let variables = self.parser.parseDeclaration(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         XCTAssertEqual(expected, variables)
     }
 
     public func test_canParseDeclarationWithDefaultValues() {
         let line = "@mixin(firstVar = 1, secondVar, thirdVar = \"3\")"
         let expected: [String: String?] = ["firstVar": "1", "secondVar": .none, "thirdVar": "\"3\""]
-        let variables = self.parser.parseDeclaration(line: line)
+        guard let variables = self.parser.parseDeclaration(line: line) else {
+            XCTFail("Unable to parse \(line)")
+        }
         XCTAssertEqual(expected, variables)
     }
 
