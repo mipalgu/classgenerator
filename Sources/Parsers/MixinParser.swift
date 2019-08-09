@@ -56,7 +56,7 @@
  *
  */
 
-import Data
+import Helpers
 import Foundation
 
 public final class MixinParser {

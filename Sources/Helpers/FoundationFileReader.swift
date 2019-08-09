@@ -60,8 +60,13 @@ public final class FoundationFileReader: FileReader {
 
     public init() {}
 
-    public func read(filePath: String) -> String? {
-        return try? String(contentsOfFile: filePath)
+    public func read(filePath: FilePath) -> String? {
+        switch filePath {
+        case .path(let path):
+            return try? String(contentsOfFile: path)
+        case .searchPath:
+            return nil
+        }
     }
 
 }
