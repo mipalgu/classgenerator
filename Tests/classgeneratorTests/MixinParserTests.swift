@@ -82,7 +82,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseSimpleCall() {
         let line = "@include \"simple.mixer\""
-        let filePath: String
+        let filePath: FilePath 
         let variables: [String: String]
         do {
             let result = try self.parser.parseCall(line: line) 
@@ -92,14 +92,15 @@ public final class MixinParserTests: ClassGeneratorTestCase {
             XCTFail("Unable to parse \(line): \(e)")
             return
         }
-        let (expectedFilePath, expectedVariables) = ("simple.mixer", [String: String]())
+        let expectedFilePath: FilePath = .path(filePath: "simple.mixer")
+        let expectedVariables: [String: String] = [:]
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
     }
 
     public func test_canParseCallWithNoVariables() {
         let line = "@include \"simple.mixer\"()"
-        let filePath: String
+        let filePath: FilePath
         let variables: [String: String]
         do {
             let result = try self.parser.parseCall(line: line) 
@@ -109,14 +110,15 @@ public final class MixinParserTests: ClassGeneratorTestCase {
             XCTFail("Unable to parse \(line): \(e)")
             return
         }
-        let (expectedFilePath, expectedVariables) = ("simple.mixer", [String: String]())
+        let expectedFilePath: FilePath = .path(filePath: "simple.mixer")
+        let expectedVariables: [String: String] = [:]
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
     }
 
     public func test_canParseCallWithVariables() {
         let line = "@include \"simple.mixer\"(firstVar: 1, secondVar: \"2\", thirdVar:3)"
-        let filePath: String
+        let filePath: FilePath
         let variables: [String: String]
         do {
             let result = try self.parser.parseCall(line: line) 
@@ -126,7 +128,8 @@ public final class MixinParserTests: ClassGeneratorTestCase {
             XCTFail("Unable to parse \(line): \(e)")
             return
         }
-        let (expectedFilePath, expectedVariables) = ("simple.mixer", ["firstVar": "1", "secondVar": "\"2\"", "thirdVar": "3"])
+        let expectedFilePath: FilePath = .path(filePath: "simple.mixer")
+        let expectedVariables: [String: String] = ["firstVar": "1", "secondVar": "\"2\"", "thirdVar": "3"]
         XCTAssertEqual(expectedFilePath, filePath)
         XCTAssertEqual(expectedVariables, variables)
     }

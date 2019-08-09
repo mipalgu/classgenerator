@@ -56,11 +56,12 @@
  *
  */
 
+import Data
 import Foundation
 
 public final class MixinParser {
 
-    public func parseCall(line: String) throws -> (String, [String: String]) {
+    public func parseCall(line: String) throws -> (FilePath, [String: String]) {
         let trimmedLine = line.trimmingCharacters(in: .whitespaces)
         let marker = "@include"
         if false == trimmedLine.hasPrefix(marker) {
@@ -72,9 +73,17 @@ public final class MixinParser {
             let index = line.firstIndex(of: "(").map { line.distance(from: line.startIndex, to: $0) } ?? 0
             throw ParsingErrors.parsingError(index, "You can only specify one variable list")
         }
-        let filePath = split[0].trimmingCharacters(in: .whitespaces)
-        if filePath.isEmpty {
+        let filePathStr = split[0].trimmingCharacters(in: .whitespaces)
+        if filePathStr.isEmpty {
             throw ParsingErrors.parsingError(0, "The file path cannot be empty.")
+        }
+        let filePath: FilePath
+        if filePathStr.first == "\"" && filePathStr.last == "\"" {
+            filePath = .path(filePath: String(filePathStr.dropFirst().dropLast()))
+        } else if filePathStr.first == "<" && filePathStr.last == ">" {
+            filePath = .searchPath(name: String(filePathStr.dropFirst().dropLast()))
+        } else {
+            throw ParsingErrors.parsingError(0, "Malformed mixin name.")
         }
         if split.count < 2 {
             return (filePath, [:])
