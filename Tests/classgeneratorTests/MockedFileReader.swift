@@ -62,7 +62,7 @@ public struct MockedFileReader: FileReader {
 
     fileprivate var _read: (String) -> String?
 
-    public init(read: @escaping (String) -> String) {
+    public init(read: @escaping (String) -> String? = { _ in nil }) {
         self._read = read
     }
 
