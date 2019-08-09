@@ -283,6 +283,12 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             -author Someone
 
             \(sharedContent)
+
+            -properties
+            int i // An integer.
+
+            -comment
+            Second comment.
             """
         let parser = self.createParser(mixins: ["test.mixin": mixinContent])
         let contents = """

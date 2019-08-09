@@ -222,7 +222,6 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         mergeProperty(&sections.author, other.author)
         mergeProperty(&sections.preC, other.preC)
         mergeProperty(&sections.variables, other.variables)
-        mergeProperty(&sections.comments, other.comments)
         mergeProperty(&sections.embeddedC, other.embeddedC)
         mergeProperty(&sections.topCFile, other.topCFile)
         mergeProperty(&sections.preCFile, other.preCFile)
