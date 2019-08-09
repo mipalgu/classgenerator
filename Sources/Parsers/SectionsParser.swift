@@ -137,6 +137,8 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                 || assignIfValid(&sections.preSwift, combined, self.isPreSwiftMarker(first))
                 || assignIfValid(&sections.embeddedSwift, combined, self.isSwiftMarker(first))
                 || assignIfValid(&sections.postSwift, combined, self.isPostSwiftMarker(first))
+                || self.isMixinLine(first)
+                || self.isMixinCallLine(first)
             ) {
                 if self.isMixinCallLine(first) {
                     let filePath: FilePath
@@ -146,7 +148,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         filePath = parsedData.0
                         variables = parsedData.1
                     } catch let e {
-                        self.errors.append(e.localizedDescription)
+                        self.errors.append("\(e)")
                         return
                     }
                     guard let contents = self.reader.read(filePath: filePath) else {
@@ -161,7 +163,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                     do {
                         declaredVariables = try self.mixinParser.parseDeclaration(line: firstLine)
                     } catch let e {
-                        self.errors.append(e.localizedDescription)
+                        self.errors.append("\(e)")
                         self.errors.append("Unable to parse underlying mixin: \(filePath)")
                         return
                     }
@@ -205,9 +207,10 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
 
     fileprivate func merge(_ sections: inout Sections, _ other: Sections) {
         func mergeProperty(_ lhs: inout String?, _ rhs: String?) {
-            lhs = lhs.map { value in rhs.map { value + "\n" + $0 } } ?? rhs
+            lhs = lhs.map { value in rhs.map { value + "\n" + $0 } ?? value } ?? rhs
         }
         mergeProperty(&sections.author, other.author)
+        mergeProperty(&sections.preC, other.preC)
         mergeProperty(&sections.variables, other.variables)
         mergeProperty(&sections.comments, other.comments)
         mergeProperty(&sections.embeddedC, other.embeddedC)
