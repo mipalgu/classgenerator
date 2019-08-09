@@ -70,7 +70,8 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             ("test_sectionsInAnyOrder", test_sectionsInAnyOrder),
             ("test_canParseSimpleMixin", test_canParseSimpleMixin),
             ("test_canParseSimpleMixinWithVariable", test_canParseSimpleMixinWithVariable),
-            ("test_canParseMultipleMixins", test_canParseMultipleMixins)
+            ("test_canParseMultipleMixins", test_canParseMultipleMixins),
+            ("test_allMixinFields", test_allMixinFields)
         ]
     }
 
