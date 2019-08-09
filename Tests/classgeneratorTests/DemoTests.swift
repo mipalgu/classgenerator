@@ -83,7 +83,7 @@ public class DemoTests: ClassGeneratorTestCase {
     public var generator: ClassGenerator<
         ClassParser<
             WarningsContainerRef,
-            SectionsParser<WarningsContainerRef>,
+            SectionsParser<WarningsContainerRef, MockedFileReader>,
             VariablesTableParser<WarningsContainerRef, VariableParser<WarningsContainerRef>>
         >,
         CommandLinePrinter<
@@ -104,7 +104,7 @@ public class DemoTests: ClassGeneratorTestCase {
         self.generator = ClassGenerator(
             parser: ClassParser(
                 container: container,
-                sectionsParser: SectionsParser(container: container),
+                sectionsParser: SectionsParser(container: container, reader: MockedFileReader()),
                 variablesParser: VariablesTableParser(
                     container: container,
                     parser: VariableParser(container: container)

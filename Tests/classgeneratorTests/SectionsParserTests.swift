@@ -72,10 +72,10 @@ public class SectionsParserTests: ClassGeneratorTestCase {
         ]
     }
 
-    public var parser: SectionsParser<WarningsContainerRef>!
+    public var parser: SectionsParser<WarningsContainerRef, MockedFileReader>!
 
     public override func setUp() {
-        self.parser = SectionsParser(container: WarningsContainerRef())
+        self.parser = SectionsParser(container: WarningsContainerRef(), reader: MockedFileReader())
     }
 
     public func test_sectionsInAnyOrder() {
@@ -123,7 +123,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
         let contents = """
             -author Callum McColl
 
-            -include simple_mixin
+            -include "simple.mixin"
 
             -properties
             int i // An integer

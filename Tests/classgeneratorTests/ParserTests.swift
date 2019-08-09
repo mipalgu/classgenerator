@@ -79,7 +79,7 @@ public class ParserTests: ClassGeneratorTestCase {
         WarningsContainerRef,
         ClassParser<
             WarningsContainerRef,
-            SectionsParser<WarningsContainerRef>,
+            SectionsParser<WarningsContainerRef, MockedFileReader>,
             VariablesTableParser<WarningsContainerRef, VariableParser<WarningsContainerRef>>
         >
     >!
@@ -90,7 +90,7 @@ public class ParserTests: ClassGeneratorTestCase {
             container: container,
             parser: ClassParser(
                 container: container,
-                sectionsParser: SectionsParser(container: container),
+                sectionsParser: SectionsParser(container: container, reader: MockedFileReader()),
                 variablesParser: VariablesTableParser(
                     container: container,
                     parser: VariableParser(container: container)
