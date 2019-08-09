@@ -58,6 +58,8 @@
 
 public final class FoundationFileReader: FileReader {
 
+    public init() {}
+
     public func read(filePath: String) -> String? {
         return try? String(contentsOfFile: filePath)
     }

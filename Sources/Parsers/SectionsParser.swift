@@ -64,7 +64,7 @@ import Helpers
 import swift_helpers
 
 //swiftlint:disable opening_brace
-public final class SectionsParser<Container: ParserWarningsContainer>: SectionsParserType {
+public final class SectionsParser<Container: ParserWarningsContainer, Reader: FileReader>: SectionsParserType {
 
     public fileprivate(set) var errors: [String] = []
 
@@ -74,8 +74,11 @@ public final class SectionsParser<Container: ParserWarningsContainer>: SectionsP
 
     public fileprivate(set) var container: Container
 
-    public init(container: Container) {
+    fileprivate let reader: Reader
+
+    public init(container: Container, reader: Reader) {
         self.container = container
+        self.reader = reader
     }
 
     public func parseSections(fromContents contents: String, withVariables variables: [String: String] = [:]) -> Sections? {

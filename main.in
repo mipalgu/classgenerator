@@ -11,7 +11,7 @@ let container = WarningsContainerRef()
 let generator = ClassGenerator(
     parser: ClassParser(
         container: container,
-        sectionsParser: SectionsParser(container: container),
+        sectionsParser: SectionsParser(container: container, reader: FoundationFileReader()),
         variablesParser: VariablesTableParser(
             container: container,
             parser: VariableParser(container: container)
