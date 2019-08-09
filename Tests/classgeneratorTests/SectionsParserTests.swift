@@ -74,8 +74,13 @@ public class SectionsParserTests: ClassGeneratorTestCase {
 
     public var parser: SectionsParser<WarningsContainerRef, MockedFileReader>!
 
+    fileprivate func createParser(mixins: [String: String] = [:]) -> SectionsParser<WarningsContainerRef, MockedFileReader> {
+        let reader = MockedFileReader { mixins[$0] }
+        return SectionsParser(container: WarningsContainerRef(), reader: reader)
+    }
+
     public override func setUp() {
-        self.parser = SectionsParser(container: WarningsContainerRef(), reader: MockedFileReader())
+        self.parser = self.createParser()
     }
 
     public func test_sectionsInAnyOrder() {
@@ -120,6 +125,11 @@ public class SectionsParserTests: ClassGeneratorTestCase {
     }
 
     func test_canParseSimpleMixin() {
+        let simpleContents = """
+            -c
+            prec
+            """
+        let parser = self.createParser(mixins: ["simple.mixin": simpleContents])
         let contents = """
             -author Callum McColl
 
@@ -131,17 +141,13 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             -comment
             A comment
             """
-        let _ = """
-            -c
-            prec
-            """
         let expected = Sections(
             author: "Callum McColl",
             preC: "prec",
             variables: "int i // An integer",
             comments: "A comment"
         )
-        guard let result = self.parser.parseSections(fromContents: contents) else {
+        guard let result = parser.parseSections(fromContents: contents) else {
             XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
