@@ -69,7 +69,8 @@ public class SectionsParserTests: ClassGeneratorTestCase {
         return [
             ("test_sectionsInAnyOrder", test_sectionsInAnyOrder),
             ("test_canParseSimpleMixin", test_canParseSimpleMixin),
-            ("test_canParseSimpleMixinWithVariable", test_canParseSimpleMixinWithVariable)
+            ("test_canParseSimpleMixinWithVariable", test_canParseSimpleMixinWithVariable),
+            ("test_canParseMultipleMixins", test_canParseMultipleMixins)
         ]
     }
 
@@ -184,5 +185,42 @@ public class SectionsParserTests: ClassGeneratorTestCase {
         }
         XCTAssertEqual(expected, result)
     }
+
+    func test_canParseMultipleMixins() {
+        let firstContents = """
+            -c
+            1
+            """
+        let secondContents = """
+            -c
+            2
+            """
+        let parser = self.createParser(mixins: ["first.mixin": firstContents, "second.mixin": secondContents])
+        let contents = """
+            -author Callum McColl
+
+            @include "first.mixin"
+
+            -properties
+            int i // An integer
+
+            -comment
+            A comment
+
+            @include "second.mixin"
+            """
+        let expected = Sections(
+            author: "Callum McColl",
+            preC: "1\n2",
+            variables: "int i // An integer",
+            comments: "A comment"
+        )
+        guard let result = parser.parseSections(fromContents: contents) else {
+            XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
+            return
+        }
+        XCTAssertEqual(expected, result)
+    }
+
 
 }
