@@ -56,52 +56,53 @@
  *
  */
 
-import swift_helpers
 import Foundation
 
 public final class MixinParser {
 
-    public func parseCall(line: String) -> (String, [String: String])? {
-        let line = line.trimmingCharacters(in: .whitespaces)
+    public func parseCall(line: String) throws -> (String, [String: String]) {
+        let trimmedLine = line.trimmingCharacters(in: .whitespaces)
         let marker = "@include"
-        if false == line.hasPrefix(marker) {
-            return nil
+        if false == trimmedLine.hasPrefix(marker) {
+            throw ParsingErrors.parsingError(0, "The mixin line must start with @include")
         }
-        let trimmed = line.dropFirst(marker.count).trimmingCharacters(in: .whitespaces)
+        let trimmed = trimmedLine.dropFirst(marker.count).trimmingCharacters(in: .whitespaces)
         let split = trimmed.components(separatedBy: "(")
         if split.count > 2 {
-            return nil
-        }
-        if split.count < 2 {
-            return nil
+            let index = line.firstIndex(of: "(").map { line.distance(from: line.startIndex, to: $0) } ?? 0
+            throw ParsingErrors.parsingError(index, "You can only specify one variable list")
         }
         let filePath = split[0].trimmingCharacters(in: .whitespaces)
+        if filePath.isEmpty {
+            throw ParsingErrors.parsingError(0, "The file path cannot be empty.")
+        }
+        if split.count < 2 {
+            return (filePath, [:])
+        }
         let varList = split[1].trimmingCharacters(in: .whitespaces).components(separatedBy: ")")[0]
         if varList.isEmpty {
-            return nil
+            return (filePath, [:])
         }
-        let vars = varList.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        let vars: [String] = varList.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
         var nameSet: Set<String> = []
-        guard let allVars = vars.failMap({ (str: String) -> (String, String)? in
+        nameSet.reserveCapacity(vars.count)
+        guard let allVars: [(String, String)] = try vars.failMap({ (str: String) throws -> (String, String)? in
             let components = str.components(separatedBy: "=")
-            if components.count > 2 {
-                return nil
-            }
-            if components.count < 2 {
-                return nil
+            if components.count != 2 {
+                throw ParsingErrors.parsingError(0, "Malformed parameter list in mixin call.")
             }
             let name = components[0].trimmingCharacters(in: .whitespaces)
             let value = components[1].trimmingCharacters(in: .whitespaces)
             if name.isEmpty || value.isEmpty {
-                return nil
+                throw ParsingErrors.parsingError(0, "Malformed parameter list in mixin call.")
             }
             if nameSet.contains(name) {
-                return nil
+                throw ParsingErrors.parsingError(0, "Duplicate variable in parameter list for mixin call.")
             }
             nameSet.insert(name)
             return (name, value)
         }) else {
-            return nil
+            throw ParsingErrors.parsingError(0, "Unable to parse \(line).")
         }
         return (filePath, Dictionary<String, String>(uniqueKeysWithValues: allVars))
     }
