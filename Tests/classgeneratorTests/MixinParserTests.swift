@@ -89,7 +89,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
             filePath = result.0
             variables = result.1
         } catch (let e) {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", [String: String]())
@@ -106,7 +106,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
             filePath = result.0
             variables = result.1
         } catch (let e) {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", [String: String]())
@@ -123,7 +123,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
             filePath = result.0
             variables = result.1
         } catch (let e) {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         let (expectedFilePath, expectedVariables) = ("simple.mixer", ["firstVar": "1", "secondVar": "\"2\"", "thirdVar": "3"])
@@ -138,7 +138,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         do {
             variables = try self.parser.parseDeclaration(line: line)
         } catch let e {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         XCTAssertEqual(expected, variables)
@@ -151,7 +151,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         do {
             variables = try self.parser.parseDeclaration(line: line)
         } catch let e {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         XCTAssertEqual(expected, variables)
@@ -164,7 +164,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         do {
             variables = try self.parser.parseDeclaration(line: line)
         } catch let e {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         XCTAssertEqual(expected, variables)
@@ -177,7 +177,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
         do {
             variables = try self.parser.parseDeclaration(line: line)
         } catch let e {
-            XCTFail("\(e)")
+            XCTFail("Unable to parse \(line): \(e)")
             return
         }
         XCTAssertEqual(expected, variables)
