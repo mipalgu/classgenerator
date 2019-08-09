@@ -128,6 +128,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
 
     func test_canParseSimpleMixin() {
         let simpleContents = """
+            @mixin
             -c
             prec
             """
@@ -144,13 +145,14 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             A comment
             """
         let expected = Sections(
-            author: "Callum McColl",
+            author: "-author Callum McColl",
             preC: "prec",
             variables: "int i // An integer",
             comments: "A comment"
         )
         guard let result = parser.parseSections(fromContents: contents) else {
-            XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
+            XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
+            parser.errors.forEach { XCTFail($0) }
             return
         }
         XCTAssertEqual(expected, result)
@@ -158,6 +160,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
 
     func test_canParseSimpleMixinWithVariable() {
         let simpleContents = """
+            @mixin
             -c
             $myVar
             """
@@ -174,13 +177,13 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             A comment
             """
         let expected = Sections(
-            author: "Callum McColl",
+            author: "-author Callum McColl",
             preC: "parsedVar",
             variables: "int i // An integer",
             comments: "A comment"
         )
         guard let result = parser.parseSections(fromContents: contents) else {
-            XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
+            XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
         XCTAssertEqual(expected, result)
@@ -188,10 +191,12 @@ public class SectionsParserTests: ClassGeneratorTestCase {
 
     func test_canParseMultipleMixins() {
         let firstContents = """
+            @mixin
             -c
             1
             """
         let secondContents = """
+            @mixin
             -c
             2
             """
@@ -210,13 +215,13 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             @include "second.mixin"
             """
         let expected = Sections(
-            author: "Callum McColl",
+            author: "-author Callum McColl",
             preC: "1\n2",
             variables: "int i // An integer",
             comments: "A comment"
         )
         guard let result = parser.parseSections(fromContents: contents) else {
-            XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
+            XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
         XCTAssertEqual(expected, result)
