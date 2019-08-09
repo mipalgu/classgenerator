@@ -8,4 +8,6 @@ XCTMain([
     testCase(SanitiserTests.allTests),
     testCase(SectionsParserTests.allTests),
     testCase(TypeIdentifierTests.allTests)
+    testCase(EnumParserTests.allTests)
+    testCase(MixinParserTests.allTests)
 ])
