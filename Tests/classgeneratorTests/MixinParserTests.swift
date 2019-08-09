@@ -82,7 +82,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseSimpleCall() {
         let line = "@include \"simple.mixer\""
-        guard let (filePath, variables) = self.parser.parseCall(line: line) else {
+        guard let (filePath, variables) = try? self.parser.parseCall(line: line) else {
             XCTFail("Unable to parse \(line)")
             return
         }
@@ -93,7 +93,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseCallWithNoVariables() {
         let line = "@include \"simple.mixer\"()"
-        guard let (filePath, variables) = self.parser.parseCall(line: line) else {
+        guard let (filePath, variables) = try? self.parser.parseCall(line: line) else {
             XCTFail("Unable to parse \(line)")
             return
         }
@@ -104,7 +104,7 @@ public final class MixinParserTests: ClassGeneratorTestCase {
 
     public func test_canParseCallWithVariables() {
         let line = "@include \"simple.mixer\"(firstVar: 1, secondVar: \"2\", thirdVar:3)"
-        guard let (filePath, variables) = self.parser.parseCall(line: line) else {
+        guard let (filePath, variables) = try? self.parser.parseCall(line: line) else {
             XCTFail("Unable to parse \(line)")
             return
         }
