@@ -184,7 +184,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         self.errors.append("Unable to parse underlying mixin: \(filePath)")
                         return
                     }
-                    self.merge(&sections, mixinSections)
+                    self.merge(&sections, mixinSections, withVariables: passedVars)
                     return
                 }
                 return
@@ -205,9 +205,16 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         return sections
     }
 
-    fileprivate func merge(_ sections: inout Sections, _ other: Sections) {
+    fileprivate func merge(_ sections: inout Sections, _ other: Sections, withVariables variables: [String: String]) {
+        let sortedVariables = variables.sorted { $0.0.count > $1.0.count }
         func mergeProperty(_ lhs: inout String?, _ rhs: String?) {
-            lhs = lhs.map { value in rhs.map { value + "\n" + $0 } ?? value } ?? rhs
+            guard var rhs = rhs else {
+                return
+            }
+            sortedVariables.forEach { (args: (key: String, value: String)) in
+                rhs = rhs.replacingOccurrences(of: "$" + args.key, with: args.value)
+            }
+            lhs = lhs.map { $0 + "\n" + rhs } ?? rhs
         }
         mergeProperty(&sections.author, other.author)
         mergeProperty(&sections.preC, other.preC)
