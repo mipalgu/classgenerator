@@ -113,8 +113,11 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
     {
         var sections = Sections()
         var usingOldFormat: Bool = false
-        let assignIfValid: (inout String?, String, Bool) -> Bool = {
-            if true == $2 { $0 = $1 }; return $2
+        func assignIfValid(_ variable: inout String?, _ value: String, _ valid: Bool) -> Bool {
+            if true == valid {
+                variable = variable.map { $0 + "\n" + value } ?? value
+            }
+            return valid
         }
         seq.forEach {
             guard let first = $0.first?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
