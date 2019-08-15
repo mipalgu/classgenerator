@@ -171,6 +171,10 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         return
                     }
                     guard let tempVars = variables.keys.failMap({ (key: String) -> (String, String)? in
+                        if nil == declaredVariables[key] {
+                            self.errors.append("Using unknown parameter \(key) in mixin call.")
+                            return nil
+                        }
                         if let value = variables[key] {
                             return (key, value)
                         }
