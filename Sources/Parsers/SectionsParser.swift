@@ -183,8 +183,10 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         return
                     }
                     let passedVars = Dictionary(uniqueKeysWithValues: tempVars)
-                    guard let mixinSections = self.parseSections(fromContents: contents, withVariables: passedVars) else {
-                        self.errors.append("Unable to parse underlying mixin: \(filePath)")
+                    let parser = SectionsParser<WarningsContainerRef, Reader>(container: WarningsContainerRef([]), reader: self.reader)
+                    guard let mixinSections = parser.parseSections(fromContents: contents, withVariables: passedVars) else {
+                        self.errors.append(contentsOf: parser.errors.map { "\(filePath): \($0)" })
+                        self.container.warnings.append(contentsOf: parser.warnings.map { "\(filePath): \($0)" })
                         return
                     }
                     self.merge(&sections, mixinSections, withVariables: passedVars)
@@ -215,7 +217,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                 return
             }
             sortedVariables.forEach { (args: (key: String, value: String)) in
-                rhs = rhs.replacingOccurrences(of: "$" + args.key, with: args.value)
+                rhs = rhs.replacingOccurrences(of: "{{" + args.key + "}}", with: args.value)
             }
             lhs = lhs.map { $0 + "\n" + rhs } ?? rhs
         }

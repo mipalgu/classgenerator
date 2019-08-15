@@ -161,9 +161,9 @@ public class SectionsParserTests: ClassGeneratorTestCase {
 
     func test_canParseSimpleMixinWithVariable() {
         let simpleContents = """
-            @mixin
+            @mixin(myVar)
             -c
-            $myVar
+            {{myVar}}
             """
         let parser = self.createParser(mixins: ["simple.mixin": simpleContents])
         let contents = """
