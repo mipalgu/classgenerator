@@ -89,11 +89,11 @@ public final class SwiftFileCreator: Creator {
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
         let preSwift = nil == cls.preSwift ? "" : "\n\n" + cls.preSwift!
-        let ext = self.createExtension(on: structName, withComment: cls.comment, andVariables: cls.variables)
-        let stringExt = self.createStringExtension(on: structName, withVariables: cls.variables)
-        let eqExt = self.createEquatableExtension(on: structName)
-        let eqOp = self.createEqualsOperator(comparing: structName, withVariables: cls.variables)
-        return [head + preSwift, ext, stringExt, eqExt, eqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
+        let ext = self.createStructWrapper(for: structName, named: className, withComment: cls.comment, andVariables: cls.variables)
+        let stringExt = self.createStringExtension(on: className, withVariables: cls.variables)
+        let eqExt = self.createEquatableExtension(on: className)
+        let wrapperEqOp = self.createEqualsOperator(comparing: className, withVariables: cls.variables)
+        return [head + preSwift, ext, stringExt, eqExt, wrapperEqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
     }
 
     fileprivate func createHead(
@@ -111,28 +111,30 @@ public final class SwiftFileCreator: Creator {
         return comment + "\n\n" + swiftLintComments
     }
 
-    fileprivate func createExtension(
-        on base: String,
+    fileprivate func createStructWrapper(
+        for base: String,
+        named wrapperName: String,
         withComment comment: String,
         andVariables variables: [Variable]
     ) -> String {
+        let rawVariable = "_raw"
         let comment = self.creatorHelpers.createComment(from: comment)
-        let def = self.createExtensionDef(on: base)
-        let wrappers = self.createArrayWrappers(forVariables: variables).map { $0 + "\n\n" } ?? ""
-        let makeFunction = self.createMakeFunction(on: base, withVariables: variables)
-        let constructor = self.createConstructor(on: base, withVariables: variables)
-        let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables)
-        let content = wrappers + makeFunction + "\n\n" + constructor + "\n\n" + fromDictionary
+        let def = self.createStructDef(on: wrapperName)
+        let rawDefinition = "var \(rawVariable): \(base)"
+        let wrappers = self.createWrappers(forVariables: variables, referencing: rawVariable).map { $0 + "\n\n" } ?? ""
+        let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
+        let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables, referencing: rawVariable)
+        let content = rawDefinition + "\n\n" + wrappers + "\n\n" + constructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
-    fileprivate func createArrayWrappers(forVariables variables: [Variable]) -> String? {
+    fileprivate func createWrappers(forVariables variables: [Variable], referencing base: String) -> String? {
         let wrappers: [String] = variables.compactMap {
             let getterSetup: String
             let getterAssign: String
             switch $0.type {
                 case .array, .string:
-                    getterSetup = "var \($0.label) = self.\($0.label)\n"
+                    getterSetup = "var \($0.label) = self.\(base).\($0.label)\n"
                     getterAssign = self.createArrayGetter(
                         forType: $0.type,
                         withLabel: $0.label,
@@ -140,20 +142,21 @@ public final class SwiftFileCreator: Creator {
                     )
                 case .bit:
                     getterSetup = ""
-                    getterAssign = self.createBitGetter(withLabel: $0.label)
+                    getterAssign = self.createBitGetter(withLabel: $0.label, referencing: base)
                 case .char(let sign):
                     getterSetup = ""
-                    getterAssign = self.createCharGetter(withLabel: $0.label, andSign: sign)
+                    getterAssign = self.createCharGetter(withLabel: $0.label, andSign: sign, referencing: base)
                 default:
-                    return nil
+                    getterSetup = ""
+                    getterAssign = "self.\(base).\($0.label)"
             }
             let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
-            let def = "public var _\($0.label): \(type) {"
+            let def = "public var \($0.label): \(type) {"
             let getterDef = "get {"
             let getterContent = getterSetup + "return " + getterAssign
             let endGetterDef = "}"
             let setterDef = "set {"
-            let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue")
+            let setterContent = self.createSetter(forVariable: $0, accessedBy: "newValue", referencing: base)
             let endSetterDef = "}"
             let endDef = "}"
             let getter = getterDef + "\n" + self.stringHelpers.indent(getterContent) + "\n" + endGetterDef
@@ -166,16 +169,16 @@ public final class SwiftFileCreator: Creator {
         return wrappers.combine("") { $0 + "\n\n" + $1 }
     }
 
-    fileprivate func createBitGetter(withLabel label: String) -> String {
-        return "self.\(label) == 1"
+    fileprivate func createBitGetter(withLabel label: String, referencing base: String) -> String {
+        return "self.\(base).\(label) == 1"
     }
 
-    fileprivate func createCharGetter(withLabel label: String, andSign sign: CharSigns) -> String {
+    fileprivate func createCharGetter(withLabel label: String, andSign sign: CharSigns, referencing base: String) -> String {
         switch sign {
             case .signed:
-                return "UnicodeScalar(UInt8(self.\(label)))"
+                return "UnicodeScalar(UInt8(self.\(base).\(label)))"
             case .unsigned:
-                return "UnicodeScalar(self.\(label))"
+                return "UnicodeScalar(self.\(base).\(label))"
         }
     }
 
@@ -213,51 +216,34 @@ public final class SwiftFileCreator: Creator {
         }
     }
 
-    fileprivate func createMakeFunction(on structName: String, withVariables variables: [Variable]) -> String {
-        let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
-        let def = "public static func make() -> \(structName) {"
-        let content: String
-        if let v = variables.first {
-            content = "return \(structName)(\(v.swiftDefaultValue))"
-        } else {
-            content = "return \(structName)()"
-        }
-        return comment + "\n" + def + "\n" + self.stringHelpers.indent(content) + "\n" + "}"
-    }
-
-    fileprivate func createConstructor(on structName: String, withVariables variables: [Variable]) -> String {
+    fileprivate func createConstructor(on structName: String, withRawVariable rawVariable: String, withVariables variables: [Variable]) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
         let startDef = "public init("
-        let copy = "self.init()\n"
+        let copy = "self.\(rawVariable) = \(structName)()\n"
         let params = variables.enumerated().map {
             let type = self.createSwiftType(forType: $1.type, withSwiftType: $1.swiftType)
-            let label = (0 == $0 ? "_ " : "") + $1.label
+            let label = $1.label
             return "\(label): \(type) = \($1.swiftDefaultValue)"
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
         let setters = copy + variables.map {
-            switch $0.type {
-                case .array, .bit, .char, .string:
-                    return "self._\($0.label) = \($0.label)"
-                default:
-                    return "self.\($0.label) = \($0.label)"
-            }
+            return "self.\($0.label) = \($0.label)"
         }.combine("") { $0 + "\n" + $1 }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
     }
 
-    fileprivate func createSetter(forVariable variable: Variable, accessedBy accessor: String) -> String {
-        let value = self.createSetterValue(forType: variable.type, withLabel: variable.label, accessedBy: accessor)
+    fileprivate func createSetter(forVariable variable: Variable, accessedBy accessor: String, referencing base: String) -> String {
+        let value = self.createSetterValue(forType: variable.type, withLabel: variable.label, accessedBy: accessor, referencing: base)
         switch variable.type {
             case .array:
                 return "_ = \(value)"
             case .bit, .char:
                 return value
             case .string(let length):
-                return self.createSetString(withLabel: variable.label, with: accessor, andLength: length)
+                return self.createSetString(withLabel: variable.label, with: accessor, andLength: length, referencing: base)
             default:
-                return "self.\(variable.label) = \(value)"
+                return "self.\(base).\(variable.label) = \(value)"
         }
     }
 
@@ -265,6 +251,7 @@ public final class SwiftFileCreator: Creator {
         forType type: VariableTypes,
         withLabel label: String,
         accessedBy accessor: String,
+        referencing base: String,
         _ level: Int = 0
     ) -> String {
         switch type {
@@ -278,9 +265,10 @@ public final class SwiftFileCreator: Creator {
                     forType: subtype,
                     withLabel: nextLabel,
                     accessedBy: nextAccessor,
+                    referencing: base,
                     level + 1
                 )
-                let start = "withUnsafeMutablePointer(to: &self.\(label).0) { \(p) in"
+                let start = "withUnsafeMutablePointer(to: &self.\(base).\(label).0) { \(p) in"
                 let content = """
                         for \(index) in 0..<\(length) {
                             \(p)[\(index)] = \(sub)
@@ -289,7 +277,7 @@ public final class SwiftFileCreator: Creator {
                     """
                 return start + "\n" + self.stringHelpers.indent(content, level)
             case .bit:
-                return "self.\(label) = true == \(accessor) ? 1 : 0"
+                return "self.\(base).\(label) = true == \(accessor) ? 1 : 0"
             case .char(let sign):
                 let intType: String
                 switch sign {
@@ -302,7 +290,7 @@ public final class SwiftFileCreator: Creator {
                     if false == \(accessor).isASCII {
                         fatalError("You can only assign ASCII values to \(label)")
                     }
-                    self.\(label) = \(intType)(newValue.value)
+                    self.\(base).\(label) = \(intType)(newValue.value)
                     """
             default:
                 return accessor
@@ -312,11 +300,12 @@ public final class SwiftFileCreator: Creator {
     fileprivate func createSetString(
         withLabel label: String,
         with otherLabel: String,
-        andLength length: String
+        andLength length: String,
+        referencing base: String
     ) -> String {
         let p = "\(label)_p"
         return """
-            _ = withUnsafeMutablePointer(to: &self.\(label).0) { \(p) in
+            _ = withUnsafeMutablePointer(to: &self.\(base).\(label).0) { \(p) in
                 let arr = \(otherLabel).utf8CString
                 _ = arr.withUnsafeBufferPointer {
                     strncpy(\(p), $0.baseAddress!, \(length))
@@ -328,7 +317,8 @@ public final class SwiftFileCreator: Creator {
     //swiftlint:disable:next function_body_length swiftlint:disable:next cyclomatic_complexity
     fileprivate func createFromDictionaryConstructor(
         on structName: String,
-        withVariables variables: [Variable]
+        withVariables variables: [Variable],
+        referencing base: String
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a `\(structName)` from a dictionary.")
         let def = "public init(fromDictionary dictionary: [String: Any]) {"
@@ -368,7 +358,7 @@ public final class SwiftFileCreator: Creator {
             switch $0.type {
                 case .array, .string:
                     return """
-                        self.\($0.label) = withUnsafePointer(to: &\($0.label)) {
+                        self.\(base).\($0.label) = withUnsafePointer(to: &\($0.label)) {
                             $0.withMemoryRebound(to: type(of: \(structName)().\($0.label)), capacity: 1) {
                                 $0.pointee
                             }
@@ -410,15 +400,8 @@ public final class SwiftFileCreator: Creator {
 
     fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable]) -> String {
         let def = "public func == (lhs: \(structName), rhs: \(structName)) -> Bool {"
-        let content = "return " + variables.compactMap {
-            switch $0.type {
-                case .unknown:
-                    return nil
-                case .array, .string:
-                    return "lhs._\($0.label) == rhs._\($0.label)"
-                default:
-                    return "lhs.\($0.label) == rhs.\($0.label)"
-            }
+        let content = "return " + variables.map {
+            return "lhs.\($0.label) == rhs.\($0.label)"
         }.combine("") { $0 + "\n" + self.stringHelpers.indent("&& " + $1) }
         let endDef = "}"
         return def + "\n" + self.stringHelpers.indent(content) + "\n" + endDef
@@ -512,6 +495,14 @@ public final class SwiftFileCreator: Creator {
             default:
                 return "\"\(pre)\\(\(getter))\""
         }
+    }
+    
+    fileprivate func createStructDef(on base: String, extending: [String] = []) -> String {
+        let def = "public struct \(base)"
+        if true == extending.isEmpty {
+            return def + " {"
+        }
+        return def + ": " + extending.combine("") { $0 + ", " + $1 } + " {"
     }
 
     fileprivate func createExtensionDef(on base: String, extending: [String] = []) -> String {
