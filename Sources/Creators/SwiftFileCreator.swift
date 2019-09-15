@@ -62,6 +62,8 @@ import Helpers
 import swift_helpers
 import whiteboard_helpers
 
+import Foundation
+
 //swiftlint:disable file_length
 //swiftlint:disable:next type_body_length
 public final class SwiftFileCreator: Creator {
@@ -226,7 +228,7 @@ public final class SwiftFileCreator: Creator {
         let params = variables.enumerated().map {
             let type = self.createWrapperType(forType: $1.type, withSwiftType: $1.swiftType)
             let label = $1.label
-            return "\(label): \(type) = \($1.swiftDefaultValue)"
+            return "\(label): \(type) = \(self.wrapValue(forType: $1.type, value: $1.swiftDefaultValue))"
         }.combine("") { $0 + ", " + $1 }
         let endDef = ") {"
         let def = startDef + params + endDef
@@ -540,6 +542,57 @@ public final class SwiftFileCreator: Creator {
             return className
         default:
             return self.createSwiftType(forType: type, withSwiftType: swiftType)
+        }
+    }
+    
+    fileprivate func wrapValue(forType type: VariableTypes, value: String) -> String {
+        switch type {
+        case .array(let subtype, _):
+            return self.wrapValue(forType: subtype, value: value)
+        case .gen(_, let structName, let className):
+            guard let first = value.first else {
+                return value
+            }
+            var bracketCount = first == "(" ? 1 : 0
+            var ungroup = false
+            let grouped = value.grouped {
+                if $1 == "(" {
+                    bracketCount += 1
+                    return true
+                }
+                if $1 == ")" {
+                    bracketCount = bracketCount == 0 ? 0 : bracketCount - 1 // handle malformed strings.
+                    ungroup = bracketCount == 0
+                    return true
+                }
+                let shouldGroup = !ungroup
+                ungroup = false
+                return shouldGroup
+            }
+            print(grouped)
+            let structCount = structName.count
+            return grouped.map {
+                var str = String($0)
+                var out = String()
+                out.reserveCapacity(str.count)
+                var prefix: Substring
+                repeat {
+                    prefix = str.prefix(structCount)
+                    if prefix.count > 0 {
+                        str.removeFirst()
+                    }
+                    if prefix == structName {
+                        out += className + "("
+                        str += ")"
+                    }
+                    out += prefix.first.map { String($0) } ?? ""
+                } while(prefix.count == structCount)
+                out += str
+                print(out)
+                return out
+            }.combine("", +)
+        default:
+            return value
         }
     }
 
