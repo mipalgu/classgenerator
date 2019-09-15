@@ -88,7 +88,7 @@ public class StringTests: XCTestCase {
         ]
     }
 
-    var demo: wb_demo = wb_demo(sub2: wb_sub(1, b: true), subs: [wb_sub(0), wb_sub(1, b: true), wb_sub(2)])
+    var demo: Demo = Demo(sub2: Sub(i: 1, b: true), subs: [Sub(i: 0), Sub(i: 1, b: true), Sub(i: 2)])
 
     //swiftlint:disable line_length
     let expectedDemoDescription: String = """
@@ -128,7 +128,7 @@ public class StringTests: XCTestCase {
     }
 
     public override func setUp() {
-        self.demo = wb_demo("hi", sub2: wb_sub(1, b: true), subs: [wb_sub(0), wb_sub(1, b: true), wb_sub(2)])
+        self.demo = Demo(str: "hi", sub2: Sub(i: 1, b: true), subs: [Sub(i: 0), Sub(i: 1, b: true), Sub(i: 2)])
     }
 
     public func test_cDescriptionEqualsExpectedDescription() {
@@ -318,17 +318,17 @@ public class StringTests: XCTestCase {
     }
 
     public func test_swiftDescriptionCanBeConvertedToStruct() {
-        var target = wb_demo("tar")
+        var target = Demo(str: "tar")
         let description = "\(self.demo)"
         let result = description.utf8CString.withUnsafeBufferPointer {
-            wb_demo_from_string(&target, UnsafeMutablePointer(mutating: $0.baseAddress))
+            wb_demo_from_string(&target._raw, UnsafeMutablePointer(mutating: $0.baseAddress))
         }
         XCTAssertNotNil(result)
         guard let r = result else {
             return
         }
-        XCTAssertEqual(r.pointee, self.demo)
-        XCTAssertEqual(r.pointee, target)
+        XCTAssertEqual(r.pointee, self.demo._raw)
+        XCTAssertEqual(r.pointee, target._raw)
     }
 
 }

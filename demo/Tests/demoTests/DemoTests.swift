@@ -77,14 +77,14 @@ public class DemoTests: XCTestCase {
         ]
     }
 
-    var demo: wb_demo = wb_demo()
+    var demo: Demo = Demo()
 
     public override func setUp() {
-        self.demo = wb_demo("hello")
+        self.demo = Demo("hello")
     }
 
     public func test_constructorUsesDefaultValues() {
-        let expected = wb_demo.make()
+        let expected = Demo()
         XCTAssertEqual(self.demo, expected)
     }
 
@@ -102,23 +102,23 @@ public class DemoTests: XCTestCase {
         let lhs = self.demo
         var rhs = lhs
         XCTAssertEqual(lhs, rhs)
-        rhs._str = "2"
+        rhs.str = "2"
         XCTAssertNotEqual(lhs, rhs)
-        rhs._str = lhs._str
+        rhs.str = lhs.str
         XCTAssertEqual(lhs, rhs)
         rhs.b = true
         XCTAssertNotEqual(lhs, rhs)
         rhs.b = lhs.b
         XCTAssertEqual(lhs, rhs)
-        rhs._c = "d"
+        rhs.c = "d"
         XCTAssertNotEqual(lhs, rhs)
         rhs.c = lhs.c
         XCTAssertEqual(lhs, rhs)
-        rhs._sc = "d"
+        rhs.sc = "d"
         XCTAssertNotEqual(lhs, rhs)
         rhs.sc = lhs.sc
         XCTAssertEqual(lhs, rhs)
-        rhs._uc = "d"
+        rhs.uc = "d"
         XCTAssertNotEqual(lhs, rhs)
         rhs.uc = lhs.uc
         XCTAssertEqual(lhs, rhs)
@@ -262,23 +262,23 @@ public class DemoTests: XCTestCase {
         XCTAssertNotEqual(lhs, rhs)
         rhs.dt = lhs.dt
         XCTAssertEqual(lhs, rhs)
-        rhs._str2 = "2"
+        rhs.str2 = "2"
         XCTAssertNotEqual(lhs, rhs)
-        rhs._str2 = lhs._str2
+        rhs.str2 = lhs.str2
         XCTAssertEqual(lhs, rhs)
         rhs.b2 = false
         XCTAssertNotEqual(lhs, rhs)
         rhs.b2 = lhs.b2
         XCTAssertEqual(lhs, rhs)
-        rhs._c2 = "d"
+        rhs.c2 = "d"
         XCTAssertNotEqual(lhs, rhs)
         rhs.c2 = lhs.c2
         XCTAssertEqual(lhs, rhs)
-        rhs._sc2 = "d"
+        rhs.sc2 = "d"
         XCTAssertNotEqual(lhs, rhs)
         rhs.sc2 = lhs.sc2
         XCTAssertEqual(lhs, rhs)
-        rhs._uc2 = "d"
+        rhs.uc2 = "d"
         XCTAssertNotEqual(lhs, rhs)
         rhs.uc2 = lhs.uc2
         XCTAssertEqual(lhs, rhs)
@@ -434,9 +434,9 @@ public class DemoTests: XCTestCase {
         XCTAssertEqual(lhs, rhs)
         rhs.sub2 = lhs.sub2
         XCTAssertEqual(lhs, rhs)
-        rhs._subs = [wb_sub(1), wb_sub(2), wb_sub(3)]
+        rhs.subs = [wb_sub(1), wb_sub(2), wb_sub(3)]
         XCTAssertNotEqual(lhs, rhs)
-        rhs._subs = lhs._subs
+        rhs.subs = lhs.subs
         XCTAssertEqual(lhs, rhs)
     }
 
@@ -545,7 +545,7 @@ public class DemoTests: XCTestCase {
             "cameraResolution": Resolutions(rawValue: 0),
             "cameraResolution2": Resolutions(rawValue: 2)
         ]
-        let result = wb_demo(fromDictionary: d)
+        let result = Demo(fromDictionary: d)
         XCTAssertEqual(self.demo, result)
     }
 

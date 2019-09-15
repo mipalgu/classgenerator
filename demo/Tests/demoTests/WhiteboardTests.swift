@@ -81,15 +81,15 @@ public class WhiteboardTests: XCTestCase {
     }
 
     public func test_posts() {
-        let demo = wb_demo("str")
-        let demo2 = wb_demo("2")
+        let demo = Demo(str: "str")
+        let demo2 = Demo(str: "2")
         self.wbd.post(val: demo2)
         self.wbd.post(val: demo)
-        let fetch = self.wbd.get()
+        let fetch: Demo = self.wbd.get()
         XCTAssertEqual(demo, fetch)
         XCTAssertNotEqual(demo2, fetch)
         self.wbd.post(val: demo2)
-        let fetch2 = self.wbd.get()
+        let fetch2: Demo = self.wbd.get()
         XCTAssertNotEqual(demo, fetch2)
         XCTAssertEqual(demo2, fetch2)
     }
