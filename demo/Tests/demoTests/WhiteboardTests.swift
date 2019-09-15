@@ -60,6 +60,8 @@ import CGUSimpleWhiteboard
 import GUSimpleWhiteboard
 import XCTest
 
+import Foundation
+
 @testable import bridge
 @testable import demo
 
@@ -74,9 +76,10 @@ public class WhiteboardTests: XCTestCase {
     public var wbd: GenericWhiteboard<Demo>!
 
     public override func setUp() {
+        let preamble = ProcessInfo.processInfo.environment["USER"].map { $0 + "_" } ?? ""
         self.wbd = GenericWhiteboard<Demo>(
             msgType: kDemo_v,
-            wbd: Whiteboard(wbd: bridge.gsw_new_whiteboard("custom_whiteboard"))
+            wbd: Whiteboard(wbd: bridge.gsw_new_whiteboard(preamble + "classgenerator_demo_tests_demoTests_whiteboardTests_wb"))
         )
     }
 
