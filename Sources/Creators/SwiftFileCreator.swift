@@ -123,8 +123,9 @@ public final class SwiftFileCreator: Creator {
         let rawDefinition = "var \(rawVariable): \(base)"
         let wrappers = self.createWrappers(forVariables: variables, referencing: rawVariable).map { $0 + "\n\n" } ?? ""
         let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
+        let copyConstructor = self.createCopyConstructor(on: base, withRawVariable: rawVariable)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables, referencing: rawVariable)
-        let content = rawDefinition + "\n\n" + wrappers + "\n\n" + constructor + "\n\n" + fromDictionary
+        let content = rawDefinition + "\n\n" + wrappers + "\n\n" + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
@@ -231,6 +232,13 @@ public final class SwiftFileCreator: Creator {
             return "self.\($0.label) = \($0.label)"
         }.combine("") { $0 + "\n" + $1 }
         return comment + "\n" + def + "\n" + self.stringHelpers.indent(setters) + "\n" + "}"
+    }
+    
+    fileprivate func createCopyConstructor(on structName: String, withRawVariable rawVariable: String) -> String {
+        let comment = self.creatorHelpers.createComment(from: "Create a new `\(structName)`.")
+        let startDef = "public init(_ rawValue: \(structName)) {"
+        let content = "self.\(rawVariable) = rawValue"
+        return comment + "\n" + startDef + "\n" + self.stringHelpers.indent(content) + "\n" + "}"
     }
 
     fileprivate func createSetter(forVariable variable: Variable, accessedBy accessor: String, referencing base: String) -> String {
