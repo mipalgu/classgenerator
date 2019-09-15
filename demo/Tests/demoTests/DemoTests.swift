@@ -80,7 +80,7 @@ public class DemoTests: XCTestCase {
     var demo: Demo = Demo()
 
     public override func setUp() {
-        self.demo = Demo("hello")
+        self.demo = Demo(str: "hello")
     }
 
     public func test_constructorUsesDefaultValues() {
@@ -93,7 +93,7 @@ public class DemoTests: XCTestCase {
             XCTFail("Unable to create wb_demo from c++ constructor")
             return
         }
-        XCTAssertEqual(self.demo, result.pointee)
+        XCTAssertEqual(self.demo, Demo(result.pointee))
         result.deallocate()
     }
 
@@ -422,11 +422,11 @@ public class DemoTests: XCTestCase {
         XCTAssertNotEqual(lhs, rhs)
         rhs.dt2 = lhs.dt2
         XCTAssertEqual(lhs, rhs)
-        rhs.myBit = 1
+        rhs.myBit = true
         XCTAssertNotEqual(lhs, rhs)
         rhs.myBit = lhs.myBit
         XCTAssertEqual(lhs, rhs)
-        rhs.myBit2 = 0
+        rhs.myBit2 = false
         XCTAssertNotEqual(lhs, rhs)
         rhs.myBit2 = lhs.myBit2
         XCTAssertEqual(lhs, rhs)
@@ -434,7 +434,7 @@ public class DemoTests: XCTestCase {
         XCTAssertEqual(lhs, rhs)
         rhs.sub2 = lhs.sub2
         XCTAssertEqual(lhs, rhs)
-        rhs.subs = [wb_sub(1), wb_sub(2), wb_sub(3)]
+        rhs.subs = [Sub(i: 1), Sub(i: 2), Sub(i: 3)]
         XCTAssertNotEqual(lhs, rhs)
         rhs.subs = lhs.subs
         XCTAssertEqual(lhs, rhs)
@@ -538,9 +538,9 @@ public class DemoTests: XCTestCase {
                 "b": self.demo.sub2.b
             ],
             "subs": (
-                self.demo.subs.0,
-                self.demo.subs.1,
-                self.demo.subs.2
+                self.demo.subs[0],
+                self.demo.subs[1],
+                self.demo.subs[2]
             ),
             "cameraResolution": Resolutions(rawValue: 0),
             "cameraResolution2": Resolutions(rawValue: 2)
