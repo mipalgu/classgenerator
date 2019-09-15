@@ -537,11 +537,11 @@ public class DemoTests: XCTestCase {
                 "i": self.demo.sub2.i,
                 "b": self.demo.sub2.b
             ],
-            "subs": (
+            "subs": [
                 self.demo.subs[0],
                 self.demo.subs[1],
                 self.demo.subs[2]
-            ),
+            ],
             "cameraResolution": Resolutions(rawValue: 0),
             "cameraResolution2": Resolutions(rawValue: 2)
         ]

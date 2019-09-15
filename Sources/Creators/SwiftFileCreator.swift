@@ -345,23 +345,12 @@ public final class SwiftFileCreator: Creator {
         let guardDef = "guard"
         let casts = variables.compactMap {
             switch $0.type {
-                case .array, .string:
-                    return "var \($0.label) = dictionary[\"\($0.label)\"]"
-                case .bit:
-                    return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt32"
-                case .char(let sign):
-                    switch sign {
-                        case .signed:
-                            return "let \($0.label) = dictionary[\"\($0.label)\"] as? Int8"
-                        case .unsigned:
-                            return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt8"
-                    }
                 case .gen(_, _, let className):
                     return "let \($0.label) = (dictionary[\"\($0.label)\"] as? [String: Any]).flatMap({ \(className)(fromDictionary: $0)  })"
                 case .pointer:
                     return nil
                 default:
-                    let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+                    let type = self.createWrapperType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "let \($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
             }
         }.combine("") { $0 + ",\n" + $1 }
@@ -375,16 +364,6 @@ public final class SwiftFileCreator: Creator {
             + endGuard
         let setters = variables.map {
             switch $0.type {
-                case .array, .string:
-                    return """
-                        self.\(base).\($0.label) = withUnsafePointer(to: &\($0.label)) {
-                            $0.withMemoryRebound(to: type(of: \(structName)().\($0.label)), capacity: 1) {
-                                $0.pointee
-                            }
-                        }
-                        """
-                case .bit, .char:
-                    return "self._raw.\($0.label) = \($0.label)"
                 case .pointer:
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "self.\($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
