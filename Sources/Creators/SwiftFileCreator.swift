@@ -587,7 +587,6 @@ public final class SwiftFileCreator: Creator {
                 ungroup = false
                 return shouldGroup
             }
-            print(grouped)
             let structCount = structName.count
             return grouped.map {
                 var str = String($0)
@@ -606,7 +605,6 @@ public final class SwiftFileCreator: Creator {
                     out += prefix.first.map { String($0) } ?? ""
                 } while(prefix.count == structCount)
                 out += str
-                print(out)
                 return out
             }.combine("", +)
         default:
