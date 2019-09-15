@@ -149,6 +149,9 @@ public final class SwiftFileCreator: Creator {
                 case .char(let sign):
                     getterSetup = ""
                     getterAssign = self.createCharGetter(withLabel: $0.label, andSign: sign, referencing: base)
+                case .gen(_, _, let className):
+                    getterSetup = ""
+                    getterAssign = "\(className)(self.\(base).\($0.label))"
                 default:
                     getterSetup = ""
                     getterAssign = "self.\(base).\($0.label)"
@@ -351,8 +354,8 @@ public final class SwiftFileCreator: Creator {
                         case .unsigned:
                             return "let \($0.label) = dictionary[\"\($0.label)\"] as? UInt8"
                     }
-                case .gen(_, let structName, _):
-                    return "let \($0.label) = (dictionary[\"\($0.label)\"] as? [String: Any]).flatMap({ \(structName)(fromDictionary: $0)  })"
+                case .gen(_, _, let className):
+                    return "let \($0.label) = (dictionary[\"\($0.label)\"] as? [String: Any]).flatMap({ \(className)(fromDictionary: $0)  })"
                 case .pointer:
                     return nil
                 default:
@@ -378,6 +381,8 @@ public final class SwiftFileCreator: Creator {
                             }
                         }
                         """
+                case .bit, .char:
+                    return "self._raw.\($0.label) = \($0.label)"
                 case .pointer:
                     let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
                     return "self.\($0.label) = dictionary[\"\($0.label)\"] as? \(type)"
@@ -510,7 +515,7 @@ public final class SwiftFileCreator: Creator {
             case .string:
                 return "\"\(pre)\\(\(computedGetter))\""
             case .char:
-                return "\"\(pre)\\(0 == \(getter) ? \"\" : String(Character(\(computedGetter))))\""
+                return "\"\(pre)\\(UnicodeScalar(UInt8(0)) == \(getter) ? \"\" : String(Character(\(computedGetter))))\""
             case .enumerated:
                 return "\"\(pre)\\(\(getter).rawValue)\""
             case .gen:
