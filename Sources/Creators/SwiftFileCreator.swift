@@ -521,6 +521,8 @@ public final class SwiftFileCreator: Creator {
                 return self.createArrayStringValue(fromType: type, andLabel: label)
             case .string:
                 return "\"\(pre)\\(\(computedGetter))\""
+            case .bit:
+                return "\"\(pre)\\(\(getter) ? 1 : 0)\""
             case .char:
                 return "\"\(pre)\\(UnicodeScalar(UInt8(0)) == \(getter) ? \"\" : String(Character(\(computedGetter))))\""
             case .enumerated:
