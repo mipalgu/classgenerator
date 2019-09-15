@@ -204,7 +204,7 @@ public final class SwiftFileCreator: Creator {
                 )
                 return """
                     withUnsafePointer(to: &\(label).0) { \(p) in
-                        var \(defaultLabel): \(self.createSwiftType(forType: type, withSwiftType: swiftType)) = []
+                        var \(defaultLabel): \(self.createWrapperType(forType: type, withSwiftType: swiftType)) = []
                         \(defaultLabel).reserveCapacity(\(length))
                         for \(index) in 0..<\(length) {
                             \(defaultLabel).append(\(value))
@@ -304,6 +304,8 @@ public final class SwiftFileCreator: Creator {
                     }
                     self.\(base).\(label) = \(intType)(newValue.value)
                     """
+            case .gen:
+                return "\(accessor)._raw"
             default:
                 return accessor
         }
@@ -440,7 +442,7 @@ public final class SwiftFileCreator: Creator {
                     andLabel: variable.label,
                     appendingTo: variable.label + "=",
                     getter: "self.\(variable.label)",
-                    computedGetter: "self._\(variable.label)"
+                    computedGetter: "self.\(variable.label)"
                 ) else {
                     return nil
                 }
@@ -460,8 +462,8 @@ public final class SwiftFileCreator: Creator {
                                 fromType: subtype,
                                 andLabel: label,
                                 appendingTo: "",
-                                getter: "self." + label + ".0",
-                                computedGetter: "self._" + label + "[0]"
+                                getter: "self." + label + "[0]",
+                                computedGetter: "self." + label + "[0]"
                             ),
                             let value = self.createStringValue(
                             fromType: subtype,
@@ -474,12 +476,12 @@ public final class SwiftFileCreator: Creator {
                         }
                         //swiftlint:disable line_length
                         return """
-                            if self._\(label).isEmpty {
+                            if self.\(label).isEmpty {
                                 descString += \"\(label)={}\"
                             } else {
                                 let first = \(firstValue)
                                 descString += \"\(label)={\"
-                                descString += self._\(label).dropFirst().reduce(\"\\(first)\") { $0 + ", " + \(value) }
+                                descString += self.\(label).dropFirst().reduce(\"\\(first)\") { $0 + ", " + \(value) }
                                 descString += \"}\"
                             }
                             """
