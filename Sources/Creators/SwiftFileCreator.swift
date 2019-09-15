@@ -151,7 +151,7 @@ public final class SwiftFileCreator: Creator {
                     getterSetup = ""
                     getterAssign = "self.\(base).\($0.label)"
             }
-            let type = self.createSwiftType(forType: $0.type, withSwiftType: $0.swiftType)
+            let type = self.createWrapperType(forType: $0.type, withSwiftType: $0.swiftType)
             let def = "public var \($0.label): \(type) {"
             let getterDef = "get {"
             let getterContent = getterSetup + "return " + getterAssign
@@ -212,6 +212,8 @@ public final class SwiftFileCreator: Creator {
                     """
             case .string:
                 return "String(cString: withUnsafePointer(to: &\(label).0) { $0 })"
+            case .gen(_, _, let className):
+                return "\(className)(\(label))"
             default:
                 return label
         }
@@ -222,7 +224,7 @@ public final class SwiftFileCreator: Creator {
         let startDef = "public init("
         let copy = "self.\(rawVariable) = \(structName)()\n"
         let params = variables.enumerated().map {
-            let type = self.createSwiftType(forType: $1.type, withSwiftType: $1.swiftType)
+            let type = self.createWrapperType(forType: $1.type, withSwiftType: $1.swiftType)
             let label = $1.label
             return "\(label): \(type) = \($1.swiftDefaultValue)"
         }.combine("") { $0 + ", " + $1 }
@@ -527,6 +529,17 @@ public final class SwiftFileCreator: Creator {
                 return "[" + self.createSwiftType(forType: subtype, withSwiftType: swiftType) + "]"
             default:
                 return swiftType
+        }
+    }
+    
+    fileprivate func createWrapperType(forType type: VariableTypes, withSwiftType swiftType: String) -> String {
+        switch type {
+        case .array(let subtype, _):
+            return "[" + self.createWrapperType(forType: subtype, withSwiftType: swiftType) + "]"
+        case .gen(_, _, let className):
+            return className
+        default:
+            return self.createSwiftType(forType: type, withSwiftType: swiftType)
         }
     }
 
