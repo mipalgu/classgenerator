@@ -412,9 +412,20 @@ public final class SwiftFileCreator: Creator {
 
     fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable]) -> String {
         let def = "public func == (lhs: \(structName), rhs: \(structName)) -> Bool {"
-        let content = "return " + variables.map {
-            return "lhs.\($0.label) == rhs.\($0.label)"
+        let equals = variables.compactMap {
+            func canEquate(_ type: VariableTypes) -> Bool {
+                switch type {
+                case .array(let subtype, _):
+                    return canEquate(subtype)
+                case .unknown:
+                    return false
+                default:
+                    return true
+                }
+            }
+            return canEquate($0.type) ? "lhs.\($0.label) == rhs.\($0.label)" : nil
         }.combine("") { $0 + "\n" + self.stringHelpers.indent("&& " + $1) }
+        let content = "return " + (equals.isEmpty ? "false" : equals)
         let endDef = "}"
         return def + "\n" + self.stringHelpers.indent(content) + "\n" + endDef
     }
