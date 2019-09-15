@@ -95,7 +95,9 @@ public final class SwiftFileCreator: Creator {
         let stringExt = self.createStringExtension(on: className, withVariables: cls.variables)
         let eqExt = self.createEquatableExtension(on: className)
         let wrapperEqOp = self.createEqualsOperator(comparing: className, withVariables: cls.variables)
-        return [head + preSwift, ext, stringExt, eqExt, wrapperEqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
+        let structEqExt = self.createEquatableExtension(on: structName)
+        let structEqOp = self.createEqualsOperator(comparing: structName, withVariables: cls.variables, wrap: className)
+        return [head + preSwift, ext, stringExt, eqExt, wrapperEqOp, structEqExt, structEqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
     }
 
     fileprivate func createHead(
@@ -417,22 +419,27 @@ public final class SwiftFileCreator: Creator {
         return self.createExtensionDef(on: structName, extending: ["Equatable"]) + "}"
     }
 
-    fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable]) -> String {
+    fileprivate func createEqualsOperator(comparing structName: String, withVariables variables: [Variable], wrap: String? = nil) -> String {
         let def = "public func == (lhs: \(structName), rhs: \(structName)) -> Bool {"
-        let equals = variables.compactMap {
-            func canEquate(_ type: VariableTypes) -> Bool {
-                switch type {
-                case .array(let subtype, _):
-                    return canEquate(subtype)
-                case .unknown:
-                    return false
-                default:
-                    return true
+        let content: String
+        if let wrap = wrap {
+            content = "return \(wrap)(lhs) == \(wrap)(rhs)"
+        } else {
+            let equals = variables.compactMap {
+                func canEquate(_ type: VariableTypes) -> Bool {
+                    switch type {
+                    case .array(let subtype, _):
+                        return canEquate(subtype)
+                    case .unknown:
+                        return false
+                    default:
+                        return true
+                    }
                 }
-            }
-            return canEquate($0.type) ? "lhs.\($0.label) == rhs.\($0.label)" : nil
-        }.combine("") { $0 + "\n" + self.stringHelpers.indent("&& " + $1) }
-        let content = "return " + (equals.isEmpty ? "false" : equals)
+                return canEquate($0.type) ? "lhs.\($0.label) == rhs.\($0.label)" : nil
+            }.combine("") { $0 + "\n" + self.stringHelpers.indent("&& " + $1) }
+            content = "return " + (equals.isEmpty ? "false" : equals)
+        }
         let endDef = "}"
         return def + "\n" + self.stringHelpers.indent(content) + "\n" + endDef
     }
