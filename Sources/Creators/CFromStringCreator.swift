@@ -114,7 +114,7 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
                         return assign
                     }
                     return """
-                        struct \(structName) \(label);
+                        struct \(structName) \(label) = {};
                         \(assign)
                         """
                 },
