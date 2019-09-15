@@ -122,7 +122,7 @@ public final class SwiftFileCreator: Creator {
         let rawVariable = "_raw"
         let comment = self.creatorHelpers.createComment(from: comment)
         let def = self.createStructDef(on: wrapperName)
-        let rawDefinition = "var \(rawVariable): \(base)"
+        let rawDefinition = "public var \(rawVariable): \(base)"
         let wrappers = self.createWrappers(forVariables: variables, referencing: rawVariable).map { $0 + "\n\n" } ?? ""
         let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
         let copyConstructor = self.createCopyConstructor(on: base, withRawVariable: rawVariable)
