@@ -107,6 +107,7 @@ public final class SwiftFileCreator: Creator {
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(forFile: fileName, withAuthor: author, andGenFile: genfile)
         let swiftLintComments = """
+            //swiftlint:disable superfluous_disable_command
             //swiftlint:disable function_body_length
             //swiftlint:disable file_length
             //swiftlint:disable line_length
