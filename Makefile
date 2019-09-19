@@ -21,7 +21,7 @@ swift-build:
 
 swift-test:
 	rm -f Sources/classgenerator/main.swift
-	$Eenv ${BUILD_ENV} ${SWIFT} test -c ${SWIFT_BUILD_CONFIG} ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
+	$Eenv ${BUILD_ENV} ${SWIFT} test -c debug ${SWIFTCFLAGS:=-Xswiftc %} ${CFLAGS:=-Xcc %} ${LDFLAGS:=-Xlinker %}
 
 host:	swift-build
 
