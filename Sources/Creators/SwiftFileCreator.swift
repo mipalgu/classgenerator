@@ -108,6 +108,7 @@ public final class SwiftFileCreator: Creator {
         let comment = self.creatorHelpers.createFileComment(forFile: fileName, withAuthor: author, andGenFile: genfile)
         let swiftLintComments = """
             //swiftlint:disable superfluous_disable_command
+            //swiftlint:disable type_body_length
             //swiftlint:disable function_body_length
             //swiftlint:disable file_length
             //swiftlint:disable line_length
@@ -130,7 +131,7 @@ public final class SwiftFileCreator: Creator {
         let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
         let copyConstructor = self.createCopyConstructor(on: base, withRawVariable: rawVariable)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables, referencing: rawVariable)
-        let content = rawDefinition + "\n\n" + wrappers + "\n\n" + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary
+        let content = rawDefinition + "\n\n" + wrappers + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
