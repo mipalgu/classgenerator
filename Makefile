@@ -52,5 +52,4 @@ generate-xcodeproj:
 
 all-real: ${ALL_TARGETS}
 
-.include "../../mk/mipal.mk"
-
+#.include "../../mk/mipal.mk"
