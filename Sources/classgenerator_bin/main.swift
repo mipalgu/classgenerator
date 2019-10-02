@@ -5,6 +5,7 @@ import Creators
 import Containers
 import IO
 import Parsers
+import classgenerator
 
 let container = WarningsContainerRef()
 
@@ -30,4 +31,3 @@ let generator = ClassGenerator(
 )
 
 generator.run(CommandLine.arguments)
-

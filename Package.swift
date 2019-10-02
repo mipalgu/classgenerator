@@ -4,6 +4,12 @@ import PackageDescription
 
 let package = Package(
     name: "classgenerator",
+    products: [
+        .executable(
+            name: "classgenerator",
+            targets: ["classgenerator_bin"]
+        )
+    ],
     dependencies: [
         .package(url: "ssh://git.mipal.net/git/swift_helpers.git", .branch("master")),
         .package(url: "ssh://git.mipal.net/git/whiteboard_helpers.git", .branch("master"))
@@ -38,6 +44,10 @@ let package = Package(
             "IO",
             "whiteboard_helpers"
         ]),
-        .testTarget(name: "classgeneratorTests", dependencies: [.target(name: "classgenerator"), .target(name: "Helpers"), "swift_helpers"])
+        .target(name: "classgenerator_bin", dependencies: [.target(name: "classgenerator")]),
+        .testTarget(
+            name: "classgeneratorTests",
+            dependencies: [.target(name: "classgenerator"), .target(name: "Helpers"), "swift_helpers"]
+        )
     ]
 )
