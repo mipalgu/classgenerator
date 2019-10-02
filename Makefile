@@ -7,8 +7,6 @@ SWIFTCFLAGS=-warnings-as-errors
 
 all:	all-real
 
-all-real:	test
-
 .include "../../mk/prefs.mk"
 
 swift-build:
@@ -51,3 +49,8 @@ generate-xcodeproj:
 	$Eecho "LINKFLAGS=\"${LDFLAGS:C,(.*),-Xlinker \1,g}\"" >> config.sh
 	$Eecho "SWIFTCFLAGS=\"${SWIFTCFLAGS:C,(.*),-Xswiftc \1,g}\"" >> config.sh
 	$E./xcodegen.sh
+
+all-real: ${ALL_TARGETS}
+
+.include "../../mk/mipal.mk"
+
