@@ -289,8 +289,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     }
             """)
         return """
-            int i;
-            for (i = index; i < length; i++) {
+            for (int i = index; i < length; i++) {
                 index = i + 1;
                 if (bracecount == 0 && \(strLabel)[i] == '=') {
                     endKey = i - 1;
