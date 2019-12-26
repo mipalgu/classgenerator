@@ -107,6 +107,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
             switch e {
                 case ClassGeneratorErrors.pathNotFound:
                     self.handleError("Path not found")
+                case ClassGeneratorErrors.malformedValue(let reason):
+                    self.handleError("Malformed value: \(reason)")
                 case ClassGeneratorErrors.unknownFlag(let flag):
                     self.handleError("Unknown Flag: \(flag)")
                 default:

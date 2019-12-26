@@ -70,6 +70,7 @@ public class ClassGeneratorParser {
             OPTIONS:
                     -b              Use backwards compatible naming conventions.
                     -c              Do Not Generate a C++ wrapper.
+                    -n              Specify a namespace for the c++ classes.
                     -s              Do Not Generate a Swift wrapper.
                     --c-header <directory=./>
                                     Place the generated C header into <directory>.
@@ -102,6 +103,8 @@ public class ClassGeneratorParser {
             return self.handleBFlag(_: task, words: &words)
         case "-c":
             return self.handleCFlag(task, words: &words)
+        case "-n":
+            return try self.handleNFlag(task, words: &words)
         case "-s":
             return self.handleSFlag(task, words: &words)
         case "--c-header":
@@ -128,6 +131,18 @@ public class ClassGeneratorParser {
     fileprivate func handleCFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.generateCppWrapper = false
+        return temp
+    }
+    
+    fileprivate func handleNFlag(_ task: Task, words: inout [String]) throws -> Task {
+        var temp = task
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        guard nil == value.first(where: { !$0.isASCII || (!$0.isLetter && !$0.isNumber && $0 != "_") }) else {
+            throw ClassGeneratorErrors.malformedValue(reason: "The namespace '\(value)' must be only contain letters, numbers and underscores.")
+        }
+        temp.cppNamespace = value
         return temp
     }
 
