@@ -71,17 +71,20 @@ public final class CPPHeaderCreator: Creator {
         return self.errors.last
     }
 
+    fileprivate let namespace: String?
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
     fileprivate let stringFunctionsCreator: CPPStringFunctionsCreator
     fileprivate let fromStringCreator: CPPFromStringCreator
 
     public init(
+        namespace: String? = nil,
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         stringHelpers: StringHelpers = StringHelpers(),
         stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator(),
         fromStringCreator: CPPFromStringCreator = CPPFromStringCreator()
     ) {
+        self.namespace = namespace
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
         self.stringFunctionsCreator = stringFunctionsCreator
@@ -151,7 +154,17 @@ public final class CPPHeaderCreator: Creator {
         andEmbeddedCpp embeddedCpp: String?,
         andPostCpp postCpp: String?
     ) -> String {
-        let namespace = "namespace guWhiteboard {"
+        let whiteboardNamespace = "namespace guWhiteboard {"
+        let endWhiteboardNamespace = "} /// namespace guWhiteboard"
+        let namespace: String
+        let endNamespace: String
+        if let cppNamespace = self.namespace {
+            namespace = "namespace " + cppNamespace + " {\n\n" + self.stringHelpers.indent(whiteboardNamespace)
+            endNamespace = self.stringHelpers.indent(endWhiteboardNamespace) + "\n\n} /// namespace \(cppNamespace)"
+        } else {
+            namespace = whiteboardNamespace
+            endNamespace = endWhiteboardNamespace
+        }
         let content = self.createClassContent(
             forClass: cls,
             forClassNamed: className,
@@ -160,10 +173,11 @@ public final class CPPHeaderCreator: Creator {
             andEmbeddedCpp: embeddedCpp
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
-        let endNamespace = "} /// namespace guWhiteboard"
-        return namespace + "\n\n"
-            + content + postCpp + "\n\n"
-            + endNamespace
+        let allContent = content + postCpp + "\n\n"
+        if nil == self.namespace {
+            return namespace + "\n\n" + allContent + endNamespace
+        }
+        return namespace + "\n\n" + self.stringHelpers.cIndent(allContent) + endNamespace
     }
 
     fileprivate func createClassContent(

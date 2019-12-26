@@ -64,7 +64,7 @@ import Helpers
 import IO
 import Parsers
 
-public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCreatorFactory: CreatorFactory, CFileCreatorFactory: CreatorFactory, CPPHeaderCreatorFactory: CreatorFactory, SwiftFileCreatorFactory: CreatorFactory> {
+public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCreatorFactory: CreatorFactory, CFileCreatorFactory: CreatorFactory, CPPHeaderCreatorFactory: CPPCreatorFactory, SwiftFileCreatorFactory: CreatorFactory> {
 
     fileprivate let argumentsParser: ClassGeneratorParser
     fileprivate let parser: Parser
@@ -146,7 +146,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         let structName = creatorHelpers.createStructName(forClassNamed: cls.name)
         let cHeaderCreator = self.cHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         let cFileCreator = self.cFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
-        let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
+        let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cppNamespace: task.cppNamespace)
         let swiftFileCreator = self.swiftFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         self.generateFiles(
             fromClass: cls,

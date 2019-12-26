@@ -1,8 +1,8 @@
 /*
- * CPPHeaderCreatorFactory.swift
+ * CPPCreatorFactory.swift
  * Creators
  *
- * Created by Callum McColl on 15/3/19.
+ * Created by Callum McColl on 26/12/19.
  * Copyright © 2019 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,39 +56,8 @@
  *
  */
 
-import Foundation
-import Helpers
-import swift_helpers
-import whiteboard_helpers
-
-public final class CPPHeaderCreatorFactory: CPPCreatorFactory {
+public protocol CPPCreatorFactory: CreatorFactory {
     
-    fileprivate let date: Date
-    fileprivate let stringHelpers: StringHelpers
-    fileprivate let whiteboardHelpers: WhiteboardHelpers
-    
-    public init(date: Date = Date(), stringHelpers: StringHelpers = StringHelpers(), whiteboardHelpers: WhiteboardHelpers = WhiteboardHelpers()) {
-        self.date = date
-        self.stringHelpers = stringHelpers
-        self.whiteboardHelpers = whiteboardHelpers
-    }
-    
-    public func make(backwardCompatible: Bool) -> CPPHeaderCreator {
-        return self.make(backwardCompatible: backwardCompatible, cppNamespace: nil)
-    }
-    
-    public func make(backwardCompatible: Bool, cppNamespace: String?) -> CPPHeaderCreator {
-        let creatorHelpers = CreatorHelpers(backwardsCompatible: backwardCompatible, date: self.date, helpers: self.whiteboardHelpers)
-        let stringFunctionsCreator = CPPStringFunctionsCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
-        let implementationCreator = FromStringImplementationCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
-        let fromStringCreator = CPPFromStringCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers, implementationCreator: implementationCreator)
-        return CPPHeaderCreator(
-            namespace: cppNamespace,
-            creatorHelpers: creatorHelpers,
-            stringHelpers: self.stringHelpers,
-            stringFunctionsCreator: stringFunctionsCreator,
-            fromStringCreator: fromStringCreator
-        )
-    }
+    func make(backwardCompatible: Bool, cppNamespace: String?) -> _Creator
     
 }
