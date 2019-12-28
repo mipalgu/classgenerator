@@ -61,7 +61,7 @@ import Helpers
 import swift_helpers
 import whiteboard_helpers
 
-public final class CPPHeaderCreatorFactory: CreatorFactory {
+public final class CPPHeaderCreatorFactory: CPPCreatorFactory {
     
     fileprivate let date: Date
     fileprivate let stringHelpers: StringHelpers
@@ -74,11 +74,16 @@ public final class CPPHeaderCreatorFactory: CreatorFactory {
     }
     
     public func make(backwardCompatible: Bool) -> CPPHeaderCreator {
+        return self.make(backwardCompatible: backwardCompatible, cppNamespace: [])
+    }
+    
+    public func make(backwardCompatible: Bool, cppNamespace: [String]) -> CPPHeaderCreator {
         let creatorHelpers = CreatorHelpers(backwardsCompatible: backwardCompatible, date: self.date, helpers: self.whiteboardHelpers)
         let stringFunctionsCreator = CPPStringFunctionsCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
         let implementationCreator = FromStringImplementationCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
         let fromStringCreator = CPPFromStringCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers, implementationCreator: implementationCreator)
         return CPPHeaderCreator(
+            namespaces: cppNamespace,
             creatorHelpers: creatorHelpers,
             stringHelpers: self.stringHelpers,
             stringFunctionsCreator: stringFunctionsCreator,

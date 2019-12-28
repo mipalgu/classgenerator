@@ -70,6 +70,8 @@ public class ClassGeneratorParser {
             OPTIONS:
                     -b              Use backwards compatible naming conventions.
                     -c              Do Not Generate a C++ wrapper.
+                    -n              Specify a namespace for the C++ classes. Multiple namespaces may be specified by
+                                    separating each namespace with '::'. For example: First::Second::Third.
                     -s              Do Not Generate a Swift wrapper.
                     --c-header <directory=./>
                                     Place the generated C header into <directory>.
@@ -102,6 +104,8 @@ public class ClassGeneratorParser {
             return self.handleBFlag(_: task, words: &words)
         case "-c":
             return self.handleCFlag(task, words: &words)
+        case "-n":
+            return try self.handleNFlag(task, words: &words)
         case "-s":
             return self.handleSFlag(task, words: &words)
         case "--c-header":
@@ -128,6 +132,25 @@ public class ClassGeneratorParser {
     fileprivate func handleCFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.generateCppWrapper = false
+        return temp
+    }
+    
+    fileprivate func handleNFlag(_ task: Task, words: inout [String]) throws -> Task {
+        var temp = task
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        let namespaces = value.components(separatedBy: "::")
+        let check: ((Int, Character)) -> Bool = { (tuple: (Int, Character)) -> Bool in
+            !tuple.1.isASCII || (!tuple.1.isLetter && !tuple.1.isNumber && tuple.1 != "_") 
+        }
+        if let first = namespaces.first(where: { nil != $0.enumerated().first(where: check)}) {
+            let index = first.enumerated().first(where: check)!.0
+            let pre = "The namespace list '"
+            let spaces = String(Array<Character>(repeating: " ", count: pre.count + index))
+            throw ClassGeneratorErrors.malformedValue(reason: pre + value + "' must only contain letters, numbers and underscores separated by '::'." + "\n" + spaces + "^" + "\n" + spaces + "|")
+        }
+        temp.cppNamespace = namespaces
         return temp
     }
 

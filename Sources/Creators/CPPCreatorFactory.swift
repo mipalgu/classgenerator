@@ -1,9 +1,9 @@
 /*
- * Task.swift 
- * classgenerator 
+ * CPPCreatorFactory.swift
+ * Creators
  *
- * Created by Callum McColl on 08/09/2017.
- * Copyright © 2017 Callum McColl. All rights reserved.
+ * Created by Callum McColl on 26/12/19.
+ * Copyright © 2019 Callum McColl. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,26 +56,8 @@
  *
  */
 
-public struct Task {
-
-    var generateCppWrapper: Bool = true
-
-    var generateSwiftWrapper: Bool = true
-
-    var path: String?
-
-    var printHelpText: Bool = false
-
-    var cHeaderOutputPath: String?
-
-    var cFileOutputPath: String?
-
-    var cppHeaderOutputPath: String?
+public protocol CPPCreatorFactory: CreatorFactory {
     
-    var cppNamespace: [String] = []
-
-    var swiftFileOutputPath: String?
+    func make(backwardCompatible: Bool, cppNamespace: [String]) -> _Creator
     
-    var useBackwardsCompatibleNamingConventions: Bool = false
-
 }

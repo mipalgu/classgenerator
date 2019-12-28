@@ -62,6 +62,8 @@ public enum ClassGeneratorErrors: Error {
      *  For when there was no way to open anything at the path.
      */
     case pathNotFound
+    
+    case malformedValue(reason: String)
 
     /**
      *  For when there was uknown input in the command line arguments.
