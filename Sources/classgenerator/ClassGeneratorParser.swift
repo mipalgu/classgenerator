@@ -70,7 +70,8 @@ public class ClassGeneratorParser {
             OPTIONS:
                     -b              Use backwards compatible naming conventions.
                     -c              Do Not Generate a C++ wrapper.
-                    -n              Specify a namespace for the c++ classes.
+                    -n              Specify a namespace for the C++ classes. Multiple namespaces may be specified by
+                                    separating each namespace with '::'. For example: First::Second::Third.
                     -s              Do Not Generate a Swift wrapper.
                     --c-header <directory=./>
                                     Place the generated C header into <directory>.
