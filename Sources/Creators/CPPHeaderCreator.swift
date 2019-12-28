@@ -71,20 +71,20 @@ public final class CPPHeaderCreator: Creator {
         return self.errors.last
     }
 
-    fileprivate let namespace: String?
+    fileprivate let namespaces: [String]
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
     fileprivate let stringFunctionsCreator: CPPStringFunctionsCreator
     fileprivate let fromStringCreator: CPPFromStringCreator
 
     public init(
-        namespace: String? = nil,
+        namespaces: [String] = [],
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         stringHelpers: StringHelpers = StringHelpers(),
         stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator(),
         fromStringCreator: CPPFromStringCreator = CPPFromStringCreator()
     ) {
-        self.namespace = namespace
+        self.namespaces = namespaces
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
         self.stringFunctionsCreator = stringFunctionsCreator
@@ -154,17 +154,13 @@ public final class CPPHeaderCreator: Creator {
         andEmbeddedCpp embeddedCpp: String?,
         andPostCpp postCpp: String?
     ) -> String {
-        let whiteboardNamespace = "namespace guWhiteboard {"
-        let endWhiteboardNamespace = "} /// namespace guWhiteboard"
-        let namespace: String
-        let endNamespace: String
-        if let cppNamespace = self.namespace {
-            namespace = "namespace " + cppNamespace + " {\n\n" + self.stringHelpers.indent(whiteboardNamespace)
-            endNamespace = self.stringHelpers.indent(endWhiteboardNamespace) + "\n\n} /// namespace \(cppNamespace)"
-        } else {
-            namespace = whiteboardNamespace
-            endNamespace = endWhiteboardNamespace
-        }
+        let namespaces = self.namespaces + ["guWhiteboard"]
+        let startNamespace = namespaces.enumerated().lazy.map {
+            self.stringHelpers.indent("namespace " + $1 + " {", $0)
+        }.combine("") { $0 + "\n\n" + $1 }
+        let endNamespace = namespaces.enumerated().reversed().lazy.map {
+            self.stringHelpers.indent("} /// namespace " + $1, $0)
+        }.combine("") { $0 + "\n\n" + $1 }
         let content = self.createClassContent(
             forClass: cls,
             forClassNamed: className,
@@ -174,10 +170,7 @@ public final class CPPHeaderCreator: Creator {
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
         let allContent = content + postCpp + "\n\n"
-        if nil == self.namespace {
-            return namespace + "\n\n" + allContent + endNamespace
-        }
-        return namespace + "\n\n" + self.stringHelpers.cIndent(allContent) + endNamespace
+        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, namespaces.count) + endNamespace
     }
 
     fileprivate func createClassContent(

@@ -72,7 +72,7 @@ public struct Task {
 
     var cppHeaderOutputPath: String?
     
-    var cppNamespace: String?
+    var cppNamespace: [String] = []
 
     var swiftFileOutputPath: String?
     

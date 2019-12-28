@@ -139,10 +139,11 @@ public class ClassGeneratorParser {
         guard let value = self.getValue(fromWords: &words) else {
             return task
         }
-        guard nil == value.first(where: { !$0.isASCII || (!$0.isLetter && !$0.isNumber && $0 != "_") }) else {
-            throw ClassGeneratorErrors.malformedValue(reason: "The namespace '\(value)' must be only contain letters, numbers and underscores.")
+        let namespaces = value.components(separatedBy: "::")
+        guard nil == namespaces.first(where: { nil != $0.first { !$0.isASCII || (!$0.isLetter && !$0.isNumber && $0 != "_") }}) else {
+            throw ClassGeneratorErrors.malformedValue(reason: "The namespace list '\(value)' must be only contain letters, numbers and underscores separated by '::'.")
         }
-        temp.cppNamespace = value
+        temp.cppNamespace = namespaces
         return temp
     }
 
