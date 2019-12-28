@@ -114,7 +114,7 @@ public final class CPPHeaderCreator: Creator {
             andPostCpp: cls.postCpp
         )
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
-        return head + pre + "\n\n" + content + "\n" + "#endif /// \(className)_DEFINED\n"
+        return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(className)_DEFINED\n"
     }
 
     fileprivate func createHead(
