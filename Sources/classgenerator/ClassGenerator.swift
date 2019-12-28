@@ -108,7 +108,12 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                 case ClassGeneratorErrors.pathNotFound:
                     self.handleError("Path not found")
                 case ClassGeneratorErrors.malformedValue(let reason):
-                    self.handleError("Malformed value: \(reason)")
+                    let pre = "Malformed value: "
+                    let reasonLines = reason.components(separatedBy: .newlines).enumerated().map {
+                        $0 == 0 ? $1 : String(Array<Character>(repeating: " ", count: pre.count)) + $1
+                    }
+                    let reason = reasonLines.combine("") { $0 + "\n" + $1 }
+                    self.handleError(pre + reason)
                 case ClassGeneratorErrors.unknownFlag(let flag):
                     self.handleError("Unknown Flag: \(flag)")
                 default:

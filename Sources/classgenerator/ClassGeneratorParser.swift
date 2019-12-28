@@ -141,8 +141,14 @@ public class ClassGeneratorParser {
             return task
         }
         let namespaces = value.components(separatedBy: "::")
-        guard nil == namespaces.first(where: { nil != $0.first { !$0.isASCII || (!$0.isLetter && !$0.isNumber && $0 != "_") }}) else {
-            throw ClassGeneratorErrors.malformedValue(reason: "The namespace list '\(value)' must be only contain letters, numbers and underscores separated by '::'.")
+        let check: ((Int, Character)) -> Bool = { (tuple: (Int, Character)) -> Bool in
+            !tuple.1.isASCII || (!tuple.1.isLetter && !tuple.1.isNumber && tuple.1 != "_") 
+        }
+        if let first = namespaces.first(where: { nil != $0.enumerated().first(where: check)}) {
+            let index = first.enumerated().first(where: check)!.0
+            let pre = "The namespace list '"
+            let spaces = String(Array<Character>(repeating: " ", count: pre.count + index))
+            throw ClassGeneratorErrors.malformedValue(reason: pre + value + "' must only contain letters, numbers and underscores separated by '::'." + "\n" + spaces + "^" + "\n" + spaces + "|")
         }
         temp.cppNamespace = namespaces
         return temp
