@@ -71,14 +71,14 @@ public final class CPPHeaderCreator: Creator {
         return self.errors.last
     }
 
-    fileprivate let namespaces: [String]
+    fileprivate let namespaces: [CPPNamespace]
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
     fileprivate let stringFunctionsCreator: CPPStringFunctionsCreator
     fileprivate let fromStringCreator: CPPFromStringCreator
 
     public init(
-        namespaces: [String] = [],
+        namespaces: [CPPNamespace] = [],
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         stringHelpers: StringHelpers = StringHelpers(),
         stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator(),
@@ -157,7 +157,7 @@ public final class CPPHeaderCreator: Creator {
         andPostCpp postCpp: String?,
         namespaces: [CNamespace]
     ) -> String {
-        let namespacesDefs = self.namespaces + ["guWhiteboard"]
+        let namespacesDefs = ["guWhiteboard"] + self.namespaces
         let startNamespace = namespacesDefs.enumerated().lazy.map {
             self.stringHelpers.indent("namespace " + $1 + " {", $0)
         }.combine("") { $0 + "\n\n" + $1 }

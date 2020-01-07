@@ -56,8 +56,10 @@
  *
  */
 
+import whiteboard_helpers
+
 public protocol CPPCreatorFactory: CreatorFactory {
     
-    func make(backwardCompatible: Bool, cppNamespace: [String]) -> _Creator
+    func make(backwardCompatible: Bool, cppNamespace: [CPPNamespace]) -> _Creator
     
 }

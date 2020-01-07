@@ -77,7 +77,7 @@ public final class CPPHeaderCreatorFactory: CPPCreatorFactory {
         return self.make(backwardCompatible: backwardCompatible, cppNamespace: [])
     }
     
-    public func make(backwardCompatible: Bool, cppNamespace: [String]) -> CPPHeaderCreator {
+    public func make(backwardCompatible: Bool, cppNamespace: [CPPNamespace]) -> CPPHeaderCreator {
         let creatorHelpers = CreatorHelpers(backwardsCompatible: backwardCompatible, date: self.date, helpers: self.whiteboardHelpers)
         let stringFunctionsCreator = CPPStringFunctionsCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
         let implementationCreator = FromStringImplementationCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
