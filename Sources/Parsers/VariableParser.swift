@@ -60,6 +60,7 @@ import Foundation
 
 import Containers
 import Data
+import whiteboard_helpers
 
 public final class VariableParser<Container: ParserWarningsContainer>: VariableParserType {
 
@@ -91,9 +92,9 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         self.typeConverter = typeConverter
     }
 
-    public func parseVariable(fromLine line: String) throws -> Variable {
+    public func parseVariable(fromLine line: String, namespaces: [CNamespace]) throws -> Variable {
         let (remaining, comment) = try self.parseComment(fromLine: line)
-        return try self.parseVar(fromSegment: remaining, withComment: comment)
+        return try self.parseVar(fromSegment: remaining, withComment: comment, namespaces: namespaces)
     }
 
     fileprivate func parseComment(fromLine line: String) throws -> (String, String) {
@@ -126,7 +127,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
     }
 
     //swiftlint:disable large_tuple
-    fileprivate func parseVar(fromSegment segment: String, withComment comment: String?) throws -> Variable {
+    fileprivate func parseVar(fromSegment segment: String, withComment comment: String?, namespaces: [CNamespace]) throws -> Variable {
         let split = segment.components(separatedBy: "=")
         guard split.count <= 2 else {
             throw ParsingErrors.parsingError(split.first?.count ?? 0, "You can only specify one default value.")
@@ -143,7 +144,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
             throw ParsingErrors.parsingError(split[0].count + offset, message)
         }
         let signature = words.dropLast().reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces)
-        let type = self.identifier.identify(fromTypeSignature: signature, andArrayCounts: arrCounts)
+        let type = self.identifier.identify(fromTypeSignature: signature, andArrayCounts: arrCounts, namespaces: namespaces)
         do {
             _ = try self.verify(type: type)
         } catch ParsingErrors.parsingError(_, let message) {

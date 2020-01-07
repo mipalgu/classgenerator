@@ -59,6 +59,7 @@
 import Containers
 import Data
 import Helpers
+import whiteboard_helpers
 
 public final class CFileCreator: Creator {
 
@@ -96,7 +97,8 @@ public final class CFileCreator: Creator {
         forFileNamed fileName: String,
         withClassName _: String,
         withStructName structName: String,
-        generatedFrom genfile: String
+        generatedFrom genfile: String,
+        namespaces: [CNamespace]
     ) -> String? {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
@@ -114,7 +116,8 @@ public final class CFileCreator: Creator {
             forClass: cls,
             withStructNamed: structName,
             forStrVariable: "descString",
-            includeLabels: true
+            includeLabels: true,
+            namespaces: namespaces
         )
         let toStringFunc = self.descriptionCreator.createFunction(
             creating: "to_string",
@@ -126,7 +129,8 @@ public final class CFileCreator: Creator {
             forClass: cls,
             withStructNamed: structName,
             forStrVariable: "toString",
-            includeLabels: false
+            includeLabels: false,
+            namespaces: namespaces
         )
         let toNetworkSerialised = self.networkSerialiserCreator.createFunction(
             creating: "to_network_serialised",
@@ -157,7 +161,8 @@ public final class CFileCreator: Creator {
                 """,
             forClass: cls,
             withStructNamed: structName,
-            forStrVariable: "str"
+            forStrVariable: "str",
+            namespaces: namespaces
         )
         let posterIfdef = "#ifndef WHITEBOARD_POSTER_STRING_CONVERSION"
         let posterEndif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"

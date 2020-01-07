@@ -61,6 +61,7 @@ import Foundation
 import Containers
 import Data
 import IO
+import whiteboard_helpers
 
 public final class Parser<
     Container: ParserWarningsContainer,
@@ -89,14 +90,14 @@ public final class Parser<
         self.fileHelpers = fileHelpers
     }
 
-    public func parse(file: URL) -> Class? {
+    public func parse(file: URL, namespaces: [CNamespace]) -> Class? {
         self.errors = []
         self.container.warnings = []
         guard let contents = self.fileHelpers.read(file) else {
             self.errors.append("Unable to read contents of file: \(file.path)")
             return nil
         }
-        guard let c = self.parser.parse(contents, withName: file.lastPathComponent) else {
+        guard let c = self.parser.parse(contents, withName: file.lastPathComponent, namespaces: namespaces) else {
             self.errors.append(contentsOf: self.parser.errors)
             return nil
         }

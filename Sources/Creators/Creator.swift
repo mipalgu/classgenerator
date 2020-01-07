@@ -58,6 +58,7 @@
 
 import Containers
 import Data
+import whiteboard_helpers
 
 public protocol Creator: ErrorContainer {
     
@@ -66,7 +67,8 @@ public protocol Creator: ErrorContainer {
         forFileNamed fileName: String,
         withClassName className: String,
         withStructName structName: String,
-        generatedFrom genfile: String
+        generatedFrom genfile: String,
+        namespaces: [CNamespace]
     ) -> String?
     
 }

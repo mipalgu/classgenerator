@@ -81,7 +81,8 @@ public final class CPPFromStringCreator {
         forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
-        withVariables variables: [Variable]
+        withVariables variables: [Variable],
+        namespaces: [CNamespace]
     ) -> String {
         let containsSupportedTypes = nil != variables.first { self.creatorHelpers.isSupportedStringType($0.type) }
         let def = "void from_string(const std::string &str) {"
@@ -109,7 +110,8 @@ public final class CPPFromStringCreator {
                 arraySetter: { "this->set_" + $0 + "(" + $2 + ", " + $1 + ");"},
                 getter: { "this->" + $0 + "()" },
                 setter: { "this->set_" + $0 + "(" + $1 + ");"}
-            )
+            ),
+            namespaces: namespaces
         )
         let endef = "}"
         return ifDef + "\n" + self.stringHelpers.cIndent(def, 2) + "\n"

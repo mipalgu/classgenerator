@@ -78,7 +78,8 @@ public final class CDescriptionCreator {
         forClass cls: Class,
         withStructNamed structName: String,
         forStrVariable strLabel: String,
-        includeLabels: Bool
+        includeLabels: Bool,
+        namespaces: [CNamespace]
     ) -> String {
         //swiftlint:disable:next line_length
         let definition = "const char* \(structName)_\(fLabel)(const struct \(structName)* self, char* \(strLabel), size_t bufferSize)\n{"
@@ -103,7 +104,8 @@ public final class CDescriptionCreator {
                 inClass: cls,
                 forClassNamed: cls.name,
                 appendingTo: strLabel,
-                includeLabels: includeLabels
+                includeLabels: includeLabels,
+                namespaces: namespaces
             )
         }
         let guardedDescriptions = descriptions.map {
@@ -138,7 +140,8 @@ public final class CDescriptionCreator {
         inClass cls: Class,
         forClassNamed className: String,
         appendingTo strLabel: String,
-        includeLabels: Bool
+        includeLabels: Bool,
+        namespaces: [CNamespace]
     ) -> String? {
         return self.createValue(
             forType: variable.type,
@@ -146,7 +149,8 @@ public final class CDescriptionCreator {
             inClass: cls,
             andClassName: className,
             includeLabel: includeLabels,
-            appendingTo: strLabel
+            appendingTo: strLabel,
+            namespaces: namespaces
         )
     }
 
@@ -158,6 +162,7 @@ public final class CDescriptionCreator {
         andClassName className: String,
         includeLabel: Bool,
         appendingTo strLabel: String,
+        namespaces: [CNamespace],
         _ createGetter: (String) -> String = { "self->" + $0 },
         _ level: Int = 0
     ) -> String? {
@@ -176,6 +181,7 @@ public final class CDescriptionCreator {
                             andClassName: className,
                             includeLabel: includeLabel,
                             appendingTo: strLabel,
+                            namespaces: namespaces,
                             { _ in "self->" + self.createIndexes(forLabel: label, level) },
                             level + 1
                         )
@@ -183,7 +189,7 @@ public final class CDescriptionCreator {
                 guard let value = temp else {
                     return nil
                 }
-                let arrDef = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: label, level: level)
+                let arrDef = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: label, level: level, namespaces: namespaces)
                 //swiftlint:disable line_length
                 return """
                     len = gu_strlcat(\(strLabel), "\(includeLabel ? arrLabel + "=" : ""){", bufferSize);
@@ -204,7 +210,8 @@ public final class CDescriptionCreator {
                     inClass: cls,
                     andClassName: className,
                     includeLabel: includeLabel,
-                    appendingTo: strLabel
+                    appendingTo: strLabel,
+                    namespaces: namespaces
                 )
         }
     }
@@ -220,6 +227,7 @@ public final class CDescriptionCreator {
         andClassName className: String,
         includeLabel: Bool,
         appendingTo strLabel: String,
+        namespaces: [CNamespace],
         _ createGetter: (String) -> String = { "self->" + $0 },
         _ level: Int = 0
     ) -> String? {
@@ -233,7 +241,8 @@ public final class CDescriptionCreator {
                     inClass: cls,
                     andClassName: className,
                     includeLabel: includeLabel,
-                    appendingTo: strLabel
+                    appendingTo: strLabel,
+                    namespaces: namespaces
                 )
             case .bit:
                 return self.createSNPrintf("\(pre)%u", getter, appendingTo: strLabel)
@@ -265,7 +274,7 @@ public final class CDescriptionCreator {
             case .gen(let genName, let structName, _):
                 let fun = true == includeLabel ? "description" : "to_string"
                 let localLabel = 0 == level ? label : label + "_\(level)"
-                let size = true == includeLabel ? self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName) : self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName)
+                let size = true == includeLabel ? self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName, namespaces: namespaces) : self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: namespaces)
                 return """
                     len = gu_strlcat(\(strLabel), "\(pre){", bufferSize);
                     \(self.createGuard(forStrVariable: strLabel))

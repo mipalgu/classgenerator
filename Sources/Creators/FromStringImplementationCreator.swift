@@ -59,6 +59,7 @@
 import Data
 import Helpers
 import swift_helpers
+import whiteboard_helpers
 
 public final class FromStringImplementationCreator {
 
@@ -72,7 +73,8 @@ public final class FromStringImplementationCreator {
 
     func createFromStringImplementation<DataSource: FromStringImplementationDataSource>(
         forClass cls: Class,
-        using dataSource: DataSource
+        using dataSource: DataSource,
+        namespaces: [CNamespace]
     ) -> String {
         let setup = dataSource.createSetup(forClass: cls)
         let vars = cls.variables.lazy.filter {
@@ -82,16 +84,17 @@ public final class FromStringImplementationCreator {
             default:
                 return true
             }
-        }.enumerated().compactMap {
+        }.enumerated().compactMap { (t: (offset: Int, element: Variable)) -> String? in
             self.createSetter(
-                atOffset: $0,
+                atOffset: t.offset,
                 using: dataSource,
-                forVariable: $1,
-                withLabel: $1.label,
+                forVariable: t.element,
+                withLabel: t.element.label,
                 accessedFrom: dataSource.accessor,
                 inClass: cls,
+                namespaces: namespaces,
                 level: 0,
-                setter: dataSource.setter(forVariable: $1)
+                setter: dataSource.setter(forVariable: t.element)
             )
         }.combine("") { $0 + "\n" + $1 }
         let tearDown = dataSource.createTearDown(forClass: cls)
@@ -105,6 +108,7 @@ public final class FromStringImplementationCreator {
         withLabel label: String,
         accessedFrom accessor: String,
         inClass cls: Class,
+        namespaces: [CNamespace],
         level: Int,
         setter: (String) -> String
     ) -> String? {
@@ -114,7 +118,8 @@ public final class FromStringImplementationCreator {
             let length = self.creatorHelpers.createArrayCountDef(
                 inClass: cls.name,
                 forVariable: label,
-                level: level
+                level: level,
+                namespaces: namespaces
             )
             let head = dataSource.createSetupArrayLoop(atOffset: offset, withIndexName: index, andLength: length, recursive: subtype.isRecursive)
             let end = dataSource.createTearDownArrayLoop(atOffset: offset, withIndexName: index, andLength: length)

@@ -100,12 +100,12 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_doesntParseNonExistingFile() {
-        XCTAssertNil(self.parser.parse(file: URL(fileURLWithPath: "this/does/not/exist")))
+        XCTAssertNil(self.parser.parse(file: URL(fileURLWithPath: "this/does/not/exist"), namespaces: []))
     }
 
     //swiftlint:disable function_body_length
     public func test_isBackwardsCompatible() {
-        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt")) else {
+        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt"), namespaces: []) else {
             XCTFail("Unable to parse old.txt: \(self.parser.lastError ?? "")")
             return
         }
@@ -118,15 +118,15 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_parsesSections() {
-        guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen")) else {
+        guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen"), namespaces: []) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections.gen")
             return
         }
-        guard let result2 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections2.gen")) else {
+        guard let result2 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections2.gen"), namespaces: []) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections2.gen")
             return
         }
-        guard let result3 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections3.gen")) else {
+        guard let result3 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections3.gen"), namespaces: []) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections3.gen")
             return
         }
@@ -136,7 +136,7 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_warnsAboutUnderscores() {
-        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_S.gen"))
+        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_S.gen"), namespaces: [])
         XCTAssertTrue(self.parser.warnings.count > 0)
     }
 

@@ -58,6 +58,7 @@
 
 import Data
 import Helpers
+import whiteboard_helpers
 
 public final class TypeIdentifier {
 
@@ -120,19 +121,19 @@ public final class TypeIdentifier {
         self.helpers = helpers
     }
 
-    public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String]) -> VariableTypes {
+    public func identify(fromTypeSignature type: String, andArrayCounts arrCounts: [String], namespaces: [CNamespace]) -> VariableTypes {
         if nil != arrCounts.first {
-            return self.identifyArray(fromType: type, andCounts: arrCounts)
+            return self.identifyArray(fromType: type, andCounts: arrCounts, namespaces: namespaces)
         }
         if type.last == "*" {
-            return self.identifyPointer(fromType: type)
+            return self.identifyPointer(fromType: type, namespaces: namespaces)
         }
         let words = type.components(separatedBy:.whitespaces)
         if nil != words.first(where: { $0 == "enum" }) {
             return self.identifyEnum(fromType: type)
         }
         if nil != words.first(where: { $0 == "gen" }) {
-            return self.identifyGen(fromType: type)
+            return self.identifyGen(fromType: type, namespaces: namespaces)
         }
         if "string" == type {
             return .string("0")
@@ -147,7 +148,7 @@ public final class TypeIdentifier {
         #endif
     }
 
-    fileprivate func identifyGen(fromType type: String) -> VariableTypes {
+    fileprivate func identifyGen(fromType type: String, namespaces: [CNamespace]) -> VariableTypes {
         let words = type.components(separatedBy:.whitespaces)
         guard
             let index = words.enumerated().first(where: { $1 == "gen" })?.0,
@@ -157,7 +158,7 @@ public final class TypeIdentifier {
         }
         return .gen(
             name,
-            self.helpers.createStructName(forClassNamed: name),
+            self.helpers.createStructName(forClassNamed: name, namespaces: namespaces),
             self.helpers.createClassName(forClassNamed: name)
         )
     }
@@ -173,17 +174,18 @@ public final class TypeIdentifier {
         return .enumerated(words[index + 1])
     }
 
-    fileprivate func identifyPointer(fromType type: String) -> VariableTypes {
+    fileprivate func identifyPointer(fromType type: String, namespaces: [CNamespace]) -> VariableTypes {
         return .pointer(
             self.identify(
                 fromTypeSignature: String(type.dropLast()).trimmingCharacters(in: .whitespaces),
-                andArrayCounts: []
+                andArrayCounts: [],
+                namespaces: namespaces
             )
         )
     }
 
-    fileprivate func identifyArray(fromType type: String, andCounts arrCounts: [String]) -> VariableTypes {
-        let vtype = self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst()))
+    fileprivate func identifyArray(fromType type: String, andCounts arrCounts: [String], namespaces: [CNamespace]) -> VariableTypes {
+        let vtype = self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst()), namespaces: namespaces)
         switch vtype {
             case .string:
                 return .string(arrCounts[0])
@@ -191,7 +193,7 @@ public final class TypeIdentifier {
                 break
         }
         return .array(
-            self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst())),
+            self.identify(fromTypeSignature: type, andArrayCounts: Array(arrCounts.dropFirst()), namespaces: namespaces),
             arrCounts[0]
         )
     }

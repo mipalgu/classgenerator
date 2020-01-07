@@ -56,6 +56,8 @@
  *
  */
 
+import whiteboard_helpers
+
 /**
  *  The standard `Parser`.
  */
@@ -140,17 +142,19 @@ public class ClassGeneratorParser {
         guard let value = self.getValue(fromWords: &words) else {
             return task
         }
-        let namespaces = value.components(separatedBy: "::")
-        let check: ((Int, Character)) -> Bool = { (tuple: (Int, Character)) -> Bool in
-            !tuple.1.isASCII || (!tuple.1.isLetter && !tuple.1.isNumber && tuple.1 != "_") 
+        let namespaces: [CNamespace]
+        do {
+            namespaces = try WhiteboardHelpers().parseNamespaces(value)
+        } catch let e as WhiteboardHelpers.ParserErrors {
+            switch e {
+            case .malformedValue(let reason):
+                throw ClassGeneratorErrors.malformedValue(reason: reason)
+            }
+        } catch let e {
+            throw ClassGeneratorErrors.malformedValue(reason: "\(e)")
         }
-        if let first = namespaces.first(where: { nil != $0.enumerated().first(where: check)}) {
-            let index = first.enumerated().first(where: check)!.0
-            let pre = "The namespace list '"
-            let spaces = String(Array<Character>(repeating: " ", count: pre.count + index))
-            throw ClassGeneratorErrors.malformedValue(reason: pre + value + "' must only contain letters, numbers and underscores separated by '::'." + "\n" + spaces + "^" + "\n" + spaces + "|")
-        }
-        temp.cppNamespace = namespaces
+        temp.namespaces = namespaces
+        temp.cppNamespace = namespaces.map { WhiteboardHelpers().toCPPNamespace(cNamespace: $0) }
         return temp
     }
 

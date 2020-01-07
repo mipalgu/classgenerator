@@ -96,7 +96,8 @@ public final class CPPHeaderCreator: Creator {
         forFileNamed fileName: String,
         withClassName className: String,
         withStructName structName: String,
-        generatedFrom genfile: String
+        generatedFrom genfile: String,
+        namespaces: [CNamespace]
     ) -> String? {
         let head = self.createHead(
             forFile: fileName,
@@ -111,7 +112,8 @@ public final class CPPHeaderCreator: Creator {
             extendingStruct: structName,
             withVariables: cls.variables,
             andEmbeddedCpp: cls.embeddedCpp,
-            andPostCpp: cls.postCpp
+            andPostCpp: cls.postCpp,
+            namespaces: namespaces
         )
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
         return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(className)_DEFINED\n"
@@ -152,13 +154,14 @@ public final class CPPHeaderCreator: Creator {
         extendingStruct structName: String,
         withVariables variables: [Variable],
         andEmbeddedCpp embeddedCpp: String?,
-        andPostCpp postCpp: String?
+        andPostCpp postCpp: String?,
+        namespaces: [CNamespace]
     ) -> String {
-        let namespaces = self.namespaces + ["guWhiteboard"]
-        let startNamespace = namespaces.enumerated().lazy.map {
+        let namespacesDefs = self.namespaces + ["guWhiteboard"]
+        let startNamespace = namespacesDefs.enumerated().lazy.map {
             self.stringHelpers.indent("namespace " + $1 + " {", $0)
         }.combine("") { $0 + "\n\n" + $1 }
-        let endNamespace = namespaces.enumerated().reversed().lazy.map {
+        let endNamespace = namespacesDefs.enumerated().reversed().lazy.map {
             self.stringHelpers.indent("} /// namespace " + $1, $0)
         }.combine("") { $0 + "\n\n" + $1 }
         let content = self.createClassContent(
@@ -166,7 +169,8 @@ public final class CPPHeaderCreator: Creator {
             forClassNamed: className,
             extending: structName,
             withVariables: variables,
-            andEmbeddedCpp: embeddedCpp
+            andEmbeddedCpp: embeddedCpp,
+            namespaces: namespaces
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
         let allContent = content + postCpp + "\n\n"
@@ -178,7 +182,8 @@ public final class CPPHeaderCreator: Creator {
         forClassNamed name: String,
         extending extendName: String,
         withVariables variables: [Variable],
-        andEmbeddedCpp cpp: String?
+        andEmbeddedCpp cpp: String?,
+        namespaces: [CNamespace]
     ) -> String {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
         let publicLabel = "public:"
@@ -211,7 +216,7 @@ public final class CPPHeaderCreator: Creator {
             forVariables: variables,
             otherType: "struct " + extendName
         )
-        let privateContent = self.createInit(forClass: cls, forVariables: variables)
+        let privateContent = self.createInit(forClass: cls, forVariables: variables, namespaces: namespaces)
         let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
             + copyConstructor + "\n\n"
@@ -227,19 +232,22 @@ public final class CPPHeaderCreator: Creator {
             forClass: cls,
             forClassNamed: name,
             andStructNamed: extendName,
-            withVariables: variables
+            withVariables: variables,
+            namespaces: namespaces
         )
         let toString = self.stringFunctionsCreator.createToStringFunction(
             forClass: cls,
             forClassNamed: name,
             andStructNamed: extendName,
-            withVariables: variables
+            withVariables: variables,
+            namespaces: namespaces
         )
         let fromString = self.fromStringCreator.createFromStringFunction(
             forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
-            withVariables: variables
+            withVariables: variables,
+            namespaces: namespaces
         )
         return self.stringHelpers.cIndent(def + "\n\n" + privateSection + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
@@ -255,7 +263,7 @@ public final class CPPHeaderCreator: Creator {
         return comment + "\n" + def
     }
     
-    fileprivate func createInit(forClass cls: Class, forVariables variables: [Variable]) -> String {
+    fileprivate func createInit(forClass cls: Class, forVariables variables: [Variable], namespaces: [CNamespace]) -> String {
         let comment = self.creatorHelpers.createComment(from: "Set the members of the class.")
         let startdef = "void init("
         let list = self.createDefaultParameters(forVariables: variables)
@@ -264,7 +272,7 @@ public final class CPPHeaderCreator: Creator {
             forVariables: variables,
             addConstOnPointers: true,
             assignDefaults: true,
-            self.creatorHelpers.createArrayCountDef(inClass: cls.name)
+            self.creatorHelpers.createArrayCountDef(inClass: cls.name, namespaces: namespaces)
         ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(setters) + "\n}"
     }

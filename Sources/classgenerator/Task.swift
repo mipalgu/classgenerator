@@ -56,6 +56,8 @@
  *
  */
 
+import whiteboard_helpers
+
 public struct Task {
 
     var generateCppWrapper: Bool = true
@@ -72,7 +74,9 @@ public struct Task {
 
     var cppHeaderOutputPath: String?
     
-    var cppNamespace: [String] = []
+    var namespaces: [CNamespace] = []
+    
+    var cppNamespace: [CPPNamespace] = []
 
     var swiftFileOutputPath: String?
     

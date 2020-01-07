@@ -140,7 +140,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         for (type, expected) in types {
             XCTAssertEqual(
                 expected,
-                self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+                self.identifier.identify(fromTypeSignature: type, andArrayCounts: [], namespaces: [])
             )
         }
     }
@@ -149,7 +149,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         let type = "int *"
         XCTAssertEqual(
             .pointer(.numeric(.signed)),
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [], namespaces: [])
         )
     }
 
@@ -157,7 +157,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         let type = "int*"
         XCTAssertEqual(
             .pointer(.numeric(.signed)),
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [], namespaces: [])
         )
     }
 
@@ -166,7 +166,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         let length = "SOME_LENGTH_MACRO"
         XCTAssertEqual(
             .array(.numeric(.signed), length),
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [length])
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [length], namespaces: [])
         )
     }
 
@@ -175,7 +175,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         let lengths = ["L1", "L2", "L3"]
         XCTAssertEqual(
             .array(.array(.array(.numeric(.signed), lengths[2]), lengths[1]), lengths[0]),
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: lengths)
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: lengths, namespaces: [])
         )
     }
 
@@ -183,7 +183,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         let type = "some unknown type"
         XCTAssertEqual(
             .unknown,
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [], namespaces: [])
         )
     }
 
@@ -191,13 +191,13 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
         let type = "enum myEnum"
         XCTAssertEqual(
             .enumerated("myEnum"),
-            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [])
+            self.identifier.identify(fromTypeSignature: type, andArrayCounts: [], namespaces: [])
         )
     }
 
     public func test_identifiesBit() {
         let type = "bit"
-        XCTAssertEqual(.bit, self.identifier.identify(fromTypeSignature: type, andArrayCounts: []))
+        XCTAssertEqual(.bit, self.identifier.identify(fromTypeSignature: type, andArrayCounts: [], namespaces: []))
     }
 
 }

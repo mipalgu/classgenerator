@@ -58,9 +58,10 @@
 
 import Containers
 import Data
+import whiteboard_helpers
 
 public protocol VariablesTableParserType: WarningsContainerDelegator, WarningsContainer, LastWarningAccessor {
 
-    func parseVariables(fromSection: String) throws -> [Variable]
+    func parseVariables(fromSection: String, namespaces: [CNamespace]) throws -> [Variable]
 
 }

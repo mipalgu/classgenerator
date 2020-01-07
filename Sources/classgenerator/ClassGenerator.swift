@@ -63,6 +63,7 @@ import Data
 import Helpers
 import IO
 import Parsers
+import whiteboard_helpers
 
 public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCreatorFactory: CreatorFactory, CFileCreatorFactory: CreatorFactory, CPPHeaderCreatorFactory: CPPCreatorFactory, SwiftFileCreatorFactory: CreatorFactory> {
 
@@ -142,13 +143,13 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         guard let contents = self.fileHelpers.read(url) else {
             self.handleError("Unable to open file: \(url.path)")
         }
-        guard let cls = self.parser.parse(contents, withName: genfile) else {
+        guard let cls = self.parser.parse(contents, withName: genfile, namespaces: task.namespaces) else {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)
         let creatorHelpers = self.creatorHelpersFactory.make(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
         let className = creatorHelpers.createClassName(forClassNamed: cls.name)
-        let structName = creatorHelpers.createStructName(forClassNamed: cls.name)
+        let structName = creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: task.namespaces)
         let cHeaderCreator = self.cHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         let cFileCreator = self.cFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cppNamespace: task.cppNamespace)
@@ -167,7 +168,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
             structName: structName,
             generatedFrom: genfile,
             generateCppWrapper: task.generateCppWrapper,
-            generateSwiftWrapper: task.generateSwiftWrapper
+            generateSwiftWrapper: task.generateSwiftWrapper,
+            namespaces: task.namespaces
         )
     }
 
@@ -197,7 +199,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         structName: String,
         generatedFrom genfile: String,
         generateCppWrapper: Bool,
-        generateSwiftWrapper: Bool
+        generateSwiftWrapper: Bool,
+        namespaces: [CNamespace]
     ) {
         guard true == self.generate(cHeaderPath.path, {
             cHeaderCreator.create(
@@ -205,7 +208,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                 forFileNamed: cHeaderPath.lastPathComponent,
                 withClassName: className,
                 withStructName: structName,
-                generatedFrom: genfile
+                generatedFrom: genfile,
+                namespaces: namespaces
             )
         }) else {
             self.handleError(cHeaderCreator.lastError ?? "Unable to create C Header at path: \(cHeaderPath.path)")
@@ -216,7 +220,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                 forFileNamed: cFilePath.lastPathComponent,
                 withClassName: className,
                 withStructName: structName,
-                generatedFrom: genfile
+                generatedFrom: genfile,
+                namespaces: namespaces
             )
         }) else {
             self.handleError(cFileCreator.lastError ?? "Unable to create C File")
@@ -228,7 +233,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                     forFileNamed: cppHeaderPath.lastPathComponent,
                     withClassName: className,
                     withStructName: structName,
-                    generatedFrom: genfile
+                    generatedFrom: genfile,
+                    namespaces: namespaces
                 )
             }) else {
                 self.handleError(cppHeaderCreator.lastError ?? "Unable to create C++ Header")
@@ -241,7 +247,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                     forFileNamed: swiftFilePath.lastPathComponent,
                     withClassName: className,
                     withStructName: structName,
-                    generatedFrom: genfile
+                    generatedFrom: genfile,
+                    namespaces: namespaces
                 )
             }) else {
                 self.handleError(swiftFileCreator.lastError ?? "Unable to create Swift file.")

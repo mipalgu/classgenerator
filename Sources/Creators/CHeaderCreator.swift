@@ -91,16 +91,18 @@ public final class CHeaderCreator: Creator {
         forFileNamed fileName: String,
         withClassName className: String,
         withStructName structName: String,
-        generatedFrom genfile: String
+        generatedFrom genfile: String,
+        namespaces: [CNamespace]
     ) -> String? {
-        guard let strct = self.createStruct(forClass: cls, withStructName: structName) else {
+        guard let strct = self.createStruct(forClass: cls, withStructName: structName, namespaces: namespaces) else {
             return nil
         }
         let head = self.createHead(
             forFileNamed: fileName,
             withClass: cls,
             withStructName: structName,
-            andGenFile: genfile
+            andGenFile: genfile,
+            namespaces: namespaces
         )
         let postC = nil == cls.postC ? "" : "\n\n" + cls.postC!
         let tail = self.createTail(withClassNamed: structName, andPostC: postC)
@@ -112,7 +114,8 @@ public final class CHeaderCreator: Creator {
         forFileNamed fileName: String,
         withClass cls: Class,
         withStructName structName: String,
-        andGenFile genfile: String
+        andGenFile genfile: String,
+        namespaces: [CNamespace]
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
@@ -154,19 +157,19 @@ public final class CHeaderCreator: Creator {
             fromVariables: cls.variables,
             withToStringBufferSize: toStringSize
         )
-        let defName = self.creatorHelpers.createDefName(fromGenName: cls.name)
+        let defName = self.creatorHelpers.createDefName(fromGenName: cls.name, namespaces: namespaces)
         var defs = ""
         defs += "#define \(defName)_GENERATED \n"
         defs += "#define \(defName)_C_STRUCT \(structName) \n"
         defs += "#define \(defName)_NUMBER_OF_VARIABLES \(cls.variables.count)\n\n"
         defs += "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION\n"
-        defs += "#define \(self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: cls.name)) \(descBufferSize)\n"
-        defs += "#define \(self.creatorHelpers.createToStringBufferSizeDef(fromGenName: cls.name)) \(toStringSize)\n"
+        defs += "#define \(self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: cls.name, namespaces: namespaces)) \(descBufferSize)\n"
+        defs += "#define \(self.creatorHelpers.createToStringBufferSizeDef(fromGenName: cls.name, namespaces: namespaces)) \(toStringSize)\n"
         defs += "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION\n"
         for v in cls.variables {
             switch v.type {
                 case .array(_, let count):
-                    let def = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: v.label, level: 0)
+                    let def = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: v.label, level: 0, namespaces: namespaces)
                     defs += "\n#define \(def) \(count)"
                 default:
                     continue
@@ -183,7 +186,7 @@ public final class CHeaderCreator: Creator {
 //        }.combine("") { $0 + "\n" + $1}
 //    }
 
-    fileprivate func createStruct(forClass cls: Class, withStructName name: String) -> String? {
+    fileprivate func createStruct(forClass cls: Class, withStructName name: String, namespaces: [CNamespace]) -> String? {
         let pragma = cls.variables.count > 0 ? "" : "#pragma clang diagnostic push\n#pragma clang diagnostic ignored \"-Wc++-compat\"\n\n"
         let start = pragma + self.creatorHelpers.createComment(from: cls.comment) + "\n" + "struct \(name)\n{\n\n"
         var properties: String = ""
@@ -192,7 +195,8 @@ public final class CHeaderCreator: Creator {
                 withLabel: v.label,
                 forClassNamed: cls.name,
                 fromType: v.type,
-                andCType: v.cType
+                andCType: v.cType,
+                namespaces: namespaces
             ) else {
                 return nil
             }
@@ -209,6 +213,7 @@ public final class CHeaderCreator: Creator {
         forClassNamed className: String,
         fromType type: VariableTypes,
         andCType cType: String,
+        namespaces: [CNamespace],
         withLevel level: Int = 0
     ) -> String? {
         switch type {
@@ -224,7 +229,7 @@ public final class CHeaderCreator: Creator {
                     + cType
                     + ", \(label)"
                     + ", "
-                    + self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: level)
+                    + self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: level, namespaces: namespaces)
                     + ")"
             case .bit:
                 return "BIT_PROPERTY(" + label + ")"

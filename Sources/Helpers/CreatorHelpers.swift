@@ -118,12 +118,12 @@ public final class CreatorHelpers {
         }
     }
 
-    public func createArrayCountDef(inClass className: String, forVariable label: String, level: Int) -> String {
-        return self.helpers.createArrayCountDef(inClass: className, forVariable: label, level: level, backwardsCompatible: self.backwardsCompatible)
+    public func createArrayCountDef(inClass className: String, forVariable label: String, level: Int, namespaces: [CNamespace]) -> String {
+        return self.helpers.createArrayCountDef(inClass: className, forVariable: label, level: level, backwardsCompatible: self.backwardsCompatible, namespaces: namespaces)
     }
 
-    public func createArrayCountDef(inClass className: String) -> (String) -> (Int) -> String {
-        return self.helpers.createArrayCountDef(inClass: className, backwardsCompatible: self.backwardsCompatible)
+    public func createArrayCountDef(inClass className: String, namespaces: [CNamespace]) -> (String) -> (Int) -> String {
+        return self.helpers.createArrayCountDef(inClass: className, backwardsCompatible: self.backwardsCompatible, namespaces: namespaces)
     }
 
     public func createClassName(forClassNamed className: String) -> String {
@@ -138,16 +138,16 @@ public final class CreatorHelpers {
         return temp + end
     }
     
-    public func createDefName(fromGenName genName: String) -> String {
-        return self.helpers.createDefName(forClassNamed: genName, backwardsCompatible: self.backwardsCompatible)
+    public func createDefName(fromGenName genName: String, namespaces: [CNamespace]) -> String {
+        return self.helpers.createDefName(forClassNamed: genName, backwardsCompatible: self.backwardsCompatible, namespaces: namespaces)
     }
     
-    public func createDescriptionBufferSizeDef(fromGenName genName: String) -> String {
-        return self.helpers.createDescriptionBufferSizeDef(forClassNamed: genName)
+    public func createDescriptionBufferSizeDef(fromGenName genName: String, namespaces: [CNamespace]) -> String {
+        return self.helpers.createDescriptionBufferSizeDef(forClassNamed: genName, namespaces: namespaces)
     }
     
-    public func createToStringBufferSizeDef(fromGenName genName: String) -> String {
-        return self.helpers.createToStringBufferSizeDef(forClassNamed: genName)
+    public func createToStringBufferSizeDef(fromGenName genName: String, namespaces: [CNamespace]) -> String {
+        return self.helpers.createToStringBufferSizeDef(forClassNamed: genName, namespaces: namespaces)
     }
 
     //swiftlint:disable:next function_body_length
@@ -218,8 +218,8 @@ public final class CreatorHelpers {
             """
     }
 
-    public func createStructName(forClassNamed className: String) -> String {
-        return self.helpers.createStructName(forClassNamed: className, backwardsCompatible: self.backwardsCompatible)
+    public func createStructName(forClassNamed className: String, namespaces: [CNamespace]) -> String {
+        return self.helpers.createStructName(forClassNamed: className, backwardsCompatible: self.backwardsCompatible, namespaces: namespaces)
     }
 
     public func isSupportedStringType(_ type: VariableTypes) -> Bool {

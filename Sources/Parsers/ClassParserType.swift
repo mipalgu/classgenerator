@@ -58,9 +58,10 @@
 
 import Containers
 import Data
+import whiteboard_helpers
 
 public protocol ClassParserType: ErrorContainer, LastWarningAccessor, WarningsContainer, WarningsContainerDelegator {
 
-    func parse(_: String, withName: String) -> Class?
+    func parse(_: String, withName: String, namespaces: [CNamespace]) -> Class?
 
 }

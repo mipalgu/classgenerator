@@ -99,7 +99,7 @@ public final class ClassParser<
         self.variablesParser = variablesParser
     }
 
-    public func parse(_ contents: String, withName file: String) -> Class? {
+    public func parse(_ contents: String, withName file: String, namespaces: [CNamespace]) -> Class? {
         self.errors = []
         do {
             //swiftlint:disable opening_brace
@@ -120,7 +120,7 @@ public final class ClassParser<
                 self.errors.append("You must specify a properties section in your class.")
                 return nil
             }
-            let variables = try self.variablesParser.parseVariables(fromSection: variablesSection)
+            let variables = try self.variablesParser.parseVariables(fromSection: variablesSection, namespaces: namespaces)
             let enums = [sections.preC ?? "", sections.postC ?? ""].flatMap(self.parseEnums)
             guard let author: String = self.parseAuthor(fromSection: authorSection) else {
                 self.errors.append("You must specify the author of the class.")

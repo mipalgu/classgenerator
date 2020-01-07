@@ -60,6 +60,7 @@ import Foundation
 
 import Containers
 import Data
+import whiteboard_helpers
 
 //swiftlint:disable opening_brace
 public final class VariablesTableParser<Container: ParserWarningsContainer, VariableParser: VariableParserType>:
@@ -75,13 +76,13 @@ public final class VariablesTableParser<Container: ParserWarningsContainer, Vari
         self.parser = parser
     }
 
-    public func parseVariables(fromSection section: String) throws -> [Variable] {
+    public func parseVariables(fromSection section: String, namespaces: [CNamespace]) throws -> [Variable] {
         let lines = section.components(separatedBy: CharacterSet.newlines)
         return try lines.enumerated().filter {
             false == $1.trimmingCharacters(in: .whitespaces).isEmpty
         }.map { (index: Int, line: String) in
             do {
-                return try self.parser.parseVariable(fromLine: line)
+                return try self.parser.parseVariable(fromLine: line, namespaces: namespaces)
             } catch ParsingErrors.parsingError(let offset, let message) {
                 throw ParsingErrors.sectionError(index, offset, message)
             } catch {
