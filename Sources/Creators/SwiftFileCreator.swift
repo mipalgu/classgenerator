@@ -129,10 +129,11 @@ public final class SwiftFileCreator: Creator {
         let def = self.createStructDef(on: wrapperName)
         let rawDefinition = "public var \(rawVariable): \(base)"
         let wrappers = self.createWrappers(forVariables: variables, referencing: rawVariable).map { $0 + "\n\n" } ?? ""
+        let modifiers = self.createModifiers(forVariables: variables, referencing: rawVariable)
         let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
         let copyConstructor = self.createCopyConstructor(on: base, withRawVariable: rawVariable)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables, referencing: rawVariable)
-        let content = rawDefinition + "\n\n" + wrappers + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary
+        let content = rawDefinition + "\n\n" + wrappers + modifiers + "\n\n" + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
@@ -227,6 +228,16 @@ public final class SwiftFileCreator: Creator {
             default:
                 return label
         }
+    }
+    
+    fileprivate func createModifiers(forVariables variables: [Variable], referencing rawValue: String) -> String {
+        let validVars = "public var validVars: [String: [Any]] {\n" + self.stringHelpers.indent("return [\"\(rawValue)\": []]") + "\n}"
+        let manipulators = "public var manipulators: [String: (Any) -> Any] {\n" + self.stringHelpers.indent("return [:]") + "\n}"
+        let list = variables.lazy.map { "\"" + $0.label + "\": self." + rawValue + "." + $0.label }
+        let computedVars = list.combine("") { $0 + ",\n" + $1 }
+        let body = "return [\n" + self.stringHelpers.indent(computedVars) + "\n]"
+        let computedVarsDefinition = "public var computedVars: [String: Any] {\n" + self.stringHelpers.indent(body) + "\n}"
+        return computedVarsDefinition + "\n\n" + manipulators + "\n\n" + validVars
     }
 
     fileprivate func createConstructor(on structName: String, withRawVariable rawVariable: String, withVariables variables: [Variable]) -> String {
