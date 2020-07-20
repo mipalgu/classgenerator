@@ -62,6 +62,7 @@ import whiteboard_helpers
 
 public protocol VariableParserType: LastWarningAccessor, WarningsContainer, WarningsContainerDelegator {
 
-    func parseVariable(fromLine: String, namespaces: [CNamespace]) throws -> Variable
+    func parseCommentBlock(fromLines lines: [String]) throws -> String
+    func parseVariable(fromLine: String, namespaces: [CNamespace], comment: String?) throws -> Variable
 
 }

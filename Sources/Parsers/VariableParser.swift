@@ -92,12 +92,48 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         self.typeConverter = typeConverter
     }
 
-    public func parseVariable(fromLine line: String, namespaces: [CNamespace]) throws -> Variable {
-        let (remaining, comment) = try self.parseComment(fromLine: line)
-        return try self.parseVar(fromSegment: remaining, withComment: comment, namespaces: namespaces)
+    public func parseCommentBlock(fromLines lines: [String]) throws -> String {
+        guard let first = lines.first, let last = lines.dropLast().last else {
+            throw ParsingErrors.parsingError(0, "Malformed chunk: \(lines.combine("") { $0 + "\n" + $1 })")
+        }
+        if first.trimmingCharacters(in: .whitespaces) != "/**" {
+            throw ParsingErrors.parsingError(0, "A comment block should start with /**")
+        }
+        if last.trimmingCharacters(in: .whitespaces) != "*/" {
+            throw ParsingErrors.parsingError(lines.count - 2, "A comment block should end with */")
+        }
+        return lines.dropFirst().dropLast(2).map {
+            let trimmed = $0.trimmingCharacters(in: .whitespaces)
+            if trimmed.prefix(1) == "*" {
+                return String(trimmed.dropFirst().trimmingCharacters(in: .whitespaces))
+            }
+            return trimmed
+        }.combine("") {
+            $0 + "\n" + $1
+        }
+    }
+    
+    public func parseVariable(fromLine line: String, namespaces: [CNamespace], comment: String?) throws -> Variable {
+        let comment: String = try comment ?? self.parseComment(fromLine: line)
+        let definition = try self.definition(fromLine: line)
+        return try self.parseVar(fromSegment: definition, withComment: comment, namespaces: namespaces)
+    }
+    
+    fileprivate func definition(fromLine line: String) throws -> String {
+        let split = line.components(separatedBy: "//")
+        guard let first = split.first else {
+            throw ParsingErrors.parsingError(0, "Empty line in variables table detected.")
+        }
+        let tabbed = first.components(separatedBy: "\t").lazy.map {
+            $0.trimmingCharacters(in: CharacterSet.whitespaces)
+        }
+        if 2 == split.count || tabbed.count <= 1 {
+            return tabbed.combine("") { $0 + " " + $1 }
+        }
+        return tabbed[0..<2].combine("") { $0 + " " + $1 }
     }
 
-    fileprivate func parseComment(fromLine line: String) throws -> (String, String) {
+    fileprivate func parseComment(fromLine line: String) throws -> String {
         let split = line.components(separatedBy: "//")
         guard split.count <= 2 else {
             throw ParsingErrors.parsingError(
@@ -115,15 +151,9 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
             throw ParsingErrors.parsingError(line.count, "You must supply a comment.")
         }
         if 2 == split.count {
-            return (
-                tabbed.reduce("") { $0 + " " + $1 }.trimmingCharacters(in: .whitespaces),
-                split[1].trimmingCharacters(in: CharacterSet.whitespaces)
-            )
+            return split[1].trimmingCharacters(in: CharacterSet.whitespaces)
         }
-        return (
-            tabbed[0] + " " + tabbed[1],
-            tabbed.dropFirst(2).reduce("") { $0 + "\t" + $1 }.trimmingCharacters(in: .whitespaces)
-        )
+        return tabbed.dropFirst(2).reduce("") { $0 + "\t" + $1 }.trimmingCharacters(in: .whitespaces)
     }
 
     //swiftlint:disable large_tuple

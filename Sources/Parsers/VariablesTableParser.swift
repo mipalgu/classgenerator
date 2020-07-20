@@ -77,18 +77,28 @@ public final class VariablesTableParser<Container: ParserWarningsContainer, Vari
     }
 
     public func parseVariables(fromSection section: String, namespaces: [CNamespace]) throws -> [Variable] {
-        let lines = section.components(separatedBy: CharacterSet.newlines)
-        return try lines.enumerated().filter {
-            false == $1.trimmingCharacters(in: .whitespaces).isEmpty
-        }.map { (index: Int, line: String) in
+        let chunks = Array(section.components(separatedBy: CharacterSet.newlines).enumerated()).grouped { (lhs: (index: Int, element: String), rhs: (index: Int, element: String)) -> Bool in
+            let prefix = lhs.element.trimmingCharacters(in: .whitespaces).prefix(2)
+            return (prefix == "/*" || prefix.first == "*" || prefix == "*/") && rhs.element.trimmingCharacters(in: .whitespaces) != ""
+        }.lazy.filter { !$0.filter { $1.trimmingCharacters(in: .whitespaces) != "" }.isEmpty }
+        return try Array(chunks.map { (chunk: [(offset: Int, element: String)]) -> Variable in
+            let comment: String?
             do {
-                return try self.parser.parseVariable(fromLine: line, namespaces: namespaces)
+                comment = try chunk[0].element.trimmingCharacters(in: .whitespaces).prefix(2) != "/*" ? nil : self.parser.parseCommentBlock(fromLines: chunk.map { $1 })
             } catch ParsingErrors.parsingError(let offset, let message) {
-                throw ParsingErrors.sectionError(index, offset, message)
-            } catch {
-                throw ParsingErrors.sectionError(index, 0, "Unable to parse variables")
+                throw ParsingErrors.parsingError(chunk[0].offset + offset, message)
             }
-        }
+            guard let last = chunk.last else {
+                throw ParsingErrors.parsingError(0, "Unable to parse chunk.")
+            }
+            do {
+                return try self.parser.parseVariable(fromLine: last.element, namespaces: namespaces, comment: comment)
+            } catch ParsingErrors.parsingError(let offset, let message) {
+                throw ParsingErrors.sectionError(last.offset, offset, message)
+            } catch {
+                throw ParsingErrors.sectionError(last.offset, 0, "Unable to parse variables")
+            }
+        })
     }
 
 }

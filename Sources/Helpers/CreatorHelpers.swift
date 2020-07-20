@@ -132,10 +132,15 @@ public final class CreatorHelpers {
 
     public func createComment(from str: String, prepend: String = "") -> String {
         let lines = str.components(separatedBy: CharacterSet.newlines)
-        let start = prepend + "/**\n"
+        let start = prepend + "/**"
         let end = prepend + " */"
-        let temp = lines.reduce(start) { $0 + prepend + " * " + $1 + "\n" }
-        return temp + end
+        let temp = lines.map {
+            if $0.trimmingCharacters(in: .whitespaces).isEmpty {
+                return prepend + " *"
+            }
+            return prepend + " * " + $0
+        }.combine("") { $0 + "\n" + $1 }
+        return start + "\n" + temp + "\n" + end
     }
     
     public func createDefName(fromGenName genName: String, namespaces: [CNamespace]) -> String {
