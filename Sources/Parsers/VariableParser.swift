@@ -105,7 +105,7 @@ public final class VariableParser<Container: ParserWarningsContainer>: VariableP
         return lines.dropFirst().dropLast(2).map {
             let trimmed = $0.trimmingCharacters(in: .whitespaces)
             if trimmed.prefix(1) == "*" {
-                return String(trimmed.dropFirst().trimmingCharacters(in: .whitespaces))
+                return String(trimmed.dropFirst())
             }
             return trimmed
         }.combine("") {

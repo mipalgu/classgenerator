@@ -135,8 +135,11 @@ public final class CreatorHelpers {
         let start = prepend + "/**"
         let end = prepend + " */"
         let temp = lines.map {
-            if $0.trimmingCharacters(in: .whitespaces).isEmpty {
+            guard let first = $0.first, !$0.trimmingCharacters(in: .whitespaces).isEmpty else {
                 return prepend + " *"
+            }
+            if first.isWhitespace {
+                return prepend + " *" + $0
             }
             return prepend + " * " + $0
         }.combine("") { $0 + "\n" + $1 }
