@@ -170,7 +170,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         self.errors.append("Unable to parse underlying mixin: \(filePath)")
                         return
                     }
-                    guard let tempVars = variables.keys.failMap({ (key: String) -> (String, String)? in
+                    guard let tempVars = Set(declaredVariables.keys).union(Set(variables.keys)).failMap({ (key: String) -> (String, String)? in
                         if nil == declaredVariables[key] {
                             self.errors.append("Using unknown parameter \(key) in mixin call.")
                             return nil
