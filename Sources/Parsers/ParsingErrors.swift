@@ -62,3 +62,14 @@ public enum ParsingErrors: Error {
     case sectionError(Int, Int, String)
 
 }
+
+extension ParsingErrors: CustomStringConvertible {
+    
+    public var description: String {
+        switch self {
+        case .parsingError(_, let message), .sectionError(_, _, let message):
+            return message
+        }
+    }
+    
+}

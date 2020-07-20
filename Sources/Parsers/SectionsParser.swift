@@ -151,7 +151,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         filePath = parsedData.0
                         variables = parsedData.1
                     } catch let e {
-                        self.errors.append("\(e)")
+                        self.errors.append("\(e) for call: \(first)")
                         return
                     }
                     guard let contents = self.reader.read(filePath: filePath) else {
