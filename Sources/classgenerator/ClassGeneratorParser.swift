@@ -106,6 +106,8 @@ public class ClassGeneratorParser {
             return self.handleBFlag(_: task, words: &words)
         case "-c":
             return self.handleCFlag(task, words: &words)
+        case "-G":
+            return self.handleGFlag(task, words: &words)
         case "-n":
             return try self.handleNFlag(task, words: &words)
         case "-s":
@@ -134,6 +136,15 @@ public class ClassGeneratorParser {
     fileprivate func handleCFlag(_ task: Task, words: inout [String]) -> Task {
         var temp = task
         temp.generateCppWrapper = false
+        return temp
+    }
+    
+    private func handleGFlag(_ task: Task, words: inout [String]) -> Task {
+        guard let value = self.getValue(fromWords: &words) else {
+            return task
+        }
+        var temp = task
+        temp.searchPaths.append(value)
         return temp
     }
     

@@ -79,7 +79,8 @@ public final class MixinParser {
         } else if filePathStr.first == "<" && filePathStr.last == ">" {
             filePath = .searchPath(name: String(filePathStr.dropFirst().dropLast()))
         } else {
-            throw ParsingErrors.parsingError(0, "Malformed mixin name.")
+            let append = filePathStr.suffix(6) == ".mixin" ? "" : ".mixin"
+            filePath = .searchPath(name: filePathStr + append)
         }
         let variables = try self.parseVariablesList(line: trimmedLine, delimiter: ":", allowEmpty: false)
         return (filePath, Dictionary(uniqueKeysWithValues: variables.map { ($0, $1!) }))

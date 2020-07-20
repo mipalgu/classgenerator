@@ -99,14 +99,14 @@ public final class ClassParser<
         self.variablesParser = variablesParser
     }
 
-    public func parse(_ contents: String, withName file: String, namespaces: [CNamespace]) -> Class? {
+    public func parse(_ contents: String, withName file: String, namespaces: [CNamespace], searchPaths: [String]) -> Class? {
         self.errors = []
         do {
             //swiftlint:disable opening_brace
             guard
                 let name = self.parseClassName(from: file),
                 let sections = self.delegate(
-                    { self.sectionsParser.parseSections(fromContents: contents, withVariables: [:]) },
+                    { self.sectionsParser.parseSections(fromContents: contents, withVariables: [:], searchPaths: searchPaths) },
                     self.sectionsParser
                 )
             else {

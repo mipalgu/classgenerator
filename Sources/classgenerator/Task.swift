@@ -77,6 +77,8 @@ public struct Task {
     var namespaces: [CNamespace] = []
     
     var cppNamespace: [CPPNamespace] = []
+    
+    var searchPaths: [String] = []
 
     var swiftFileOutputPath: String?
     

@@ -143,7 +143,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         guard let contents = self.fileHelpers.read(url) else {
             self.handleError("Unable to open file: \(url.path)")
         }
-        guard let cls = self.parser.parse(contents, withName: genfile, namespaces: task.namespaces) else {
+        guard let cls = self.parser.parse(contents, withName: genfile, namespaces: task.namespaces, searchPaths: task.searchPaths) else {
             self.handleError(self.parser.lastError ?? "Unable to parse class")
         }
         self.parser.warnings.forEach(self.handleWarning)

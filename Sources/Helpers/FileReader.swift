@@ -60,6 +60,6 @@ import swift_helpers
 
 public protocol FileReader {
 
-    func read(filePath: FilePath) -> String?
+    func read(filePath: FilePath, searchPaths: [String]) -> String?
 
 }

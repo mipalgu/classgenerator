@@ -56,16 +56,20 @@
  *
  */
 
+import Foundation
+
 public final class FoundationFileReader: FileReader {
 
     public init() {}
 
-    public func read(filePath: FilePath) -> String? {
+    public func read(filePath: FilePath, searchPaths: [String]) -> String? {
         switch filePath {
         case .path(let path):
             return try? String(contentsOfFile: path)
-        case .searchPath:
-            return nil
+        case .searchPath(let file):
+            return searchPaths.lazy.compactMap {
+                try? String(contentsOf: URL(fileURLWithPath: $0, isDirectory: true).appendingPathComponent(file, isDirectory: false))
+            }.first
         }
     }
 

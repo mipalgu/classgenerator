@@ -90,14 +90,14 @@ public final class Parser<
         self.fileHelpers = fileHelpers
     }
 
-    public func parse(file: URL, namespaces: [CNamespace]) -> Class? {
+    public func parse(file: URL, namespaces: [CNamespace], searchPaths: [String]) -> Class? {
         self.errors = []
         self.container.warnings = []
         guard let contents = self.fileHelpers.read(file) else {
             self.errors.append("Unable to read contents of file: \(file.path)")
             return nil
         }
-        guard let c = self.parser.parse(contents, withName: file.lastPathComponent, namespaces: namespaces) else {
+        guard let c = self.parser.parse(contents, withName: file.lastPathComponent, namespaces: namespaces, searchPaths: searchPaths) else {
             self.errors.append(contentsOf: self.parser.errors)
             return nil
         }

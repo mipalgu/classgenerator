@@ -83,7 +83,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         self.reader = reader
     }
 
-    public func parseSections(fromContents contents: String, withVariables variables: [String: String] = [:]) -> Sections? {
+    public func parseSections(fromContents contents: String, withVariables variables: [String: String] = [:], searchPaths: [String]) -> Sections? {
         self.errors = []
         let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             .components(separatedBy: CharacterSet.newlines)
@@ -102,12 +102,12 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
             false == (self.isAuthorLine(last) || self.isMarker(str.trimmingCharacters(in: CharacterSet.whitespaces)))
         })
         let trimmedGroup = grouped.map { $0.trim("") }
-        return self.createSections(fromGroups: trimmedGroup)
+        return self.createSections(fromGroups: trimmedGroup, searchPaths: searchPaths)
     }
 
     //swiftlint:disable opening_brace
     //swiftlint:disable:next function_body_length
-    fileprivate func createSections<S: Sequence, C: Collection>(fromGroups seq: S) -> Sections? where
+    fileprivate func createSections<S: Sequence, C: Collection>(fromGroups seq: S, searchPaths: [String]) -> Sections? where
         S.Iterator.Element == C,
         C.Iterator.Element == String
     {
@@ -154,7 +154,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         self.errors.append("\(e) for call: \(first)")
                         return
                     }
-                    guard let contents = self.reader.read(filePath: filePath) else {
+                    guard let contents = self.reader.read(filePath: filePath, searchPaths: searchPaths) else {
                         self.errors.append("Unable to read mixin: \(filePath)")
                         return
                     }
@@ -188,7 +188,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                     }
                     let passedVars = Dictionary(uniqueKeysWithValues: tempVars)
                     let parser = SectionsParser<WarningsContainerRef, Reader>(container: WarningsContainerRef([]), reader: self.reader)
-                    guard let mixinSections = parser.parseSections(fromContents: contents, withVariables: passedVars) else {
+                    guard let mixinSections = parser.parseSections(fromContents: contents, withVariables: passedVars, searchPaths: searchPaths) else {
                         self.errors.append(contentsOf: parser.errors.map { "\(filePath): \($0)" })
                         self.container.warnings.append(contentsOf: parser.warnings.map { "\(filePath): \($0)" })
                         return
