@@ -88,9 +88,8 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             .components(separatedBy: CharacterSet.newlines)
         guard let sanitisedLines = lines.failMap({ (line: String) -> String? in
-                let trimmed = line.trimmingCharacters(in: .whitespaces)
-                if "-" == trimmed.first && false == self.isMarker(trimmed) {
-                    self.errors.append("Malformed marker detected: \(trimmed)")
+                if "-" == line.first && false == self.isMarker(line) {
+                    self.errors.append("Malformed marker detected: \(line)")
                     return nil
                 }
                 return line
