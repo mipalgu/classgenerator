@@ -56,6 +56,7 @@
  *
  */
 
+import Dispatch
 import Foundation
 
 @testable import Creators
@@ -158,6 +159,7 @@ public class DemoTests: ClassGeneratorTestCase {
         buildProcess.currentDirectoryPath = self.filemanager.currentDirectoryPath
         buildProcess.launchPath = "/usr/bin/env"
         buildProcess.arguments = ["bmake", "host"]
+        fork(buildProcess)
         buildProcess.launch()
         buildProcess.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, buildProcess.terminationStatus, "Demo tests failed")
@@ -170,8 +172,7 @@ public class DemoTests: ClassGeneratorTestCase {
         p.launchPath = "/usr/bin/env"
         p.arguments = ["bmake"]
         print((p.launchPath ?? "") + " " + (p.arguments?.combine("") { $0 + " " + $1} ?? ""))
-        p.launch()
-        p.waitUntilExit()
+        fork(p)
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
     }
 
@@ -195,8 +196,7 @@ public class DemoTests: ClassGeneratorTestCase {
             "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
             ]
         print((p.launchPath ?? "") + " " + (p.arguments?.combine("") { $0 + " " + $1} ?? ""))
-        p.launch()
-        p.waitUntilExit()
+        fork(p)
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
     }
 
@@ -222,8 +222,7 @@ public class DemoTests: ClassGeneratorTestCase {
             "-I\(self.filemanager.currentDirectoryPath)/Sources/bridge"
         ]
         print((p.launchPath ?? "") + " " + (p.arguments?.combine("") { $0 + " " + $1} ?? ""))
-        p.launch()
-        p.waitUntilExit()
+        fork(p)
         XCTAssertEqual(EXIT_SUCCESS, p.terminationStatus, "Demo tests failed")
     }
 

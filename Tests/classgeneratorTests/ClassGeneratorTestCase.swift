@@ -56,6 +56,7 @@
  *
  */
 
+import Dispatch
 import Foundation
 @testable import Data
 @testable import classgenerator
@@ -1026,6 +1027,25 @@ public class ClassGeneratorTestCase: XCTestCase {
             return ""
         }
         return contents
+    }
+    
+    func fork(_ process: Process) {
+        if #available(macOS 10.12, *) {
+            let signals = [SIGINT, SIGQUIT, SIGTSTP, SIGKILL]
+            let sources = signals.map { signal in return DispatchSource.makeSignalSource(signal: signal) }
+            sources.forEach {
+                $0.setEventHandler {
+                    process.terminate()
+                }
+                $0.activate()
+            }
+            process.launch()
+            process.waitUntilExit()
+            sources.forEach { $0.cancel() }
+        } else {
+            process.launch()
+            process.waitUntilExit()
+        }
     }
 
 }
