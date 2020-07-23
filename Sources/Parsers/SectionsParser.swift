@@ -62,6 +62,7 @@ import Containers
 import Data
 import Helpers
 import swift_helpers
+import whiteboard_helpers
 
 //swiftlint:disable opening_brace
 public final class SectionsParser<Container: ParserWarningsContainer, Reader: FileReader>: SectionsParserType {
@@ -73,6 +74,8 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
     }
 
     public fileprivate(set) var container: Container
+    
+    private let creatorHelpers = CreatorHelpers()
 
     fileprivate let reader: Reader
 
@@ -83,7 +86,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
         self.reader = reader
     }
 
-    public func parseSections(fromContents contents: String, withVariables variables: [String: String] = [:], searchPaths: [String]) -> Sections? {
+    public func parseSections(forGen genName: String, namespaces: [CNamespace], fromContents contents: String, withVariables variables: [String: String] = [:], searchPaths: [String]) -> Sections? {
         self.errors = []
         let lines = contents.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             .components(separatedBy: CharacterSet.newlines)
@@ -101,12 +104,12 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
             false == (self.isAuthorLine(last) || self.isMarker(str.trimmingCharacters(in: CharacterSet.whitespaces)))
         })
         let trimmedGroup = grouped.map { $0.trim("") }
-        return self.createSections(fromGroups: trimmedGroup, searchPaths: searchPaths)
+        return self.createSections(forGen: genName, namespaces: namespaces, fromGroups: trimmedGroup, searchPaths: searchPaths)
     }
 
     //swiftlint:disable opening_brace
     //swiftlint:disable:next function_body_length
-    fileprivate func createSections<S: Sequence, C: Collection>(fromGroups seq: S, searchPaths: [String]) -> Sections? where
+    fileprivate func createSections<S: Sequence, C: Collection>(forGen genName: String, namespaces: [CNamespace], fromGroups seq: S, searchPaths: [String]) -> Sections? where
         S.Iterator.Element == C,
         C.Iterator.Element == String
     {
@@ -187,12 +190,18 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                     }
                     let passedVars = Dictionary(uniqueKeysWithValues: tempVars)
                     let parser = SectionsParser<WarningsContainerRef, Reader>(container: WarningsContainerRef([]), reader: self.reader)
-                    guard let mixinSections = parser.parseSections(fromContents: contents, withVariables: passedVars, searchPaths: searchPaths) else {
+                    guard let mixinSections = parser.parseSections(forGen: genName, namespaces: namespaces, fromContents: contents, withVariables: passedVars, searchPaths: searchPaths) else {
                         self.errors.append(contentsOf: parser.errors.map { "\(filePath): \($0)" })
                         self.container.warnings.append(contentsOf: parser.warnings.map { "\(filePath): \($0)" })
                         return
                     }
-                    self.merge(&sections, mixinSections, withVariables: passedVars)
+                    let mandatoryVariables = [
+                        "structName": self.creatorHelpers.createStructName(forClassNamed: genName, namespaces: namespaces),
+                        "className": self.creatorHelpers.createStructName(forClassNamed: genName, namespaces: namespaces),
+                        "descBufferSize": self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName, namespaces: namespaces),
+                        "toStringBufferSize": self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: namespaces)
+                    ]
+                    self.merge(&sections, mixinSections, withVariables: passedVars.merging(mandatoryVariables) { (current, _) in current })
                     return
                 }
                 return

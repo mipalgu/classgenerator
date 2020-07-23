@@ -66,7 +66,7 @@ public struct MockedFileReader: FileReader {
         self._read = read
     }
 
-    public func read(filePath: FilePath) -> String? {
+    public func read(filePath: FilePath, searchPaths _: [String]) -> String? {
         switch filePath {
         case .path(let path):
             return self._read(path)

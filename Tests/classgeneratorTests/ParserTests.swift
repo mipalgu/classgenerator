@@ -100,12 +100,12 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_doesntParseNonExistingFile() {
-        XCTAssertNil(self.parser.parse(file: URL(fileURLWithPath: "this/does/not/exist"), namespaces: []))
+        XCTAssertNil(self.parser.parse(file: URL(fileURLWithPath: "this/does/not/exist"), namespaces: [], searchPaths: []))
     }
 
     //swiftlint:disable function_body_length
     public func test_isBackwardsCompatible() {
-        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt"), namespaces: []) else {
+        guard let result = self.parser.parse(file: URL(fileURLWithPath: "gens/old.txt"), namespaces: [], searchPaths: []) else {
             XCTFail("Unable to parse old.txt: \(self.parser.lastError ?? "")")
             return
         }
@@ -118,15 +118,15 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_parsesSections() {
-        guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen"), namespaces: []) else {
+        guard let result1 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections.gen"), namespaces: [], searchPaths: []) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections.gen")
             return
         }
-        guard let result2 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections2.gen"), namespaces: []) else {
+        guard let result2 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections2.gen"), namespaces: [], searchPaths: []) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections2.gen")
             return
         }
-        guard let result3 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections3.gen"), namespaces: []) else {
+        guard let result3 = self.parser.parse(file: URL(fileURLWithPath: "gens/sections3.gen"), namespaces: [], searchPaths: []) else {
             XCTFail(self.parser.lastError ?? "Unable to parse sections3.gen")
             return
         }
@@ -136,7 +136,7 @@ public class ParserTests: ClassGeneratorTestCase {
     }
 
     public func test_warnsAboutUnderscores() {
-        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_S.gen"), namespaces: [])
+        _ = self.parser.parse(file: URL(fileURLWithPath: "gens/underscore_S.gen"), namespaces: [], searchPaths: [])
         XCTAssertTrue(self.parser.warnings.count > 0)
     }
 

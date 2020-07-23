@@ -58,9 +58,10 @@
 
 import Containers
 import Data
+import whiteboard_helpers
 
 public protocol SectionsParserType: ErrorContainer, WarningsContainerDelegator, WarningsContainer, LastWarningAccessor {
 
-    func parseSections(fromContents: String, withVariables: [String: String], searchPaths: [String]) -> Sections?
+    func parseSections(forGen: String, namespaces: [CNamespace], fromContents: String, withVariables: [String: String], searchPaths: [String]) -> Sections?
 
 }

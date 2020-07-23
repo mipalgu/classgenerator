@@ -119,7 +119,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
                 str += "\n\n" + sections[(j + i) % sections.count]
             }
             let contents = str.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard let result = self.parser.parseSections(fromContents: contents) else {
+            guard let result = self.parser.parseSections(forGen: "sections", namespaces: [], fromContents: contents, searchPaths: []) else {
                 XCTFail("\(self.parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
                 return
             }
@@ -151,7 +151,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             variables: "int i // An integer",
             comments: "A comment"
         )
-        guard let result = parser.parseSections(fromContents: contents) else {
+        guard let result = parser.parseSections(forGen: "sections", namespaces: [], fromContents: contents, searchPaths: []) else {
             XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             parser.errors.forEach { XCTFail($0) }
             return
@@ -183,7 +183,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             variables: "int i // An integer",
             comments: "A comment"
         )
-        guard let result = parser.parseSections(fromContents: contents) else {
+        guard let result = parser.parseSections(forGen: "sections", namespaces: [], fromContents: contents, searchPaths: []) else {
             XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
@@ -221,7 +221,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
             variables: "int i // An integer",
             comments: "A comment"
         )
-        guard let result = parser.parseSections(fromContents: contents) else {
+        guard let result = parser.parseSections(forGen: "sections", namespaces: [], fromContents: contents, searchPaths: []) else {
             XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
@@ -320,7 +320,7 @@ public class SectionsParserTests: ClassGeneratorTestCase {
 
             @include "second.mixin"
             """
-        guard let result = parser.parseSections(fromContents: contents) else {
+        guard let result = parser.parseSections(forGen: "sections", namespaces: [], fromContents: contents, searchPaths: []) else {
             XCTFail("\(parser.lastError ?? "Unable to parse sections from"):\n\n\(contents)\n")
             return
         }
