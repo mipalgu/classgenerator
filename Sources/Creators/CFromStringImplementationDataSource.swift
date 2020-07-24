@@ -403,6 +403,23 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                 )
             case.string(let length):
                 return setter("strncpy(\(self.getter(label)), \(accessor), \(length))")
+            case .mixed(let macOS, let linux):
+                guard
+                    let macValue = self.createVariablesValue(forType: macOS, withLabel: label, andCType: cType, accessedFrom: accessor, inClass: cls, level: level, setter: setter),
+                    let linuxValue = self.createVariablesValue(forType: linux, withLabel: label, andCType: cType, accessedFrom: accessor, inClass: cls, level: level, setter: setter)
+                else {
+                    return nil
+                }
+                if macValue == linuxValue {
+                    return macValue
+                }
+                return """
+                    #ifdef __APPLE__
+                    \(macValue)
+                    #else
+                    \(linuxValue)
+                    #endif
+                    """
             default:
                 return nil
         }

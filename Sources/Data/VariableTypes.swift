@@ -68,6 +68,7 @@ public enum VariableTypes {
     }
 
     indirect case array(VariableTypes, String)
+    indirect case mixed(macOS: VariableTypes, linux: VariableTypes)
     case bit
     case bool
     case char(CharSigns)
@@ -99,6 +100,8 @@ public func == (lhs: VariableTypes, rhs: VariableTypes) -> Bool {
             return ltype == rtype
         case (.pointer(let ltype), .pointer(let rtype)):
             return ltype == rtype
+        case (.mixed(let lmac, let llinux), .mixed(let rmac, let rlinux)):
+            return lmac == rmac && llinux == rlinux
         default:
             return false
     }

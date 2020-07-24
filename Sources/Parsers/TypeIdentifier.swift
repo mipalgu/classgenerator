@@ -76,11 +76,11 @@ public final class TypeIdentifier {
         "uint8_t": .numeric(.unsigned),
         "uint16_t": .numeric(.unsigned),
         "uint32_t": .numeric(.unsigned),
-        "uint64_t": .numeric(.long(.long(.unsigned))),
+        "uint64_t": .mixed(macOS: .numeric(.long(.long(.unsigned))), linux: .numeric(.long(.unsigned))),
         "int8_t": .numeric(.signed),
         "int16_t": .numeric(.signed),
         "int32_t": .numeric(.signed),
-        "int64_t": .numeric(.long(.long(.signed))),
+        "int64_t": .mixed(macOS: .numeric(.long(.long(.signed))), linux: .numeric(.long(.signed))),
         "int": .numeric(.signed),
         "uint": .numeric(.unsigned),
         "short": .numeric(.signed),
@@ -110,13 +110,6 @@ public final class TypeIdentifier {
         "double double": .numeric(.double)
     ]
 
-    fileprivate var linuxValues: [String: VariableTypes] {
-        var values = self.values
-        values["int64_t"] = .numeric(.long(.signed))
-        values["uint64_t"] = .numeric(.long(.unsigned))
-        return values
-    }
-
     public init(helpers: CreatorHelpers = CreatorHelpers()) {
         self.helpers = helpers
     }
@@ -141,11 +134,7 @@ public final class TypeIdentifier {
         if "bit" == type {
             return .bit
         }
-        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
         return self.values[type] ?? .unknown
-        #else
-        return self.linuxValues[type] ?? .unknown
-        #endif
     }
 
     fileprivate func identifyGen(fromType type: String, namespaces: [CNamespace]) -> VariableTypes {

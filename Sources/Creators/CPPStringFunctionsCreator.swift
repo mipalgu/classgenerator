@@ -357,6 +357,23 @@ public final class CPPStringFunctionsCreator {
                         \(pre)\(getter);
                     }
                     """
+            case .mixed(let macOS, let linux):
+                guard
+                    let macValue = self.createStringValue(forGenNamed: genName, inClass: cls, forClassNamed: className, forType: macOS, withLabel: label, includeLabel: includeLabel, namespaces: namespaces, appendingTo: pre, createGetter),
+                    let linuxValue = self.createStringValue(forGenNamed: genName, inClass: cls, forClassNamed: className, forType: linux, withLabel: label, includeLabel: includeLabel, namespaces: namespaces, appendingTo: pre, createGetter)
+                else {
+                    return nil
+                }
+                if macValue == linuxValue {
+                    return macValue
+                }
+                return """
+                    #ifdef __APPLE__
+                    \(macValue)
+                    #else
+                    \(linuxValue)
+                    #endif
+                    """
             case .unknown:
                 return nil
             default:

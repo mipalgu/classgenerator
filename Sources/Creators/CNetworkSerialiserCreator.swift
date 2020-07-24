@@ -134,87 +134,107 @@ public final class CNetworkSerialiserCreator {
         forVariable variable: Variable,
         forClassNamed className: String
     ) -> String? {
-      let label = variable.label
-        switch variable.type {
-            case .array(_, let len):
-              return """
-                  //Class generator does not support array network compression.
-                  //Copying into the buffer, uncompressed
-                  do { //limit declaration scope
-                    uint32_t len = \(len);
-                    uint32_t bytes = len * sizeof(\(variable.cType));
-                    const char *buf = (const char *)&self->\(label)[0];
-                    uint32_t c;
-                    int8_t b;
-                    for (c = 0; c < bytes; c++) {
-                      for (b = 7; b >= 0; b--) {
-                        \(bitSetterGenerator(data: "(buf[c] >> b) & 1U"))
-                      }
-                    }
-                  } while(false);
-              """
-            case .bit:
-                return bitSetterGenerator(data: "self->\(label)")
-            case .bool:
-                return bitSetterGenerator(data: "self->\(label) ? 1U : 0U")
-            case .char:
-                return """
-                  do {
-                    int8_t b;
-                    for (b = 7; b >= 0; b--) {
-                      \(bitSetterGenerator(data: "(self->\(label) >> b) & 1U"))
-                    }
-                  } while (false);
-                  """
-            case .enumerated:
-                let bitSize:UInt8 = 32
-                return """
-                  \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
-                  do {
-                    int8_t b;
-                    for (b = (\(bitSize) - 1); b >= 0; b--) {
-                      \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
-                    }
-                  } while(false);
-                  """
-            case .numeric(let numericType):
-                switch numericType {
-                    case .double, .float, .long(.double), .long(.float):
-                        return "//The class generator does not support float types for network conversion."
-                    default:
-                        guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
-                            return "//The class generator does not support '\(variable.cType)' network conversion."
+        let label = variable.label
+        func createNetworkCompressed(forType type: VariableTypes) -> String? {
+            switch type {
+                case .array(_, let len):
+                  return """
+                      //Class generator does not support array network compression.
+                      //Copying into the buffer, uncompressed
+                      do { //limit declaration scope
+                        uint32_t len = \(len);
+                        uint32_t bytes = len * sizeof(\(variable.cType));
+                        const char *buf = (const char *)&self->\(label)[0];
+                        uint32_t c;
+                        int8_t b;
+                        for (c = 0; c < bytes; c++) {
+                          for (b = 7; b >= 0; b--) {
+                            \(bitSetterGenerator(data: "(buf[c] >> b) & 1U"))
+                          }
                         }
-                        return """
-                            \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
-                            do {
-                              int8_t b;
-                              for (b = (\(bitSize) - 1); b >= 0; b--) {
-                                \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
-                              }
-                            } while(false);
-                            """
-                }
-
-            case .string:
-                return """
-                  do { //limit declaration scope
-                    uint8_t len = (uint8_t) strlen(self->\(label));
-                    int8_t b;
-                    for (b = 7; b >= 0; b--) {
-                      \(bitSetterGenerator(data: "(len >> b) & 1U"))
-                    }
-                    uint8_t c;
-                    for (c = 0; c < len; c++) {
-                      for (b = 7; b >= 0; b--) {
-                        \(bitSetterGenerator(data: "(self->\(label)[c] >> b) & 1U"))
-                      }
-                    }
-                  } while(false);
+                      } while(false);
                   """
-            default:
-                return nil
+                case .bit:
+                    return bitSetterGenerator(data: "self->\(label)")
+                case .bool:
+                    return bitSetterGenerator(data: "self->\(label) ? 1U : 0U")
+                case .char:
+                    return """
+                      do {
+                        int8_t b;
+                        for (b = 7; b >= 0; b--) {
+                          \(bitSetterGenerator(data: "(self->\(label) >> b) & 1U"))
+                        }
+                      } while (false);
+                      """
+                case .enumerated:
+                    let bitSize:UInt8 = 32
+                    return """
+                      \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
+                      do {
+                        int8_t b;
+                        for (b = (\(bitSize) - 1); b >= 0; b--) {
+                          \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
+                        }
+                      } while(false);
+                      """
+                case .numeric(let numericType):
+                    switch numericType {
+                        case .double, .float, .long(.double), .long(.float):
+                            return "//The class generator does not support float types for network conversion."
+                        default:
+                            guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
+                                return "//The class generator does not support '\(variable.cType)' network conversion."
+                            }
+                            return """
+                                \(variable.cType) \(label)_nbo = \(htonC(bits: bitSize))(self->\(label));
+                                do {
+                                  int8_t b;
+                                  for (b = (\(bitSize) - 1); b >= 0; b--) {
+                                    \(bitSetterGenerator(data: "(\(label)_nbo >> b) & 1U"))
+                                  }
+                                } while(false);
+                                """
+                    }
+
+                case .string:
+                    return """
+                      do { //limit declaration scope
+                        uint8_t len = (uint8_t) strlen(self->\(label));
+                        int8_t b;
+                        for (b = 7; b >= 0; b--) {
+                          \(bitSetterGenerator(data: "(len >> b) & 1U"))
+                        }
+                        uint8_t c;
+                        for (c = 0; c < len; c++) {
+                          for (b = 7; b >= 0; b--) {
+                            \(bitSetterGenerator(data: "(self->\(label)[c] >> b) & 1U"))
+                          }
+                        }
+                      } while(false);
+                      """
+                case .mixed(let macOS, let linux):
+                    guard
+                        let macValue = createNetworkCompressed(forType: macOS),
+                        let linuxValue = createNetworkCompressed(forType: linux)
+                    else {
+                        return nil
+                    }
+                    if macValue == linuxValue {
+                        return macValue
+                    }
+                    return """
+                        #ifdef __APPLE__
+                        \(macValue)
+                        #else
+                        \(linuxValue)
+                        #endif
+                        """
+                default:
+                    return nil
+            }
         }
+        return createNetworkCompressed(forType: variable.type)
     }
 
     fileprivate func htonC(bits: UInt8) -> String {

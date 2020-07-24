@@ -81,6 +81,8 @@ public final class Sanitiser {
                     return "nil"
                 }
                 return value
+            case .mixed(let macOS, _):
+                return self.sanitise(value: value, forType: macOS, withSignature: signature)
             default:
                 return value
         }

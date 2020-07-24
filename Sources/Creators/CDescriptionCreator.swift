@@ -291,6 +291,23 @@ public final class CDescriptionCreator {
                     getter,
                     appendingTo: strLabel
                 )
+            case .mixed(let macOS, let linux):
+                guard
+                    let macValue = self.createValue(forType: macOS, withLabel: label, inClass: cls, andClassName: className, includeLabel: includeLabel, appendingTo: strLabel, namespaces: namespaces, createGetter, level),
+                    let linuxValue = self.createValue(forType: linux, withLabel: label, inClass: cls, andClassName: className, includeLabel: includeLabel, appendingTo: strLabel, namespaces: namespaces, createGetter, level)
+                else {
+                    return nil
+                }
+                if macValue == linuxValue {
+                    return macValue
+                }
+                return """
+                #ifdef __APPLE__
+                \(macValue)
+                #else
+                \(linuxValue)
+                #endif
+                """
             case .string:
                 return self.createSNPrintf("\(pre)%s", getter, appendingTo: strLabel)
             default:

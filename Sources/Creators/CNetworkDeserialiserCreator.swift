@@ -135,88 +135,108 @@ public final class CNetworkDeserialiserCreator {
         forVariable variable: Variable,
         forClassNamed className: String
     ) -> String? {
-      let label = variable.label
-        switch variable.type {
-            case .array(_, let len):
-              return """
-                  //Class generator does not support array network compression.
-                  //Copying into the buffer, uncompressed
-                  do { //limit declaration scope
-                    uint32_t len = \(len);
-                    uint32_t bytes = len * sizeof(\(variable.cType));
-                    char *buf = (char *)malloc(bytes);
-                    uint32_t c;
-                    int8_t b;
-                    for (c = 0; c < bytes; c++) {
-                      for (b = 7; b >= 0; b--) {
-                        \(bitGetterGenerator(variable: "buf[c] ^= (-bitValue ^ buf[c]) & (1UL << b);"))
-                      }
+        let label = variable.label
+        func createNetworkCompressed(forType type: VariableTypes) -> String? {
+            switch type {
+                case .array(_, let len):
+                  return """
+                      //Class generator does not support array network compression.
+                      //Copying into the buffer, uncompressed
+                      do { //limit declaration scope
+                        uint32_t len = \(len);
+                        uint32_t bytes = len * sizeof(\(variable.cType));
+                        char *buf = (char *)malloc(bytes);
+                        uint32_t c;
+                        int8_t b;
+                        for (c = 0; c < bytes; c++) {
+                          for (b = 7; b >= 0; b--) {
+                            \(bitGetterGenerator(variable: "buf[c] ^= (-bitValue ^ buf[c]) & (1UL << b);"))
+                          }
+                        }
+                        memcpy(&dst->\(label)[0], &buf[0], bytes);
+                        free(buf);
+                      } while(false);
+                  """
+                case .bit:
+                    return bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << 0);")
+                case .bool:
+                    return bitGetterGenerator(variable: "dst->\(label) = bitValue != 0;")
+                case .char:
+                    return """
+                        do {
+                            int8_t b;
+                            for (b = 7; b >= 0; b--) {
+                                \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
+                            }
+                        } while (false);
+                        """
+                case .enumerated:
+                    let bitSize:UInt8 = 32
+                    return """
+                      do {
+                        int8_t b;
+                        for (b = (\(bitSize) - 1); b >= 0; b--) {
+                          \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
+                        }
+                      } while(false);
+                      dst->\(label) = \(ntohC(bits: bitSize))(dst->\(label));
+                      """
+                case .numeric(let numericType):
+                    switch numericType {
+                        case .double, .float, .long(.double), .long(.float):
+                            return "//The class generator does not support float types for network conversion."
+                        default:
+                            guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
+                                return "//The class generator does not support '\(variable.cType)' network conversion."
+                            }
+                            return """
+                                do {
+                                  int8_t b;
+                                  for (b = (\(bitSize) - 1); b >= 0; b--) {
+                                    \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
+                                  }
+                                } while(false);
+                                dst->\(label) = \(ntohC(bits: bitSize))(dst->\(label));
+                                """
                     }
-                    memcpy(&dst->\(label)[0], &buf[0], bytes);
-                    free(buf);
-                  } while(false);
-              """
-            case .bit:
-                return bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << 0);")
-            case .bool:
-                return bitGetterGenerator(variable: "dst->\(label) = bitValue != 0;")
-            case .char:
-                return """
-                    do {
+                case .string:
+                    return """
+                      do {
+                        uint8_t len = 0;
                         int8_t b;
                         for (b = 7; b >= 0; b--) {
-                            \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
+                          \(bitGetterGenerator(variable: "len ^= (-bitValue ^ len) & (1UL << b);"))
                         }
-                    } while (false);
-                    """
-            case .enumerated:
-                let bitSize:UInt8 = 32
-                return """
-                  do {
-                    int8_t b;
-                    for (b = (\(bitSize) - 1); b >= 0; b--) {
-                      \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
-                    }
-                  } while(false);
-                  dst->\(label) = \(ntohC(bits: bitSize))(dst->\(label));
-                  """
-            case .numeric(let numericType):
-                switch numericType {
-                    case .double, .float, .long(.double), .long(.float):
-                        return "//The class generator does not support float types for network conversion."
-                    default:
-                        guard let bitSize: UInt8 = numericBitSize[variable.cType] else {
-                            return "//The class generator does not support '\(variable.cType)' network conversion."
+                        uint8_t c;
+                        for (c = 0; c < len; c++) {
+                          for (b = 7; b >= 0; b--) {
+                            \(bitGetterGenerator(variable: "dst->\(label)[c] ^= (-bitValue ^ dst->\(label)[c]) & (1UL << b);"))
+                          }
                         }
-                        return """
-                            do {
-                              int8_t b;
-                              for (b = (\(bitSize) - 1); b >= 0; b--) {
-                                \(bitGetterGenerator(variable: "dst->\(label) ^= (-bitValue ^ dst->\(label)) & (1UL << b);"))
-                              }
-                            } while(false);
-                            dst->\(label) = \(ntohC(bits: bitSize))(dst->\(label));
-                            """
-                }
-            case .string:
-                return """
-                  do {
-                    uint8_t len = 0;
-                    int8_t b;
-                    for (b = 7; b >= 0; b--) {
-                      \(bitGetterGenerator(variable: "len ^= (-bitValue ^ len) & (1UL << b);"))
+                      } while (false);
+                      """
+                case .mixed(let macOS, let linux):
+                    guard
+                        let macValue = createNetworkCompressed(forType: macOS),
+                        let linuxValue = createNetworkCompressed(forType: linux)
+                    else {
+                        return nil
                     }
-                    uint8_t c;
-                    for (c = 0; c < len; c++) {
-                      for (b = 7; b >= 0; b--) {
-                        \(bitGetterGenerator(variable: "dst->\(label)[c] ^= (-bitValue ^ dst->\(label)[c]) & (1UL << b);"))
-                      }
+                    if macValue == linuxValue {
+                        return macValue
                     }
-                  } while (false);
-                  """
-            default:
-                return nil
+                    return """
+                        #ifdef __APPLE__
+                        \(macValue)
+                        #else
+                        \(linuxValue)
+                        #endif
+                        """
+                default:
+                    return nil
+            }
         }
+        return createNetworkCompressed(forType: variable.type)
     }
 
     fileprivate func ntohC(bits: UInt8) -> String {

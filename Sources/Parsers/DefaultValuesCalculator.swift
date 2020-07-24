@@ -82,6 +82,8 @@ public final class DefaultValuesCalculator {
                 return ("NULL", "nil")
             case .string:
                 return ("\"\"", "\"\"")
+            case .mixed(let macOS, _):
+                return self.calculateDefaultValues(forType: macOS, withSignature: signature)
             case .unknown:
                 return nil
         }

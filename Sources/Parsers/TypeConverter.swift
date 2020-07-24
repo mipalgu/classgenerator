@@ -136,6 +136,8 @@ public final class TypeConverter {
             }
             let newType = try self.convert(fromType: subtype, withSignature: last)
             return "UnsafeMutablePointer<\(newType)>!"
+        case .mixed(let macOS, _):
+            return try self.convert(fromType: macOS, withSignature: signature)
         case .unknown:
             let words = signature.trimmingCharacters(in: .whitespaces)
                 .components(separatedBy: CharacterSet.whitespaces)
