@@ -286,9 +286,10 @@ public final class CDescriptionCreator {
                     len = gu_strlcat(\(strLabel), "}", bufferSize);
                     """
             case .numeric(let numericType):
+                let cast = numericType == .float ? "(double) " : ""
                 return self.createSNPrintf(
                     "\(pre)%\(self.createFormat(forNumericType: numericType))",
-                    getter,
+                    cast + getter,
                     appendingTo: strLabel
                 )
             case .mixed(let macOS, let linux):
@@ -324,10 +325,8 @@ public final class CDescriptionCreator {
 
     fileprivate func createFormat(forNumericType type: NumericTypes) -> String {
         switch type {
-            case .double:
+        case .float, .double:
                 return "lf"
-            case .float:
-                return "f"
             case .long(let subtype):
                 switch subtype {
                     case .float:
