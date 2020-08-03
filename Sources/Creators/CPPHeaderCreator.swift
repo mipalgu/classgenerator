@@ -216,13 +216,15 @@ public final class CPPHeaderCreator: Creator {
             forVariables: variables,
             otherType: "struct " + extendName
         )
+        let equalsOperators = self.createEqualityOperators(inClass: cls, forClassNamed: name, andStructNamed: extendName)
         let privateContent = self.createInit(forClass: cls, forVariables: variables, namespaces: namespaces)
         let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
             + copyConstructor + "\n\n"
             + structCopyConstructor + "\n\n"
             + copyAssignmentOperator + "\n\n"
-            + structCopyAssignmentOperator
+            + structCopyAssignmentOperator + "\n\n"
+            + equalsOperators
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.cIndent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.cIndent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
@@ -429,6 +431,143 @@ public final class CPPHeaderCreator: Creator {
             }
             """
         return comment + "\n" + constructor
+    }
+    
+    private func createEqualityOperators(
+        inClass cls: Class,
+        forClassNamed className: String,
+        andStructNamed structName: String
+    ) -> String {
+        let equalsOperator = self.createEqualsOperator(inClass: cls, forClassNamed: className, andStructNamed: structName)
+        let notEqualsOperator = """
+            bool operator !=(const \(className) &other) const
+            {
+            \(self.stringHelpers.cIndent("return !(*this == other);"))
+            }
+            """
+        let equalsCOperator = """
+            bool operator ==(const \(structName) &other) const
+            {
+            \(self.stringHelpers.cIndent("return *this == \(className)(other);"))
+            }
+            """
+        let notEqualsCOperator = """
+            bool operator !=(const \(structName) &other) const
+            {
+            \(self.stringHelpers.cIndent("return !(*this == other);"))
+            }
+            """
+        return equalsOperator
+            + "\n\n" + notEqualsOperator
+            + "\n\n" + equalsCOperator
+            + "\n\n" + notEqualsCOperator
+    }
+    
+    private func createEqualsOperator(
+        inClass cls: Class,
+        forClassNamed className: String,
+        andStructNamed structName: String
+    ) -> String {
+        let def = "bool operator ==(const " + className + " &other) const"
+        let startBody = "{"
+        let equalsChainCondition = self.createEqualsChain(for: cls.variables)
+        let complexEquals = cls.variables.compactMap(self.createComplexEquals).combine("") { $0 + "\n" + $1 }
+        let body: String
+        if equalsChainCondition.isEmpty && complexEquals.isEmpty {
+            body = "return true;"
+        } else if complexEquals.isEmpty {
+            body = "return " + equalsChainCondition + ";"
+        } else if equalsChainCondition.isEmpty {
+            body = complexEquals + "\nreturn true;"
+        } else {
+            body = """
+                if (!(\(equalsChainCondition)))
+                {
+                    return false;
+                }
+                \(complexEquals)
+                return true;
+                """
+        }
+        let endBody = "}"
+        return def + "\n" + startBody + "\n" + self.stringHelpers.cIndent(body) + "\n" + endBody
+    }
+    
+    private func createEqualsChain(for variables: [Variable]) -> String {
+        func isChainable(_ type: VariableTypes) -> Bool {
+            switch type {
+            case .array, .unknown:
+                return false
+            case .mixed(let subtype, _):
+                return isChainable(subtype)
+            default:
+                return true
+            }
+        }
+        return variables.lazy.filter {
+            isChainable($0.type)
+        }.compactMap {
+            self.createEquals(for: $0.label, type: $0.type)
+        }.combine("") {
+            $0 + "\n" + self.stringHelpers.indent("&& " + $1)
+        }
+    }
+    
+    private func createEquals(for label: String, type: VariableTypes) -> String {
+        func createEquals(for type: NumericTypes) -> String {
+            switch type {
+            case .long(let subtype):
+                return createEquals(for: subtype)
+            case .double:
+                return "absf(" + label + "() - other." + label + "()) < DBL_EPSILON"
+            case .float:
+                return "fabsf(" + label + "() - other." + label + "()) < FLT_EPSILON"
+            default:
+                return label + "() == other." + label + "()"
+            }
+        }
+        switch type {
+        case .numeric(let numericType):
+            return createEquals(for: numericType)
+        case .gen(_, _, let className):
+            return className + "(_" + label + ") == " + className + "(other._" + label + ")"
+        case .string(let length):
+            return "0 == strncmp(_" + label + ", " + "other._" + label + ", " + length + ")"
+        default:
+            return label + "() == other." + label + "()"
+        }
+    }
+    
+    private func createComplexEquals(for variable: Variable) -> String? {
+        func create(for label: String, type: VariableTypes, level: Int) -> String? {
+            switch type {
+            case .array(let elementType, let length):
+                let index = label + "_\(level)_index"
+                let getterList: [String] = (0...level).map { "[" + label + "_\($0)_index" + "]" }
+                let getter = label + getterList.combine("") { $0 + $1 }
+                guard let recurse = create(for: getter, type: elementType, level: level + 1) else {
+                    return nil
+                }
+                let compare = """
+                    for (int \(index) = 0; \(index) < \(length); \(index)++)
+                    {
+                    \(self.stringHelpers.cIndent(recurse))
+                    }
+                    """
+                return compare
+            case .mixed(let type, _):
+                return create(for: label, type: type, level: level)
+            case .unknown:
+                return nil
+            default:
+                if level == 0 {
+                    return nil
+                }
+                let condition = self.createEquals(for: label, type: type)
+                return "if (!(\(condition))) return false;"
+            }
+        }
+        return create(for: variable.label, type: variable.type, level: 0)
     }
 
 }
