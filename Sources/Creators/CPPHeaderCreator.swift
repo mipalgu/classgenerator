@@ -104,7 +104,8 @@ public final class CPPHeaderCreator: Creator {
             withStructNamed: structName,
             withClassNamed: className,
             withAuthor: cls.author,
-            generatedFrom: genfile
+            generatedFrom: genfile,
+            variables: cls.variables
         )
         let content = self.createClass(
             forClass: cls,
@@ -124,13 +125,15 @@ public final class CPPHeaderCreator: Creator {
         withStructNamed structName: String,
         withClassNamed className: String,
         withAuthor author: String,
-        generatedFrom genfile: String
+        generatedFrom genfile: String,
+        variables: [Variable]
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
             withAuthor: author,
             andGenFile: genfile
         )
+        let includes = nil == variables.first { $0.type.isFloat } ? "" : "\n#include <float.h>"
         let define = """
             #ifndef \(className)_DEFINED
             #define \(className)_DEFINED
@@ -142,7 +145,7 @@ public final class CPPHeaderCreator: Creator {
             #endif
 
             #include <gu_util.h>
-            #include "\(structName).h"
+            #include "\(structName).h"\(includes)
             """
         return comment + "\n\n" + define
     }

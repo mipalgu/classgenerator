@@ -58,6 +58,17 @@
 
 public enum NumericTypes {
 
+    public var isFloat: Bool {
+        switch self {
+        case .double, .float:
+            return true
+        case .long(let subtype):
+            return subtype.isFloat
+        default:
+            return false
+        }
+    }
+    
     case double
     case float
     indirect case long(NumericTypes)

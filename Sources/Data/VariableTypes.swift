@@ -66,6 +66,15 @@ public enum VariableTypes {
             return false
         }
     }
+    
+    public var isFloat: Bool {
+        switch self {
+        case .numeric(let numericType):
+            return numericType.isFloat
+        default:
+            return false
+        }
+    }
 
     indirect case array(VariableTypes, String)
     indirect case mixed(macOS: VariableTypes, linux: VariableTypes)
