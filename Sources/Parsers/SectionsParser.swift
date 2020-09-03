@@ -197,7 +197,7 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                     }
                     let mandatoryVariables = [
                         "structName": self.creatorHelpers.createStructName(forClassNamed: genName, namespaces: namespaces),
-                        "className": self.creatorHelpers.createStructName(forClassNamed: genName, namespaces: namespaces),
+                        "className": self.creatorHelpers.createClassName(forClassNamed: genName),
                         "descBufferSize": self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName, namespaces: namespaces),
                         "toStringBufferSize": self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: namespaces)
                     ]
