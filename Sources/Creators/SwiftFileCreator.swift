@@ -136,7 +136,7 @@ public final class SwiftFileCreator: Creator {
         let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
         let copyConstructor = self.createCopyConstructor(on: base, withRawVariable: rawVariable)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables, referencing: rawVariable)
-        let embeddedSwift = embeddedSwift == nil ? "" : "\n\n" + self.stringHelpers.indent(embeddedSwift!)
+        let embeddedSwift = embeddedSwift == nil ? "" : "\n\n" + embeddedSwift!
         let content = rawDefinition + "\n\n" + wrappers + modifiers + "\n\n" + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary + embeddedSwift
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
