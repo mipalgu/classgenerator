@@ -92,13 +92,15 @@ public final class SwiftFileCreator: Creator {
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
         let preSwift = nil == cls.preSwift ? "" : "\n\n" + cls.preSwift!
-        let ext = self.createStructWrapper(for: structName, named: className, withComment: cls.comment, andVariables: cls.variables)
+        let ext = self.createStructWrapper(for: structName, named: className, withComment: cls.comment, andVariables: cls.variables, embeddedSwift: cls.embeddedSwift)
         let stringExt = self.createStringExtension(on: className, withVariables: cls.variables)
         let eqExt = self.createEquatableExtension(on: className)
         let wrapperEqOp = self.createEqualsOperator(comparing: className, withVariables: cls.variables)
         let structEqExt = self.createEquatableExtension(on: structName)
         let structEqOp = self.createEqualsOperator(comparing: structName, withVariables: cls.variables, wrap: className)
-        return [head + preSwift, ext, stringExt, eqExt, wrapperEqOp, structEqExt, structEqOp].combine("") { $0 + "\n\n" + $1 } + "\n"
+        let postSwift = nil == cls.postSwift ? "" : "\n\n" + cls.postSwift!
+        let content: [String] = [head + preSwift, ext, stringExt, eqExt, wrapperEqOp, structEqExt, structEqOp + postSwift]
+        return content.combine("") { $0 + "\n\n" + $1 } + "\n"
     }
 
     fileprivate func createHead(
@@ -122,7 +124,8 @@ public final class SwiftFileCreator: Creator {
         for base: String,
         named wrapperName: String,
         withComment comment: String,
-        andVariables variables: [Variable]
+        andVariables variables: [Variable],
+        embeddedSwift: String?
     ) -> String {
         let rawVariable = "_raw"
         let comment = self.creatorHelpers.createComment(from: comment)
@@ -133,7 +136,8 @@ public final class SwiftFileCreator: Creator {
         let constructor = self.createConstructor(on: base, withRawVariable: rawVariable, withVariables: variables)
         let copyConstructor = self.createCopyConstructor(on: base, withRawVariable: rawVariable)
         let fromDictionary = self.createFromDictionaryConstructor(on: base, withVariables: variables, referencing: rawVariable)
-        let content = rawDefinition + "\n\n" + wrappers + modifiers + "\n\n" + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary
+        let embeddedSwift = embeddedSwift == nil ? "" : "\n\n" + self.stringHelpers.indent(embeddedSwift!)
+        let content = rawDefinition + "\n\n" + wrappers + modifiers + "\n\n" + constructor + "\n\n" + copyConstructor + "\n\n" + fromDictionary + embeddedSwift
         return comment + "\n" + def + "\n\n" + self.stringHelpers.indent(content) + "\n\n" + "}"
     }
 
