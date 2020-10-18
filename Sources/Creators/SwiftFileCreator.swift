@@ -98,8 +98,9 @@ public final class SwiftFileCreator: Creator {
         let wrapperEqOp = self.createEqualsOperator(comparing: className, withVariables: cls.variables)
         let structEqExt = self.createEquatableExtension(on: structName)
         let structEqOp = self.createEqualsOperator(comparing: structName, withVariables: cls.variables, wrap: className)
+        let structSwiftfsm = self.createSwiftfsmConformance(on: className)
         let postSwift = nil == cls.postSwift ? "" : "\n\n" + cls.postSwift!
-        let content: [String] = [head + preSwift, ext, stringExt, eqExt, wrapperEqOp, structEqExt, structEqOp + postSwift]
+        let content: [String] = [head + preSwift, ext, stringExt, eqExt, wrapperEqOp, structEqExt, structEqOp, structSwiftfsm + postSwift]
         return content.combine("") { $0 + "\n\n" + $1 } + "\n"
     }
 
@@ -117,7 +118,12 @@ public final class SwiftFileCreator: Creator {
             //swiftlint:disable line_length
             //swiftlint:disable identifier_name
             """
-        return comment + "\n\n" + swiftLintComments
+        let imports = """
+            #if canImport(swiftfsm)
+            import swiftfsm
+            #endif
+            """
+        return comment + "\n\n" + swiftLintComments + "\n\n" + imports
     }
 
     fileprivate func createStructWrapper(
@@ -439,6 +445,14 @@ public final class SwiftFileCreator: Creator {
         }
         let endDef = "}"
         return def + "\n" + self.stringHelpers.indent(content) + "\n" + endDef
+    }
+    
+    private func createSwiftfsmConformance(on className: String) -> String {
+        return """
+            #if canImport(swiftfsm)
+            extension \(className): ExternalVariables, KripkeVariablesModifier {}
+            #endif
+            """
     }
 
     fileprivate func createString(fromVariable variable: Variable) -> String? {
