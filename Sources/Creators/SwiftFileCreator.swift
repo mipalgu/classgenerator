@@ -311,7 +311,7 @@ public final class SwiftFileCreator: Creator {
                 )
                 let start = "withUnsafeMutablePointer(to: &self.\(base).\(label).0) { \(p) in"
                 let content = """
-                        for \(index) in 0..<\(length) {
+                        for \(index) in 0..<min(\(length), \(accessor).count) {
                             \(p)[\(index)] = \(sub)
                         }
                     }
