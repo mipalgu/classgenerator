@@ -364,7 +364,7 @@ public final class SwiftFileCreator: Creator {
         referencing base: String
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Create a `\(structName)` from a dictionary.")
-        let def = "public init(fromDictionary dictionary: [String: Any]) {"
+        let def = "public init(fromDictionary dictionary: [String: Any?]) {"
         let copy = "self.init()\n"
         let guardDef = "guard"
         let casts = variables.compactMap {
