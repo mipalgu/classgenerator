@@ -87,7 +87,7 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
 
     //swiftlint:disable:next function_body_length
     public func test_identifiesPrimitiveTypes() {
-        var types: [String: VariableTypes] = [
+        let types: [String: VariableTypes] = [
             "bool": .bool,
             "char": .char(.signed),
             "signed char": .char(.signed),
@@ -99,9 +99,11 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
             "uint8_t": .numeric(.unsigned),
             "uint16_t": .numeric(.unsigned),
             "uint32_t": .numeric(.unsigned),
+            "uint64_t": .mixed(macOS: .numeric(.long(.long(.unsigned))), linux: .numeric(.long(.unsigned))),
             "int8_t": .numeric(.signed),
             "int16_t": .numeric(.signed),
             "int32_t": .numeric(.signed),
+            "int64_t": .mixed(macOS: .numeric(.long(.long(.signed))), linux: .numeric(.long(.signed))),
             "int": .numeric(.signed),
             "uint": .numeric(.unsigned),
             "short": .numeric(.signed),
@@ -130,13 +132,6 @@ public class TypeIdentifierTests: ClassGeneratorTestCase {
             "long double": .numeric(.long(.double)),
             "double double": .numeric(.double)
         ]
-        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
-        types["uint64_t"] = .numeric(.long(.long(.unsigned)))
-        types["int64_t"] = .numeric(.long(.long(.signed)))
-        #else
-        types["int64_t"] = .numeric(.long(.signed))
-        types["uint64_t"] = .numeric(.long(.unsigned))
-        #endif
         for (type, expected) in types {
             XCTAssertEqual(
                 expected,
