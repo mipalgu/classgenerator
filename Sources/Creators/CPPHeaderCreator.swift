@@ -516,28 +516,28 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createEquals(for label: String, type: VariableTypes) -> String {
+    private func createEquals(for label: String, type: VariableTypes, post: String = "()", pre: String = "_") -> String {
         func createEquals(for type: NumericTypes) -> String {
             switch type {
             case .long(let subtype):
                 return createEquals(for: subtype)
             case .double:
-                return "fabs(" + label + "() - other." + label + "()) < DBL_EPSILON"
+                return "fabs(" + label + post + " - other." + label + post + ") < DBL_EPSILON"
             case .float:
-                return "fabsf(" + label + "() - other." + label + "()) < FLT_EPSILON"
+                return "fabsf(" + label + post + " - other." + label + post + ") < FLT_EPSILON"
             default:
-                return label + "() == other." + label + "()"
+                return label + post + " == other." + label + post
             }
         }
         switch type {
         case .numeric(let numericType):
             return createEquals(for: numericType)
         case .gen(_, _, let className):
-            return className + "(_" + label + ") == " + className + "(other._" + label + ")"
+            return className + "(" + pre + label + ") == " + className + "(other." + pre + label + ")"
         case .string(let length):
-            return "0 == strncmp(_" + label + ", " + "other._" + label + ", " + length + ")"
+            return "0 == strncmp(" + pre + label + ", " + "other." + pre + label + ", " + length + ")"
         default:
-            return label + "() == other." + label + "()"
+            return label + post + " == other." + label + post
         }
     }
     
@@ -547,7 +547,7 @@ public final class CPPHeaderCreator: Creator {
             case .array(let elementType, let length):
                 let index = label + "_\(level)_index"
                 let getterList: [String] = (0...level).map { "[" + label + "_\($0)_index" + "]" }
-                let getter = label + getterList.combine("") { $0 + $1 }
+                let getter = "_" + label + getterList.combine("") { $0 + $1 }
                 guard let recurse = create(for: getter, type: elementType, level: level + 1) else {
                     return nil
                 }
@@ -566,7 +566,7 @@ public final class CPPHeaderCreator: Creator {
                 if level == 0 {
                     return nil
                 }
-                let condition = self.createEquals(for: label, type: type)
+                let condition = self.createEquals(for: label, type: type, post: "", pre: "")
                 return "if (!(\(condition))) return false;"
             }
         }
