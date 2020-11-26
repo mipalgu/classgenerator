@@ -1,1 +1,0 @@
-../guwhiteboardtypelist_c_typestrings_generated.c

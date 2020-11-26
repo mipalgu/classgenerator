@@ -1,1 +1,0 @@
-../gusimplewhiteboard.c
