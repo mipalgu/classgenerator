@@ -522,7 +522,7 @@ public final class CPPHeaderCreator: Creator {
             case .long(let subtype):
                 return createEquals(for: subtype)
             case .double:
-                return "absf(" + label + "() - other." + label + "()) < DBL_EPSILON"
+                return "fabs(" + label + "() - other." + label + "()) < DBL_EPSILON"
             case .float:
                 return "fabsf(" + label + "() - other." + label + "()) < FLT_EPSILON"
             default:
