@@ -278,7 +278,7 @@ public final class SwiftFileCreator: Creator {
         let value = self.createSetterValue(forType: variable.type, withLabel: variable.label, accessedBy: accessor, referencing: base)
         switch variable.type {
             case .array:
-                return "_ = \(value)"
+                return "\(value)"
             case .bit, .char:
                 return value
             case .string(let length):
@@ -348,7 +348,7 @@ public final class SwiftFileCreator: Creator {
     ) -> String {
         let p = "\(label)_p"
         return """
-            _ = withUnsafeMutablePointer(to: &self.\(base).\(label).0) { \(p) in
+            withUnsafeMutablePointer(to: &self.\(base).\(label).0) { \(p) in
                 let arr = \(otherLabel).utf8CString
                 _ = arr.withUnsafeBufferPointer {
                     strncpy(\(p), $0.baseAddress!, \(length))
