@@ -87,19 +87,11 @@ public class ClassGeneratorTestCase: XCTestCase {
     }
 
     fileprivate var int64Type: VariableTypes {
-        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
-        return .numeric(.long(.long(.signed)))
-        #else
-        return .numeric(.long(.signed))
-        #endif
+        return .mixed(macOS: .numeric(.long(.long(.signed))), linux: .numeric(.long(.signed)))
     }
 
     fileprivate var uint64Type: VariableTypes {
-        #if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
-        return .numeric(.long(.long(.unsigned)))
-        #else
-        return .numeric(.long(.unsigned))
-        #endif
+        return .mixed(macOS: .numeric(.long(.long(.unsigned))), linux: .numeric(.long(.unsigned)))
     }
 
     public var oldClass: Class {
