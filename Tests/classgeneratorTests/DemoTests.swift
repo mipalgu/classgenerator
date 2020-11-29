@@ -159,7 +159,6 @@ public class DemoTests: ClassGeneratorTestCase {
         buildProcess.currentDirectoryPath = self.filemanager.currentDirectoryPath
         buildProcess.launchPath = "/usr/bin/env"
         buildProcess.arguments = ["bmake", "host"]
-        fork(buildProcess)
         buildProcess.launch()
         buildProcess.waitUntilExit()
         XCTAssertEqual(EXIT_SUCCESS, buildProcess.terminationStatus, "Demo tests failed")
