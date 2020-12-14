@@ -121,6 +121,7 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
                 },
                 arrayGetter: { "self->" + $0 + "[" + $1 + "]" },
                 arraySetter: { "self->" + $0 + "[" + $1 + "] = " + $2 + ";" },
+                stringGetter: { "self->" + $0 },
                 getter: { "self->" + $0 },
                 setter: { "self->" + $0 + " = " + $1 + ";"}
             ),

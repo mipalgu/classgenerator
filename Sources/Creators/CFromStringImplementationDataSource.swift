@@ -78,6 +78,8 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
     public let arrayGetter: (String, String) -> String
 
     public let arraySetter: (String, String, String) -> String
+    
+    public let stringGetter: (String) -> String
 
     public let getter: (String) -> String
 
@@ -92,6 +94,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         recurse: @escaping (Bool, String, String, String, String) -> String,
         arrayGetter: @escaping (String, String) -> String,
         arraySetter: @escaping (String, String, String) -> String,
+        stringGetter: @escaping (String) -> String,
         getter: @escaping (String) -> String,
         setter: @escaping (String, String) -> String
     ) {
@@ -103,6 +106,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         self.recurse = recurse
         self.arrayGetter = arrayGetter
         self.arraySetter = arraySetter
+        self.stringGetter = stringGetter
         self.getter = getter
         self.setter = setter
     }
@@ -402,7 +406,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
                     setter
                 )
             case.string(let length):
-                return setter("strncpy(\(self.getter(label)), \(accessor), \(length))")
+                return setter("strncpy(\(self.stringGetter(label)), \(accessor), \(length))")
             case .mixed(let macOS, let linux):
                 guard
                     let macValue = self.createVariablesValue(forType: macOS, withLabel: label, andCType: cType, accessedFrom: accessor, inClass: cls, level: level, setter: setter),

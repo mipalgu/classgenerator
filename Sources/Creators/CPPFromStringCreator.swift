@@ -108,6 +108,7 @@ public final class CPPFromStringCreator {
                 },
                 arrayGetter: { "this->" + $0 + "(" + $1 + ")"},
                 arraySetter: { "this->set_" + $0 + "(" + $2 + ", " + $1 + ");"},
+                stringGetter: { structName + "::" + $0 },
                 getter: { "this->" + $0 + "()" },
                 setter: { "this->set_" + $0 + "(" + $1 + ");"}
             ),

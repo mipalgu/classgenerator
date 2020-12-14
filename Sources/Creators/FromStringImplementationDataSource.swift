@@ -65,6 +65,8 @@ public protocol FromStringImplementationDataSource {
     var arrayGetter: (String, String) -> String { get }
 
     var arraySetter: (String, String, String) -> String { get }
+    
+    var stringGetter: (String) -> String { get }
 
     var getter: (String) -> String { get }
 
