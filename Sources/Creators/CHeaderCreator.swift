@@ -151,6 +151,10 @@ public final class CHeaderCreator: Creator {
 
             #include <gu_util.h>
             #include <stdint.h>
+            
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
             """
         let toStringSize = self.calculator.getToStringBufferSize(fromVariables: cls.variables)
         let descBufferSize = self.calculator.getDescriptionBufferSize(
@@ -207,38 +211,43 @@ public final class CHeaderCreator: Creator {
         let end = start + properties + embeddedC + "};"
         return cls.variables.count > 0 ? end : end + "\n#pragma clang diagnostic pop"
     }
+    
+    private func createArrayBrackets(inClass className: String, forVariable label: String, type: VariableTypes, level: Int, namespaces: [CNamespace]) -> String? {
+        switch type {
+        case .array(let subtype, _):
+            let count = self.creatorHelpers.createArrayCountDef(
+                inClass: className,
+                forVariable: label,
+                level: level,
+                namespaces: namespaces
+            )
+            return "[" + count + "]" + (self.createArrayBrackets(inClass: className, forVariable: label, type: subtype, level: level + 1, namespaces: namespaces) ?? "")
+        default:
+            return nil
+        }
+    }
 
     fileprivate func createProperty(
         withLabel label: String,
         forClassNamed className: String,
         fromType type: VariableTypes,
         andCType cType: String,
-        namespaces: [CNamespace],
-        withLevel level: Int = 0
+        namespaces: [CNamespace]
     ) -> String? {
         switch type {
-            case .array(let subtype, _):
-                switch subtype {
-                    case .array:
-                        self.errors.append("Multi-Dimensional arrays (\(label)) are not currently supported.")
-                        return nil
-                    default:
-                        break
+            case .array:
+                guard let brackets = self.createArrayBrackets(inClass: className, forVariable: label, type: type, level: 0, namespaces: namespaces) else {
+                    fatalError("Unable to create array brackets for type \(type)")
                 }
-                return "ARRAY_PROPERTY("
-                    + cType
-                    + ", \(label)"
-                    + ", "
-                    + self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: level, namespaces: namespaces)
-                    + ")"
+                return cType + " " + label + brackets + ";"
             case .bit:
-                return "BIT_PROPERTY(" + label + ")"
+                return "unsigned int " + label + " : 1;"
             case .pointer:
-                return "PROPERTY(" + cType + self.createPointers(forType: type) + ", " + label + ")"
+                return cType + " " + self.createPointers(forType: type) + label + ";"
             case .string(let length):
-                return "STRING_PROPERTY(\(label), \(length))"
+                return "char " + label + "[" + length + "];"
             default:
-                return "PROPERTY(" + cType + ", " + label + ")"
+                return cType + " " + label + ";"
         }
     }
 
@@ -255,10 +264,6 @@ public final class CHeaderCreator: Creator {
     fileprivate func createTail(withClassNamed name: String, andPostC postC: String) -> String {
         let name = String(name.lazy.map { self.helpers.isAlphaNumeric($0) ? $0 : "_" })
         return """
-            #ifdef __cplusplus
-            extern "C" {
-            #endif
-
             #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 
             /**
@@ -291,11 +296,11 @@ public final class CHeaderCreator: Creator {
             size_t \(name)_from_network_serialised(const char *src, struct \(name) *dst);
 
             /*#endif /// WHITEBOARD_SERIALISATION*/
-
+            
             #ifdef __cplusplus
             }
             #endif
-
+            
             #endif /// \(name)_h
             """
     }
