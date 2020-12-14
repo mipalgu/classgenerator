@@ -75,6 +75,24 @@ public enum VariableTypes {
             return false
         }
     }
+    
+    public var arrayLevels: Int {
+        switch self {
+        case .array(let subtype, _):
+            return subtype.arrayLevels + 1
+        default:
+            return 0
+        }
+    }
+    
+    public var arraySubType: VariableTypes? {
+        switch self {
+        case .array(let subtype, _):
+            return subtype
+        default:
+            return nil
+        }
+    }
 
     indirect case array(VariableTypes, String)
     indirect case mixed(macOS: VariableTypes, linux: VariableTypes)

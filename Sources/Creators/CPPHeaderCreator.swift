@@ -220,6 +220,7 @@ public final class CPPHeaderCreator: Creator {
             otherType: "struct " + extendName
         )
         let equalsOperators = self.createEqualityOperators(inClass: cls, forClassNamed: name, andStructNamed: extendName)
+        let gettersAndSetters = self.createGettersAndSetters(inClass: cls, forClassNamed: name, andStructNamed: extendName, namespaces: namespaces)
         let privateContent = self.createInit(forClass: cls, forVariables: variables, namespaces: namespaces)
         let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
@@ -227,7 +228,8 @@ public final class CPPHeaderCreator: Creator {
             + structCopyConstructor + "\n\n"
             + copyAssignmentOperator + "\n\n"
             + structCopyAssignmentOperator + "\n\n"
-            + equalsOperators
+            + equalsOperators + "\n\n"
+            + gettersAndSetters
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.cIndent(publicContent)
         let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.cIndent(cpp!)
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
@@ -434,6 +436,115 @@ public final class CPPHeaderCreator: Creator {
             }
             """
         return comment + "\n" + constructor
+    }
+    
+    private func createGettersAndSetters(inClass cls: Class, forClassNamed className: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+        let gettersAndSetters: [String] = cls.variables.map {
+            let getter = self.createGetter(forVariable: $0, inClassNamed: className, andStructNamed: structName)
+            let setter = self.createSetter(forVariable: $0, inClassNamed: className, andStructNamed: structName, namespaces: namespaces)
+            return getter + "\n\n" + setter
+        }
+        return gettersAndSetters.joined(separator: "\n\n")
+    }
+    
+    fileprivate func createPointers(forType type: VariableTypes) -> String {
+        switch type {
+            case .pointer(let subtype):
+                return self.createPointers(forType: subtype) + "*"
+            default:
+                return ""
+        }
+    }
+    
+    private func createArrayIndexGetters(forVariable label: String, _ type: VariableTypes, cType: String, inClassNamed className: String, andStructNamed structName: String, level: Int) -> String? {
+        guard let subtype = type.arraySubType else {
+            return nil
+        }
+        let levelsCount = type.arrayLevels
+        let stars = Array(repeating: "*", count: levelsCount - 1).joined()
+        let indexes = (0...level).map { ($0 == 0 ? "i" : "i\($0)") }
+        let parameters = indexes.map { "int " + $0 }.joined(separator: ", ")
+        let brackets = indexes.map { "[" + $0 + "]" }.joined()
+        let definition = cType + " " + stars + label + "(" + parameters + ") const"
+        let startBracket = "{"
+        let content = "return " + structName + "::" + label + brackets + ";"
+        let endBracket = "}"
+        let getter = definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
+        if let subGetter = createArrayIndexGetters(forVariable: label, subtype, cType: cType, inClassNamed: className, andStructNamed: structName, level: level + 1) {
+            return getter + "\n\n" + subGetter
+        }
+        return getter
+    }
+    
+    private func createGetter(forVariable variable: Variable, inClassNamed className: String, andStructNamed structName: String) -> String {
+        let startBracket = "{"
+        let definition: String
+        let content: String
+        switch variable.type {
+        case .array:
+            let stars = Array(repeating: "*", count: variable.type.arrayLevels).joined()
+            let definition = variable.cType + " " + stars + variable.label + "() const"
+            let content = "return &(" + structName + "::" + variable.label + "[0]);"
+            let arrGetter = definition + "\n{\n" + stringHelpers.indent(content) + "\n}"
+            guard let getter = self.createArrayIndexGetters(forVariable: variable.label, variable.type, cType: variable.cType, inClassNamed: className, andStructNamed: structName, level: 0) else {
+                fatalError("Failed to create getter for array type \(variable.type)")
+            }
+            return arrGetter + "\n\n" + getter
+//            guard let brackets = self.createArrayBrackets(inClass: className, forVariable: label, type: type, level: 0, namespaces: namespaces) else {
+//                fatalError("Unable to create array brackets for type \(type)")
+//            }
+//            return cType + " " + label + brackets + ";"
+        case .pointer:
+            definition = variable.cType + " " + self.createPointers(forType: variable.type) + " " + variable.label + "() const"
+            content = "return " + structName + "::" + variable.label + ";"
+        case .string:
+            definition = "char *" + variable.label + "() const"
+            content = "return &(" + structName + "::" + variable.label + "[0]);"
+        default:
+            definition = variable.cType + " " + variable.label + "() const"
+            content = "return " + structName + "::" + variable.label + ";"
+        }
+        let endBracket = "}"
+        return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
+    }
+    
+    private func createSetterContent(forVariable label: String, _ type: VariableTypes, propertyLabel: String, className: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
+        switch type {
+        case .array:
+            let length = self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: level, namespaces: namespaces)
+            return "memcpy(" + propertyLabel + ", newValue, " + length + ");"
+        case .string(let length):
+            return "strncpy(" + propertyLabel + ", newValue, " + length + ");"
+        default:
+            return propertyLabel + " = newValue;"
+        }
+    }
+    
+    private func createSetter(forVariable variable: Variable, inClassNamed className: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+        let startBracket = "{"
+        let property = structName + "::" + variable.label
+        let definition: String
+        switch variable.type {
+        case .array(let subtype, _):
+            let size = self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: variable.label, level: 0, namespaces: namespaces)
+            let arrDefinition = "void set_" + variable.label + "(const " + variable.cType + " *newValue)"
+            let arrContent = "memcpy(" + structName + "::" + variable.label + ", newValue, " + size + ");"
+            let indexDefinition = "void set_" + variable.label + "(const " + variable.cType + " &newValue, int i)"
+            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, propertyLabel: structName + "::" + variable.label + "[i]", className: className, structName: structName, level: 0, namespaces: namespaces)
+            let setter = arrDefinition + "\n{\n" + self.stringHelpers.indent(arrContent) + "\n}"
+            let indexSetter = indexDefinition + "\n{\n" + self.stringHelpers.indent(indexContent) + "\n}"
+            return setter + "\n\n" + indexSetter
+        case .pointer:
+            let pointerType = variable.cType + " " + self.createPointers(forType: variable.type)
+            definition = "void set_" + variable.label + "(const " + pointerType + "newValue)"
+        case .string:
+            definition = "void set_" + variable.label + "(const char *newValue)"
+        default:
+            definition = "void set_" + variable.label + "(const " + variable.cType + " &newValue)"
+        }
+        let content = self.createSetterContent(forVariable: variable.label, variable.type, propertyLabel: property, className: className, structName: structName, namespaces: namespaces)
+        let endBracket = "}"
+        return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
     }
     
     private func createEqualityOperators(
