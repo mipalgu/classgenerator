@@ -151,10 +151,6 @@ public final class CHeaderCreator: Creator {
 
             #include <gu_util.h>
             #include <stdint.h>
-            
-            #ifdef __cplusplus
-            extern "C" {
-            #endif
             """
         let toStringSize = self.calculator.getToStringBufferSize(fromVariables: cls.variables)
         let descBufferSize = self.calculator.getDescriptionBufferSize(
@@ -180,7 +176,12 @@ public final class CHeaderCreator: Creator {
             }
         }
         let preC = nil == cls.preC ? "" : cls.preC! + "\n\n"
-        return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines)
+        let externC = """
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
+            """
+        return comment + "\n\n" + head + "\n\n" + preC + defs.trimmingCharacters(in: .newlines) + "\n\n" + externC
     }
 //
 //    fileprivate func indentC(_ str: String, _ level: Int = 1) -> String {
