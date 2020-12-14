@@ -196,32 +196,36 @@ public final class CPPHeaderCreator: Creator {
             forClassNamed: name,
             withStructNamed: extendName,
             forVariables: variables,
-            otherType: name
+            otherType: name,
+            includeBrackets: true
         )
         let structCopyConstructor = self.createCopyConstructor(
             forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             forVariables: variables,
-            otherType: "struct " + extendName
+            otherType: "struct " + extendName,
+            includeBrackets: false
         )
         let copyAssignmentOperator = self.createCopyAssignmentOperator(
             forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             forVariables: variables,
-            otherType: name
+            otherType: name,
+            includeBrackets: true
         )
         let structCopyAssignmentOperator = self.createCopyAssignmentOperator(
             forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             forVariables: variables,
-            otherType: "struct " + extendName
+            otherType: "struct " + extendName,
+            includeBrackets: false
         )
         let equalsOperators = self.createEqualityOperators(inClass: cls, forClassNamed: name, andStructNamed: extendName)
         let gettersAndSetters = self.createGettersAndSetters(inClass: cls, forClassNamed: name, andStructNamed: extendName, namespaces: namespaces)
-        let privateContent = self.createInit(forClass: cls, forVariables: variables, namespaces: namespaces)
+        let privateContent = self.createInit(forClass: cls, structName: extendName, forVariables: variables, namespaces: namespaces)
         let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
             + copyConstructor + "\n\n"
@@ -270,13 +274,14 @@ public final class CPPHeaderCreator: Creator {
         return comment + "\n" + def
     }
     
-    fileprivate func createInit(forClass cls: Class, forVariables variables: [Variable], namespaces: [CNamespace]) -> String {
+    fileprivate func createInit(forClass cls: Class, structName: String, forVariables variables: [Variable], namespaces: [CNamespace]) -> String {
         let comment = self.creatorHelpers.createComment(from: "Set the members of the class.")
         let startdef = "void init("
         let list = self.createDefaultParameters(forVariables: variables)
         let def = startdef + list + ") {"
         let setters = self.createSetters(
             forVariables: variables,
+            structName: structName,
             addConstOnPointers: true,
             assignDefaults: true,
             self.creatorHelpers.createArrayCountDef(inClass: cls.name, namespaces: namespaces)
@@ -337,11 +342,12 @@ public final class CPPHeaderCreator: Creator {
         forClassNamed className: String,
         withStructNamed structName: String,
         forVariables variables: [Variable],
-        otherType: String
+        otherType: String,
+        includeBrackets: Bool
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Constructor.")
         let def = "\(className)(const \(otherType) &other): \(structName)() {"
-        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + "()" } + ");"
+        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + (includeBrackets ? "()" : "") } + ");"
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(call) + "\n}"
     }
 
@@ -350,11 +356,12 @@ public final class CPPHeaderCreator: Creator {
         forClassNamed className: String,
         withStructNamed structName: String,
         forVariables variables: [Variable],
-        otherType: String
+        otherType: String,
+        includeBrackets: Bool
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
         let def = "\(className) &operator = (const \(otherType) &other) {"
-        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + "()" } + ");"
+        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + (includeBrackets ? "()" : "") } + ");"
         let ret = "return *this;"
         let content = call + "\n" + ret
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(content) + "\n}"
@@ -362,6 +369,7 @@ public final class CPPHeaderCreator: Creator {
 
     fileprivate func createSetters(
         forVariables variables: [Variable],
+        structName: String,
         addConstOnPointers: Bool,
         assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
@@ -370,6 +378,7 @@ public final class CPPHeaderCreator: Creator {
         return variables.map {
             self.createSetter(
                 forVariable: $0,
+                structName: structName,
                 addConstOnPointers: addConstOnPointers,
                 assignDefaults: assignDefaults,
                 arrayDefGetter,
@@ -382,6 +391,7 @@ public final class CPPHeaderCreator: Creator {
 
     fileprivate func createSetter(
         forVariable variable: Variable,
+        structName: String,
         addConstOnPointers: Bool,
         assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
@@ -393,7 +403,7 @@ public final class CPPHeaderCreator: Creator {
                 let def = arrayDefGetter(variable.label)(0)
                 let temp = """
                     if (\(label) != NULLPTR) {
-                        std::memcpy(this->_\(variable.label), \(label), \(def) * sizeof (\(variable.cType)));
+                        std::memcpy(\(structName)::\(variable.label), \(label), \(def) * sizeof (\(variable.cType)));
                     }
                     """
                 if false == assignDefaults {
@@ -403,7 +413,7 @@ public final class CPPHeaderCreator: Creator {
                 return temp + """
                      else {
                         \(variable.cType) \(variable.label)_temp[\(def)] = \(variable.defaultValue);
-                        std::memcpy(this->_\(variable.label), \(variable.label)_temp, \(def) * sizeof (\(variable.cType)));
+                        std::memcpy(\(structName)::\(variable.label), \(variable.label)_temp, \(def) * sizeof (\(variable.cType)));
                     }
                     """
             case .string(let length):
@@ -483,7 +493,7 @@ public final class CPPHeaderCreator: Creator {
         switch variable.type {
         case .array:
             let stars = Array(repeating: "*", count: variable.type.arrayLevels).joined()
-            let definition = variable.cType + " " + stars + variable.label + "() const"
+            let definition = "const " + variable.cType + " " + stars + variable.label + "() const"
             let content = "return &(" + structName + "::" + variable.label + "[0]);"
             let arrGetter = definition + "\n{\n" + stringHelpers.indent(content) + "\n}"
             guard let getter = self.createArrayIndexGetters(forVariable: variable.label, variable.type, cType: variable.cType, inClassNamed: className, andStructNamed: structName, level: 0) else {
@@ -498,7 +508,7 @@ public final class CPPHeaderCreator: Creator {
             definition = variable.cType + " " + self.createPointers(forType: variable.type) + " " + variable.label + "() const"
             content = "return " + structName + "::" + variable.label + ";"
         case .string:
-            definition = "char *" + variable.label + "() const"
+            definition = "const char *" + variable.label + "() const"
             content = "return &(" + structName + "::" + variable.label + "[0]);"
         default:
             definition = variable.cType + " " + variable.label + "() const"
@@ -627,7 +637,7 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createEquals(for label: String, type: VariableTypes, post: String = "()", pre: String = "_") -> String {
+    private func createEquals(for label: String, type: VariableTypes, post: String = "()") -> String {
         func createEquals(for type: NumericTypes) -> String {
             switch type {
             case .long(let subtype):
@@ -644,9 +654,9 @@ public final class CPPHeaderCreator: Creator {
         case .numeric(let numericType):
             return createEquals(for: numericType)
         case .gen(_, _, let className):
-            return className + "(" + pre + label + ") == " + className + "(other." + pre + label + ")"
+            return className + "(" + label + post + ") == " + className + "(other." + label + post + ")"
         case .string(let length):
-            return "0 == strncmp(" + pre + label + ", " + "other." + pre + label + ", " + length + ")"
+            return "0 == strncmp(" + label + post + ", " + "other." + label + post + ", " + length + ")"
         default:
             return label + post + " == other." + label + post
         }
@@ -657,8 +667,8 @@ public final class CPPHeaderCreator: Creator {
             switch type {
             case .array(let elementType, let length):
                 let index = label + "_\(level)_index"
-                let getterList: [String] = (0...level).map { "[" + label + "_\($0)_index" + "]" }
-                let getter = "_" + label + getterList.combine("") { $0 + $1 }
+                let getterList: [String] = (0...level).map { label + "_\($0)_index" }
+                let getter = label + "(" + getterList.joined(separator: ", ") + ")"
                 guard let recurse = create(for: getter, type: elementType, level: level + 1) else {
                     return nil
                 }
@@ -677,7 +687,7 @@ public final class CPPHeaderCreator: Creator {
                 if level == 0 {
                     return nil
                 }
-                let condition = self.createEquals(for: label, type: type, post: "", pre: "")
+                let condition = self.createEquals(for: label, type: type, post: "")
                 return "if (!(\(condition))) return false;"
             }
         }

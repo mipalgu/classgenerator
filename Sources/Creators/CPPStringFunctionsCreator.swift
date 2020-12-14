@@ -342,8 +342,7 @@ public final class CPPStringFunctionsCreator {
             case .gen(_, _, let className):
                 let fun = true == includeLabel ? "description" : "to_string"
                 return """
-                    guWhiteboard::\(className) * \(label)_cast = const_cast<guWhiteboard::\(className) *>(static_cast<const guWhiteboard::\(className) *>(&\(getter)));
-                    \(pre)"{" << \(label)_cast->\(fun)() << "}";
+                    \(pre)"{" << \(className)(\(getter)).\(fun)() << "}";
                     """
             case .numeric(.signed):
                 return "\(pre)static_cast<signed>(\(getter));"
