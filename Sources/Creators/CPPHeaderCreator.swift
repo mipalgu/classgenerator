@@ -518,11 +518,13 @@ public final class CPPHeaderCreator: Creator {
         return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
     }
     
-    private func createSetterContent(forVariable label: String, _ type: VariableTypes, propertyLabel: String, className: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
+    private func createSetterContent(forVariable label: String, _ type: VariableTypes, cType: String, propertyLabel: String, className: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
         switch type {
         case .array:
-            let length = self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: level, namespaces: namespaces)
-            return "memcpy(" + propertyLabel + ", newValue, " + length + ");"
+            let length = (level..<type.arrayLevels).map {
+                self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: $0, namespaces: namespaces)
+            }.joined(separator: " * ")
+            return "memcpy(" + propertyLabel + ", newValue, " + length + " * (sizeof (" + cType + ")));"
         case .string(let length):
             return "strncpy(" + propertyLabel + ", newValue, " + length + ");"
         default:
@@ -536,11 +538,14 @@ public final class CPPHeaderCreator: Creator {
         let definition: String
         switch variable.type {
         case .array(let subtype, _):
-            let size = self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: variable.label, level: 0, namespaces: namespaces)
+            let length = (0..<variable.type.arrayLevels).map {
+                self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: variable.label, level: $0, namespaces: namespaces)
+            }.joined(separator: " * ")
+            let size = length + " * (sizeof (" + variable.cType + "))"
             let arrDefinition = "void set_" + variable.label + "(const " + variable.cType + " *newValue)"
             let arrContent = "memcpy(" + structName + "::" + variable.label + ", newValue, " + size + ");"
             let indexDefinition = "void set_" + variable.label + "(const " + variable.cType + " &newValue, int i)"
-            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, propertyLabel: structName + "::" + variable.label + "[i]", className: className, structName: structName, level: 0, namespaces: namespaces)
+            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, cType: variable.cType, propertyLabel: structName + "::" + variable.label + "[i]", className: className, structName: structName, level: 0, namespaces: namespaces)
             let setter = arrDefinition + "\n{\n" + self.stringHelpers.indent(arrContent) + "\n}"
             let indexSetter = indexDefinition + "\n{\n" + self.stringHelpers.indent(indexContent) + "\n}"
             return setter + "\n\n" + indexSetter
@@ -552,7 +557,7 @@ public final class CPPHeaderCreator: Creator {
         default:
             definition = "void set_" + variable.label + "(const " + variable.cType + " &newValue)"
         }
-        let content = self.createSetterContent(forVariable: variable.label, variable.type, propertyLabel: property, className: className, structName: structName, namespaces: namespaces)
+        let content = self.createSetterContent(forVariable: variable.label, variable.type, cType: variable.cType, propertyLabel: property, className: className, structName: structName, namespaces: namespaces)
         let endBracket = "}"
         return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
     }
