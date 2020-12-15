@@ -449,7 +449,6 @@ public final class CPPHeaderCreator: Creator {
     }
     
     private func createGettersAndSetters(inClass cls: Class, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
-        print("cls.name: \(cls.name)")
         let gettersAndSetters: [String] = cls.variables.map {
             let getter = self.createGetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces)
             let setter = self.createSetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces)

@@ -86,7 +86,7 @@ public final class CPPFromStringCreator {
     ) -> String {
         let containsSupportedTypes = nil != variables.first { self.creatorHelpers.isSupportedStringType($0.type) }
         let def = "void from_string(const std::string &t_str) {"
-        let nodef = "void from_string(const std::string &) {"
+        let nodef = "void from_string(const std::string &t_str) {"
         let ifDef = "#ifdef USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let elseDef = "#else"
         let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
