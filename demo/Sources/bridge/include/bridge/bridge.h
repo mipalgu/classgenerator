@@ -63,22 +63,23 @@
 #pragma clang diagnostic ignored "-Weverything"
 
 #include <termios.h> 
-#include "WBFunctor_types_generated.h"
-#include "gusimplewhiteboard.h"
-#include "guwhiteboard_c_types.h"
-#include "guwhiteboardtypelist_c_generated.h"
-#include "guwhiteboardserialisation.h"
-#include "gu_util.h"
+#include "../../WBFunctor_types_generated.h"
+#include "../../gusimplewhiteboard.h"
+#include "../../guwhiteboard_c_types.h"
+#include "../../guwhiteboardtypelist_c_generated.h"
+#include "../../guwhiteboardserialisation.h"
+#include "../../gu_util.h"
 
 #pragma clang diagnostic pop
 
-#include "somestruct.h"
-#include "wb_demo.h"
-#include "cpp_bridge.h"
-#include "wb_field_ball.h"
-#include "wb_field_balls.h"
-#include "wb_vision_control_status.h"
-#include "wb_vision_detection_ball.h"
-#include "wb_vision_detection_balls.h"
+#include "../../somestruct.h"
+#include "../../wb_demo.h"
+#include "../../cpp_bridge.h"
+#include "../../wb_field_ball.h"
+#include "../../wb_field_balls.h"
+#include "../../wb_vision_control_status.h"
+#include "../../wb_vision_detection_ball.h"
+#include "../../wb_vision_detection_balls.h"
 
 #endif  /* BRIDGE_H */
+

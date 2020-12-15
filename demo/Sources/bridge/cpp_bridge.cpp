@@ -59,7 +59,8 @@
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 
 #include "Demo.h"
-#include "include/bridge/cpp_bridge.h"
+#include "cpp_bridge.h"
+
 
 #ifdef __cplusplus
 extern "C" {
