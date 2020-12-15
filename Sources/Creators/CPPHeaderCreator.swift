@@ -285,11 +285,11 @@ public final class CPPHeaderCreator: Creator {
             addConstOnPointers: true,
             assignDefaults: true,
             self.creatorHelpers.createArrayCountDef(inClass: cls.name, namespaces: namespaces)
-        ) { switch $0.type { case .string: return "\($0.label).c_str()" default: return $0.label } }
+        ) { switch $0.type { case .string: return "t_\($0.label).c_str()" default: return "t_" + $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(setters) + "\n}"
     }
     
-    fileprivate func createCallList(forVariables variables: [Variable], accessor: @escaping (String) -> String = { $0 }) -> String {
+    fileprivate func createCallList(forVariables variables: [Variable], accessor: @escaping (String) -> String = { "t_" + $0 }) -> String {
         return variables.lazy.map { accessor($0.label) }.combine("") { $0 + ", " + $1 }
     }
     
@@ -299,14 +299,14 @@ public final class CPPHeaderCreator: Creator {
             let label = self.calculateCppLabel(forVariable: $0)
             switch $0.type {
             case .array:
-                return "const \(type) \(label) = NULLPTR"
+                return "const \(type) t_\(label) = NULLPTR"
             case .enumerated:
                 guard nil != Int($0.defaultValue) else {
-                    return "\(type) \(label) = \($0.defaultValue)"
+                    return "\(type) t_\(label) = \($0.defaultValue)"
                 }
-                return "\(type) \(label) = static_cast<\(type)>(\($0.defaultValue))"
+                return "\(type) t_\(label) = static_cast<\(type)>(\($0.defaultValue))"
             default:
-                return "\(type) \(label) = \($0.defaultValue)"
+                return "\(type) t_\(label) = \($0.defaultValue)"
             }
         }.combine("") { $0 + ", " + $1 }
     }
@@ -346,8 +346,8 @@ public final class CPPHeaderCreator: Creator {
         includeBrackets: Bool
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Constructor.")
-        let def = "\(className)(const \(otherType) &other): \(structName)() {"
-        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + (includeBrackets ? "()" : "") } + ");"
+        let def = "\(className)(const \(otherType) &t_other): \(structName)() {"
+        let call = "this->init(" + self.createCallList(forVariables: variables) { "t_other." + $0 + (includeBrackets ? "()" : "") } + ");"
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(call) + "\n}"
     }
 
@@ -360,8 +360,8 @@ public final class CPPHeaderCreator: Creator {
         includeBrackets: Bool
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "Copy Assignment Operator.")
-        let def = "\(className) &operator = (const \(otherType) &other) {"
-        let call = "this->init(" + self.createCallList(forVariables: variables) { "other." + $0 + (includeBrackets ? "()" : "") } + ");"
+        let def = "\(className) &operator = (const \(otherType) &t_other) {"
+        let call = "this->init(" + self.createCallList(forVariables: variables) { "t_other." + $0 + (includeBrackets ? "()" : "") } + ");"
         let ret = "return *this;"
         let content = call + "\n" + ret
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(content) + "\n}"
@@ -373,7 +373,7 @@ public final class CPPHeaderCreator: Creator {
         addConstOnPointers: Bool,
         assignDefaults: Bool,
         _ arrayDefGetter: (String) -> (Int) -> String,
-        _ transformGetter: (Variable) -> String = { "\($0.label)"}
+        _ transformGetter: (Variable) -> String = { "t_\($0.label)"}
     ) -> String {
         return variables.map {
             self.createSetter(
@@ -440,9 +440,9 @@ public final class CPPHeaderCreator: Creator {
     ) -> String {
         let comment = self.creatorHelpers.createComment(from: "String Constructor.")
         let constructor = """
-            \(className)(const std::string &str) {
+            \(className)(const std::string &t_str) {
                 this->init();
-                this->from_string(str);
+                this->from_string(t_str);
             }
             """
         return comment + "\n" + constructor
@@ -472,7 +472,7 @@ public final class CPPHeaderCreator: Creator {
         }
         let levelsCount = type.arrayLevels
         let stars = Array(repeating: "*", count: levelsCount - 1).joined()
-        let indexes = (0...level).map { ($0 == 0 ? "i" : "i\($0)") }
+        let indexes = (0...level).map { ($0 == 0 ? "t_i" : "t_i\($0)") }
         let parameters = indexes.map { "int " + $0 }.joined(separator: ", ")
         let brackets = indexes.map { "[" + $0 + "]" }.joined()
         let definition = cType + " " + stars + label + "(" + parameters + ") const"
@@ -524,11 +524,11 @@ public final class CPPHeaderCreator: Creator {
             let length = (level..<type.arrayLevels).map {
                 self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: $0, namespaces: namespaces)
             }.joined(separator: " * ")
-            return "memcpy(" + propertyLabel + ", newValue, " + length + " * (sizeof (" + cType + ")));"
+            return "memcpy(" + propertyLabel + ", t_newValue, " + length + " * (sizeof (" + cType + ")));"
         case .string(let length):
-            return "strncpy(" + propertyLabel + ", newValue, " + length + ");"
+            return "strncpy(" + propertyLabel + ", t_newValue, " + length + ");"
         default:
-            return propertyLabel + " = newValue;"
+            return propertyLabel + " = t_newValue;"
         }
     }
     
@@ -542,20 +542,20 @@ public final class CPPHeaderCreator: Creator {
                 self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: variable.label, level: $0, namespaces: namespaces)
             }.joined(separator: " * ")
             let size = length + " * (sizeof (" + variable.cType + "))"
-            let arrDefinition = "void set_" + variable.label + "(const " + variable.cType + " *newValue)"
-            let arrContent = "memcpy(" + structName + "::" + variable.label + ", newValue, " + size + ");"
-            let indexDefinition = "void set_" + variable.label + "(const " + variable.cType + " &newValue, int i)"
-            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, cType: variable.cType, propertyLabel: structName + "::" + variable.label + "[i]", className: className, structName: structName, level: 0, namespaces: namespaces)
+            let arrDefinition = "void set_" + variable.label + "(const " + variable.cType + " *t_newValue)"
+            let arrContent = "memcpy(" + structName + "::" + variable.label + ", t_newValue, " + size + ");"
+            let indexDefinition = "void set_" + variable.label + "(const " + variable.cType + " &t_newValue, int t_i)"
+            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, cType: variable.cType, propertyLabel: structName + "::" + variable.label + "[t_i]", className: className, structName: structName, level: 0, namespaces: namespaces)
             let setter = arrDefinition + "\n{\n" + self.stringHelpers.indent(arrContent) + "\n}"
             let indexSetter = indexDefinition + "\n{\n" + self.stringHelpers.indent(indexContent) + "\n}"
             return setter + "\n\n" + indexSetter
         case .pointer:
             let pointerType = variable.cType + " " + self.createPointers(forType: variable.type)
-            definition = "void set_" + variable.label + "(const " + pointerType + "newValue)"
+            definition = "void set_" + variable.label + "(const " + pointerType + "t_newValue)"
         case .string:
-            definition = "void set_" + variable.label + "(const char *newValue)"
+            definition = "void set_" + variable.label + "(const char *t_newValue)"
         default:
-            definition = "void set_" + variable.label + "(const " + variable.cType + " &newValue)"
+            definition = "void set_" + variable.label + "(const " + variable.cType + " &t_newValue)"
         }
         let content = self.createSetterContent(forVariable: variable.label, variable.type, cType: variable.cType, propertyLabel: property, className: className, structName: structName, namespaces: namespaces)
         let endBracket = "}"
@@ -569,21 +569,21 @@ public final class CPPHeaderCreator: Creator {
     ) -> String {
         let equalsOperator = self.createEqualsOperator(inClass: cls, forClassNamed: className, andStructNamed: structName)
         let notEqualsOperator = """
-            bool operator !=(const \(className) &other) const
+            bool operator !=(const \(className) &t_other) const
             {
-            \(self.stringHelpers.cIndent("return !(*this == other);"))
+            \(self.stringHelpers.cIndent("return !(*this == t_other);"))
             }
             """
         let equalsCOperator = """
-            bool operator ==(const \(structName) &other) const
+            bool operator ==(const \(structName) &t_other) const
             {
-            \(self.stringHelpers.cIndent("return *this == \(className)(other);"))
+            \(self.stringHelpers.cIndent("return *this == \(className)(t_other);"))
             }
             """
         let notEqualsCOperator = """
-            bool operator !=(const \(structName) &other) const
+            bool operator !=(const \(structName) &t_other) const
             {
-            \(self.stringHelpers.cIndent("return !(*this == other);"))
+            \(self.stringHelpers.cIndent("return !(*this == t_other);"))
             }
             """
         return equalsOperator
@@ -597,7 +597,7 @@ public final class CPPHeaderCreator: Creator {
         forClassNamed className: String,
         andStructNamed structName: String
     ) -> String {
-        let def = "bool operator ==(const " + className + " &other) const"
+        let def = "bool operator ==(const " + className + " &t_other) const"
         let startBody = "{"
         let equalsChainCondition = self.createEqualsChain(for: cls.variables)
         let complexEquals = cls.variables.compactMap(self.createComplexEquals).combine("") { $0 + "\n" + $1 }
@@ -648,22 +648,22 @@ public final class CPPHeaderCreator: Creator {
             case .long(let subtype):
                 return createEquals(for: subtype)
             case .double:
-                return "fabs(" + label + post + " - other." + label + post + ") < DBL_EPSILON"
+                return "fabs(" + label + post + " - t_other." + label + post + ") < DBL_EPSILON"
             case .float:
-                return "fabsf(" + label + post + " - other." + label + post + ") < FLT_EPSILON"
+                return "fabsf(" + label + post + " - t_other." + label + post + ") < FLT_EPSILON"
             default:
-                return label + post + " == other." + label + post
+                return label + post + " == t_other." + label + post
             }
         }
         switch type {
         case .numeric(let numericType):
             return createEquals(for: numericType)
         case .gen(_, _, let className):
-            return className + "(" + label + post + ") == " + className + "(other." + label + post + ")"
+            return className + "(" + label + post + ") == " + className + "(t_other." + label + post + ")"
         case .string(let length):
-            return "0 == strncmp(" + label + post + ", " + "other." + label + post + ", " + length + ")"
+            return "0 == strncmp(" + label + post + ", " + "t_other." + label + post + ", " + length + ")"
         default:
-            return label + post + " == other." + label + post
+            return label + post + " == t_other." + label + post
         }
     }
     

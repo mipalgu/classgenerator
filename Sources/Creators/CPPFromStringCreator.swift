@@ -85,13 +85,13 @@ public final class CPPFromStringCreator {
         namespaces: [CNamespace]
     ) -> String {
         let containsSupportedTypes = nil != variables.first { self.creatorHelpers.isSupportedStringType($0.type) }
-        let def = "void from_string(const std::string &str) {"
+        let def = "void from_string(const std::string &t_str) {"
         let nodef = "void from_string(const std::string &) {"
         let ifDef = "#ifdef USE_WB_\(cls.name.uppercased())_C_CONVERSION"
         let elseDef = "#else"
         let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
-        let cImplementation = structName + "_from_string(this, str.c_str());"
-        let begin = "char * str_cstr = const_cast<char *>(str.c_str());"
+        let cImplementation = structName + "_from_string(this, t_str.c_str());"
+        let begin = "char * str_cstr = const_cast<char *>(t_str.c_str());"
         let cppImplementation = self.implementationCreator.createFromStringImplementation(
             forClass: cls,
             using: CFromStringImplementationDataSource(
