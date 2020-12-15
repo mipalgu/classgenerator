@@ -59,6 +59,9 @@
 #ifndef BRIDGE_H
 #define BRIDGE_H
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+
 #include <termios.h> 
 #include "WBFunctor_types_generated.h"
 #include "gusimplewhiteboard.h"
@@ -66,6 +69,9 @@
 #include "guwhiteboardtypelist_c_generated.h"
 #include "guwhiteboardserialisation.h"
 #include "gu_util.h"
+
+#pragma clang diagnostic pop
+
 #include "somestruct.h"
 #include "wb_demo.h"
 #include "cpp_bridge.h"
