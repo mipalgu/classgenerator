@@ -142,6 +142,9 @@ public var crossLine: LandmarkSighting? {
     return firstSighting(sightingType: CrossLineSightingType)
 }
 
+-swift
+import bridge
+
 -properties
 
 uint8_t numberOfSightings = 0 // The number of sightings in `sightings`.

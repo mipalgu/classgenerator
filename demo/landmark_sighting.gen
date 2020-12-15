@@ -16,6 +16,9 @@ enum LandmarkSightingType {
     BallSightingType
 };
 
+-swift
+import bridge
+
 -properties
 
 int16_t direction = 0 // degrees, relative to the center of the nao torso. + == left, 0 == straight, - == right.
