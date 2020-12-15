@@ -224,7 +224,7 @@ public final class CPPHeaderCreator: Creator {
             includeBrackets: false
         )
         let equalsOperators = self.createEqualityOperators(inClass: cls, forClassNamed: name, andStructNamed: extendName)
-        let gettersAndSetters = self.createGettersAndSetters(inClass: cls, forClassNamed: name, andStructNamed: extendName, namespaces: namespaces)
+        let gettersAndSetters = self.createGettersAndSetters(inClass: cls, andStructNamed: extendName, namespaces: namespaces)
         let privateContent = self.createInit(forClass: cls, structName: extendName, forVariables: variables, namespaces: namespaces)
         let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
@@ -448,10 +448,11 @@ public final class CPPHeaderCreator: Creator {
         return comment + "\n" + constructor
     }
     
-    private func createGettersAndSetters(inClass cls: Class, forClassNamed className: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+    private func createGettersAndSetters(inClass cls: Class, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+        print("cls.name: \(cls.name)")
         let gettersAndSetters: [String] = cls.variables.map {
-            let getter = self.createGetter(forVariable: $0, inClassNamed: className, andStructNamed: structName)
-            let setter = self.createSetter(forVariable: $0, inClassNamed: className, andStructNamed: structName, namespaces: namespaces)
+            let getter = self.createGetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName)
+            let setter = self.createSetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces)
             return getter + "\n\n" + setter
         }
         return gettersAndSetters.joined(separator: "\n\n")
@@ -466,7 +467,7 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createArrayIndexGetters(forVariable label: String, _ type: VariableTypes, cType: String, inClassNamed className: String, andStructNamed structName: String, level: Int) -> String? {
+    private func createArrayIndexGetters(forVariable label: String, _ type: VariableTypes, cType: String, inGenNamed genName: String, andStructNamed structName: String, level: Int) -> String? {
         guard let subtype = type.arraySubType else {
             return nil
         }
@@ -480,13 +481,13 @@ public final class CPPHeaderCreator: Creator {
         let content = "return " + structName + "::" + label + brackets + ";"
         let endBracket = "}"
         let getter = definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
-        if let subGetter = createArrayIndexGetters(forVariable: label, subtype, cType: cType, inClassNamed: className, andStructNamed: structName, level: level + 1) {
+        if let subGetter = createArrayIndexGetters(forVariable: label, subtype, cType: cType, inGenNamed: genName, andStructNamed: structName, level: level + 1) {
             return getter + "\n\n" + subGetter
         }
         return getter
     }
     
-    private func createGetter(forVariable variable: Variable, inClassNamed className: String, andStructNamed structName: String) -> String {
+    private func createGetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String) -> String {
         let startBracket = "{"
         let definition: String
         let content: String
@@ -496,7 +497,7 @@ public final class CPPHeaderCreator: Creator {
             let definition = "const " + variable.cType + " " + stars + variable.label + "() const"
             let content = "return &(" + structName + "::" + variable.label + "[0]);"
             let arrGetter = definition + "\n{\n" + stringHelpers.indent(content) + "\n}"
-            guard let getter = self.createArrayIndexGetters(forVariable: variable.label, variable.type, cType: variable.cType, inClassNamed: className, andStructNamed: structName, level: 0) else {
+            guard let getter = self.createArrayIndexGetters(forVariable: variable.label, variable.type, cType: variable.cType, inGenNamed: genName, andStructNamed: structName, level: 0) else {
                 fatalError("Failed to create getter for array type \(variable.type)")
             }
             return arrGetter + "\n\n" + getter
@@ -518,11 +519,11 @@ public final class CPPHeaderCreator: Creator {
         return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
     }
     
-    private func createSetterContent(forVariable label: String, _ type: VariableTypes, cType: String, propertyLabel: String, className: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
+    private func createSetterContent(forVariable label: String, _ type: VariableTypes, cType: String, propertyLabel: String, genName: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
         switch type {
         case .array:
             let length = (level..<type.arrayLevels).map {
-                self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: label, level: $0, namespaces: namespaces)
+                self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: $0, namespaces: namespaces)
             }.joined(separator: " * ")
             return "memcpy(" + propertyLabel + ", t_newValue, " + length + " * (sizeof (" + cType + ")));"
         case .string(let length):
@@ -532,20 +533,20 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createSetter(forVariable variable: Variable, inClassNamed className: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+    private func createSetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
         let startBracket = "{"
         let property = structName + "::" + variable.label
         let definition: String
         switch variable.type {
         case .array(let subtype, _):
             let length = (0..<variable.type.arrayLevels).map {
-                self.creatorHelpers.createArrayCountDef(inClass: className, forVariable: variable.label, level: $0, namespaces: namespaces)
+                self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: variable.label, level: $0, namespaces: namespaces)
             }.joined(separator: " * ")
             let size = length + " * (sizeof (" + variable.cType + "))"
             let arrDefinition = "void set_" + variable.label + "(const " + variable.cType + " *t_newValue)"
             let arrContent = "memcpy(" + structName + "::" + variable.label + ", t_newValue, " + size + ");"
             let indexDefinition = "void set_" + variable.label + "(const " + variable.cType + " &t_newValue, int t_i)"
-            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, cType: variable.cType, propertyLabel: structName + "::" + variable.label + "[t_i]", className: className, structName: structName, level: 0, namespaces: namespaces)
+            let indexContent = self.createSetterContent(forVariable: variable.label, subtype, cType: variable.cType, propertyLabel: structName + "::" + variable.label + "[t_i]", genName: genName, structName: structName, level: 0, namespaces: namespaces)
             let setter = arrDefinition + "\n{\n" + self.stringHelpers.indent(arrContent) + "\n}"
             let indexSetter = indexDefinition + "\n{\n" + self.stringHelpers.indent(indexContent) + "\n}"
             return setter + "\n\n" + indexSetter
@@ -557,7 +558,7 @@ public final class CPPHeaderCreator: Creator {
         default:
             definition = "void set_" + variable.label + "(const " + variable.cType + " &t_newValue)"
         }
-        let content = self.createSetterContent(forVariable: variable.label, variable.type, cType: variable.cType, propertyLabel: property, className: className, structName: structName, namespaces: namespaces)
+        let content = self.createSetterContent(forVariable: variable.label, variable.type, cType: variable.cType, propertyLabel: property, genName: genName, structName: structName, namespaces: namespaces)
         let endBracket = "}"
         return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
     }
