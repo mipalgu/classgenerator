@@ -93,6 +93,26 @@ public enum VariableTypes {
             return nil
         }
     }
+    
+    public var terminalType: VariableTypes {
+        switch self {
+        case .array(let subtype, _):
+            return subtype.terminalType
+        case .pointer(let subtype):
+            return subtype.terminalType
+        default:
+            return self
+        }
+    }
+    
+    public var className: String? {
+        switch self {
+        case .gen(_, _, let className):
+            return className
+        default:
+            return nil
+        }
+    }
 
     indirect case array(VariableTypes, String)
     indirect case mixed(macOS: VariableTypes, linux: VariableTypes)
