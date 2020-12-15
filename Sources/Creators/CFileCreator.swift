@@ -212,7 +212,7 @@ public final class CFileCreator: Creator {
               //Manually define swap macros?
             #endif
 
-            #if __BYTE_ORDER == __LITTLE_ENDIAN
+            #if (!defined(__BYTE_ORDER) && !defined(__LITTLE_ENDIAN)) || (defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && __BYTE_ORDER == __LITTLE_ENDIAN)
             #  if !defined(htonll) && !defined(ntohll)
             #   define htonll(x) bswap_64(x)
             #   define ntohll(x) bswap_64(x)
