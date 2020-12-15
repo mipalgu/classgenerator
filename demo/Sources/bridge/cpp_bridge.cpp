@@ -59,6 +59,16 @@
 #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
 
 #include "Demo.h"
+#include "Sub.h"
+#include "FieldBall.h"
+#include "FieldBalls.h"
+#include "MachineFilteredLocalisationVision.h"
+#include "LandmarkSighting.h"
+#include "VisionControlStatus.h"
+#include "VisionDetectionBall.h"
+#include "VisionDetectionBalls.h"
+
+
 #include "cpp_bridge.h"
 
 

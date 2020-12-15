@@ -1,0 +1,154 @@
+-author Callum McColl
+
+-c
+
+#include "wb_landmark_sighting.h"
+
+-c++
+
+#include "LandmarkSighting.h"
+
+%c++
+
+int firstSighting(LandmarkSightingType sightingType)
+{
+    for (int i = 0; i < this->numberOfSightings(); i++) {
+        if (this->sightings(i).sightingType() == sightingType)
+        {
+            return i;
+        }
+    }
+    return -1;
+
+}
+
+int ball()
+{
+    return this->firstSighting(BallSightingType);
+}
+
+int firstGenericGoalPost()
+{
+    return this->firstSighting(GenericGoalPostSightingType);
+}
+
+int leftGoalPost()
+{
+    return this->firstSighting(LeftGoalPostSightingType);
+}
+
+int rightGoalPost() {
+    return this->firstSighting(RightGoalPostSightingType);
+}
+
+int goal() {
+    return this->firstSighting(GoalLandmarkSightingType);
+}
+
+int lineHorizon()
+{
+    return this->firstSighting(LineHorizonSightingType);
+}
+
+int cornerHorizon()
+{
+    return this->firstSighting(CornerHorizonSightingType);
+}
+
+int horizon()
+{
+    return MAX(this->lineHorizon(), this->cornerHorizon());
+}
+
+int line()
+{
+    return this->firstSighting(StraightLineSightingType);
+}
+
+int cornerLine()
+{
+    return this->firstSighting(CornerLineSightingType);
+}
+
+int tLine()
+{
+    return this->firstSighting(TIntersectionLineSightingType);
+}
+
+int crossLine()
+{
+    return this->firstSighting(CrossLineSightingType);
+}
+
+%swift
+
+private func firstSighting(sightingType: LandmarkSightingType) -> LandmarkSighting? {
+    for sighting in sightings {
+        if sighting.sightingType == sightingType {
+            return sighting
+        }
+    }
+    return nil
+}
+
+public var ball: LandmarkSighting? {
+    return firstSighting(sightingType: BallSightingType)
+}
+
+public var firstGenericGoalPost: LandmarkSighting? {
+    return firstSighting(sightingType: GenericGoalPostSightingType)
+}
+
+public var leftGoalPost: LandmarkSighting? {
+    return firstSighting(sightingType: LeftGoalPostSightingType)
+}
+
+public var rightGoalPost: LandmarkSighting? {
+    return firstSighting(sightingType: RightGoalPostSightingType)
+}
+
+public var goal: LandmarkSighting? {
+    return firstSighting(sightingType: GoalLandmarkSightingType)
+}
+
+public var lineHorizon: LandmarkSighting? {
+    return firstSighting(sightingType: LineHorizonSightingType)
+}
+
+public var cornerHorizon: LandmarkSighting? {
+    return firstSighting(sightingType: CornerHorizonSightingType)
+}
+
+public var horizon: LandmarkSighting? {
+    guard let lineSighting = lineHorizon else {
+        return cornerHorizon
+    }
+    return lineSighting
+}
+
+public var line: LandmarkSighting? {
+    return firstSighting(sightingType: StraightLineSightingType)
+}
+
+public var cornerLine: LandmarkSighting? {
+    return firstSighting(sightingType: CornerLineSightingType)
+}
+
+public var tLine: LandmarkSighting? {
+    return firstSighting(sightingType: TIntersectionLineSightingType)
+}
+
+public var crossLine: LandmarkSighting? {
+    return firstSighting(sightingType: CrossLineSightingType)
+}
+
+-properties
+
+uint8_t numberOfSightings = 0 // The number of sightings in `sightings`.
+gen landmark_sighting sightings[12] // All sightings.
+
+-comment
+Results of the FSM (and sub machines) "SMFilterVision".
+This machine applies some basic filtering to vision output messages.
+It also handles the coord conversion and kinematics for distance and bearing calculations on the Nao robot.
+

@@ -18,6 +18,14 @@ Sources/bridge/wb_field_balls.h
 Sources/bridge/wb_field_balls.c
 Sources/bridge/FieldBalls.h
 Sources/demo/FieldBalls.swift
+Sources/bridge/wb_machine_filtered_localisation_vision.h
+Sources/bridge/wb_machine_filtered_localisation_vision.c
+Sources/bridge/MachineFilteredLocalisationVision.h
+Sources/demo/MachineFilteredLocalisationVision.swift
+Sources/bridge/wb_landmark_sighting.h
+Sources/bridge/wb_landmark_sighting.c
+Sources/bridge/LandmarkSighting.h
+Sources/demo/LandmarkSighting.swift
 Sources/bridge/wb_vision_control_status.h
 Sources/bridge/wb_vision_control_status.c
 Sources/bridge/VisionControlStatus.h

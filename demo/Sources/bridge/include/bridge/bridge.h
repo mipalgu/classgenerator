@@ -77,6 +77,8 @@
 #include "../../cpp_bridge.h"
 #include "../../wb_field_ball.h"
 #include "../../wb_field_balls.h"
+#include "../../wb_machine_filtered_localisation_vision.h"
+#include "../../wb_landmark_sighting.h"
 #include "../../wb_vision_control_status.h"
 #include "../../wb_vision_detection_ball.h"
 #include "../../wb_vision_detection_balls.h"

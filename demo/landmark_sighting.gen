@@ -1,0 +1,27 @@
+-author Callum McColl
+
+-c
+
+enum LandmarkSightingType {
+    GenericGoalPostSightingType,
+    LeftGoalPostSightingType,
+    RightGoalPostSightingType,
+    GoalLandmarkSightingType,
+    LineHorizonSightingType,
+    CornerHorizonSightingType,
+    StraightLineSightingType,
+    CornerLineSightingType,
+    TIntersectionLineSightingType,
+    CrossLineSightingType,
+    BallSightingType
+};
+
+-properties
+
+int16_t direction = 0 // degrees, relative to the center of the nao torso. + == left, 0 == straight, - == right.
+uint16_t distance = 0 // CM distance to the center point of the sighting.
+enum LandmarkSightingType sightingType = 0|GenericGoalPostSightingType // The type of sighting.
+
+-comment
+
+Provides a common structure for sightings of landmarks.

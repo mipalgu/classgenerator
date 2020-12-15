@@ -138,6 +138,8 @@ public class DemoTests: ClassGeneratorTestCase {
             "demo",
             "fieldBalls",
             "fieldBall",
+            "machine_filtered_localisation_vision",
+            "landmark_sighting",
             "vision_control_status",
             "vision_detection_ball",
             "vision_detection_balls"
