@@ -473,7 +473,6 @@ public final class CPPHeaderCreator: Creator {
             let sizeContent = "return " + size + ";"
             let stars = Array(repeating: "*", count: type.arrayLevels).joined()
             let cType = type.terminalType.className ?? cType
-            let returnType = cType + " " + stars
             let constReturnType = "const " + cType + " " + stars
             let value: String
             if let terminalClass = type.terminalType.className {
@@ -482,8 +481,7 @@ public final class CPPHeaderCreator: Creator {
                 value = getter
             }
             let constContent = "return " + value + ";"
-            let content = "return " + "const_cast<" + cType + " *>(" + value + ");"
-            return ([(returnType, content, { $0 })], [(constReturnType, constContent, { $0 }), (sizeReturnType, sizeContent, { $0 + "_size" })])
+            return ([], [(constReturnType, constContent, { $0 }), (sizeReturnType, sizeContent, { $0 + "_size" })])
         case .pointer:
             let returnType = cType + " " + self.createPointers(forType: type)
             let constReturnType = "const " + cType + " " + self.createPointers(forType: type)
