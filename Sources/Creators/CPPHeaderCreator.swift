@@ -532,22 +532,10 @@ public final class CPPHeaderCreator: Creator {
     private func createGetterContent(forVariable label: String, _ type: VariableTypes, propertyLabel: String, genName: String, structName: String, cType: String, level: Int, namespaces: [CNamespace]) -> [(String, String, Bool, [String])] {
         switch type {
         case .array:
-            let stars = Array(repeating: "*", count: type.arrayLevels).joined()
-            let cType = type.terminalType.className ?? cType
-            let returnType = cType + " " + stars
-            let constReturnType = "const " + cType + " " + stars
-            let value: String
-            if let terminalClass = type.terminalType.className {
-                value = "static_cast<const " + terminalClass + " *>(" + structName + "::" + label + ")"
-            } else {
-                value = structName + "::" + label
-            }
-            let constContent = "return " + value + ";"
-            let content = "return " + "const_cast<" + cType + " *>(" + value + ");"
-            let arrGetters: [(String, String, Bool, [String])] = [
-                (returnType, content, false, []),
-                (constReturnType, constContent, true, [])
-            ]
+            let indexes: [String] = level <= 0 ? [] : (0..<level).map { ($0 == 0 ? "t_i" : "t_i\($0)") }
+            let parameters = indexes.map { "int " + $0 }
+            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: propertyLabel)
+            let arrGetters: [(String, String, Bool, [String])] = getters.map { ($0, $1, false, parameters) } + constGetters.map { ($0, $1, true, parameters) }
             let indexGetters = self.createArrayIndexGetters(
                 forVariable: label,
                 type,
@@ -558,31 +546,9 @@ public final class CPPHeaderCreator: Creator {
                 namespaces: namespaces
             )
             return arrGetters + indexGetters
-        case .pointer:
-            let returnType = cType + " " + self.createPointers(forType: type)
-            let constReturnType = "const " + cType + " " + self.createPointers(forType: type)
-            let content = "return " + propertyLabel + ";"
-            return [(returnType, content, false, []), (constReturnType, content, true, [])]
-        case .string:
-            let returnType = "char *"
-            let constReturnType = "const char *"
-            let content = "return &(" + propertyLabel + "[0]);"
-            return [(returnType, content, false, []), (constReturnType, content, true, [])]
-        case .gen(_, _, let className):
-            let returnType = className + " &"
-            let constReturnType = "const " + className + " &"
-            let content = "return const_cast<" + className + " &>(static_cast<const " + className + " &>(" + propertyLabel + "));"
-            let constContent = "return static_cast<const " + className + " &>(" + propertyLabel + ");"
-            return [(returnType, content, false, []), (constReturnType, constContent, true, [])]
-        case .bit:
-            let returnType = cType
-            let content = "return " + propertyLabel + ";"
-            return [(returnType, content, true, [])]
         default:
-            let returnType = cType + " &"
-            let constReturnType = "const " + cType + " &"
-            let content = "return " + propertyLabel + ";"
-            return [(returnType, content, false, []), (constReturnType, content, true, [])]
+            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: propertyLabel)
+            return getters.map { ($0, $1, false, []) } + constGetters.map { ($0, $1, true, []) }
         }
     }
     
