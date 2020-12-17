@@ -466,9 +466,11 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func getters(forType type: VariableTypes, cType: String, getter: String) -> ([(String, String)], [(String, String)]) {
+    private func getters(forType type: VariableTypes, cType: String, getter: String, size: String) -> ([(String, String, (String) -> String)], [(String, String, (String) -> String)]) {
         switch type {
         case .array:
+            let sizeReturnType = "size_t"
+            let sizeContent = "return " + size + ";"
             let stars = Array(repeating: "*", count: type.arrayLevels).joined()
             let cType = type.terminalType.className ?? cType
             let returnType = cType + " " + stars
@@ -481,37 +483,38 @@ public final class CPPHeaderCreator: Creator {
             }
             let constContent = "return " + value + ";"
             let content = "return " + "const_cast<" + cType + " *>(" + value + ");"
-            return ([(returnType, content)], [(constReturnType, constContent)])
+            return ([(returnType, content, { $0 })], [(constReturnType, constContent, { $0 }), (sizeReturnType, sizeContent, { $0 + "_size" })])
         case .pointer:
             let returnType = cType + " " + self.createPointers(forType: type)
             let constReturnType = "const " + cType + " " + self.createPointers(forType: type)
             let content = "return " + getter + ";"
-            return ([(returnType, content)], [(constReturnType, content)])
+            return ([(returnType, content, { $0 })], [(constReturnType, content, { $0 })])
         case .string(let length):
-            return self.getters(forType: .array(.char(.signed), length), cType: "char", getter: getter)
+            return self.getters(forType: .array(.char(.signed), length), cType: "char", getter: getter, size: length)
         case .gen(_, _, let className):
             let returnType = className + " &"
             let constReturnType = "const " + className + " &"
             let content = "return const_cast<" + className + " &>(static_cast<const " + className + " &>(" + getter + "));"
             let constContent = "return static_cast<const " + className + " &>(" + getter + ");"
-            return ([(returnType, content)], [(constReturnType, constContent)])
+            return ([(returnType, content, { $0 })], [(constReturnType, constContent, { $0 })])
         case .bit:
             let returnType = cType
             let content = "return " + getter + ";"
-            return ([], [(returnType, content)])
+            return ([], [(returnType, content, { $0 })])
         default:
             let returnType = cType + " &"
             let constReturnType = "const " + cType + " &"
             let content = "return " + getter + ";"
-            return ([(returnType, content)], [(constReturnType, content)])
+            return ([(returnType, content, { $0 })], [(constReturnType, content, { $0 })])
         }
     }
     
-    private func createGetterContent(forVariable label: String, _ type: VariableTypes, getter: String, genName: String, structName: String, cType: String, parameters: [String] = [], level: Int, namespaces: [CNamespace]) -> [(String, String, Bool, [String])] {
+    private func createGetterContent(forVariable label: String, _ type: VariableTypes, getter: String, genName: String, structName: String, cType: String, parameters: [String] = [], level: Int, namespaces: [CNamespace]) -> [(String, String, (String) -> String, Bool, [String])] {
         switch type {
         case .array(let subtype, _):
-            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: getter)
-            let arrGetters: [(String, String, Bool, [String])] = getters.map { ($0, $1, false, parameters) } + constGetters.map { ($0, $1, true, parameters) }
+            let size = self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: level, namespaces: namespaces)
+            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: getter, size: size)
+            let arrGetters: [(String, String, (String) -> String, Bool, [String])] = getters.map { ($0, $1, $2, false, parameters) } + constGetters.map { ($0, $1, $2, true, parameters) }
             let currentIndex = level == 0 ? "t_i" : "t_i\(level)"
             let subParameters = parameters + ["int " + currentIndex]
             let subGetter = getter + "[" + currentIndex + "]"
@@ -528,19 +531,26 @@ public final class CPPHeaderCreator: Creator {
             )
             return arrGetters + subGetters
         case .string(let length):
-            return self.createGetterContent(
+            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: getter, size: length)
+            let stringGetters: [(String, String, (String) -> String, Bool, [String])] = getters.map { ($0, $1, $2, false, parameters) } + constGetters.map { ($0, $1, $2, true, parameters) }
+            let currentIndex = level == 0 ? "t_i" : "t_i\(level)"
+            let subParameters = parameters + ["int " + currentIndex]
+            let subGetter = getter + "[" + currentIndex + "]"
+            let subGetters = self.createGetterContent(
                 forVariable: label,
-                .array(.char(.signed), length),
-                getter: getter,
+                .char(.signed),
+                getter: subGetter,
                 genName: genName,
                 structName: structName,
                 cType: "char",
-                level: level,
+                parameters: subParameters,
+                level: level + 1,
                 namespaces: namespaces
             )
+            return stringGetters + subGetters
         default:
-            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: getter)
-            return getters.map { ($0, $1, false, parameters) } + constGetters.map { ($0, $1, true, parameters) }
+            let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: getter, size: "")
+            return getters.map { ($0, $1, $2, false, parameters) } + constGetters.map { ($0, $1, $2, true, parameters) }
         }
     }
     
@@ -557,9 +567,9 @@ public final class CPPHeaderCreator: Creator {
             namespaces: namespaces
         )
         let endBracket = "}"
-        return funcs.map { (returnType, content, isConst, parameters) in
+        return funcs.map { (returnType, content, name, isConst, parameters) in
             let post = isConst ? " const" : ""
-            let definition: String = returnType + " " + variable.label + "(" + parameters.joined(separator: ", ") + ")" + post
+            let definition: String = returnType + " " + name(variable.label) + "(" + parameters.joined(separator: ", ") + ")" + post
             return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
         }.joined(separator: "\n\n")
     }
