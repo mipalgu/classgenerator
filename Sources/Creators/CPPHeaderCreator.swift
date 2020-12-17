@@ -476,9 +476,9 @@ public final class CPPHeaderCreator: Creator {
             let constReturnType = "const " + cType + " " + stars
             let value: String
             if let terminalClass = type.terminalType.className {
-                value = "static_cast<const " + terminalClass + " *>(" + getter + ")"
+                value = "static_cast<const " + terminalClass + " *>(&(" + getter + "[0]))"
             } else {
-                value = getter
+                value = "&(" + getter + "[0])"
             }
             let constContent = "return " + value + ";"
             return ([], [(constReturnType, constContent, { $0 }), (sizeReturnType, sizeContent, { $0 + "_size" })])
