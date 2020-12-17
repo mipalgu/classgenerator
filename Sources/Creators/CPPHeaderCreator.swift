@@ -466,82 +466,144 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createArrayIndexGetters(forVariable label: String, _ type: VariableTypes, cType: String, inGenNamed genName: String, andStructNamed structName: String, level: Int, namespaces: [CNamespace]) -> String? {
+    private func createArrayIndexGetters(forVariable label: String, _ type: VariableTypes, cType: String, inGenNamed genName: String, andStructNamed structName: String, level: Int, namespaces: [CNamespace]) -> [(String, String, Bool, [String])] {
         guard let subtype = type.arraySubType else {
-            return nil
+            return []
         }
         let levelsCount = type.arrayLevels
         let stars = Array(repeating: "*", count: levelsCount - 1).joined()
         let indexes = (0...level).map { ($0 == 0 ? "t_i" : "t_i\($0)") }
-        let parameters = indexes.map { "int " + $0 }.joined(separator: ", ")
+        let parameters = indexes.map { "int " + $0 }
         let brackets = indexes.map { "[" + $0 + "]" }.joined()
-        let definition = cType + " " + stars + label + "(" + parameters + ") const"
-        let startBracket = "{"
-        let content = "return " + self.createGetterContent(forVariable: label, subtype, propertyLabel: structName + "::" + label + brackets, genName: genName, structName: structName, level: 0, namespaces: namespaces)
-        let endBracket = "}"
-        let getter = definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
-        if let subGetter = createArrayIndexGetters(forVariable: label, subtype, cType: cType, inGenNamed: genName, andStructNamed: structName, level: level + 1, namespaces: namespaces) {
-            return getter + "\n\n" + subGetter
+        let (subGetters, subConstGetters) = self.getters(forType: subtype, cType: cType, getter: structName + "::" + label + brackets)
+        let subGettersMapped = subGetters.map { (returnType, content) in
+            (returnType + (stars.isEmpty ? "" : " " + stars), content, false, parameters)
         }
-        return getter
+        let subConstGettersMapped = subConstGetters.map { (returnType, content) in
+            (returnType + (stars.isEmpty ? "" : " " + stars), content, true, parameters)
+        }
+        return subGettersMapped + subConstGettersMapped
     }
     
-    private func createGetterContent(forVariable label: String, _ type: VariableTypes, propertyLabel: String, genName: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
+    private func getters(forType type: VariableTypes, cType: String, getter: String) -> ([(String, String)], [(String, String)]) {
         switch type {
-        case .array(let subtype, _):
+        case .array:
+            let stars = Array(repeating: "*", count: type.arrayLevels).joined()
+            let cType = type.terminalType.className ?? cType
+            let returnType = cType + " " + stars
+            let constReturnType = "const " + cType + " " + stars
+            let value: String
             if let terminalClass = type.terminalType.className {
-                let stars = (level..<type.arrayLevels).map { _ in "*" }.joined()
-                let subGetter = self.createGetterContent(forVariable: label, subtype, propertyLabel: propertyLabel, genName: genName, structName: structName, level: level + 1, namespaces: namespaces)
-                return "static_cast<const " + terminalClass + " " + stars + ">(" + subGetter + ");"
+                value = "static_cast<const " + terminalClass + " *>(" + getter + ")"
+            } else {
+                value = getter
             }
-            return propertyLabel + ";"
+            let constContent = "return " + value + ";"
+            let content = "return " + "const_cast<" + cType + " *>(" + value + ");"
+            return ([(returnType, content)], [(constReturnType, constContent)])
+        case .pointer:
+            let returnType = cType + " " + self.createPointers(forType: type)
+            let constReturnType = "const " + cType + " " + self.createPointers(forType: type)
+            let content = "return " + getter + ";"
+            return ([(returnType, content)], [(constReturnType, content)])
+        case .string:
+            let returnType = "char *"
+            let constReturnType = "const char *"
+            let content = "return &(" + getter + "[0]);"
+            return ([(returnType, content)], [(constReturnType, content)])
         case .gen(_, _, let className):
-            return className + "(" + propertyLabel + ");"
+            let returnType = className + " &"
+            let constReturnType = "const " + className + " &"
+            let content = "return const_cast<" + className + " &>(static_cast<const " + className + " &>(" + getter + "));"
+            let constContent = "return static_cast<const " + className + " &>(" + getter + ");"
+            return ([(returnType, content)], [(constReturnType, constContent)])
+        case .bit:
+            let returnType = cType
+            let content = "return " + getter + ";"
+            return ([], [(returnType, content)])
         default:
-            return propertyLabel + ";"
+            let returnType = cType + " &"
+            let constReturnType = "const " + cType + " &"
+            let content = "return " + getter + ";"
+            return ([(returnType, content)], [(constReturnType, content)])
+        }
+    }
+    
+    private func createGetterContent(forVariable label: String, _ type: VariableTypes, propertyLabel: String, genName: String, structName: String, cType: String, level: Int, namespaces: [CNamespace]) -> [(String, String, Bool, [String])] {
+        switch type {
+        case .array:
+            let stars = Array(repeating: "*", count: type.arrayLevels).joined()
+            let cType = type.terminalType.className ?? cType
+            let returnType = cType + " " + stars
+            let constReturnType = "const " + cType + " " + stars
+            let value: String
+            if let terminalClass = type.terminalType.className {
+                value = "static_cast<const " + terminalClass + " *>(" + structName + "::" + label + ")"
+            } else {
+                value = structName + "::" + label
+            }
+            let constContent = "return " + value + ";"
+            let content = "return " + "const_cast<" + cType + " *>(" + value + ");"
+            let arrGetters: [(String, String, Bool, [String])] = [
+                (returnType, content, false, []),
+                (constReturnType, constContent, true, [])
+            ]
+            let indexGetters = self.createArrayIndexGetters(
+                forVariable: label,
+                type,
+                cType: type.terminalType.className ?? cType,
+                inGenNamed: genName,
+                andStructNamed: structName,
+                level: level,
+                namespaces: namespaces
+            )
+            return arrGetters + indexGetters
+        case .pointer:
+            let returnType = cType + " " + self.createPointers(forType: type)
+            let constReturnType = "const " + cType + " " + self.createPointers(forType: type)
+            let content = "return " + propertyLabel + ";"
+            return [(returnType, content, false, []), (constReturnType, content, true, [])]
+        case .string:
+            let returnType = "char *"
+            let constReturnType = "const char *"
+            let content = "return &(" + propertyLabel + "[0]);"
+            return [(returnType, content, false, []), (constReturnType, content, true, [])]
+        case .gen(_, _, let className):
+            let returnType = className + " &"
+            let constReturnType = "const " + className + " &"
+            let content = "return const_cast<" + className + " &>(static_cast<const " + className + " &>(" + propertyLabel + "));"
+            let constContent = "return static_cast<const " + className + " &>(" + propertyLabel + ");"
+            return [(returnType, content, false, []), (constReturnType, constContent, true, [])]
+        case .bit:
+            let returnType = cType
+            let content = "return " + propertyLabel + ";"
+            return [(returnType, content, true, [])]
+        default:
+            let returnType = cType + " &"
+            let constReturnType = "const " + cType + " &"
+            let content = "return " + propertyLabel + ";"
+            return [(returnType, content, false, []), (constReturnType, content, true, [])]
         }
     }
     
     private func createGetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
         let startBracket = "{"
-        let definition: String
-        let content: String
-        switch variable.type {
-        case .array:
-            let stars = Array(repeating: "*", count: variable.type.arrayLevels).joined()
-            let cType = variable.type.terminalType.className ?? variable.cType
-            let definition = "const " + cType + " " + stars + variable.label + "() const"
-            let value: String
-            if let terminalClass = variable.type.terminalType.className {
-                value = "static_cast<const " + terminalClass + " *>(" + structName + "::" + variable.label + ")"
-            } else {
-                value = structName + "::" + variable.label
-            }
-            let content = "return " + value + ";"
-            let arrGetter = definition + "\n{\n" + stringHelpers.indent(content) + "\n}"
-            guard let getter = self.createArrayIndexGetters(forVariable: variable.label, variable.type, cType: variable.type.terminalType.className ?? variable.cType, inGenNamed: genName, andStructNamed: structName, level: 0, namespaces: namespaces) else {
-                fatalError("Failed to create getter for array type \(variable.type)")
-            }
-            return arrGetter + "\n\n" + getter
-//            guard let brackets = self.createArrayBrackets(inClass: className, forVariable: label, type: type, level: 0, namespaces: namespaces) else {
-//                fatalError("Unable to create array brackets for type \(type)")
-//            }
-//            return cType + " " + label + brackets + ";"
-        case .pointer:
-            definition = variable.cType + " " + self.createPointers(forType: variable.type) + " " + variable.label + "() const"
-            content = "return " + structName + "::" + variable.label + ";"
-        case .string:
-            definition = "const char *" + variable.label + "() const"
-            content = "return &(" + structName + "::" + variable.label + "[0]);"
-        case .gen(_, _, let className):
-            definition = "const " + className + " " + variable.label + "() const"
-            content = "return " + className + "(" + structName + "::" + variable.label + ");"
-        default:
-            definition = variable.cType + " " + variable.label + "() const"
-            content = "return " + structName + "::" + variable.label + ";"
-        }
+        let funcs = self.createGetterContent(
+            forVariable: variable.label,
+            variable.type,
+            propertyLabel: structName + "::" + variable.label,
+            genName: genName,
+            structName: structName,
+            cType: variable.cType,
+            level: 0,
+            namespaces: namespaces
+        )
         let endBracket = "}"
-        return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
+        return funcs.map { (returnType, content, isConst, parameters) in
+            let post = isConst ? " const" : ""
+            let definition: String = returnType + " " + variable.label + "(" + parameters.joined(separator: ", ") + ")" + post
+            return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
+        }.joined(separator: "\n\n")
     }
     
     private func createSetterContent(forVariable label: String, _ type: VariableTypes, cType: String, propertyLabel: String, genName: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
