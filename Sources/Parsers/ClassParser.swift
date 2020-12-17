@@ -130,6 +130,10 @@ public final class ClassParser<
                 self.errors.append("You must specify a comment for the class.")
                 return nil
             }
+            guard !variables.isEmpty else {
+                self.errors.append("The class must not contain an empty property list.")
+                return nil
+            }
             return Class(
                 name: name,
                 author: author,
