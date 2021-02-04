@@ -9,7 +9,7 @@ let package = Package(
         .library(name: "demo", targets: ["demo"])
     ],
     dependencies: [
-        .package(url: "ssh://git.mipal.net/git/swift_wb.git", .branch("master"))
+        .package(url: "ssh://git.mipal.net/Users/Shared/git/swift_wb.git", .branch("master"))
     ],
     targets: [
         .target(name: "bridge", dependencies: []),
