@@ -57,6 +57,7 @@
  */
 
 import Data
+import whiteboard_helpers
 
 public protocol FromStringImplementationDataSource {
 
@@ -76,7 +77,7 @@ public protocol FromStringImplementationDataSource {
 
     var strLabel: String { get }
 
-    func createSetup(forClass: Class) -> String
+    func createSetup(forClass: Class, namespaces: [CNamespace]) -> String
 
     func createTearDown(forClass: Class) -> String
 

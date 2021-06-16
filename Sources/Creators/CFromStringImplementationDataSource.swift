@@ -58,6 +58,7 @@
 
 import Data
 import swift_helpers
+import whiteboard_helpers
 
 public final class CFromStringImplementationDataSource: FromStringImplementationDataSource {
 
@@ -111,7 +112,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         self.setter = setter
     }
 
-    public func createSetup(forClass cls: Class) -> String {
+    public func createSetup(forClass cls: Class, namespaces: [CNamespace]) -> String {
         let keyAssignsIfs = cls.variables.lazy.filter{
             switch $0.type {
             case .pointer, .unknown:

@@ -76,7 +76,7 @@ public final class FromStringImplementationCreator {
         using dataSource: DataSource,
         namespaces: [CNamespace]
     ) -> String {
-        let setup = dataSource.createSetup(forClass: cls)
+        let setup = dataSource.createSetup(forClass: cls, namespaces: namespaces)
         let vars = cls.variables.lazy.filter {
             switch $0.type {
             case .pointer, .unknown:
