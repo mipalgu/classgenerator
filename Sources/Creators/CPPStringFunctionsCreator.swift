@@ -66,10 +66,13 @@ public final class CPPStringFunctionsCreator {
     fileprivate let creatorHelpers: CreatorHelpers
 
     fileprivate let stringHelpers: StringHelpers
+    
+    private let whiteboardHelpers: WhiteboardHelpers
 
-    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), stringHelpers: StringHelpers = StringHelpers()) {
+    public init(creatorHelpers: CreatorHelpers = CreatorHelpers(), stringHelpers: StringHelpers = StringHelpers(), whiteboardHelpers: WhiteboardHelpers = WhiteboardHelpers()) {
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
+        self.whiteboardHelpers = whiteboardHelpers
     }
 
     public func createDescriptionFunction(
@@ -83,7 +86,8 @@ public final class CPPStringFunctionsCreator {
         let cConversionDescription = self.createCConversionDescription(
             forClass: cls,
             forClassNamed: className,
-            withStructNamed: structName
+            withStructNamed: structName,
+            namespaces: namespaces
         )
         let body = self.createStringFunctionBody(
             forGenNamed: cls.name,
@@ -168,10 +172,12 @@ public final class CPPStringFunctionsCreator {
     fileprivate func createCConversionDescription(
         forClass cls: Class,
         forClassNamed className: String,
-        withStructNamed structName: String
+        withStructNamed structName: String,
+        namespaces: [CNamespace]
     ) -> String {
+        let def = self.whiteboardHelpers.createDefName(forClassNamed: className, namespaces: namespaces)
         return """
-            char buffer[\(cls.name.uppercased())_DESC_BUFFER_SIZE];
+            char buffer[\(def)_DESC_BUFFER_SIZE];
             \(structName)_description(this, buffer, sizeof(buffer));
             std::string descr = buffer;
             return descr;
