@@ -117,7 +117,7 @@ public final class CPPHeaderCreator: Creator {
             andPostCpp: cls.postCpp,
             namespaces: namespaces
         )
-        let defName = self.creatorHelpers.createDefName(fromGenName: fileName, namespaces: namespaces)
+        let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: namespaces)
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
         return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(defName)_DEFINED\n"
     }
@@ -137,7 +137,7 @@ public final class CPPHeaderCreator: Creator {
             andGenFile: genfile
         )
         let includes = nil == variables.first { $0.type.isFloat } ? "" : "\n#include <float.h>"
-        let defName = self.creatorHelpers.createDefName(fromGenName: fileName, namespaces: namespaces)
+        let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: namespaces)
         let define = """
             #ifndef \(defName)_DEFINED
             #define \(defName)_DEFINED
