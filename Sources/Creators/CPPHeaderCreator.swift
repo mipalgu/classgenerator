@@ -105,7 +105,8 @@ public final class CPPHeaderCreator: Creator {
             withClassNamed: className,
             withAuthor: cls.author,
             generatedFrom: genfile,
-            variables: cls.variables
+            variables: cls.variables,
+            namespaces: namespaces
         )
         let content = self.createClass(
             forClass: cls,
@@ -116,8 +117,9 @@ public final class CPPHeaderCreator: Creator {
             andPostCpp: cls.postCpp,
             namespaces: namespaces
         )
+        let defName = self.creatorHelpers.createDefName(fromGenName: genfile, namespaces: namespaces)
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
-        return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(className)_DEFINED\n"
+        return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(defName)_DEFINED\n"
     }
 
     fileprivate func createHead(
@@ -126,7 +128,8 @@ public final class CPPHeaderCreator: Creator {
         withClassNamed className: String,
         withAuthor author: String,
         generatedFrom genfile: String,
-        variables: [Variable]
+        variables: [Variable],
+        namespaces: [CNamespace]
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
@@ -134,9 +137,10 @@ public final class CPPHeaderCreator: Creator {
             andGenFile: genfile
         )
         let includes = nil == variables.first { $0.type.isFloat } ? "" : "\n#include <float.h>"
+        let defName = self.creatorHelpers.createDefName(fromGenName: genfile, namespaces: namespaces)
         let define = """
-            #ifndef \(className)_DEFINED
-            #define \(className)_DEFINED
+            #ifndef \(defName)_DEFINED
+            #define \(defName)_DEFINED
 
             #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
             #include <cstdlib>
