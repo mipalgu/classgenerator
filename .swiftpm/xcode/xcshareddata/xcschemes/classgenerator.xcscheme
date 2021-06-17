@@ -161,7 +161,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-s -G typeClassDefs --c-header typeClassDefs -n wb:guWhiteboard -n n2 typeClassDefs/vision_detection_goals.gen"
+            argument = "-s -G typeClassDefs --c-header typeClassDefs -n wb:guWhiteboard --squash-defines typeClassDefs/vision_detection_goals.gen"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
