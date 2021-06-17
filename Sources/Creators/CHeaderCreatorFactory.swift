@@ -76,7 +76,7 @@ public final class CHeaderCreatorFactory: CreatorFactory {
     public func make(backwardCompatible: Bool) -> CHeaderCreator {
         let calculator = BufferSizeCalculator()
         let creatorHelpers = CreatorHelpers(backwardsCompatible: backwardCompatible, date: self.date, helpers: self.whiteboardHelpers)
-        return CHeaderCreator(calculator: calculator, creatorHelpers: creatorHelpers, helpers: self.stringHelpers)
+        return CHeaderCreator(backwardsCompatible: backwardCompatible, calculator: calculator, creatorHelpers: creatorHelpers, helpers: self.stringHelpers)
     }
     
 }

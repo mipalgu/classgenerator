@@ -72,15 +72,18 @@ public final class CHeaderCreator: Creator {
         return self.errors.last
     }
 
+    fileprivate let backwardsCompatible: Bool
     fileprivate let calculator: BufferSizeCalculator
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let helpers: StringHelpers
 
     public init(
+        backwardsCompatible: Bool,
         calculator: BufferSizeCalculator = BufferSizeCalculator(),
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         helpers: StringHelpers = StringHelpers()
     ) {
+        self.backwardsCompatible = backwardsCompatible
         self.calculator = calculator
         self.creatorHelpers = creatorHelpers
         self.helpers = helpers
@@ -125,7 +128,7 @@ public final class CHeaderCreator: Creator {
             withAuthor: cls.author,
             andGenFile: genfile
         )
-        let includeGuard = WhiteboardHelpers().cIncludeGuard(forClassNamed: cls.name, namespaces: namespaces)
+        let includeGuard = WhiteboardHelpers().cIncludeGuard(forClassNamed: cls.name, backwardsCompatible: self.backwardsCompatible, namespaces: namespaces)
         let head = """
             #ifndef \(includeGuard)
             #define \(includeGuard)
