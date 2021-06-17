@@ -84,12 +84,13 @@ public final class CPPFromStringCreator {
         withVariables variables: [Variable],
         namespaces: [CNamespace]
     ) -> String {
+        let cConversionDef = WhiteboardHelpers().cConversionDefine(forStructNamed: structName)
         let containsSupportedTypes = nil != variables.first { self.creatorHelpers.isSupportedStringType($0.type) }
         let def = "void from_string(const std::string &t_str) {"
         let nodef = "void from_string(const std::string &t_str) {"
-        let ifDef = "#ifdef USE_WB_\(cls.name.uppercased())_C_CONVERSION"
+        let ifDef = "#ifdef \(cConversionDef)"
         let elseDef = "#else"
-        let endifDef = "#endif /// USE_WB_\(cls.name.uppercased())_C_CONVERSION"
+        let endifDef = "#endif /// \(cConversionDef)"
         let cImplementation = structName + "_from_string(this, t_str.c_str());"
         let begin = "char * str_cstr = const_cast<char *>(t_str.c_str());"
         let cppImplementation = self.implementationCreator.createFromStringImplementation(

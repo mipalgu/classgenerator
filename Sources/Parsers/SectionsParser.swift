@@ -199,7 +199,8 @@ public final class SectionsParser<Container: ParserWarningsContainer, Reader: Fi
                         "structName": self.creatorHelpers.createStructName(forClassNamed: genName, namespaces: namespaces),
                         "className": self.creatorHelpers.createClassName(forClassNamed: genName),
                         "descBufferSize": self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName, namespaces: namespaces),
-                        "toStringBufferSize": self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: namespaces)
+                        "toStringBufferSize": self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: namespaces),
+                        "cNamespace": WhiteboardHelpers().cNamespace(of: namespaces)
                     ]
                     self.merge(&sections, mixinSections, withVariables: passedVars.merging(mandatoryVariables) { (current, _) in current })
                     return

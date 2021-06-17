@@ -122,10 +122,10 @@ public final class CHeaderCreator: Creator {
             withAuthor: cls.author,
             andGenFile: genfile
         )
-        let fileName = String(fileName.lazy.map { $0 == "." ? "_" : $0 })
+        let includeGuard = WhiteboardHelpers().cIncludeGuard(forClassNamed: cls.name, namespaces: namespaces)
         let head = """
-            #ifndef \(fileName)
-            #define \(fileName)
+            #ifndef \(includeGuard)
+            #define \(includeGuard)
 
             #pragma clang diagnostic push
             #pragma clang diagnostic ignored "-Wreserved-id-macro"

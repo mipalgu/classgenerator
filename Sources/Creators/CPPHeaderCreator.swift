@@ -164,7 +164,7 @@ public final class CPPHeaderCreator: Creator {
         andPostCpp postCpp: String?,
         namespaces: [CNamespace]
     ) -> String {
-        let namespacesDefs = ["guWhiteboard"] + self.namespaces
+        let namespacesDefs = self.namespaces
         let startNamespace = namespacesDefs.enumerated().lazy.map {
             self.stringHelpers.indent("namespace " + $1 + " {", $0)
         }.combine("") { $0 + "\n\n" + $1 }
@@ -181,7 +181,7 @@ public final class CPPHeaderCreator: Creator {
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
         let allContent = content + postCpp + "\n\n"
-        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, namespaces.count) + endNamespace
+        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, min(0, namespaces.count - 1)) + endNamespace
     }
 
     fileprivate func createClassContent(

@@ -175,9 +175,9 @@ public final class CPPStringFunctionsCreator {
         withStructNamed structName: String,
         namespaces: [CNamespace]
     ) -> String {
-        let def = self.whiteboardHelpers.createDefName(forClassNamed: className, namespaces: namespaces)
+        let def = self.whiteboardHelpers.createDescriptionBufferSizeDef(forClassNamed: cls.name, namespaces: namespaces)
         return """
-            char buffer[\(def)_DESC_BUFFER_SIZE];
+            char buffer[\(def)];
             \(structName)_description(this, buffer, sizeof(buffer));
             std::string descr = buffer;
             return descr;
