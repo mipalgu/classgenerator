@@ -147,10 +147,13 @@ public class DemoTests: ClassGeneratorTestCase {
         gens.forEach {
             self.generator.run([
                 "classgenerator",
+                "-n",
+                "wb:guWhiteboard",
                 "--c-header",
                 "./Sources/bridge",
                 "--swift-file",
                 "./Sources/demo",
+                "--squash-defines",
                 "./\($0).gen"
             ])
         }
