@@ -82,6 +82,8 @@ public struct Task {
 
     var swiftFileOutputPath: String?
     
+    var squashDefines: Bool = false
+    
     var useBackwardsCompatibleNamingConventions: Bool = false
 
 }

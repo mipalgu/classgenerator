@@ -85,6 +85,8 @@ public class ClassGeneratorParser {
                                     Place the C++ file into <directory>.
                     --swift-file <directory=<c-header>>
                                     Place the generated swift file into <directory>.
+                    --squash-defines
+                                    Don't include namespaces when generating #defines.
             """
     }
 
@@ -122,6 +124,8 @@ public class ClassGeneratorParser {
             return self.handleCppHeaderFlag(task, words: &words)
         case "--swift-file":
             return self.handleSwiftFileFlag(task, words: &words)
+        case "--squash-defines":
+            return self.handleSquashDefinesFlag(task, words: &words)
         case "--help":
             return self.handleHelpFlag(task, words: &words)
         default:
@@ -210,6 +214,12 @@ public class ClassGeneratorParser {
             return task
         }
         task.swiftFileOutputPath = value
+        return task
+    }
+    
+    fileprivate func handleSquashDefinesFlag(_ task: Task, words: inout [String]) -> Task {
+        var task = task
+        task.squashDefines = true
         return task
     }
 

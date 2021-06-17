@@ -82,7 +82,8 @@ public final class CPPFromStringCreator {
         forClassNamed className: String,
         withStructNamed structName: String,
         withVariables variables: [Variable],
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let cConversionDef = WhiteboardHelpers().cConversionDefine(forStructNamed: structName)
         let containsSupportedTypes = nil != variables.first { self.creatorHelpers.isSupportedStringType($0.type) }
@@ -113,7 +114,8 @@ public final class CPPFromStringCreator {
                 getter: { "this->" + $0 + "()" },
                 setter: { "this->set_" + $0 + "(" + $1 + ");"}
             ),
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let endef = "}"
         return ifDef + "\n" + self.stringHelpers.cIndent(def, 2) + "\n"

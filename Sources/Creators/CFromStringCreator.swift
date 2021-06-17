@@ -86,7 +86,8 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
         forClass cls: Class,
         withStructNamed structName: String,
         forStrVariable strLabel: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         //swiftlint:disable:next line_length
         let definition = "struct \(structName)* \(structName)_\(fLabel)(struct \(structName)* self, const char* \(strLabel))\n{"
@@ -125,7 +126,8 @@ public final class CFromStringCreator<ImplementationCreator: FromStringImplement
                 getter: { "self->" + $0 },
                 setter: { "self->" + $0 + " = " + $1 + ";"}
             ),
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let endDefinition = "}"
         return comment + "\n" + definition + "\n" + self.stringHelpers.cIndent(contents) + "\n" + endDefinition

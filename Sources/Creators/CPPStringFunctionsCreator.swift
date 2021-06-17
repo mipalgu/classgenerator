@@ -80,14 +80,16 @@ public final class CPPStringFunctionsCreator {
         forClassNamed className: String,
         andStructNamed structName: String,
         withVariables variables: [Variable],
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let startDescription = self.createDescriptionDef()
         let cConversionDescription = self.createCConversionDescription(
             forClass: cls,
             forClassNamed: className,
             withStructNamed: structName,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let body = self.createStringFunctionBody(
             forGenNamed: cls.name,
@@ -97,7 +99,8 @@ public final class CPPStringFunctionsCreator {
             withVariables: variables,
             andCImplementation: cConversionDescription,
             andIncludeLabels: true,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         return self.stringHelpers.cIndent(startDescription, 2) + "\n"
             + body + "\n"
@@ -109,14 +112,16 @@ public final class CPPStringFunctionsCreator {
         forClassNamed className: String,
         andStructNamed structName: String,
         withVariables variables: [Variable],
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let startDescription = self.createToStringDef()
         let cConversionToString = self.createCConversionToString(
             forClass: cls,
             forClassNamed: className,
             withStructNamed: structName,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let body = self.createStringFunctionBody(
             forGenNamed: cls.name,
@@ -126,7 +131,8 @@ public final class CPPStringFunctionsCreator {
             withVariables: variables,
             andCImplementation: cConversionToString,
             andIncludeLabels: false,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         return self.stringHelpers.cIndent(startDescription, 2) + "\n"
             + body + "\n"
@@ -141,18 +147,20 @@ public final class CPPStringFunctionsCreator {
         withVariables variables: [Variable],
         andCImplementation cImplementation: String,
         andIncludeLabels includeLabels: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
-        let ifCConversion = "#ifdef USE_\(structName.uppercased())_C_CONVERSION"
+        let ifCConversion = "#ifdef \(WhiteboardHelpers().cConversionDefine(forStructNamed: structName))"
         let elseDef = "#else"
-        let endifCConversion = "#endif /// USE_\(structName.uppercased())_C_CONVERSION"
+        let endifCConversion = "#endif /// \(WhiteboardHelpers().cConversionDefine(forStructNamed: structName))"
         let cppImplementation = self.createCPPVariableStringSetters(
             forGenNamed: genName,
             inClass: cls,
             forClassNamed: className,
             withVariables: variables,
             andIncludeLabels: includeLabels,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         return ifCConversion + "\n"
             + self.stringHelpers.cIndent(cImplementation, 3) + "\n"
@@ -173,9 +181,10 @@ public final class CPPStringFunctionsCreator {
         forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
-        let def = self.whiteboardHelpers.createDescriptionBufferSizeDef(forClassNamed: cls.name, namespaces: namespaces)
+        let def = self.whiteboardHelpers.createDescriptionBufferSizeDef(forClassNamed: cls.name, namespaces: squashDefines ? [] : namespaces)
         return """
             char buffer[\(def)];
             \(structName)_description(this, buffer, sizeof(buffer));
@@ -188,10 +197,11 @@ public final class CPPStringFunctionsCreator {
         forClass cls: Class,
         forClassNamed className: String,
         withStructNamed structName: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         return """
-            char buffer[\(self.creatorHelpers.createToStringBufferSizeDef(fromGenName: cls.name, namespaces: namespaces))];
+            char buffer[\(self.creatorHelpers.createToStringBufferSizeDef(fromGenName: cls.name, namespaces: squashDefines ? [] : namespaces))];
             \(structName)_to_string(this, buffer, sizeof(buffer));
             std::string toString = buffer;
             return toString;
@@ -204,7 +214,8 @@ public final class CPPStringFunctionsCreator {
         forClassNamed className: String,
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let ssdef = "std::ostringstream ss;"
         let concat = self.createConcatString(
@@ -213,7 +224,8 @@ public final class CPPStringFunctionsCreator {
             forClassNamed: className,
             withVariables: variables,
             andIncludeLabels: includeLabels,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let returnStatement = "return ss.str();"
         return ssdef + "\n" + concat + "\n" + returnStatement
@@ -225,7 +237,8 @@ public final class CPPStringFunctionsCreator {
         forClassNamed className: String,
         withVariables variables: [Variable],
         andIncludeLabels includeLabels: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         return variables.compactMap {
             self.createConcatString(
@@ -235,7 +248,8 @@ public final class CPPStringFunctionsCreator {
                 forType: $0.type,
                 withLabel: $0.label,
                 andIncludeLabel: includeLabels,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
         }.combine("") { $0 + "\nss << \", \";\n" + $1 }
     }
@@ -247,7 +261,8 @@ public final class CPPStringFunctionsCreator {
         forType type: VariableTypes,
         withLabel label: String,
         andIncludeLabel includeLabel: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String? {
         switch type {
             case .array(let subtype, _):
@@ -266,12 +281,13 @@ public final class CPPStringFunctionsCreator {
                     withLabel: label,
                     includeLabel: includeLabel,
                     namespaces: namespaces,
+                    squashDefines: squashDefines,
                     appendingTo: "ss << (\(label)_first ? \"\" : \", \") << ",
                     createGetter
                 ) else {
                     return nil
                 }
-                let sizeDef = self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: 0, namespaces: namespaces)
+                let sizeDef = self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: 0, namespaces: squashDefines ? [] : namespaces)
                 return """
                     bool \(label)_first = true;
                     ss << \(true == includeLabel ? "\"\(label)={\";" : "\"{\";")
@@ -291,6 +307,7 @@ public final class CPPStringFunctionsCreator {
                     withLabel: label,
                     includeLabel: includeLabel,
                     namespaces: namespaces,
+                    squashDefines: squashDefines,
                     appendingTo: pre
                 )
         }
@@ -304,6 +321,7 @@ public final class CPPStringFunctionsCreator {
         withLabel label: String,
         includeLabel: Bool,
         namespaces: [CNamespace],
+        squashDefines: Bool,
         appendingTo pre: String,
         _ createGetter: (String) -> String = { "this->" + $0 + "()" }
     ) -> String? {
@@ -317,7 +335,8 @@ public final class CPPStringFunctionsCreator {
                     forType: type,
                     withLabel: label,
                     andIncludeLabel: includeLabel,
-                    namespaces: namespaces
+                    namespaces: namespaces,
+                    squashDefines: squashDefines
                 )
             case .bool:
                 return "\(pre)(\(getter) ? \"true\" : \"false\");"
@@ -364,8 +383,8 @@ public final class CPPStringFunctionsCreator {
                     """
             case .mixed(let macOS, let linux):
                 guard
-                    let macValue = self.createStringValue(forGenNamed: genName, inClass: cls, forClassNamed: className, forType: macOS, withLabel: label, includeLabel: includeLabel, namespaces: namespaces, appendingTo: pre, createGetter),
-                    let linuxValue = self.createStringValue(forGenNamed: genName, inClass: cls, forClassNamed: className, forType: linux, withLabel: label, includeLabel: includeLabel, namespaces: namespaces, appendingTo: pre, createGetter)
+                    let macValue = self.createStringValue(forGenNamed: genName, inClass: cls, forClassNamed: className, forType: macOS, withLabel: label, includeLabel: includeLabel, namespaces: namespaces, squashDefines: squashDefines, appendingTo: pre, createGetter),
+                    let linuxValue = self.createStringValue(forGenNamed: genName, inClass: cls, forClassNamed: className, forType: linux, withLabel: label, includeLabel: includeLabel, namespaces: namespaces, squashDefines: squashDefines, appendingTo: pre, createGetter)
                 else {
                     return nil
                 }

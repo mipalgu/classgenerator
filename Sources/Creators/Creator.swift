@@ -68,7 +68,8 @@ public protocol Creator: ErrorContainer {
         withClassName className: String,
         withStructName structName: String,
         generatedFrom genfile: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String?
     
 }

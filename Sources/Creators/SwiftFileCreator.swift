@@ -88,7 +88,8 @@ public final class SwiftFileCreator: Creator {
         withClassName className: String,
         withStructName structName: String,
         generatedFrom genfile: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String? {
         let head = self.createHead(forFile: fileName, withAuthor: cls.author, andGenFile: genfile)
         let preSwift = nil == cls.preSwift ? "" : "\n\n" + cls.preSwift!

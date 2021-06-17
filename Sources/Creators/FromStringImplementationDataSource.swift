@@ -77,7 +77,7 @@ public protocol FromStringImplementationDataSource {
 
     var strLabel: String { get }
 
-    func createSetup(forClass: Class, namespaces: [CNamespace]) -> String
+    func createSetup(forClass: Class, namespaces: [CNamespace], squashDefines: Bool) -> String
 
     func createTearDown(forClass: Class) -> String
 

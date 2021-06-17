@@ -169,7 +169,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
             generatedFrom: genfile,
             generateCppWrapper: task.generateCppWrapper,
             generateSwiftWrapper: task.generateSwiftWrapper,
-            namespaces: task.namespaces
+            namespaces: task.namespaces,
+            squashDefines: task.squashDefines
         )
     }
 
@@ -200,7 +201,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         generatedFrom genfile: String,
         generateCppWrapper: Bool,
         generateSwiftWrapper: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) {
         guard true == self.generate(cHeaderPath.path, {
             cHeaderCreator.create(
@@ -209,7 +211,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                 withClassName: className,
                 withStructName: structName,
                 generatedFrom: genfile,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
         }) else {
             self.handleError(cHeaderCreator.lastError ?? "Unable to create C Header at path: \(cHeaderPath.path)")
@@ -221,7 +224,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                 withClassName: className,
                 withStructName: structName,
                 generatedFrom: genfile,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
         }) else {
             self.handleError(cFileCreator.lastError ?? "Unable to create C File")
@@ -234,7 +238,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                     withClassName: className,
                     withStructName: structName,
                     generatedFrom: genfile,
-                    namespaces: namespaces
+                    namespaces: namespaces,
+                    squashDefines: squashDefines
                 )
             }) else {
                 self.handleError(cppHeaderCreator.lastError ?? "Unable to create C++ Header")
@@ -248,7 +253,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
                     withClassName: className,
                     withStructName: structName,
                     generatedFrom: genfile,
-                    namespaces: namespaces
+                    namespaces: namespaces,
+                    squashDefines: squashDefines
                 )
             }) else {
                 self.handleError(swiftFileCreator.lastError ?? "Unable to create Swift file.")

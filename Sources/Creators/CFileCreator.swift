@@ -98,7 +98,8 @@ public final class CFileCreator: Creator {
         withClassName _: String,
         withStructName structName: String,
         generatedFrom genfile: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String? {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
@@ -117,7 +118,8 @@ public final class CFileCreator: Creator {
             withStructNamed: structName,
             forStrVariable: "descString",
             includeLabels: true,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let toStringFunc = self.descriptionCreator.createFunction(
             creating: "to_string",
@@ -130,7 +132,8 @@ public final class CFileCreator: Creator {
             withStructNamed: structName,
             forStrVariable: "toString",
             includeLabels: false,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let toNetworkSerialised = self.networkSerialiserCreator.createFunction(
             creating: "to_network_serialised",
@@ -162,7 +165,8 @@ public final class CFileCreator: Creator {
             forClass: cls,
             withStructNamed: structName,
             forStrVariable: "str",
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let posterIfdef = "#ifndef WHITEBOARD_POSTER_STRING_CONVERSION"
         let posterEndif = "#endif // WHITEBOARD_POSTER_STRING_CONVERSION"

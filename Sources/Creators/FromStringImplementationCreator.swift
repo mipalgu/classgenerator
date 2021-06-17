@@ -74,9 +74,10 @@ public final class FromStringImplementationCreator {
     func createFromStringImplementation<DataSource: FromStringImplementationDataSource>(
         forClass cls: Class,
         using dataSource: DataSource,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
-        let setup = dataSource.createSetup(forClass: cls, namespaces: namespaces)
+        let setup = dataSource.createSetup(forClass: cls, namespaces: namespaces, squashDefines: squashDefines)
         let vars = cls.variables.lazy.filter {
             switch $0.type {
             case .pointer, .unknown:
@@ -93,6 +94,7 @@ public final class FromStringImplementationCreator {
                 accessedFrom: dataSource.accessor,
                 inClass: cls,
                 namespaces: namespaces,
+                squashDefines: squashDefines,
                 level: 0,
                 setter: dataSource.setter(forVariable: t.element)
             )
@@ -109,6 +111,7 @@ public final class FromStringImplementationCreator {
         accessedFrom accessor: String,
         inClass cls: Class,
         namespaces: [CNamespace],
+        squashDefines: Bool,
         level: Int,
         setter: (String) -> String
     ) -> String? {
@@ -119,7 +122,7 @@ public final class FromStringImplementationCreator {
                 inClass: cls.name,
                 forVariable: label,
                 level: level,
-                namespaces: namespaces
+                namespaces: squashDefines ? [] : namespaces
             )
             let head = dataSource.createSetupArrayLoop(atOffset: offset, withIndexName: index, andLength: length, recursive: subtype.isRecursive)
             let end = dataSource.createTearDownArrayLoop(atOffset: offset, withIndexName: index, andLength: length)

@@ -79,7 +79,8 @@ public final class CDescriptionCreator {
         withStructNamed structName: String,
         forStrVariable strLabel: String,
         includeLabels: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         //swiftlint:disable:next line_length
         let definition = "const char* \(structName)_\(fLabel)(const struct \(structName)* self, char* \(strLabel), size_t bufferSize)\n{"
@@ -105,7 +106,8 @@ public final class CDescriptionCreator {
                 forClassNamed: cls.name,
                 appendingTo: strLabel,
                 includeLabels: includeLabels,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
         }
         let guardedDescriptions = descriptions.map {
@@ -141,7 +143,8 @@ public final class CDescriptionCreator {
         forClassNamed className: String,
         appendingTo strLabel: String,
         includeLabels: Bool,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String? {
         return self.createValue(
             forType: variable.type,
@@ -150,7 +153,8 @@ public final class CDescriptionCreator {
             andClassName: className,
             includeLabel: includeLabels,
             appendingTo: strLabel,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
     }
 
@@ -163,6 +167,7 @@ public final class CDescriptionCreator {
         includeLabel: Bool,
         appendingTo strLabel: String,
         namespaces: [CNamespace],
+        squashDefines: Bool,
         _ createGetter: (String) -> String = { "self->" + $0 },
         _ level: Int = 0
     ) -> String? {
@@ -182,6 +187,7 @@ public final class CDescriptionCreator {
                             includeLabel: includeLabel,
                             appendingTo: strLabel,
                             namespaces: namespaces,
+                            squashDefines: squashDefines,
                             { _ in "self->" + self.createIndexes(forLabel: label, level) },
                             level + 1
                         )
@@ -189,7 +195,7 @@ public final class CDescriptionCreator {
                 guard let value = temp else {
                     return nil
                 }
-                let arrDef = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: label, level: level, namespaces: namespaces)
+                let arrDef = self.creatorHelpers.createArrayCountDef(inClass: cls.name, forVariable: label, level: level, namespaces: squashDefines ? [] : namespaces)
                 //swiftlint:disable line_length
                 return """
                     len = gu_strlcat(\(strLabel), "\(includeLabel ? arrLabel + "=" : ""){", bufferSize);
@@ -211,7 +217,8 @@ public final class CDescriptionCreator {
                     andClassName: className,
                     includeLabel: includeLabel,
                     appendingTo: strLabel,
-                    namespaces: namespaces
+                    namespaces: namespaces,
+                    squashDefines: squashDefines
                 )
         }
     }
@@ -228,6 +235,7 @@ public final class CDescriptionCreator {
         includeLabel: Bool,
         appendingTo strLabel: String,
         namespaces: [CNamespace],
+        squashDefines: Bool,
         _ createGetter: (String) -> String = { "self->" + $0 },
         _ level: Int = 0
     ) -> String? {
@@ -242,7 +250,8 @@ public final class CDescriptionCreator {
                     andClassName: className,
                     includeLabel: includeLabel,
                     appendingTo: strLabel,
-                    namespaces: namespaces
+                    namespaces: namespaces,
+                    squashDefines: squashDefines
                 )
             case .bit:
                 return self.createSNPrintf("\(pre)%u", getter, appendingTo: strLabel)
@@ -274,7 +283,7 @@ public final class CDescriptionCreator {
             case .gen(let genName, let structName, _):
                 let fun = true == includeLabel ? "description" : "to_string"
                 let localLabel = 0 == level ? label : label + "_\(level)"
-                let size = true == includeLabel ? self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName, namespaces: namespaces) : self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: namespaces)
+                let size = true == includeLabel ? self.creatorHelpers.createDescriptionBufferSizeDef(fromGenName: genName, namespaces: squashDefines ? [] : namespaces) : self.creatorHelpers.createToStringBufferSizeDef(fromGenName: genName, namespaces: squashDefines ? [] : namespaces)
                 return """
                     len = gu_strlcat(\(strLabel), "\(pre){", bufferSize);
                     \(self.createGuard(forStrVariable: strLabel))
@@ -294,8 +303,8 @@ public final class CDescriptionCreator {
                 )
             case .mixed(let macOS, let linux):
                 guard
-                    let macValue = self.createValue(forType: macOS, withLabel: label, inClass: cls, andClassName: className, includeLabel: includeLabel, appendingTo: strLabel, namespaces: namespaces, createGetter, level),
-                    let linuxValue = self.createValue(forType: linux, withLabel: label, inClass: cls, andClassName: className, includeLabel: includeLabel, appendingTo: strLabel, namespaces: namespaces, createGetter, level)
+                    let macValue = self.createValue(forType: macOS, withLabel: label, inClass: cls, andClassName: className, includeLabel: includeLabel, appendingTo: strLabel, namespaces: namespaces, squashDefines: squashDefines, createGetter, level),
+                    let linuxValue = self.createValue(forType: linux, withLabel: label, inClass: cls, andClassName: className, includeLabel: includeLabel, appendingTo: strLabel, namespaces: namespaces, squashDefines: squashDefines, createGetter, level)
                 else {
                     return nil
                 }

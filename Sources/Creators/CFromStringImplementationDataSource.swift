@@ -112,7 +112,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         self.setter = setter
     }
 
-    public func createSetup(forClass cls: Class, namespaces: [CNamespace]) -> String {
+    public func createSetup(forClass cls: Class, namespaces: [CNamespace], squashDefines: Bool) -> String {
         let keyAssignsIfs = cls.variables.lazy.filter{
             switch $0.type {
             case .pointer, .unknown:
@@ -131,7 +131,7 @@ public final class CFromStringImplementationDataSource: FromStringImplementation
         let keyBufferSize = (cls.variables.sorted() { $0.label.count > $1.label.count }.first?.label.count).map { $0 + 1 } ?? 0
         let recursive = nil != cls.variables.first { $0.type.isRecursive }
         let lastBrace = recursive ? "\nint lastBrace = -1;" : ""
-        let def = WhiteboardHelpers().createDefName(forClassNamed: cls.name, namespaces: namespaces)
+        let def = WhiteboardHelpers().createDefName(forClassNamed: cls.name, namespaces: squashDefines ? [] : namespaces)
         let bufferDef = "\(def)_DESC_BUFFER_SIZE"
         return """
             size_t temp_length = strlen(\(self.strLabel));

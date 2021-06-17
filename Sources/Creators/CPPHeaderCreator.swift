@@ -97,7 +97,8 @@ public final class CPPHeaderCreator: Creator {
         withClassName className: String,
         withStructName structName: String,
         generatedFrom genfile: String,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String? {
         let head = self.createHead(
             forFile: fileName,
@@ -106,7 +107,8 @@ public final class CPPHeaderCreator: Creator {
             withAuthor: cls.author,
             generatedFrom: genfile,
             variables: cls.variables,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let content = self.createClass(
             forClass: cls,
@@ -115,7 +117,8 @@ public final class CPPHeaderCreator: Creator {
             withVariables: cls.variables,
             andEmbeddedCpp: cls.embeddedCpp,
             andPostCpp: cls.postCpp,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: namespaces)
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
@@ -129,7 +132,8 @@ public final class CPPHeaderCreator: Creator {
         withAuthor author: String,
         generatedFrom genfile: String,
         variables: [Variable],
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let comment = self.creatorHelpers.createFileComment(
             forFile: fileName,
@@ -137,7 +141,7 @@ public final class CPPHeaderCreator: Creator {
             andGenFile: genfile
         )
         let includes = nil == variables.first { $0.type.isFloat } ? "" : "\n#include <float.h>"
-        let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: namespaces)
+        let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: squashDefines ? [] : namespaces)
         let define = """
             #ifndef \(defName)_DEFINED
             #define \(defName)_DEFINED
@@ -162,7 +166,8 @@ public final class CPPHeaderCreator: Creator {
         withVariables variables: [Variable],
         andEmbeddedCpp embeddedCpp: String?,
         andPostCpp postCpp: String?,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let namespacesDefs = self.namespaces
         let startNamespace = namespacesDefs.enumerated().lazy.map {
@@ -177,7 +182,8 @@ public final class CPPHeaderCreator: Creator {
             extending: structName,
             withVariables: variables,
             andEmbeddedCpp: embeddedCpp,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
         let allContent = content + postCpp + "\n\n"
@@ -190,7 +196,8 @@ public final class CPPHeaderCreator: Creator {
         extending extendName: String,
         withVariables variables: [Variable],
         andEmbeddedCpp cpp: String?,
-        namespaces: [CNamespace]
+        namespaces: [CNamespace],
+        squashDefines: Bool
     ) -> String {
         let def = self.createClassDefinition(forClassNamed: name, extending: extendName)
         let publicLabel = "public:"
@@ -228,8 +235,8 @@ public final class CPPHeaderCreator: Creator {
             includeBrackets: false
         )
         let equalsOperators = self.createEqualityOperators(inClass: cls, forClassNamed: name, andStructNamed: extendName)
-        let gettersAndSetters = self.createGettersAndSetters(inClass: cls, andStructNamed: extendName, namespaces: namespaces)
-        let privateContent = self.createInit(forClass: cls, structName: extendName, forVariables: variables, namespaces: namespaces)
+        let gettersAndSetters = self.createGettersAndSetters(inClass: cls, andStructNamed: extendName, namespaces: namespaces, squashDefines: squashDefines)
+        let privateContent = self.createInit(forClass: cls, structName: extendName, forVariables: variables, namespaces: namespaces, squashDefines: squashDefines)
         let privateSection = "private:\n\n" + self.stringHelpers.cIndent(privateContent)
         let publicContent = constructor + "\n\n"
             + copyConstructor + "\n\n"
@@ -248,21 +255,24 @@ public final class CPPHeaderCreator: Creator {
             forClassNamed: name,
             andStructNamed: extendName,
             withVariables: variables,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let toString = self.stringFunctionsCreator.createToStringFunction(
             forClass: cls,
             forClassNamed: name,
             andStructNamed: extendName,
             withVariables: variables,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let fromString = self.fromStringCreator.createFromStringFunction(
             forClass: cls,
             forClassNamed: name,
             withStructNamed: extendName,
             withVariables: variables,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         return self.stringHelpers.cIndent(def + "\n\n" + privateSection + "\n\n" + publicSection) + "\n\n"
             + ifdef + "\n"
@@ -278,7 +288,7 @@ public final class CPPHeaderCreator: Creator {
         return comment + "\n" + def
     }
     
-    fileprivate func createInit(forClass cls: Class, structName: String, forVariables variables: [Variable], namespaces: [CNamespace]) -> String {
+    fileprivate func createInit(forClass cls: Class, structName: String, forVariables variables: [Variable], namespaces: [CNamespace], squashDefines: Bool) -> String {
         let comment = self.creatorHelpers.createComment(from: "Set the members of the class.")
         let startdef = "void init("
         let list = self.createDefaultParameters(forVariables: variables)
@@ -288,7 +298,7 @@ public final class CPPHeaderCreator: Creator {
             structName: structName,
             addConstOnPointers: true,
             assignDefaults: true,
-            self.creatorHelpers.createArrayCountDef(inClass: cls.name, namespaces: namespaces)
+            self.creatorHelpers.createArrayCountDef(inClass: cls.name, namespaces: squashDefines ? [] : namespaces)
         ) { switch $0.type { case .string: return "t_\($0.label).c_str()" default: return "t_" + $0.label } }
         return comment + "\n" + def + "\n" + self.stringHelpers.cIndent(setters) + "\n}"
     }
@@ -452,10 +462,10 @@ public final class CPPHeaderCreator: Creator {
         return comment + "\n" + constructor
     }
     
-    private func createGettersAndSetters(inClass cls: Class, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+    private func createGettersAndSetters(inClass cls: Class, andStructNamed structName: String, namespaces: [CNamespace], squashDefines: Bool) -> String {
         let gettersAndSetters: [String] = cls.variables.map {
-            let getter = self.createGetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces)
-            let setter = self.createSetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces)
+            let getter = self.createGetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces, squashDefines: squashDefines)
+            let setter = self.createSetter(forVariable: $0, inGenNamed: cls.name, andStructNamed: structName, namespaces: namespaces, squashDefines: squashDefines)
             return getter + "\n\n" + setter
         }
         return gettersAndSetters.joined(separator: "\n\n")
@@ -511,10 +521,10 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createGetterContent(forVariable label: String, _ type: VariableTypes, getter: String, genName: String, structName: String, cType: String, parameters: [String] = [], level: Int, namespaces: [CNamespace]) -> [(String, String, (String) -> String, Bool, [String])] {
+    private func createGetterContent(forVariable label: String, _ type: VariableTypes, getter: String, genName: String, structName: String, cType: String, parameters: [String] = [], level: Int, namespaces: [CNamespace], squashDefines: Bool) -> [(String, String, (String) -> String, Bool, [String])] {
         switch type {
         case .array(let subtype, _):
-            let size = self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: level, namespaces: namespaces)
+            let size = self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: level, namespaces: squashDefines ? [] : namespaces)
             let (getters, constGetters) = self.getters(forType: type, cType: cType, getter: getter, size: size)
             let arrGetters: [(String, String, (String) -> String, Bool, [String])] = getters.map { ($0, $1, $2, false, parameters) } + constGetters.map { ($0, $1, $2, true, parameters) }
             let currentIndex = level == 0 ? "t_i" : "t_i\(level)"
@@ -529,7 +539,8 @@ public final class CPPHeaderCreator: Creator {
                 cType: cType,
                 parameters: subParameters,
                 level: level + 1,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
             return arrGetters + subGetters
         case .string(let length):
@@ -547,7 +558,8 @@ public final class CPPHeaderCreator: Creator {
                 cType: "char",
                 parameters: subParameters,
                 level: level + 1,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
             return stringGetters + subGetters
         default:
@@ -556,7 +568,7 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createGetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+    private func createGetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String, namespaces: [CNamespace], squashDefines: Bool) -> String {
         let startBracket = "{"
         let funcs = self.createGetterContent(
             forVariable: variable.label,
@@ -566,7 +578,8 @@ public final class CPPHeaderCreator: Creator {
             structName: structName,
             cType: variable.cType,
             level: 0,
-            namespaces: namespaces
+            namespaces: namespaces,
+            squashDefines: squashDefines
         )
         let endBracket = "}"
         return funcs.map { (returnType, content, name, isConst, parameters) in
@@ -576,11 +589,11 @@ public final class CPPHeaderCreator: Creator {
         }.joined(separator: "\n\n")
     }
     
-    private func createSetterContent(forVariable label: String, _ type: VariableTypes, cType: String, propertyLabel: String, genName: String, structName: String, level: Int = 0, namespaces: [CNamespace]) -> String {
+    private func createSetterContent(forVariable label: String, _ type: VariableTypes, cType: String, propertyLabel: String, genName: String, structName: String, level: Int = 0, namespaces: [CNamespace], squashDefines: Bool) -> String {
         switch type {
         case .array:
             let length = (level..<type.arrayLevels).map {
-                self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: $0, namespaces: namespaces)
+                self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: label, level: $0, namespaces: squashDefines ? [] : namespaces)
             }.joined(separator: " * ")
             return "memcpy(" + propertyLabel + ", t_newValue, " + length + " * (sizeof (" + cType + ")));"
         case .string(let length):
@@ -592,14 +605,14 @@ public final class CPPHeaderCreator: Creator {
         }
     }
     
-    private func createSetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String, namespaces: [CNamespace]) -> String {
+    private func createSetter(forVariable variable: Variable, inGenNamed genName: String, andStructNamed structName: String, namespaces: [CNamespace], squashDefines: Bool) -> String {
         let startBracket = "{"
         let property = structName + "::" + variable.label
         let definition: String
         switch variable.type {
         case .array(let subtype, _):
             let length = (0..<variable.type.arrayLevels).map {
-                self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: variable.label, level: $0, namespaces: namespaces)
+                self.creatorHelpers.createArrayCountDef(inClass: genName, forVariable: variable.label, level: $0, namespaces: squashDefines ? [] : namespaces)
             }.joined(separator: " * ")
             let size = length + " * (sizeof (" + variable.cType + "))"
             let arrDefinition = "void set_" + variable.label + "(const " + (variable.type.terminalType.className ?? variable.cType) + " *t_newValue)"
@@ -613,7 +626,8 @@ public final class CPPHeaderCreator: Creator {
                 genName: genName,
                 structName: structName,
                 level: 0,
-                namespaces: namespaces
+                namespaces: namespaces,
+                squashDefines: squashDefines
             )
             let setter = arrDefinition + "\n{\n" + self.stringHelpers.indent(arrContent) + "\n}"
             let indexSetter = indexDefinition + "\n{\n" + self.stringHelpers.indent(indexContent) + "\n}"
@@ -628,7 +642,7 @@ public final class CPPHeaderCreator: Creator {
         default:
             definition = "void set_" + variable.label + "(const " + variable.cType + " &t_newValue)"
         }
-        let content = self.createSetterContent(forVariable: variable.label, variable.type, cType: variable.cType, propertyLabel: property, genName: genName, structName: structName, namespaces: namespaces)
+        let content = self.createSetterContent(forVariable: variable.label, variable.type, cType: variable.cType, propertyLabel: property, genName: genName, structName: structName, namespaces: namespaces, squashDefines: squashDefines)
         let endBracket = "}"
         return definition + "\n" + startBracket + "\n" + self.stringHelpers.indent(content) + "\n" + endBracket
     }
