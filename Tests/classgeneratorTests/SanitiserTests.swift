@@ -58,7 +58,7 @@
 
 import Foundation
 @testable import Parsers
-@testable import classgenerator
+@testable import Main
 import XCTest
 
 //swiftlint:disable type_body_length

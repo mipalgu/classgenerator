@@ -60,7 +60,7 @@ import Foundation
 @testable import Data
 @testable import Containers
 @testable import Parsers
-@testable import classgenerator
+@testable import Main
 import XCTest
 
 public class SectionsParserTests: ClassGeneratorTestCase {
