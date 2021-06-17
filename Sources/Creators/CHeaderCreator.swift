@@ -125,7 +125,7 @@ public final class CHeaderCreator: Creator {
             withAuthor: cls.author,
             andGenFile: genfile
         )
-        let includeGuard = WhiteboardHelpers().cIncludeGuard(forClassNamed: cls.name, namespaces: squashDefines ? [] : namespaces)
+        let includeGuard = WhiteboardHelpers().cIncludeGuard(forClassNamed: cls.name, namespaces: namespaces)
         let head = """
             #ifndef \(includeGuard)
             #define \(includeGuard)
