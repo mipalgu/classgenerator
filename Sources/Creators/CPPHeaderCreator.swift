@@ -101,6 +101,7 @@ public final class CPPHeaderCreator: Creator {
         squashDefines: Bool
     ) -> String? {
         let head = self.createHead(
+            forClass: cls,
             forFile: fileName,
             withStructNamed: structName,
             withClassNamed: className,
@@ -120,12 +121,13 @@ public final class CPPHeaderCreator: Creator {
             namespaces: namespaces,
             squashDefines: squashDefines
         )
-        let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: namespaces)
+        let defName = WhiteboardHelpers().cppIncludeGuard(forClassNamed: cls.name, namespaces: self.namespaces)
         let pre = nil == cls.preCpp ? "" : "\n\n" + cls.preCpp!
-        return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(defName)_DEFINED\n"
+        return head + pre + "\n\n" + content + "\n\n" + "#endif /// \(defName)\n"
     }
 
     fileprivate func createHead(
+        forClass cls: Class,
         forFile fileName: String,
         withStructNamed structName: String,
         withClassNamed className: String,
@@ -141,10 +143,10 @@ public final class CPPHeaderCreator: Creator {
             andGenFile: genfile
         )
         let includes = nil == variables.first { $0.type.isFloat } ? "" : "\n#include <float.h>"
-        let defName = self.creatorHelpers.createDefName(fromGenName: className, namespaces: squashDefines ? [] : namespaces)
+        let defName = WhiteboardHelpers().cppIncludeGuard(forClassNamed: cls.name, namespaces: self.namespaces)
         let define = """
-            #ifndef \(defName)_DEFINED
-            #define \(defName)_DEFINED
+            #ifndef \(defName)
+            #define \(defName)
 
             #ifdef WHITEBOARD_POSTER_STRING_CONVERSION
             #include <cstdlib>
