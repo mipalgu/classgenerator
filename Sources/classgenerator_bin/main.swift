@@ -5,7 +5,7 @@ import Creators
 import Containers
 import IO
 import Parsers
-import classgenerator
+import Main
 
 let container = WarningsContainerRef()
 

@@ -34,7 +34,7 @@ let package = Package(
             "IO",
             "whiteboard_helpers"
         ]),
-        .target(name: "classgenerator", dependencies: [
+        .target(name: "Main", dependencies: [
             .target(name: "Data"),
             .target(name: "Containers"),
             .target(name: "Helpers"),
@@ -44,10 +44,10 @@ let package = Package(
             "IO",
             "whiteboard_helpers"
         ]),
-        .target(name: "classgenerator_bin", dependencies: [.target(name: "classgenerator")]),
+        .target(name: "classgenerator_bin", dependencies: [.target(name: "Main")]),
         .testTarget(
             name: "classgeneratorTests",
-            dependencies: [.target(name: "classgenerator"), .target(name: "Helpers"), "swift_helpers"]
+            dependencies: [.target(name: "Main"), .target(name: "Helpers"), "swift_helpers"]
         )
     ]
 )

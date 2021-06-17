@@ -59,7 +59,7 @@
 import Dispatch
 import Foundation
 @testable import Data
-@testable import classgenerator
+@testable import Main
 import XCTest
 
 //swiftlint:disable file_length

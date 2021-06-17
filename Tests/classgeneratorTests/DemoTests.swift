@@ -64,7 +64,7 @@ import Foundation
 @testable import IO
 @testable import Parsers
 @testable import Helpers
-@testable import classgenerator
+@testable import Main
 import XCTest
 
 public class DemoTests: ClassGeneratorTestCase {

@@ -72,8 +72,10 @@ public class ClassGeneratorParser {
             OPTIONS:
                     -b              Use backwards compatible naming conventions.
                     -c              Do Not Generate a C++ wrapper.
-                    -n              Specify a namespace for the C++ classes. Multiple namespaces may be specified by
-                                    separating each namespace with '::'. For example: First::Second::Third.
+                    -n              Specify a namespace for the class. Multiple namespaces may be specified by
+                                    using additional -n flags. You may specify a namespace for both C and C++
+                                    by seperating the namespaces with a colon (:).
+                                    For example: -n "c_namespace:CPPNamespace".
                     -s              Do Not Generate a Swift wrapper.
                     --c-header <directory=./>
                                     Place the generated C header into <directory>.
@@ -153,9 +155,9 @@ public class ClassGeneratorParser {
         guard let value = self.getValue(fromWords: &words) else {
             return task
         }
-        let namespaces: [CNamespace]
+        let namespaces: (CNamespace, CPPNamespace)
         do {
-            namespaces = try WhiteboardHelpers().parseNamespaces(value)
+            namespaces = try WhiteboardHelpers().parseNamespacePair(value)
         } catch let e as WhiteboardHelpers.ParserErrors {
             switch e {
             case .malformedValue(let reason):
@@ -164,8 +166,8 @@ public class ClassGeneratorParser {
         } catch let e {
             throw ClassGeneratorErrors.malformedValue(reason: "\(e)")
         }
-        temp.namespaces = namespaces
-        temp.cppNamespace = namespaces.map { WhiteboardHelpers().toCPPNamespace(cNamespace: $0) }
+        temp.namespaces.append(namespaces.0)
+        temp.cppNamespace.append(namespaces.1)
         return temp
     }
 
