@@ -162,6 +162,10 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-s -G typeClassDefs --c-header typeClassDefs -n wb:guWhiteboard --squash-defines typeClassDefs/vision_detection_goals.gen"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = " -s -G typeClassDefs --c-header typeClassDefs -b typeClassDefs/Filtered_ArrayBallSightings.txt"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

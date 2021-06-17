@@ -189,7 +189,7 @@ public final class CPPHeaderCreator: Creator {
         )
         let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
         let allContent = content + postCpp + "\n\n"
-        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, min(0, namespaces.count - 1)) + endNamespace
+        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, max(0, namespaces.count - 1)) + endNamespace
     }
 
     fileprivate func createClassContent(
