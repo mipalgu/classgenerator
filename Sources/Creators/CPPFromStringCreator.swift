@@ -118,13 +118,14 @@ public final class CPPFromStringCreator {
             squashDefines: squashDefines
         )
         let endef = "}"
-        return ifDef + "\n" + self.stringHelpers.cIndent(def, 2) + "\n"
-            + self.stringHelpers.cIndent(cImplementation, 3) + "\n"
+        return ifDef + "\n" + def + "\n"
+            + self.stringHelpers.cIndent(cImplementation) + "\n"
             + elseDef + "\n"
-            + (containsSupportedTypes ? self.stringHelpers.cIndent(def, 2) : self.stringHelpers.cIndent(nodef, 2))
-            + "\n" + self.stringHelpers.cIndent(begin + "\n" + cppImplementation, 3) + "\n"
+            + (containsSupportedTypes ? def : nodef) + "\n"
+            + self.stringHelpers.cIndent(begin) + "\n"
+            + self.stringHelpers.cIndent(cppImplementation) + "\n"
             + endifDef + "\n"
-            + self.stringHelpers.cIndent(endef, 2)
+            + endef
     }
 
 }

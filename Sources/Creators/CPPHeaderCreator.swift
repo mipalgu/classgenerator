@@ -187,9 +187,9 @@ public final class CPPHeaderCreator: Creator {
             namespaces: namespaces,
             squashDefines: squashDefines
         )
-        let postCpp = nil == postCpp ? "" : "\n\n" + self.stringHelpers.cIndent(postCpp!)
+        let postCpp = nil == postCpp ? "" : "\n\n" + postCpp!
         let allContent = content + postCpp + "\n\n"
-        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, max(0, namespaces.count - 1)) + endNamespace
+        return startNamespace + "\n\n" + self.stringHelpers.cIndent(allContent, namespaces.count) + endNamespace
     }
 
     fileprivate func createClassContent(
@@ -248,7 +248,7 @@ public final class CPPHeaderCreator: Creator {
             + equalsOperators + "\n\n"
             + gettersAndSetters
         let publicSection = publicLabel + "\n\n" + self.stringHelpers.cIndent(publicContent)
-        let cpp = nil == cpp ? "" : "\n\n" + self.stringHelpers.cIndent(cpp!)
+        let cpp = nil == cpp ? "" : "\n\n" + cpp!
         let ifdef = "#ifdef WHITEBOARD_POSTER_STRING_CONVERSION"
         let endif = "#endif /// WHITEBOARD_POSTER_STRING_CONVERSION"
         let fromStringConstructor = self.createFromStringConstructor(inClass: cls, forClassNamed: name, andStructNamed: extendName)
@@ -276,12 +276,14 @@ public final class CPPHeaderCreator: Creator {
             namespaces: namespaces,
             squashDefines: squashDefines
         )
-        return self.stringHelpers.cIndent(def + "\n\n" + privateSection + "\n\n" + publicSection) + "\n\n"
+        return def + "\n\n" + privateSection + "\n\n" + publicSection + "\n\n"
             + ifdef + "\n"
-            + self.stringHelpers.cIndent(fromStringConstructor, 2) + "\n\n"
-            + description + "\n\n" + toString + "\n\n" + fromString
-            + "\n" + endif + self.stringHelpers.cIndent(cpp) + "\n"
-            + self.stringHelpers.cIndent("};")
+            + self.stringHelpers.cIndent(fromStringConstructor) + "\n\n"
+            + self.stringHelpers.cIndent(description) + "\n\n"
+            + self.stringHelpers.cIndent(toString) + "\n\n"
+            + self.stringHelpers.cIndent(fromString)
+            + "\n" + endif + self.stringHelpers.cIndent(cpp)
+            + "\n};"
     }
 
     fileprivate func createClassDefinition(forClassNamed name: String, extending extendName: String) -> String {

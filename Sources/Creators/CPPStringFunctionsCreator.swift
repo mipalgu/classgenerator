@@ -102,9 +102,9 @@ public final class CPPStringFunctionsCreator {
             namespaces: namespaces,
             squashDefines: squashDefines
         )
-        return self.stringHelpers.cIndent(startDescription, 2) + "\n"
-            + body + "\n"
-            + self.stringHelpers.cIndent("}", 2)
+        return startDescription + "\n"
+            + self.stringHelpers.cIndent(body) + "\n"
+            + "}"
     }
 
     public func createToStringFunction(
@@ -134,9 +134,9 @@ public final class CPPStringFunctionsCreator {
             namespaces: namespaces,
             squashDefines: squashDefines
         )
-        return self.stringHelpers.cIndent(startDescription, 2) + "\n"
-            + body + "\n"
-            + self.stringHelpers.cIndent("}", 2)
+        return startDescription + "\n"
+            + self.stringHelpers.cIndent(body) + "\n"
+            + "}"
     }
 
     fileprivate func createStringFunctionBody(
@@ -163,9 +163,9 @@ public final class CPPStringFunctionsCreator {
             squashDefines: squashDefines
         )
         return ifCConversion + "\n"
-            + self.stringHelpers.cIndent(cImplementation, 3) + "\n"
+            + cImplementation + "\n"
             + elseDef + "\n"
-            + self.stringHelpers.cIndent(cppImplementation, 3) + "\n"
+            + cppImplementation + "\n"
             + endifCConversion
     }
 
