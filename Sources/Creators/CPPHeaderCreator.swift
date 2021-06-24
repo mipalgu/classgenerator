@@ -157,7 +157,16 @@ public final class CPPHeaderCreator: Creator {
             #include <gu_util.h>
             #include "\(structName).h"\(includes)
             """
-        return comment + "\n\n" + define
+        let defined: String
+        if namespaces.isEmpty {
+            defined = WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name)
+        } else {
+            defined = WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name, namespaces: namespaces) + "\n" + WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name)
+        }
+        let definedDefs = defined.components(separatedBy: .newlines).map {
+            "#undef " + $0 + "\n#define " + $0
+        }.joined(separator: "\n\n")
+        return comment + "\n\n" + define + "\n\n" + definedDefs
     }
 
     //swiftlint:disable:next function_parameter_count
