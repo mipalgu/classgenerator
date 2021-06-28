@@ -161,12 +161,12 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-s -G typeClassDefs --c-header typeClassDefs -n wb:guWhiteboard --squash-defines typeClassDefs/vision_detection_goals.gen"
-            isEnabled = "NO">
+            argument = "-s -G typeClassDefs --c-header typeClassDefs -n wb:guWhiteboard --squash-defines --namespace-files typeClassDefs/vision_detection_goals.gen"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = " -s -G typeClassDefs --c-header typeClassDefs -b typeClassDefs/Filtered_ArrayBallSightings.txt"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

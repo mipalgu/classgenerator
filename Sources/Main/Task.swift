@@ -84,6 +84,8 @@ public struct Task {
     
     var squashDefines: Bool = false
     
+    var namespaceFiles: Bool = false
+    
     var useBackwardsCompatibleNamingConventions: Bool = false
 
 }
