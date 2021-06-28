@@ -161,7 +161,7 @@ public final class CPPHeaderCreator: Creator {
         if namespaces.isEmpty {
             defined = WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name)
         } else {
-            defined = WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name, namespaces: namespaces) + "\n" + WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name)
+            defined = WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name, namespaces: self.namespaces) + "\n" + WhiteboardHelpers().cppDefinedDef(forClassNamed: cls.name)
         }
         let definedDefs = defined.components(separatedBy: .newlines).map {
             "#undef " + $0 + "\n#define " + $0
