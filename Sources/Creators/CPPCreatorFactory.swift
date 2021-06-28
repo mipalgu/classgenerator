@@ -57,9 +57,12 @@
  */
 
 import whiteboard_helpers
+import Foundation
 
-public protocol CPPCreatorFactory: CreatorFactory {
+public protocol CPPCreatorFactory {
+
+    associatedtype _Creator: Creator
     
-    func make(backwardCompatible: Bool, cppNamespace: [CPPNamespace]) -> _Creator
+    func make(backwardCompatible: Bool, cppNamespace: [CPPNamespace], cHeaderPath: URL) -> _Creator
     
 }

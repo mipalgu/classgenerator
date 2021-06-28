@@ -65,7 +65,7 @@ import IO
 import Parsers
 import whiteboard_helpers
 
-public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCreatorFactory: CreatorFactory, CFileCreatorFactory: CreatorFactory, CPPHeaderCreatorFactory: CPPCreatorFactory, SwiftFileCreatorFactory: CreatorFactory> {
+public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCreatorFactory: CreatorFactory, CPPHeaderCreatorFactory: CPPCreatorFactory, SwiftFileCreatorFactory: CreatorFactory> {
 
     fileprivate let argumentsParser: ClassGeneratorParser
     fileprivate let parser: Parser
@@ -150,9 +150,10 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         let creatorHelpers = self.creatorHelpersFactory.make(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
         let className = creatorHelpers.createClassName(forClassNamed: cls.name)
         let structName = creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: task.namespaces)
+        let cHeaderPath = self.create(task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: Array(task.namespaces[0..<1]))) + ".h")
         let cHeaderCreator = self.cHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
-        let cFileCreator = self.cFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
-        let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cppNamespace: task.cppNamespace)
+        let cFileCreator = self.cFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cHeaderPath: cHeaderPath)
+        let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cppNamespace: task.cppNamespace, cHeaderPath: cHeaderPath)
         let swiftFileCreator = self.swiftFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         self.generateFiles(
             fromClass: cls,
@@ -160,8 +161,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
             cFileCreator: cFileCreator,
             cppHeaderCreator: cppHeaderCreator,
             swiftFileCreator: swiftFileCreator,
-            cHeaderPath: self.create(task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: [])) + ".h"),
-            cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: [])) + ".c"),
+            cHeaderPath: cHeaderPath,
+            cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: Array(task.namespaces[0..<1]))) + ".c"),
             cppHeaderPath: self.create(task.cppHeaderOutputPath ?? task.cHeaderOutputPath, className + ".h"),
             swiftFilePath: self.create(task.swiftFileOutputPath ?? task.cHeaderOutputPath, className + ".swift"),
             className: className,
@@ -189,7 +190,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
     fileprivate func generateFiles(
         fromClass cls: Class,
         cHeaderCreator: CHeaderCreatorFactory._Creator,
-        cFileCreator: CFileCreatorFactory._Creator,
+        cFileCreator: CFileCreator,
         cppHeaderCreator: CPPHeaderCreatorFactory._Creator,
         swiftFileCreator: SwiftFileCreatorFactory._Creator,
         cHeaderPath: URL,

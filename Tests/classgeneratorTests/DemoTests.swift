@@ -93,7 +93,6 @@ public class DemoTests: ClassGeneratorTestCase {
             StdoutOutputStream
         >,
         CHeaderCreatorFactory,
-        CFileCreatorFactory,
         CPPHeaderCreatorFactory,
         SwiftFileCreatorFactory
     >!

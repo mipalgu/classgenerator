@@ -87,8 +87,8 @@ public class ClassGeneratorParser {
                                     Place the generated swift file into <directory>.
                     --squash-defines
                                     Don't include namespaces when generating #defines.
-                    --namespace-files
-                                    Include the namespace in the C files.
+                    --squash-files
+                                    Only include the top level namespace in C files.
             """
     }
 
@@ -128,8 +128,8 @@ public class ClassGeneratorParser {
             return self.handleSwiftFileFlag(task, words: &words)
         case "--squash-defines":
             return self.handleSquashDefinesFlag(task, words: &words)
-        case "--namespace-files":
-            return self.handleNamespaceFilesFlag(task, words: &words)
+        case "--squash-files":
+            return self.handleSquashFiles(task, words: &words)
         case "--help":
             return self.handleHelpFlag(task, words: &words)
         default:
@@ -227,9 +227,9 @@ public class ClassGeneratorParser {
         return task
     }
     
-    fileprivate func handleNamespaceFilesFlag(_ task: Task, words: inout [String]) -> Task {
+    fileprivate func handleSquashFiles(_ task: Task, words: inout [String]) -> Task {
         var task = task
-        task.namespaceFiles = true
+        task.namespaceFiles = false
         return task
     }
 

@@ -60,6 +60,7 @@ import Containers
 import Data
 import Helpers
 import whiteboard_helpers
+import Foundation
 
 public final class CFileCreator: Creator {
 
@@ -74,8 +75,11 @@ public final class CFileCreator: Creator {
     fileprivate let networkSerialiserCreator: CNetworkSerialiserCreator
     fileprivate let networkDeserialiserCreator: CNetworkDeserialiserCreator
     fileprivate let fromStringCreator: CFromStringCreator<FromStringImplementationCreator>
+    
+    private let cHeaderPath: URL
 
     public init(
+        cHeaderPath: URL,
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         descriptionCreator: CDescriptionCreator = CDescriptionCreator(),
         networkSerialiserCreator: CNetworkSerialiserCreator = CNetworkSerialiserCreator(),
@@ -84,6 +88,7 @@ public final class CFileCreator: Creator {
             implementationCreator: FromStringImplementationCreator()
         )
     ) {
+        self.cHeaderPath = cHeaderPath
         self.creatorHelpers = creatorHelpers
         self.descriptionCreator = descriptionCreator
         self.networkSerialiserCreator = networkSerialiserCreator
@@ -189,7 +194,7 @@ public final class CFileCreator: Creator {
     fileprivate func createHead(forStructNamed structName: String, topC: String?) -> String {
         let pre = topC == nil ? "" : topC! + "\n"
         return """
-            \(pre)#include "\(structName).h"
+            \(pre)#include "\(cHeaderPath.lastPathComponent)"
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>

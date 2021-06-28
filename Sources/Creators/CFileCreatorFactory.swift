@@ -61,7 +61,7 @@ import Helpers
 import swift_helpers
 import whiteboard_helpers
 
-public final class CFileCreatorFactory: CreatorFactory {
+public final class CFileCreatorFactory {
     
     fileprivate let date: Date
     fileprivate let stringHelpers: StringHelpers
@@ -73,7 +73,7 @@ public final class CFileCreatorFactory: CreatorFactory {
         self.whiteboardHelpers = whiteboardHelpers
     }
     
-    public func make(backwardCompatible: Bool) -> CFileCreator {
+    public func make(backwardCompatible: Bool, cHeaderPath: URL) -> CFileCreator {
         let creatorHelpers = CreatorHelpers(backwardsCompatible: backwardCompatible, date: self.date, helpers: self.whiteboardHelpers)
         let descriptionCreator = CDescriptionCreator(creatorHelpers: creatorHelpers, stringHelpers: stringHelpers)
         let networkSerialiserCreator = CNetworkSerialiserCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
@@ -84,6 +84,7 @@ public final class CFileCreatorFactory: CreatorFactory {
             stringHelpers: self.stringHelpers
         )
         return CFileCreator(
+            cHeaderPath: cHeaderPath,
             creatorHelpers: creatorHelpers,
             descriptionCreator: descriptionCreator,
             networkSerialiserCreator: networkSerialiserCreator,

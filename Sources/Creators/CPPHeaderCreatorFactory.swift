@@ -63,6 +63,8 @@ import whiteboard_helpers
 
 public final class CPPHeaderCreatorFactory: CPPCreatorFactory {
     
+    public typealias _Creator = CPPHeaderCreator
+    
     fileprivate let date: Date
     fileprivate let stringHelpers: StringHelpers
     fileprivate let whiteboardHelpers: WhiteboardHelpers
@@ -73,17 +75,14 @@ public final class CPPHeaderCreatorFactory: CPPCreatorFactory {
         self.whiteboardHelpers = whiteboardHelpers
     }
     
-    public func make(backwardCompatible: Bool) -> CPPHeaderCreator {
-        return self.make(backwardCompatible: backwardCompatible, cppNamespace: [])
-    }
-    
-    public func make(backwardCompatible: Bool, cppNamespace: [CPPNamespace]) -> CPPHeaderCreator {
+    public func make(backwardCompatible: Bool, cppNamespace: [CPPNamespace], cHeaderPath: URL) -> CPPHeaderCreator {
         let creatorHelpers = CreatorHelpers(backwardsCompatible: backwardCompatible, date: self.date, helpers: self.whiteboardHelpers)
         let stringFunctionsCreator = CPPStringFunctionsCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
         let implementationCreator = FromStringImplementationCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers)
         let fromStringCreator = CPPFromStringCreator(creatorHelpers: creatorHelpers, stringHelpers: self.stringHelpers, implementationCreator: implementationCreator)
         return CPPHeaderCreator(
             namespaces: cppNamespace,
+            cHeaderPath: cHeaderPath,
             creatorHelpers: creatorHelpers,
             stringHelpers: self.stringHelpers,
             stringFunctionsCreator: stringFunctionsCreator,

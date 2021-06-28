@@ -62,6 +62,8 @@ import Helpers
 import swift_helpers
 import whiteboard_helpers
 
+import Foundation
+
 //swiftlint:disable type_body_length
 public final class CPPHeaderCreator: Creator {
 
@@ -72,6 +74,7 @@ public final class CPPHeaderCreator: Creator {
     }
 
     fileprivate let namespaces: [CPPNamespace]
+    private let cHeaderPath: URL
     fileprivate let creatorHelpers: CreatorHelpers
     fileprivate let stringHelpers: StringHelpers
     fileprivate let stringFunctionsCreator: CPPStringFunctionsCreator
@@ -79,12 +82,14 @@ public final class CPPHeaderCreator: Creator {
 
     public init(
         namespaces: [CPPNamespace] = [],
+        cHeaderPath: URL,
         creatorHelpers: CreatorHelpers = CreatorHelpers(),
         stringHelpers: StringHelpers = StringHelpers(),
         stringFunctionsCreator: CPPStringFunctionsCreator = CPPStringFunctionsCreator(),
         fromStringCreator: CPPFromStringCreator = CPPFromStringCreator()
     ) {
         self.namespaces = namespaces
+        self.cHeaderPath = cHeaderPath
         self.creatorHelpers = creatorHelpers
         self.stringHelpers = stringHelpers
         self.stringFunctionsCreator = stringFunctionsCreator
@@ -155,7 +160,7 @@ public final class CPPHeaderCreator: Creator {
             #endif
 
             #include <gu_util.h>
-            #include "\(structName).h"\(includes)
+            #include "\(cHeaderPath.lastPathComponent)"\(includes)
             """
         let defined: String
         if namespaces.isEmpty {
