@@ -150,7 +150,8 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
         let creatorHelpers = self.creatorHelpersFactory.make(backwardsCompatible: task.useBackwardsCompatibleNamingConventions)
         let className = creatorHelpers.createClassName(forClassNamed: cls.name)
         let structName = creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: task.namespaces)
-        let cHeaderPath = self.create(task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: Array(task.namespaces[0..<1]))) + ".h")
+        let optionalNamespaces = task.namespaces.isEmpty ? [] : Array(task.namespaces[0..<1])
+        let cHeaderPath = self.create(task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: optionalNamespaces)) + ".h")
         let cHeaderCreator = self.cHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions)
         let cFileCreator = self.cFileCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cHeaderPath: cHeaderPath)
         let cppHeaderCreator = self.cppHeaderCreatorFactory.make(backwardCompatible: task.useBackwardsCompatibleNamingConventions, cppNamespace: task.cppNamespace, cHeaderPath: cHeaderPath)
@@ -162,7 +163,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
             cppHeaderCreator: cppHeaderCreator,
             swiftFileCreator: swiftFileCreator,
             cHeaderPath: cHeaderPath,
-            cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: Array(task.namespaces[0..<1]))) + ".c"),
+            cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: optionalNamespaces)) + ".c"),
             cppHeaderPath: self.create(task.cppHeaderOutputPath ?? task.cHeaderOutputPath, className + ".h"),
             swiftFilePath: self.create(task.swiftFileOutputPath ?? task.cHeaderOutputPath, className + ".swift"),
             className: className,
