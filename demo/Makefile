@@ -1,7 +1,7 @@
 SWIFT=swift
 CUSTOM_WB_NAME=custom_whiteboard
 CUSTOM_WB_CLASSES=demo
-ALL_TARGETS=generate-classes host
+ALL_TARGETS=generate-classes purge-cache host
 SWIFTCFLAGS=-warnings-as-errors
 SPECIFIC_CPPFLAGS=-DWHITEBOARD_POSTER_STRING_CONVERSION=1 -DWHITEBOARD_SERIALISATION=1 -I${SRCDIR}/bridge -Werror -Wall -Weverything -Wno-newline-eof -Wno-padded -Wno-sign-conversion \
 	       	-Wno-unused-parameter -Wno-poison-system-directories -Wno-gnu-empty-initializer -Wno-implicit-int-conversion -Wno-c++11-long-long
