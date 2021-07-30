@@ -96,6 +96,12 @@ public class DemoTests: ClassGeneratorTestCase {
         CPPHeaderCreatorFactory,
         SwiftFileCreatorFactory
     >!
+    
+    var projectFolder: String {
+        let file = URL(fileURLWithPath: #filePath, isDirectory: false)
+        let directory = file.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        return directory.path
+    }
 
     public override func setUp() {
         self.filemanager = FileManager.default
@@ -121,6 +127,10 @@ public class DemoTests: ClassGeneratorTestCase {
             cppHeaderCreatorFactory: CPPHeaderCreatorFactory(),
             swiftFileCreatorFactory: SwiftFileCreatorFactory()
         )
+        guard true == self.filemanager.changeCurrentDirectoryPath(projectFolder) else {
+            XCTFail("Unable to change into project directory.")
+            return
+        }
         _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/wb_demo.h")
         _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/wb_demo.c")
         _ = try? self.filemanager.removeItem(atPath: "demo/Sources/bridge/Demo.h")
@@ -163,9 +173,8 @@ public class DemoTests: ClassGeneratorTestCase {
         buildProcess.currentDirectoryPath = self.filemanager.currentDirectoryPath
         buildProcess.launchPath = "/usr/bin/env"
         buildProcess.arguments = ["bmake", "host"]
-        buildProcess.launch()
-        buildProcess.waitUntilExit()
-        XCTAssertEqual(EXIT_SUCCESS, buildProcess.terminationStatus, "Demo tests failed")
+        fork(buildProcess)
+        XCTAssertEqual(EXIT_SUCCESS, buildProcess.terminationStatus, "Unable to build project")
         guard true == self.filemanager.changeCurrentDirectoryPath("demo") else {
             XCTFail("Unable to change into demo directory.")
             return
