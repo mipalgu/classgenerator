@@ -6,7 +6,7 @@
 
 -c++
 
-#include "LandmarkSighting.h"
+#include "LandmarkSighting.hpp"
 
 %c++
 

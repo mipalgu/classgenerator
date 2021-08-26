@@ -20,7 +20,7 @@
 #include "wb_sub.h"
 
 -c++
-#include "Sub.h"
+#include "Sub.hpp"
 
 -swift
 import bridge
