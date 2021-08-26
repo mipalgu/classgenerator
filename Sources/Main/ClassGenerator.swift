@@ -164,7 +164,7 @@ public final class ClassGenerator<Parser: ClassParserType, P: Printer, CHeaderCr
             swiftFileCreator: swiftFileCreator,
             cHeaderPath: cHeaderPath,
             cFilePath: self.create(task.cFileOutputPath ?? task.cHeaderOutputPath, (task.namespaceFiles ? structName : creatorHelpers.createStructName(forClassNamed: cls.name, namespaces: optionalNamespaces)) + ".c"),
-            cppHeaderPath: self.create(task.cppHeaderOutputPath ?? task.cHeaderOutputPath, className + ".h"),
+            cppHeaderPath: self.create(task.cppHeaderOutputPath ?? task.cHeaderOutputPath, className + ".hpp"),
             swiftFilePath: self.create(task.swiftFileOutputPath ?? task.cHeaderOutputPath, className + ".swift"),
             className: className,
             structName: structName,
