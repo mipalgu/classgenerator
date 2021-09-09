@@ -75,7 +75,7 @@
 #undef VisionDetectionBalls_DEFINED
 #define VisionDetectionBalls_DEFINED
 
-#include "VisionDetectionBall.h"
+#include "VisionDetectionBall.hpp"
 
 namespace guWhiteboard {
 
