@@ -4,7 +4,7 @@
 #include "wb_vision_detection_ball.h"
 #include <stdint.h>
 -c++
-#include "VisionDetectionBall.h"
+#include "VisionDetectionBall.hpp"
 
 -swift
 import bridge
