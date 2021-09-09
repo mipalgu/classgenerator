@@ -1,7 +1,7 @@
 -author Carl Lusty
 
 -c
-#include <wb_field_ball.h>
+#include "wb_field_ball.h"
 
 -swift
 import bridge
